@@ -1,5 +1,6 @@
 import { Header } from "@/components/Main/Header/Header";
 import { Footer } from "@/components/Main/Footer/Footer";
+import NavigationModul from "@/features/NavigationModul/Navigation";
 
 export default function RootLayout({
   children,
@@ -10,11 +11,7 @@ export default function RootLayout({
     <div className="relative min-h-screen">
       <Header />
 
-      {children}
-
-      {/* <section id="contacts">
-        <Contacts />
-      </section> */}
+      <NavigationModul>{children}</NavigationModul>
 
       <Footer />
     </div>

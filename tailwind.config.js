@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         jura: ["var(--font-jura)", "sans-serif"],
+        koulen: ["var(--font-koulen)"],
       },
     },
   },

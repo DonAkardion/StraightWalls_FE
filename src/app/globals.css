@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 :root {
   --background: #ffffff;
   --black: #000000;
@@ -7,6 +6,11 @@
   --green: #15ae08;
   --red: #b70000;
   --blue: #0097c0;
+  --yellow-gradient: linear-gradient(
+    90deg,
+    rgba(255, 179, 38, 0.5) 36.06%,
+    rgba(191, 117, 42, 0.5) 100%
+  );
 }
 
 html,
@@ -18,12 +22,7 @@ body {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: var(--font-inter);
-}
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  font-family: var(--font-jura);
 }
 
 a {

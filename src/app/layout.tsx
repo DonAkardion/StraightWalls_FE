@@ -1,16 +1,22 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, Jura } from "next/font/google";
+import { Inter, Jura, Koulen } from "next/font/google";
 
 const jura = Jura({
   variable: "--font-jura",
   subsets: ["latin"],
 });
 
-// const inter = Inter({
-//   variable: "--font-inter",
-//   subsets: ["latin"],
-// });
+const koulen = Koulen({
+  variable: "--font-koulen",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "StraightWalls",
@@ -24,7 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jura.variable}`}>
+    <html
+      lang="en"
+      className={`${jura.variable} ${koulen.variable} ${inter.variable}`}
+    >
       <body>{children}</body>
     </html>
   );
