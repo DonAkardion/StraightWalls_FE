@@ -10,5 +10,11 @@ export { default as Worker } from "./Worker.svg";
 export { default as Paper } from "./Paper.svg";
 export { default as Cog } from "./Cog.svg";
 export { default as ArrowRight } from "./ArrowRight.svg";
+export { default as Purse } from "./Purse.svg";
+export { default as Phone } from "./Phone.svg";
+export { default as Mail } from "./Mail.svg";
+export { default as Eye } from "./Eye.svg";
+export { default as Pen } from "./Pen.svg";
+export { default as Trash } from "./Trash.svg";
 
 export { default as Logo } from "../header/header-icon.png";
