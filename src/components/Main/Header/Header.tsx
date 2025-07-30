@@ -1,4 +1,5 @@
 "use client";
+import { useUser } from "@/hooks/useUser";
 import React, { useState } from "react";
 import styles from "./Header.module.css";
 import Link from "next/link";
@@ -12,6 +13,8 @@ import {
 } from "../../../../public/icons";
 
 export const Header = () => {
+  const user = useUser();
+  const role = useUser().role;
   const [open, setOpen] = useState(false);
 
   const toggleMenu = () => setOpen((prev) => !prev);
@@ -76,7 +79,7 @@ export const Header = () => {
             </div>
           </Link>
           <Link
-            href="/notifications"
+            href={`/${role}/notifications`}
             className={`${styles.headerLink} relative shrink-0`}
             prefetch={false}
           >
@@ -100,7 +103,7 @@ export const Header = () => {
               alt="Search"
             />
             <div className={`${styles.navigationUserName} w-full `}>
-              Олексій
+              <span>{user.name}</span>
             </div>
           </Link>
         </nav>
