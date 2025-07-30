@@ -1,10 +1,10 @@
 import React from "react";
-import { Hero } from "./Hero/Hero";
+import { Balance } from "./Balance/Balance";
 
 const HomePage = () => {
   return (
     <>
-      <Hero />
+      <Balance />
     </>
   );
 };

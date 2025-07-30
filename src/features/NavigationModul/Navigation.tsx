@@ -13,7 +13,7 @@ export default function NavigationModul({
   const [isScrolling, setIsScrolling] = useState(false);
 
   return (
-    <div className="relative flex h-full w-full">
+    <div className="relative flex lg:flex-row-reverse h-full w-full">
       <aside
         className="hidden lg:block absolute top-0 left-0 bottom-0 w-[311px] bg-white z-40"
         style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
@@ -50,7 +50,7 @@ export default function NavigationModul({
       </div>
       <main
         id="main-content"
-        className="transition-all duration-300 ease-in-out w-full md:w-[calc(100%-246px)] lg:w-[calc(100%-311px)] min-h-screen"
+        className=" transition-all duration-300 ease-in-out w-full md:w-[calc(100%-246px)] lg:w-[calc(100%-311px)] min-h-screen"
       >
         {children}
       </main>
