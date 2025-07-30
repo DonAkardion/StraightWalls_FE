@@ -10,9 +10,14 @@
   align-items: center;
   gap: 10px;
 }
-.menuLinkImg {
-  width: 38px;
-  height: 38px;
+@media (max-width: 1024px) {
+  .navigationMenuListLink {
+    padding: 18px 100px 20px 40px;
+  }
+  .navigationMenuList {
+    font-size: 14px;
+    line-height: 17px;
+  }
 }
 .activeLink {
   background: var(--yellow-gradient);

@@ -25,7 +25,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
   const pathname = usePathname();
   return (
     <div className={`${styles.navigationMenu} `} style={{ height: "100%" }}>
-      <nav className={`${styles.navigationMenuList} flex-col mt-[52px] `}>
+      <nav
+        className={`${styles.navigationMenuList} flex-col mt-[102px] lg:mt-[52px]`}
+      >
         <Link
           href="/"
           className={`${styles.navigationMenuListLink} 
