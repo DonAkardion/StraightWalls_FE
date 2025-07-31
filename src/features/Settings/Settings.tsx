@@ -50,7 +50,7 @@ export function Settings() {
             <div>Журнал аудиту/логів</div>
           </Link>
           <Link
-            href="/"
+            href={`/${role}/settings/serviceSettings`}
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
