@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/hooks/useUser";
 import React from "react";
 import styles from "./NavigationMenu.module.css";
 import Link from "next/link";
@@ -34,7 +35,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
           <Link
             href="/"
             className={`${styles.navigationMenuListLink} 
-          ${pathname === "/" ? styles.activeLink : ""} 
+          ${
+            [`/${role}`, `/${role}/notifications`].includes(pathname)
+              ? styles.activeLink
+              : ""
+          } 
           `}
             prefetch={false}
           >
@@ -102,9 +107,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Звіти</div>
           </Link>
           <Link
-            href="/Settings"
+            href={`/${role}/settings`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Settings" ? styles.activeLink : ""}
+          ${pathname === `/${role}/settings` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -123,7 +128,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
           <Link
             href="/"
             className={`${styles.navigationMenuListLink} 
-          ${pathname === "/" ? styles.activeLink : ""} 
+          ${
+            [`/${role}`, `/${role}/notifications`].includes(pathname)
+              ? styles.activeLink
+              : ""
+          } 
           `}
             prefetch={false}
           >
@@ -163,9 +172,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Клієнти</div>
           </Link>
           <Link
-            href="/Settings"
+            href={`/${role}/settings`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Settings" ? styles.activeLink : ""}
+          ${pathname === `/${role}/settings` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >

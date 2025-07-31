@@ -1,0 +1,20 @@
+.settings {
+  font-family: var(--font-koulen);
+  font-size: 20px;
+  line-height: 30px;
+}
+.settingsLinksListLink {
+  background: var(--yellow-gradient);
+  border-radius: 5px;
+  box-shadow: 1px 3px 15px 2px #00000040;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  height: 64px;
+  max-width: 480px;
+  width: 100%;
+  padding: 0 6px;
+}
+.settingsLinksListLink :first-child {
+  margin: auto;
+}

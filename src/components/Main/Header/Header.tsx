@@ -1,6 +1,6 @@
 "use client";
 import { useUser } from "@/hooks/useUser";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Header.module.css";
 import Link from "next/link";
 import {
@@ -17,10 +17,28 @@ export const Header = () => {
   const role = useUser().role;
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    const body = document.body;
+    const html = document.documentElement;
+
+    if (open) {
+      body.classList.add("overflow-hidden", "h-full");
+      html.classList.add("overflow-hidden", "h-full");
+    } else {
+      body.classList.remove("overflow-hidden", "h-full");
+      html.classList.remove("overflow-hidden", "h-full");
+    }
+
+    return () => {
+      body.classList.remove("overflow-hidden", "h-full");
+      html.classList.remove("overflow-hidden", "h-full");
+    };
+  }, [open]);
+
   const toggleMenu = () => setOpen((prev) => !prev);
   const closeMenu = () => setOpen(false);
   return (
-    <header className={`${styles.header} flex-col z-[100] relative`}>
+    <header className={`${styles.header} flex-col z-[50] relative`}>
       <div
         className={`${styles.headerContainer} lg:pt-3 lg:pb-3 lg:pr-[60px] lg:pl-[60px] md:pr-[30px] md:pl-[30px] pt-[6px] pb-[10px] pl-[20px] pr-[20px] flex gap-[30px] justify-between items-center`}
       >
@@ -109,9 +127,12 @@ export const Header = () => {
         </nav>
       </div>
       {open && (
-        <div id="mobileMenu" className={styles.headerMobileMenu}>
+        <div
+          id="mobileMenu"
+          className={`${styles.headerMobileMenu} absolute top-0 left-0 z-[-1] w-full bg-white md:hidden`}
+        >
           <div
-            className={`${styles.headerMobileMenuWrapper} flex flex-col gap-[28px] justify-center items-center`}
+            className={`${styles.headerMobileMenuWrapper} flex flex-col gap-[28px] h-screen justify-center items-center`}
           >
             <Link
               href="/cabinet"
@@ -129,7 +150,7 @@ export const Header = () => {
               </div>
             </Link>
             <Link
-              href="/notifications"
+              href={`/${role}/notifications`}
               onClick={closeMenu}
               className={`${styles.mobileMenuLink} relative shrink-0`}
               prefetch={false}

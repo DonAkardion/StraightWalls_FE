@@ -17,11 +17,12 @@ export const NavigationButton: React.FC<INavigationButton> = ({
     <button
       onClick={onClick}
       style={{
-        boxShadow: "-1px 4px 14px 1px rgba(255, 230, 230, 0.7)",
+        boxShadow: "",
       }}
-      className={`
+      className={`${styles.buttonBG}
       cursor-pointer
-      z-60
+      z-[34]
+      
       ${
         isScrolling ? "transition-none" : "transition-all duration-500 ease-out"
       }
