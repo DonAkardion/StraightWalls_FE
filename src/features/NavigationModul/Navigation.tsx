@@ -49,7 +49,7 @@ export default function NavigationModul({
       {/* Toggle Button */}
 
       <div
-        className=" z-[40] lg:hidden fixed transition-all duration-300"
+        className=" z-[35] lg:hidden fixed transition-all duration-300"
         style={{
           left: open ? "242px" : "-4px",
           top: "50%",

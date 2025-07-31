@@ -26,7 +26,6 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
   role,
 }) => {
   const pathname = usePathname();
-  const user = useUser();
   return (
     <div className={`${styles.navigationMenu} `} style={{ height: "100%" }}>
       {role === "admin" ? (
@@ -36,7 +35,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
           <Link
             href="/"
             className={`${styles.navigationMenuListLink} 
-          ${pathname === "/" ? styles.activeLink : ""} 
+          ${
+            [`/${role}`, `/${role}/notifications`].includes(pathname)
+              ? styles.activeLink
+              : ""
+          } 
           `}
             prefetch={false}
           >
@@ -104,9 +107,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Звіти</div>
           </Link>
           <Link
-            href="/Settings"
+            href={`/${role}/settings`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Settings" ? styles.activeLink : ""}
+          ${pathname === `/${role}/settings` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -125,7 +128,11 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
           <Link
             href="/"
             className={`${styles.navigationMenuListLink} 
-          ${pathname === "/" ? styles.activeLink : ""} 
+          ${
+            [`/${role}`, `/${role}/notifications`].includes(pathname)
+              ? styles.activeLink
+              : ""
+          } 
           `}
             prefetch={false}
           >
@@ -165,9 +172,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Клієнти</div>
           </Link>
           <Link
-            href="/Settings"
+            href={`/${role}/settings`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Settings" ? styles.activeLink : ""}
+          ${pathname === `/${role}/settings` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >

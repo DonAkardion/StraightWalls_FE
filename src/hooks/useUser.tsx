@@ -5,7 +5,7 @@ export function useUser() {
   const user = useMemo(() => {
     return {
       name: "Олексій",
-      role: "admin", // 🔁 Змініть на "worker", щоб перевірити
+      role: "worker", // 🔁 Змініть на "worker", щоб перевірити
       isAuthenticated: true,
     };
   }, []);
