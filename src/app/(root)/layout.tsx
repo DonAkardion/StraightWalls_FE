@@ -12,8 +12,6 @@ export default function RootLayout({
       <Header />
 
       <NavigationModul>{children}</NavigationModul>
-
-      <Footer />
     </div>
   );
 }
