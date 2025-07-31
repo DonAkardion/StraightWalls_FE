@@ -67,7 +67,7 @@ export default function NavigationModul({
 
       <main
         id="main-content"
-        className=" transition-all duration-300 ease-in-out w-full md:w-[calc(100%-246px)] lg:w-[calc(100%-311px)] min-h-screen"
+        className=" transition-all duration-300 ease-in-out w-full  lg:w-[calc(100%-311px)] min-h-screen"
       >
         {children}
       </main>
