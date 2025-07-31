@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/hooks/useUser";
 import React from "react";
 import styles from "./NavigationMenu.module.css";
 import Link from "next/link";
@@ -25,6 +26,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
   role,
 }) => {
   const pathname = usePathname();
+  const user = useUser();
   return (
     <div className={`${styles.navigationMenu} `} style={{ height: "100%" }}>
       {role === "admin" ? (

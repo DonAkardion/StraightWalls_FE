@@ -19,7 +19,7 @@ export default function NavigationModul({
       {/* Desktop Sidebar */}
 
       <aside
-        className="hidden lg:block absolute top-0 left-0 bottom-0 w-[311px] bg-white z-40"
+        className="hidden lg:block absolute top-0 left-0 bottom-0 w-[311px] bg-white z-[40]"
         style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
       >
         <NavigationMenu role={user.role} isOpen onClose={() => {}} />
@@ -29,7 +29,7 @@ export default function NavigationModul({
 
       {open && (
         <aside
-          className="fixed top-0 w-[246px] z-[90] bg-white lg:hidden transform transition-transform duration-300 ease-in-out translate-x-0"
+          className="fixed top-0 w-[246px] z-[40] bg-white lg:hidden transform transition-transform duration-300 ease-in-out translate-x-0"
           style={{
             height: "100vh",
             overflow: "hidden",
@@ -49,7 +49,7 @@ export default function NavigationModul({
       {/* Toggle Button */}
 
       <div
-        className=" z-[60] lg:hidden fixed transition-all duration-300"
+        className=" z-[40] lg:hidden fixed transition-all duration-300"
         style={{
           left: open ? "242px" : "-4px",
           top: "50%",
