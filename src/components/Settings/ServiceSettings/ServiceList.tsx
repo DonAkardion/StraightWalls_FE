@@ -1,15 +1,24 @@
 "use client";
 
-import { Service, ServiceType } from "@/mock/Service/servicesMock";
+import { Service, ServiceType } from "@/types/service";
 import { Trash, Pen, Eye } from "../../../../public/icons";
 import styles from "./ServiceList.module.css";
 
 interface Props {
   services: Service[];
   type: ServiceType;
+  onDelete: (id: string) => void;
+  onEdit: (updated: Service) => void;
+  onAdd: () => void;
 }
 
-export const ServiceList = ({ services, type }: Props) => {
+export const ServiceList = ({
+  services,
+  type,
+  onDelete,
+  onEdit,
+  onAdd,
+}: Props) => {
   const filtered = services.filter((s) => s.serviceType === type);
 
   return (
@@ -97,7 +106,8 @@ export const ServiceList = ({ services, type }: Props) => {
                   <img
                     src={Pen.src}
                     alt="Edit"
-                    className={`${styles.serviceTableItemIcon} w-[21px] h-[21px]`}
+                    className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
+                    onClick={() => onEdit(service)}
                   />
                 </td>
                 <td
@@ -106,7 +116,8 @@ export const ServiceList = ({ services, type }: Props) => {
                   <img
                     src={Trash.src}
                     alt="Delete"
-                    className={`${styles.serviceTableItemIcon} w-[21px] h-[21px]`}
+                    className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
+                    onClick={() => onDelete(service.id)}
                   />
                 </td>
                 <td
@@ -115,7 +126,7 @@ export const ServiceList = ({ services, type }: Props) => {
                   <img
                     src={Eye.src}
                     alt="Inspect"
-                    className={`${styles.serviceTableItemIcon} w-[21px] h-[21px]`}
+                    className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
                   />
                 </td>
                 <td className={styles.indentCell}></td>
@@ -128,6 +139,7 @@ export const ServiceList = ({ services, type }: Props) => {
         </table>
         <button
           className={`${styles.serviceTableBtn} h-[48px] mt-[38px] mr-[40px] mb-[38px] ml-[20px] rounded-[5px] w-[calc(100%-60px)]`}
+          onClick={onAdd}
         >
           Додати послугу
         </button>
