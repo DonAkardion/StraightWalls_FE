@@ -72,6 +72,12 @@
 .serviceTableItemInspect {
   display: none;
 }
+.inspectRow {
+  font-size: 16px;
+}
+.noBorderBottom {
+  border-bottom: none !important;
+}
 @media (max-width: 768px) {
   .serviceTytle {
     line-height: 24px;
@@ -109,5 +115,11 @@
   .serviceTableBtn {
     font-size: 16px;
     line-height: 19px;
+  }
+  .serviceTableItemIconInspect {
+    margin-left: auto;
+  }
+  .noBottomBorderRow td {
+    border-bottom: none !important;
   }
 }

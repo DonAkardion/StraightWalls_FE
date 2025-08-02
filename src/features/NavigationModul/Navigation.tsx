@@ -14,6 +14,18 @@ export default function NavigationModul({
   const [open, setOpen] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
+
   return (
     <div className="relative flex lg:flex-row-reverse h-full w-full">
       {/* Desktop Sidebar */}

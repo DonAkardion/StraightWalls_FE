@@ -27,7 +27,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 }) => {
   const pathname = usePathname();
   return (
-    <div className={`${styles.navigationMenu} `} style={{ height: "100%" }}>
+    <div className={`${styles.navigationMenu} `} style={{}}>
       {role === "admin" ? (
         <nav
           className={`${styles.navigationMenuList} flex-col mt-[102px] lg:mt-[52px]`}
@@ -62,7 +62,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
               src={Papers.src}
               alt="Projects"
             />
-            <div>Проэкти</div>
+            <div>Проєкти</div>
           </Link>
           <Link
             href="/Clients"

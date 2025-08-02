@@ -9,6 +9,9 @@
   box-shadow: 1px 3px 15px 2px #00000040;
   background-color: var(--background);
 }
+.searchInput {
+  outline: none;
+}
 .searchInput::placeholder {
   color: black;
   opacity: 1;

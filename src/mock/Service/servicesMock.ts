@@ -1,13 +1,4 @@
-export type ServiceType = "Основні послуги" | "Додаткові роботи";
-
-export interface Service {
-  id: string;
-  name: string;
-  unit: string;
-  amount: number;
-  serviceType: ServiceType;
-  price: number;
-}
+import { Service, ServiceType } from "@/types/service";
 
 export const mockServices: Service[] = [
   {

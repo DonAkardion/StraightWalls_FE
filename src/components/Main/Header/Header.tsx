@@ -73,10 +73,10 @@ export const Header = () => {
             <input
               type="text"
               placeholder="Пошук"
-              className={`${styles.searchInput} w-full h-[50px]`}
+              className={`${styles.searchInput} w-full h-[50px] `}
             ></input>
             <img
-              className={`${styles.searchImg} w-[36px] h-[36px]`}
+              className={`${styles.searchImg} w-[36px] h-[36px] cursor-pointer`}
               src={Search.src}
               alt="Search"
             />
