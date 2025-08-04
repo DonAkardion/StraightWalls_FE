@@ -65,7 +65,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Проєкти</div>
           </Link>
           <Link
-            href="/Clients"
+            href={`/${role}/clients`}
             className={`${styles.navigationMenuListLink}
           ${pathname === "/Clients" ? styles.activeLink : ""}
           `}
