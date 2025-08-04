@@ -12,13 +12,24 @@
 .ServiceModalSaveBtn {
   background: var(--yellow-gradient);
   color: var(--black);
+  cursor: pointer;
+  box-shadow: 1px 3px 15px 2px #00000020;
 }
 .ServiceModalCancelBtn {
-  background: lightgray;
+  background: #d3d3d3;
+  cursor: pointer;
+  box-shadow: 1px 3px 15px 2px #00000020;
 }
 .ServiceModalInputTytle {
   margin-top: 10px;
 }
+.ServiceModalSaveBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+.ServiceModalCancelBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #d3d3d3;
+}
+
 @media (max-width: 768px) {
   .ServiceModalInputTytle {
     padding-left: 6px;
