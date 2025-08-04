@@ -1,0 +1,141 @@
+.TableWrap {
+  overflow: hidden;
+  box-shadow: 1px 3px 15px 2px #00000040;
+}
+
+.Table {
+  border-collapse: collapse;
+  font-family: var(--font-inter);
+  border-spacing: 10px 10px;
+}
+.TableCell {
+  text-align: center;
+  line-height: 18px;
+  padding: 20px 10px;
+  border-bottom: 1px solid #000000;
+}
+.TableTopRow {
+  border-radius: 5px;
+
+  background: var(--yellow-gradient);
+}
+.TableRowCell {
+  font-family: var(--font-koulen);
+  font-weight: 400;
+  font-size: 20px;
+  text-decoration: none;
+}
+.TableTopRow th:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.TableTopRow th:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.TableBtn {
+  background: var(--yellow-gradient);
+  font-family: var(--font-inter);
+
+  cursor: pointer;
+}
+.TableBtnText {
+  font-size: 20px;
+}
+.TableBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+.TableItemIcon {
+  width: 21px;
+  height: 21px;
+  min-width: 21px;
+  min-height: 21px;
+  max-width: 21px;
+  max-height: 21px;
+  object-fit: contain;
+}
+.TableItemInspect {
+  display: none;
+}
+.inspectRow {
+  font-size: 16px;
+}
+.noBorderBottom {
+  border-bottom: none !important;
+}
+.leftAlign {
+  text-align: left;
+  padding-left: 0;
+}
+.leftAlignHeader {
+  text-align: left;
+  font-family: var(--font-inter);
+  font-weight: 400;
+  font-size: 20;
+}
+.TableItemIconInspect {
+  display: none;
+}
+.indentCellSmall {
+  display: none;
+}
+.indentCellBig {
+  display: table-cell;
+}
+.truncateText {
+  overflow: hidden;
+}
+@media (max-width: 768px) {
+  .Tytle {
+    line-height: 24px;
+    font-size: 20px;
+  }
+  .TableCell {
+    padding: 10px 0;
+    font-size: 14px;
+    display: none;
+  }
+  .TableTopRow {
+    font-size: 16px;
+  }
+  .TableRowCell {
+    display: none;
+  }
+  .TableItemInspect {
+    display: table-cell;
+  }
+  .TableBtn {
+    font-size: 16px;
+    line-height: 19px;
+  }
+  .TableBtnText {
+    font-size: 16px;
+  }
+  .TableItemIcon {
+    display: none;
+  }
+  .TableItemIconInspect {
+    display: table-cell;
+    margin-left: auto;
+  }
+  .leftAlignHeader {
+    display: table-cell;
+    font-size: 16px;
+  }
+  .leftAlign {
+    display: table-cell;
+  }
+  .indentCellSmall {
+    display: table-cell;
+  }
+  .indentCellBig {
+    display: none;
+  }
+  .TableCellInspect {
+    display: table-cell;
+  }
+  .noBottomBorderRow td {
+    border-bottom: none !important;
+  }
+}
