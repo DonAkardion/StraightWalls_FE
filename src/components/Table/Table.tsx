@@ -156,7 +156,7 @@ export function Table<T extends { id: string }>({
                   {/* Стовпець з кнопками Редагування та Видалення */}
                   {(onEdit || onDelete) && (
                     <td className={styles.TableCell}>
-                      <div className="flex gap-[10px]">
+                      <div className="flex flex-row justify-end gap-[10px]">
                         {onEdit && (
                           <button
                             onClick={() => onEdit(item)}
