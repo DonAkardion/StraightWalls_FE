@@ -1,0 +1,39 @@
+.ClientModal {
+  font-family: var(--font-inter);
+  font-weight: 400;
+}
+.ClientModalWindow {
+  box-shadow: 1px 3px 15px 2px #00000040;
+}
+.ClientModalInputTytle {
+  font-size: 18px;
+  line-height: 24px;
+}
+.ClientModalSaveBtn {
+  background: var(--yellow-gradient);
+  color: var(--black);
+  cursor: pointer;
+  box-shadow: 1px 3px 15px 2px #00000020;
+}
+.ClientModalCancelBtn {
+  background: #d3d3d3;
+  cursor: pointer;
+  box-shadow: 1px 3px 15px 2px #00000020;
+}
+.ClientModalInputTytle {
+  margin-top: 10px;
+}
+.ClientModalSaveBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+.ClientModalCancelBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #d3d3d3;
+}
+
+@media (max-width: 768px) {
+  .ClientModalInputTytle {
+    padding-left: 6px;
+    font-size: 16px;
+    line-height: 18px;
+  }
+}
