@@ -8,5 +8,6 @@ interface Props {
 }
 
 export default function ClientsDetailedPage({ params }: Props) {
-  return <ClientsDetailed clientId={params.id} />;
+  const { role, id } = params;
+  return <ClientsDetailed clientId={id} />;
 }
