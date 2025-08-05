@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Service, ServiceType } from "@/types/service";
 import { Table } from "@/components/Table/Table";
-import { Pen, Trash, Eye } from "../../../../public/icons";
+import { Pen, Trash } from "../../../../public/icons";
 import styles from "./ServiceList.module.css";
 
 interface Props {
@@ -27,7 +27,7 @@ export const ServiceList = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Твій breakpoint
+      setIsMobile(window.innerWidth <= 768); // breakpoint
     };
 
     handleResize(); // одразу перевіряємо
@@ -41,6 +41,7 @@ export const ServiceList = ({
       title={
         type === "Основні послуги" ? "Основні послуги" : "Додаткові роботи"
       }
+      showIndex={true}
       data={filtered}
       expandedId={expandedId}
       onAdd={onAdd}
@@ -65,7 +66,7 @@ export const ServiceList = ({
       ]}
       renderInspection={(s) => (
         <div className=" pb-1  bg-white border-b-1 relative">
-          <div className="pl-[20px] pr-[16px] flex flex-col gap-2 ">
+          <div className="pl-[20px] pr-[10px] flex flex-col gap-2 ">
             <div className={`${styles.inspectRow} flex justify-between`}>
               <p>
                 <span>Од. виміру: </span>

@@ -16,6 +16,7 @@ interface TableProps<T> {
   data: T[];
   columns: TableColumn<T>[];
   title?: string;
+  showIndex?: boolean;
   // Опціональні callbackи для операцій над рядком:
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
@@ -26,36 +27,47 @@ interface TableProps<T> {
   onAdd?: () => void;
   // Прапорець або id поточного "розкритого" рядка (для inline деталей)
   expandedId?: string | null;
+  // передаємо класс для редизайну
+  className?: string;
+  // перехід до детального огляду
+  onRowClick?: (id: string) => void;
 }
 
 export function Table<T extends { id: string }>({
   title,
+  showIndex,
   data,
   columns,
   onEdit,
   onDelete,
   onInspect,
   onAdd,
+  onRowClick,
   expandedId,
   renderInspection,
+  className,
 }: TableProps<T>) {
   return (
-    <div className="  ">
+    <div className="">
       {title && <h2 className={`${styles.Tytle} mb-[15px]`}>{title}</h2>}
-      <div className={`${styles.TableWrap} rounded-[5px]`}>
+      <div
+        className={`${styles.TableWrap} rounded-[5px] pb-[10px] ${
+          className || ""
+        }`}
+      >
         <table className={`${styles.Table} w-full`}>
           <thead className={`${styles.TableHead} md:h-[76px] h-[46px]`}>
             <tr className={styles.TableTopRow}>
-              <th className={`${styles.indentCellBig}`}></th>
+              {showIndex && <th className={`${styles.indentCellBig}`}></th>}
               <th className={`${styles.indentCellBig} `}></th>
-              <th className={`${styles.indentCellSmall}`}></th>
-              <th className={`${styles.indentCellSmall}`}></th>
+              <th className={`${styles.indentCellSmallFirst}`}></th>
+              <th className={`${styles.indentCellSmallSecond}`}></th>
               {columns.map((col, index) => (
                 <th
                   key={String(col.key)}
                   className={`${styles.TableRowCell} ${
                     index < 1 ? styles.leftAlignHeader : ""
-                  }`}
+                  } ${styles.resizableColumn}`}
                 >
                   {col.label}
                 </th>
@@ -63,9 +75,9 @@ export function Table<T extends { id: string }>({
               <th className=""></th>
               <th className={`${styles.indentCellBig}`}></th>
               <th className={`${styles.indentCellSmall}`}></th>
-              {(onEdit || onDelete || onInspect) && (
-                <th className={styles.TableRowCell}></th>
-              )}
+              {/* {(onEdit || onDelete || onInspect) && (
+                <th className={`${styles.TableRowCell}`}></th>
+              )} */}
             </tr>
           </thead>
           <tbody className={styles.TableBody}>
@@ -78,15 +90,19 @@ export function Table<T extends { id: string }>({
                 >
                   <td className="w-[10px] md:w-[20px]"></td>
 
-                  <td className={`${styles.TableCell} ${styles.leftAlign}`}>
-                    {index + 1}
-                  </td>
+                  {showIndex && (
+                    <td className={`${styles.TableCell} ${styles.leftAlign}`}>
+                      {index + 1}
+                    </td>
+                  )}
                   {columns.map((col, index) => (
                     <td
+                      onClick={() => onRowClick && onRowClick(item.id)}
+                      style={{ cursor: onRowClick ? "pointer" : "default" }}
                       key={String(col.key)}
                       className={`${styles.TableCell} ${styles.truncateText} ${
                         index < 1 ? styles.leftAlign : ""
-                      }`}
+                      } ${styles.resizableColumn}`}
                     >
                       {col.render
                         ? col.render(item)
@@ -99,58 +115,60 @@ export function Table<T extends { id: string }>({
                     <td
                       className={`${styles.TableCell} ${styles.TableCellInspect}`}
                     >
-                      {expandedId === item.id ? (
-                        <button
-                          onClick={() => onInspect(item)}
-                          title="Закрити перегляд"
-                        >
-                          {/* Перекреслене око */}
-                          <svg
-                            className={`${styles.TableItemIcon} ${styles.TableItemIconInspect} w-[21px] h-[21px] cursor-pointer`}
-                            width="21"
-                            height="21"
-                            viewBox="0 0 25 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                      <div className=" flex justify-end pr-[10px]">
+                        {expandedId === item.id ? (
+                          <button
+                            onClick={() => onInspect(item)}
+                            title="Закрити перегляд"
                           >
-                            <path
-                              d="M12.5 18C6.98 18 2.5 12 2.5 12C2.5 12 6.98 6 12.5 6C18.02 6 22.5 12 22.5 12C22.5 12 18.02 18 12.5 18Z"
-                              stroke="#000000"
-                              strokeWidth="2"
-                              strokeMiterlimit="10"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                            {/* Перекреслене око */}
+                            <svg
+                              className={`${styles.TableItemIcon} ${styles.TableItemIconInspect} w-[21px] h-[21px] cursor-pointer`}
+                              width="21"
+                              height="21"
+                              viewBox="0 0 25 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M12.5 18C6.98 18 2.5 12 2.5 12C2.5 12 6.98 6 12.5 6C18.02 6 22.5 12 22.5 12C22.5 12 18.02 18 12.5 18Z"
+                                stroke="#000000"
+                                strokeWidth="2"
+                                strokeMiterlimit="10"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M12.5 14.5C13.8807 14.5 15 13.3807 15 12C15 10.6193 13.8807 9.5 12.5 9.5C11.1193 9.5 10 10.6193 10 12C10 13.3807 11.1193 14.5 12.5 14.5Z"
+                                stroke="#000000"
+                                strokeWidth="2"
+                                strokeMiterlimit="10"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M22.5 2L2.5 22"
+                                stroke="#000000"
+                                strokeWidth="2"
+                                strokeMiterlimit="10"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => onInspect(item)}
+                            title="Переглянути"
+                          >
+                            <img
+                              src={Eye.src}
+                              alt="Inspect"
+                              className={`${styles.TableItemIcon} ${styles.TableItemIconInspect} w-[21px] h-[21px] cursor-pointer`}
                             />
-                            <path
-                              d="M12.5 14.5C13.8807 14.5 15 13.3807 15 12C15 10.6193 13.8807 9.5 12.5 9.5C11.1193 9.5 10 10.6193 10 12C10 13.3807 11.1193 14.5 12.5 14.5Z"
-                              stroke="#000000"
-                              strokeWidth="2"
-                              strokeMiterlimit="10"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                            <path
-                              d="M22.5 2L2.5 22"
-                              stroke="#000000"
-                              strokeWidth="2"
-                              strokeMiterlimit="10"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => onInspect(item)}
-                          title="Переглянути"
-                        >
-                          <img
-                            src={Eye.src}
-                            alt="Inspect"
-                            className={`${styles.TableItemIcon} ${styles.TableItemIconInspect} w-[21px] h-[21px] cursor-pointer`}
-                          />
-                        </button>
-                      )}
+                          </button>
+                        )}
+                      </div>
                     </td>
                   )}
                   {/* Стовпець з кнопками Редагування та Видалення */}

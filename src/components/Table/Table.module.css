@@ -1,9 +1,12 @@
 .TableWrap {
-  overflow: hidden;
+  overflow-x: auto;
+  width: 100%;
   box-shadow: 1px 3px 15px 2px #00000040;
 }
 
 .Table {
+  min-width: max-content;
+  width: 100%;
   border-collapse: collapse;
   font-family: var(--font-inter);
   border-spacing: 10px 10px;
@@ -24,6 +27,9 @@
   font-weight: 400;
   font-size: 20px;
   text-decoration: none;
+}
+.TableRowCellActionsActions {
+  display: table-cell;
 }
 .TableTopRow th:first-child {
   border-top-left-radius: 5px;
@@ -77,7 +83,10 @@
 .TableItemIconInspect {
   display: none;
 }
-.indentCellSmall {
+.indentCellSmallFirst {
+  display: none;
+}
+.indentCellSmallSecond {
   display: none;
 }
 .indentCellBig {
@@ -85,6 +94,13 @@
 }
 .truncateText {
   overflow: hidden;
+}
+.resizableColumn {
+  max-width: 180px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 @media (max-width: 768px) {
   .Tytle {
@@ -126,7 +142,10 @@
   .leftAlign {
     display: table-cell;
   }
-  .indentCellSmall {
+  .indentCellSmallFirst {
+    display: table-cell;
+  }
+  .indentCellSmallSecond {
     display: table-cell;
   }
   .indentCellBig {
@@ -137,5 +156,10 @@
   }
   .noBottomBorderRow td {
     border-bottom: none !important;
+  }
+
+  /* правила для Clients */
+  :global(.clientsTableWrap) .indentCellSmallSecond {
+    display: none;
   }
 }

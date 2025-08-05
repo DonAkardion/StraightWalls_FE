@@ -7,6 +7,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Client } from "@/types/client";
 
-export function ClientsDetailed() {
-  return <div className={styles.clientsDetailed}></div>;
+interface Props {
+  clientId: string;
+}
+
+export function ClientsDetailed({ clientId }: Props) {
+  const client = mockClients.find((c) => c.id === clientId);
+
+  if (!client) {
+    return <div>Клієнта не знайдено</div>;
+  }
+
+  return (
+    <div>
+      <h1>{client.name}</h1>
+    </div>
+  );
 }
