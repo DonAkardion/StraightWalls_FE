@@ -1,13 +1,16 @@
 import { ClientsDetailed } from "@/features/clients/ClientsDetailed/ClientsDetailed";
 
-interface Props {
-  params: {
-    role: string;
-    id: string;
-  };
+interface Params {
+  role: string;
+  id: string;
 }
 
-export default function ClientsDetailedPage({ params }: Props) {
-  const { role, id } = params;
-  return <ClientsDetailed clientId={id} />;
+interface Props {
+  params: Promise<Params>;
+}
+
+export default async function ClientsDetailedPage({ params }: Props) {
+  const awaitedParams = await params;
+
+  return <ClientsDetailed clientId={awaitedParams.id} />;
 }
