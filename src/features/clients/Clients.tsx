@@ -8,40 +8,42 @@ import { usePathname } from "next/navigation";
 import { Client } from "@/types/client";
 import { ClientsList } from "@/components/Clients/ClientsList";
 import { ClientFormModal } from "@/components/Clients/ClientsFormModal";
+import { FormModal } from "@/components/Table/Form/FormModal";
+import { handleDelete, handleSave } from "@/utils/dataHandlers";
 
 export function Clients() {
   const { role } = useParams();
   const roleStr = Array.isArray(role) ? role[0] : role;
   const [clients, setClients] = useState<Client[]>(mockClients);
-  const router = useRouter();
+  const [modalData, setModalData] = useState<{ client?: Client } | null>(null);
 
-  const handleDelete = (id: string) => {
-    setClients((prev) => prev.filter((client) => client.id !== id));
+  const [currentForm, setCurrentForm] = useState<Client | null>(null);
+  const deleteClient = (id: string) => {
+    setClients((prev) => handleDelete(prev, id));
   };
-
-  // modal window
-  const [modalData, setModalData] = useState<{
-    client?: Client;
-  } | null>(null);
 
   const openEditModal = (client: Client) => {
     setModalData({ client });
+    setCurrentForm(client);
   };
 
   const openAddModal = () => {
+    const newClient: Client = {
+      id: crypto.randomUUID(),
+      name: "",
+      contactName: "",
+      address: "",
+      phone: "+380",
+      mail: "",
+    };
     setModalData({});
+    setCurrentForm(newClient);
   };
 
-  const handleSave = (newClient: Client) => {
-    setClients((prev) => {
-      const exists = prev.find((clients) => clients.id === newClient.id);
-      if (exists) {
-        return prev.map((c) => (c.id === newClient.id ? newClient : c));
-      }
-
-      return [...prev, { ...newClient }];
-    });
+  const saveClient = (client: Client) => {
+    setClients((prev) => handleSave(prev, client));
     setModalData(null);
+    setCurrentForm(null);
   };
 
   return (
@@ -50,17 +52,30 @@ export function Clients() {
     >
       <ClientsList
         clients={clients}
-        onDelete={handleDelete}
+        onDelete={deleteClient}
         onEdit={openEditModal}
         onAdd={() => openAddModal()}
         role={roleStr}
       />
-      {modalData && (
-        <ClientFormModal
-          client={modalData?.client}
-          onClose={() => setModalData(null)}
-          onSave={handleSave}
-        />
+      {modalData && currentForm && (
+        <FormModal
+          title={modalData.client ? "Редагувати клієнта" : "Новий клієнт"}
+          onClose={() => {
+            setModalData(null);
+            setCurrentForm(null);
+          }}
+          onSave={() => {
+            if (currentForm.name && currentForm.phone) {
+              saveClient(currentForm);
+            }
+          }}
+          isValid={!!currentForm.name && !!currentForm.phone}
+        >
+          <ClientFormModal
+            client={modalData.client}
+            onChange={(updated) => setCurrentForm(updated)}
+          />
+        </FormModal>
       )}
     </section>
   );

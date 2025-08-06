@@ -76,9 +76,10 @@ export function Table<T extends { id: string }>({
                   {col.label}
                 </th>
               ))}
-              <th className=""></th>
+
               <th className={`${styles.indentCellBig}`}></th>
               <th className={`${styles.indentCellSmall}`}></th>
+              <th className={`${styles.indentCellLast}`}></th>
               {/* {(onEdit || onDelete || onInspect) && (
                 <th className={`${styles.TableRowCell}`}></th>
               )} */}

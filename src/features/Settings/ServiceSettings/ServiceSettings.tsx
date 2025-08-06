@@ -4,22 +4,21 @@ import { useState, useEffect } from "react";
 import { mockServices } from "@/mock/Service/servicesMock";
 import { ServiceList } from "@/components/Settings/ServiceSettings/ServiceList";
 import { Service, ServiceType } from "@/types/service";
+import { FormModal } from "@/components/Table/Form/FormModal";
 import { ServiceFormModal } from "@/components/Settings/ServiceSettings/ServiceFormModal";
+import { handleDelete, handleSave } from "@/utils/dataHandlers";
 
 export function ServiceSettings() {
   const { role } = useParams();
-  const router = useRouter();
+  const roleStr = Array.isArray(role) ? role[0] : role;
+  // const router = useRouter();
+
   const [services, setServices] = useState<Service[]>(mockServices);
-
-  useEffect(() => {
-    if (role !== "admin") {
-      router.replace(`/${role}/settings`);
-    }
-  }, [role, router]);
-
-  const handleDelete = (id: string) => {
-    setServices((prev) => prev.filter((service) => service.id !== id));
-  };
+  const [modalData, setModalData] = useState<{
+    service?: Service;
+    type: ServiceType;
+  } | null>(null);
+  const [currentForm, setCurrentForm] = useState<Service | null>(null);
 
   const mainServices = services.filter(
     (s) => s.serviceType === "Основні послуги"
@@ -27,34 +26,36 @@ export function ServiceSettings() {
   const additionalServices = services.filter(
     (s) => s.serviceType === "Додаткові роботи"
   );
-
-  // modal window
-  const [modalData, setModalData] = useState<{
-    service?: Service;
-    type: ServiceType;
-  } | null>(null);
+  const deleteService = (id: string) => {
+    setServices((prev) => handleDelete(prev, id));
+  };
 
   const openEditModal = (service: Service) => {
     setModalData({ service, type: service.serviceType });
+    setCurrentForm(service);
   };
-
   const openAddModal = (type: ServiceType) => {
+    const newService: Service = {
+      id: crypto.randomUUID(),
+      name: "",
+      unit: "",
+      price: 0,
+      amount: 1,
+      serviceType: type,
+    };
     setModalData({ type });
+    setCurrentForm(newService);
   };
 
-  const handleSave = (newService: Service) => {
-    setServices((prev) => {
-      const exists = prev.find((s) => s.id === newService.id);
-      if (exists) {
-        return prev.map((s) => (s.id === newService.id ? newService : s));
-      }
-
-      return [
-        ...prev,
-        { ...newService, serviceType: modalData?.type || "Основні послуги" },
-      ];
-    });
+  const saveService = (service: Service) => {
+    setServices((prev) =>
+      handleSave(prev, {
+        ...service,
+        serviceType: modalData?.type || "Основні послуги",
+      })
+    );
     setModalData(null);
+    setCurrentForm(null);
   };
 
   return (
@@ -65,7 +66,7 @@ export function ServiceSettings() {
         <ServiceList
           services={mainServices}
           type="Основні послуги"
-          onDelete={handleDelete}
+          onDelete={deleteService}
           onEdit={openEditModal}
           onAdd={() => openAddModal("Основні послуги")}
         />
@@ -73,18 +74,30 @@ export function ServiceSettings() {
         <ServiceList
           services={additionalServices}
           type="Додаткові роботи"
-          onDelete={handleDelete}
+          onDelete={deleteService}
           onEdit={openEditModal}
           onAdd={() => openAddModal("Додаткові роботи")}
         />
       </div>
-      {modalData && (
-        <ServiceFormModal
-          service={modalData.service}
-          type={modalData.type}
-          onClose={() => setModalData(null)}
-          onSave={handleSave}
-        />
+      {modalData && currentForm && (
+        <FormModal
+          title={modalData.service ? "Редагувати послугу" : "Нова послуга"}
+          onClose={() => {
+            setModalData(null);
+            setCurrentForm(null);
+          }}
+          onSave={() => {
+            if (currentForm.name && currentForm.unit) {
+              saveService(currentForm);
+            }
+          }}
+          isValid={!!currentForm.name && !!currentForm.unit}
+        >
+          <ServiceFormModal
+            service={currentForm}
+            onChange={(updated) => setCurrentForm(updated)}
+          />
+        </FormModal>
       )}
     </section>
   );

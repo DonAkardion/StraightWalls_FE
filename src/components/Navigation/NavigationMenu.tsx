@@ -79,9 +79,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Клієнти</div>
           </Link>
           <Link
-            href="/Employees"
+            href={`/${role}/workers`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Employees" ? styles.activeLink : ""}
+          ${pathname === `/${role}/workers` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
