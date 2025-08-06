@@ -81,4 +81,20 @@ export const mockWorkers: Worker[] = [
     phone: "+380 92 11 22 333",
     crewId: null,
   },
+  {
+    id: "211",
+    name: "Романенко Володимир Ігорович",
+    occupation: "Арматурник",
+    salary: "12 500",
+    phone: "+380 94 33 22 111",
+    crewId: "108",
+  },
+  {
+    id: "212",
+    name: "Петренко Денис Юрійович",
+    occupation: "Підсобний робітник",
+    salary: "10 800",
+    phone: "+380 92 11 22 333",
+    crewId: "107",
+  },
 ];

@@ -187,9 +187,9 @@
     border-bottom: none !important;
   }
   /* правила для Crews */
-  /* :global(.CrewsTableWrap) .indentCellSmallSecond {
+  :global(.CrewsTableWrap) .indentCellSmallSecond {
     width: 20px;
-  } */
+  }
 
   /* правила для Clients */
   :global(.clientsTableWrap) .indentCellSmallSecond {

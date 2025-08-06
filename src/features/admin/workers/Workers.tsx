@@ -1,6 +1,6 @@
 "use client";
 import styles from "./Workers.module.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { mockWorkers } from "@/mock/Workers/workersMock";
 import { mockCrews } from "@/mock/Crew/crewMock";
 import { WorkersInfo } from "@/components/Workers/WorkersInfo";
@@ -8,35 +8,42 @@ import { WorkersCrewTable } from "@/components/Workers/WorkersCrewTable";
 import { WorkersTable } from "@/components/Workers/WorkersTable";
 import { Worker } from "@/types/worker";
 import { Crew } from "@/types/crew";
+import { FormModal } from "@/components/Table/Form/FormModal";
+import { CrewFormModal } from "@/components/Workers/CrewFormModal/CrewFormModal";
+import { WorkerFormModal } from "@/components/Workers/WorkerFormModal/WorkerFormModal";
+import { handleDelete, handleSave } from "@/utils/dataHandlers";
 
 export function Workers() {
   const [workers, setWorkers] = useState<Worker[]>(mockWorkers);
   const [crews, setCrews] = useState<Crew[]>(mockCrews);
-
-  type WithId = { id: string };
-
-  function handleDelete<T extends WithId>(
-    id: string,
-    setState: React.Dispatch<React.SetStateAction<T[]>>
-  ) {
-    setState((prev) => prev.filter((item) => item.id !== id));
-  }
 
   const [modalData, setModalData] = useState<{
     crew?: Crew;
     worker?: Worker;
   } | null>(null);
 
-  const deleteCrew = (id: string) => handleDelete(id, setCrews);
-  const deleteWorker = (id: string) => handleDelete(id, setWorkers);
+  // операції над Crew
 
-  const openEditModal = (crew: Crew) => {
-    setModalData({ crew });
-  };
+  const deleteCrew = (id: string) => setCrews((prev) => handleDelete(prev, id));
 
-  const openAddModal = () => {
-    setModalData({});
-  };
+  const saveCrew = (crew: Crew) => setCrews((prev) => handleSave(prev, crew));
+
+  const openEditModal = (crew: Crew) => setModalData({ crew });
+  const openAddModal = () => setModalData({});
+
+  const closeModal = () => setModalData(null);
+
+  //операції над Worker
+
+  const deleteWorker = (id: string) =>
+    setWorkers((prev) => handleDelete(prev, id));
+
+  const saveWorker = (worker: Worker) =>
+    setWorkers((prev) => handleSave(prev, worker));
+
+  const openEditWorkerModal = (worker: Worker) => setModalData({ worker });
+
+  const openAddWorkerModal = () => setModalData({});
 
   return (
     <section
@@ -45,12 +52,45 @@ export function Workers() {
       <WorkersInfo />
       <WorkersCrewTable
         crews={crews}
+        workers={workers}
         onDelete={deleteCrew}
         onEdit={openEditModal}
-        onAdd={() => openAddModal()}
+        onAdd={openAddModal}
       />
-      <WorkersTable />
-      {/* календар */}
+      <WorkersTable
+        workers={workers}
+        crews={crews}
+        onDelete={deleteWorker}
+        onEdit={openEditWorkerModal}
+        onAdd={openAddWorkerModal}
+      />
+      {modalData?.crew && (
+        <FormModal
+          title={modalData.crew ? "Редагувати бригаду" : "Додати бригаду"}
+          onClose={closeModal}
+          onSave={() => {}}
+        >
+          <CrewFormModal
+            initialData={modalData.crew}
+            onSubmit={saveCrew}
+            onClose={closeModal}
+            workers={workers}
+          />
+        </FormModal>
+      )}
+      {modalData?.worker && (
+        <FormModal
+          title={modalData.worker ? "Редагувати робітника" : "Додати робітника"}
+          onClose={closeModal}
+          onSave={() => {}}
+        >
+          <WorkerFormModal
+            initialData={modalData.worker}
+            onSubmit={saveWorker}
+            onClose={closeModal}
+          />
+        </FormModal>
+      )}
     </section>
   );
 }
