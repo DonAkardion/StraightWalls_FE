@@ -126,6 +126,10 @@
   scrollbar-color: var(--yellow-gradient);
   scrollbar-width: thin;
 }
+/* правила для Crews */
+:global(.CrewsTableWrap) .indentCellLast {
+  display: none;
+}
 
 @media (max-width: 768px) {
   .Tytle {
@@ -181,6 +185,10 @@
   }
   .noBottomBorderRow td {
     border-bottom: none !important;
+  }
+  /* правила для Crews */
+  :global(.CrewsTableWrap) .indentCellSmallSecond {
+    width: 20px;
   }
 
   /* правила для Clients */
