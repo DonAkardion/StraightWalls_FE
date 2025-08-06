@@ -5,11 +5,13 @@ import { useState } from "react";
 import { Service, ServiceType } from "@/types/service";
 import { Trash, Pen, Eye } from "../../../public/icons";
 import styles from "./Table.module.css";
+import { TooltipWrapper } from "@/components/Table/TooltipWrapper/TooltipWrapper";
 
 interface TableColumn<T> {
   key: keyof T | string;
   label: string;
   render?: (item: T) => React.ReactNode;
+  tooltip?: (item: T) => string;
 }
 
 interface TableProps<T> {
@@ -31,6 +33,7 @@ interface TableProps<T> {
   className?: string;
   // перехід до детального огляду
   onRowClick?: (id: string) => void;
+  enableTooltips?: boolean;
 }
 
 export function Table<T extends { id: string }>({
@@ -45,17 +48,18 @@ export function Table<T extends { id: string }>({
   onRowClick,
   expandedId,
   renderInspection,
+  enableTooltips,
   className,
 }: TableProps<T>) {
   return (
-    <div className="">
+    <div className=" ">
       {title && <h2 className={`${styles.Tytle} mb-[15px]`}>{title}</h2>}
       <div
-        className={`${styles.TableWrap} rounded-[5px] pb-[10px] ${
+        className={`${styles.TableWrap} relative rounded-[5px] pb-[10px] ${
           className || ""
         }`}
       >
-        <table className={`${styles.Table} w-full`}>
+        <table className={`${styles.Table} `}>
           <thead className={`${styles.TableHead} md:h-[76px] h-[46px]`}>
             <tr className={styles.TableTopRow}>
               {showIndex && <th className={`${styles.indentCellBig}`}></th>}
@@ -102,11 +106,21 @@ export function Table<T extends { id: string }>({
                       key={String(col.key)}
                       className={`${styles.TableCell} ${styles.truncateText} ${
                         index < 1 ? styles.leftAlign : ""
-                      } ${styles.resizableColumn}`}
+                      } ${styles.resizableColumn} `}
                     >
-                      {col.render
-                        ? col.render(item)
-                        : String(item[col.key as keyof T])}
+                      {enableTooltips && col.tooltip ? (
+                        <TooltipWrapper tooltipText={col.tooltip(item)}>
+                          <span>
+                            {col.render
+                              ? col.render(item)
+                              : String(item[col.key as keyof T])}
+                          </span>
+                        </TooltipWrapper>
+                      ) : col.render ? (
+                        col.render(item)
+                      ) : (
+                        String(item[col.key as keyof T])
+                      )}
                     </td>
                   ))}
 
@@ -216,12 +230,16 @@ export function Table<T extends { id: string }>({
           </tbody>
         </table>
         {onAdd && (
-          <button
-            className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
-            onClick={onAdd}
+          <div
+            className={`${styles.TableStickyButtonWrap} sticky right-0 bottom-0 flex justify-end`}
           >
-            <span className={styles.TableBtnText}>Додати послугу</span>
-          </button>
+            <button
+              className={`${styles.TableBtn}  md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
+              onClick={onAdd}
+            >
+              <span className={styles.TableBtnText}>Додати послугу</span>
+            </button>
+          </div>
         )}
       </div>
     </div>
