@@ -18,9 +18,5 @@ export function ClientsDetailed({ clientId }: Props) {
     return <div>Клієнта не знайдено</div>;
   }
 
-  return (
-    <div>
-      <h1>{client.name}</h1>
-    </div>
-  );
+  return <div className="pl-[10px] pr-[10px] pt-[76px]"></div>;
 }

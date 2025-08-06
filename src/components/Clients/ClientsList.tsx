@@ -13,6 +13,7 @@ interface Props {
   onEdit: (updated: Client) => void;
   onAdd: () => void;
   role?: string;
+  enableTooltips?: boolean;
 }
 
 export const ClientsList = ({
@@ -21,6 +22,7 @@ export const ClientsList = ({
   onDelete,
   onEdit,
   onAdd,
+  enableTooltips = true,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const router = useRouter();
@@ -43,20 +45,32 @@ export const ClientsList = ({
           setExpandedId((prev) => (prev === item.id ? null : item.id))
         }
         onRowClick={handleRowClick} // перехід
+        enableTooltips={enableTooltips}
         columns={[
-          { key: "name", label: "Ім'я" },
-          { key: "contactName", label: "Контактна особа" },
+          {
+            key: "name",
+            label: "Ім'я",
+            tooltip: (client) => `Повне ім’я: ${client.name}`,
+          },
+          {
+            key: "contactName",
+            label: "Контактна особа",
+            tooltip: (client) => `Контактна особа: ${client.contactName}`,
+          },
           {
             key: "address",
             label: "Адреса",
+            tooltip: (client) => `Адреса: ${client.address}`,
           },
           {
             key: "phone",
             label: "Телефон",
+            tooltip: (client) => `Телефон: ${client.phone}`,
           },
           {
             key: "mail",
             label: "Пошта",
+            tooltip: (client) => `Пошта: ${client.mail}`,
           },
         ]}
         renderInspection={(clients) => (
