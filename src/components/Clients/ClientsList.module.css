@@ -1,0 +1,3 @@
+.clientsTableWrap :global(.indentCellSmallSecond) {
+  display: none;
+}
