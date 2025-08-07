@@ -1,5 +1,5 @@
+import React from "react";
 import { Header } from "@/components/Main/Header/Header";
-import { Footer } from "@/components/Main/Footer/Footer";
 import NavigationModul from "@/features/NavigationModul/Navigation";
 
 export default function RootLayout({

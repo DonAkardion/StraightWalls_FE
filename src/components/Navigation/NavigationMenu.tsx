@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@/hooks/useUser";
 import React from "react";
 import styles from "./NavigationMenu.module.css";
 import Link from "next/link";
@@ -20,11 +19,7 @@ interface NavigationMenuProps {
   role: string;
 }
 
-export const NavigationMenu: React.FC<NavigationMenuProps> = ({
-  isOpen,
-  onClose,
-  role,
-}) => {
+export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
   const pathname = usePathname();
   return (
     <div className={`${styles.navigationMenu} `} style={{}}>
@@ -51,9 +46,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Головна</div>
           </Link>
           <Link
-            href="/Projects"
+            href={`/${role}/projects`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/Projects` ? styles.activeLink : ""}
+          ${pathname === `/${role}/projects` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -93,9 +88,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Робітники</div>
           </Link>
           <Link
-            href="/Reports"
+            href={`/${role}/reports`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Reports" ? styles.activeLink : ""}
+          ${pathname === `/${role}/reports` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -151,9 +146,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Головна</div>
           </Link>
           <Link
-            href="/Projects"
+            href={`/${role}/projects`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Projects" ? styles.activeLink : ""}
+          ${pathname === `/${role}/projects` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >

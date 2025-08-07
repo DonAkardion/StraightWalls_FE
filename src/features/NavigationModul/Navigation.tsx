@@ -1,9 +1,9 @@
 "use client";
-import styles from "./Navigation.module.css";
 import { useUser } from "@/hooks/useUser";
 import React, { useState, useEffect } from "react";
 import { NavigationButton } from "@/components/Navigation/NavigationButton";
 import { NavigationMenu } from "@/components/Navigation/NavigationMenu";
+import { NavigationMessage } from "@/components/Navigation/NavigationMessage/NavigationMessage";
 
 export default function NavigationModul({
   children,
@@ -12,7 +12,7 @@ export default function NavigationModul({
 }) {
   const user = useUser();
   const [open, setOpen] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [isScrolling] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -35,6 +35,7 @@ export default function NavigationModul({
         style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
       >
         <NavigationMenu role={user.role} isOpen onClose={() => {}} />
+        <NavigationMessage />
       </aside>
 
       {/* Mobile Sidebar */}
@@ -74,7 +75,6 @@ export default function NavigationModul({
           isScrolling={isScrolling}
         />
       </div>
-
       {/* Main Content */}
 
       <main

@@ -86,7 +86,7 @@ export const Header = () => {
           className={`${styles.headerContainerLinks} hidden md:flex gap-[30px] w-[430px] items-center`}
         >
           <Link
-            href="/addProject"
+            href={`/${role}/addProject`}
             className={styles.navigation}
             prefetch={false}
           >
