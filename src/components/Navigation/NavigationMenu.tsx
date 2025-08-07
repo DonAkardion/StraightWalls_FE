@@ -51,9 +51,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Головна</div>
           </Link>
           <Link
-            href="/Projects"
+            href={`/${role}/projects`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/Projects` ? styles.activeLink : ""}
+          ${pathname === `/${role}/projects` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -93,9 +93,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Робітники</div>
           </Link>
           <Link
-            href="/Reports"
+            href={`/${role}/reports`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Reports" ? styles.activeLink : ""}
+          ${pathname === `/${role}/reports` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -151,9 +151,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
             <div>Головна</div>
           </Link>
           <Link
-            href="/Projects"
+            href={`/${role}/projects`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === "/Projects" ? styles.activeLink : ""}
+          ${pathname === `/${role}/projects` ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
