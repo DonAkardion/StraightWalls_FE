@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Service, ServiceType } from "@/types/service";
+import React from "react";
+import { Service } from "@/types/service";
 import styles from "./ServiceFormModal.module.css";
 
 interface Props {

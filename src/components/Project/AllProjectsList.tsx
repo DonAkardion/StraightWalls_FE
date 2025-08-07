@@ -6,7 +6,6 @@ import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import { Crew } from "@/types/crew";
 import { Client } from "@/types/client";
-import { FormModal } from "@/components/Table/Form/FormModal";
 
 interface Props {
   projects: Project[];

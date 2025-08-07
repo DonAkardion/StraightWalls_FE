@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
-import { Service, ServiceType } from "@/types/service";
 import { Trash, Pen, Eye } from "../../../public/icons";
 import styles from "./Table.module.css";
 import { TooltipWrapper } from "@/components/Table/TooltipWrapper/TooltipWrapper";

@@ -1,11 +1,6 @@
 "use client";
 
-import styles from "./ProjectsDetailed.module.css";
-import { useParams } from "next/navigation";
-import { usePathname } from "next/navigation";
-import { Client } from "@/types/client";
 import { mockProjects } from "@/mock/Project/mockProjects";
-import { Project } from "@/types/project";
 
 interface Props {
   projectId: string;

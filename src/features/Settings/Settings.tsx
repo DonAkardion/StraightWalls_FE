@@ -1,13 +1,12 @@
 "use client";
+import React from "react";
 import { useParams } from "next/navigation";
 import styles from "./Settings.module.css";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export function Settings() {
   const params = useParams();
   const role = params.role as string;
-  const pathname = usePathname();
 
   return (
     <section

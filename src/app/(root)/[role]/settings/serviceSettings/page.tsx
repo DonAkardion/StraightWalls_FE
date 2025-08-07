@@ -1,3 +1,4 @@
+import React from "react";
 import { ServiceSettings } from "@/features/Settings/ServiceSettings/ServiceSettings";
 
 export default function ServiceSettingsPage() {

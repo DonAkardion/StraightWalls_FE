@@ -1,10 +1,12 @@
+import React from "react";
 type ProjectsHeadersProps = {
   headers: string[];
   className?: string;
 };
 
 export const ProjectsHeaders: React.FC<ProjectsHeadersProps> = ({
-  headers, className,
+  headers,
+  className,
 }) => {
   return (
     <>
@@ -13,6 +15,6 @@ export const ProjectsHeaders: React.FC<ProjectsHeadersProps> = ({
           {header}
         </h3>
       ))}
-      </>
+    </>
   );
 };

@@ -1,16 +1,17 @@
 "use client";
+import React from "react";
 import styles from "./Projects.module.css";
 import { mockProjects } from "@/mock/Project/mockProjects";
 import { Project } from "@/types/project";
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { AllProjectsList } from "@/components/Projects/AllProjectsList";
+import { useParams } from "next/navigation";
+import { AllProjectsList } from "@/components/Project/AllProjectsList";
 import { Calendar } from "@/components/Calendar/Calendar";
 import { Crew } from "@/types/crew";
 import { mockCrews } from "@/mock/Crew/crewMock";
 import { Client } from "@/types/client";
 import { mockClients } from "@/mock/Clients/clientsMock";
-import { ProjectsFormModal } from "@/components/Projects/ProjectsFormModal";
+import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
 
 export function Projects() {

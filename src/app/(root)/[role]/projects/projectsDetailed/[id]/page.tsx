@@ -1,3 +1,4 @@
+import React from "react";
 import { ProjectsDetailed } from "@/features/projects/ProjectsDetailed/ProjectsDetailed";
 
 interface Params {

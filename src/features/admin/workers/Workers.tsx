@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import styles from "./Workers.module.css";
 import { useState } from "react";
 import { mockWorkers } from "@/mock/Workers/workersMock";

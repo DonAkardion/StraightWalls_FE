@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Pen, Trash } from "../../../../public/icons";
-import styles from "./Inspect.module.css";
 
 interface Field<T> {
   label: string;
