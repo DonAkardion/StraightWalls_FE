@@ -6,6 +6,7 @@ import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import { Crew } from "@/types/crew";
 import { Client } from "@/types/client";
+import { FormModal } from "@/components/Table/Form/FormModal";
 
 interface Props {
   projects: Project[];
@@ -42,75 +43,80 @@ export const AllProjectsList = ({
     crews.find((c) => c.id === crewId)?.name ?? "Відсутня бригада";
 
   return (
-    <Table<Project>
-      data={projects}
-      expandedId={expandedId}
-      className="projectsTableWrap"
-      onEdit={role === "admin" ? onEdit : undefined}
-      onDelete={role === "admin" ? (item) => onDelete(item.id) : undefined}
-      onInspect={(item) =>
-        setExpandedId((prev) => (prev === item.id ? null : item.id))
-      }
-      onRowClick={handleRowClick}
-      enableTooltips={enableTooltips}
-      columns={[
-        {
-          key: "name",
-          label: "Назва",
-          tooltip: (project) => `Проєкт: ${project.name}`,
-        },
-        {
-          key: "clientId",
-          label: "Клієнт",
-          render: (project) => getClientName(project.clientId),
-          tooltip: (project) => `Клієнт: ${getClientName(project.clientId)}`,
-        },
-        {
-          key: "budget",
-          label: "Вартість",
-        },
-        {
-          key: "crewId",
-          label: "Бригада",
-          render: (project) => getCrewName(project.crewId),
-          tooltip: (project) => `Бригада: ${getCrewName(project.crewId)}`,
-        },
-        {
-          key: "startDate",
-          label: "Початок",
-          tooltip: (project) => `Початок: ${project.startDate}`,
-        },
-      ]}
-      renderInspection={(project) => (
-        <Inspect<Project>
-          item={project}
-          getId={(item) => item.id}
-          onEdit={role === "admin" ? onEdit : undefined}
-          onDelete={role === "admin" ? onDelete : undefined}
-          fields={[
-            {
-              label: "Клієнт",
-              value: (item) => getClientName(item.clientId),
-            },
-            {
-              label: "Бригада",
-              value: (item) => getCrewName(item.crewId),
-            },
-            {
-              label: "Початок",
-              value: (item) => item.startDate,
-            },
-            {
-              label: "Завершення",
-              value: (item) => item.endDate,
-            },
-            {
-              label: "Статус",
-              value: (item) => item.status ?? "—",
-            },
-          ]}
-        />
-      )}
-    />
+    <div className="mb-[60px] relative">
+      <Table<Project>
+        data={projects}
+        expandedId={expandedId}
+        className="projectsTableWrap"
+        onEdit={role === "admin" ? onEdit : undefined}
+        onDelete={role === "admin" ? (item) => onDelete(item.id) : undefined}
+        onInspect={(item) =>
+          setExpandedId((prev) => (prev === item.id ? null : item.id))
+        }
+        onRowClick={handleRowClick}
+        enableTooltips={enableTooltips}
+        columns={[
+          {
+            key: "name",
+            label: "Назва",
+            tooltip: (project) => `Проєкт: ${project.name}`,
+          },
+          {
+            key: "clientId",
+            label: "Клієнт",
+            render: (project) => getClientName(project.clientId),
+            tooltip: (project) => `Клієнт: ${getClientName(project.clientId)}`,
+          },
+          {
+            key: "budget",
+            label: "Вартість",
+            render: () => "12000", //замінити на реальну ціну
+          },
+          {
+            key: "crewId",
+            label: "Бригада",
+            render: (project) => getCrewName(project.crewId),
+            tooltip: (project) => `Бригада: ${getCrewName(project.crewId)}`,
+          },
+          {
+            key: "dateRange",
+            label: "Термін",
+            render: (project) => `${project.startDate}/${project.endDate}`,
+            tooltip: (project) =>
+              `Термін: ${project.startDate} / ${project.endDate}`,
+          },
+        ]}
+        renderInspection={(project) => (
+          <Inspect<Project>
+            item={project}
+            getId={(item) => item.id}
+            onEdit={role === "admin" ? onEdit : undefined}
+            onDelete={role === "admin" ? onDelete : undefined}
+            fields={[
+              {
+                label: "Клієнт",
+                value: (item) => getClientName(item.clientId),
+              },
+              {
+                label: "Бригада",
+                value: (item) => getCrewName(item.crewId),
+              },
+              {
+                label: "Початок",
+                value: (item) => item.startDate,
+              },
+              {
+                label: "Завершення",
+                value: (item) => item.endDate,
+              },
+              {
+                label: "Статус",
+                value: (item) => item.status ?? "—",
+              },
+            ]}
+          />
+        )}
+      />
+    </div>
   );
 };

@@ -12,7 +12,7 @@ import { FormModal } from "@/components/Table/Form/FormModal";
 import { CrewFormModal } from "@/components/Workers/CrewFormModal/CrewFormModal";
 import { WorkerFormModal } from "@/components/Workers/WorkerFormModal/WorkerFormModal";
 import { handleDelete, handleSave } from "@/utils/dataHandlers";
-import Calendar from "../../../components/Calendar/Calendar";
+import { Calendar } from "../../../components/Calendar/Calendar";
 
 export function Workers() {
   const [workers, setWorkers] = useState<Worker[]>(mockWorkers);

@@ -25,7 +25,7 @@ export function WorkersTable({
   enableTooltips = true,
 }: WorkersTableProps) {
   return (
-    <div>
+    <div className="mb-[60px]">
       <Table
         title={"Робітники"}
         data={workers}
