@@ -1,10 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { mockClients } from "@/mock/Clients/clientsMock";
 import styles from "./Clients.module.css";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Client } from "@/types/client";
 import { ClientsList } from "@/components/Clients/ClientsList";
 import { ClientFormModal } from "@/components/Clients/ClientsFormModal";
