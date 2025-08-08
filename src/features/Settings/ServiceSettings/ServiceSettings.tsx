@@ -1,6 +1,6 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import React from "react";
+import { useState } from "react";
 import { mockServices } from "@/mock/Service/servicesMock";
 import { ServiceList } from "@/components/Settings/ServiceSettings/ServiceList";
 import { Service, ServiceType } from "@/types/service";
@@ -9,10 +9,6 @@ import { ServiceFormModal } from "@/components/Settings/ServiceSettings/ServiceF
 import { handleDelete, handleSave } from "@/utils/dataHandlers";
 
 export function ServiceSettings() {
-  const { role } = useParams();
-  const roleStr = Array.isArray(role) ? role[0] : role;
-  // const router = useRouter();
-
   const [services, setServices] = useState<Service[]>(mockServices);
   const [modalData, setModalData] = useState<{
     service?: Service;

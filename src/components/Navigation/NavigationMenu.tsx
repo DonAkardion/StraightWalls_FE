@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@/hooks/useUser";
 import React from "react";
 import styles from "./NavigationMenu.module.css";
 import Link from "next/link";
@@ -20,11 +19,7 @@ interface NavigationMenuProps {
   role: string;
 }
 
-export const NavigationMenu: React.FC<NavigationMenuProps> = ({
-  isOpen,
-  onClose,
-  role,
-}) => {
+export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
   const pathname = usePathname();
   return (
     <div className={`${styles.navigationMenu} `} style={{}}>

@@ -13,6 +13,10 @@
   background: #FFB32680;
   display: block;
   border-radius: 8px;
+/* .calendarDiv::-webkit-scrollbar {
+  height: 8px;
+  background: #FFB32680;
+  display: block;
 }
 
 .calendarDiv::-webkit-scrollbar-thumb {
@@ -21,6 +25,14 @@
   min-height: 8px;
   /* min-width: 15px; */
 }
+
+  min-height: 6px;
+  min-width: 30px;
+}
+
+.calendarDiv::-webkit-scrollbar-track {
+  background: #FFB32680;
+} */ 
 
 @media (max-width: 1280px) {
   .calendarButton {
@@ -37,5 +49,6 @@
 @media (max-width: 500px) {
   .calendarButton {
     min-width: 51%;
+    min-width: 48%;
   }
 }

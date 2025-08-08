@@ -1,5 +1,4 @@
 "use client";
-import styles from "./Navigation.module.css";
 import { useUser } from "@/hooks/useUser";
 import React, { useState, useEffect } from "react";
 import { NavigationButton } from "@/components/Navigation/NavigationButton";
@@ -13,7 +12,7 @@ export default function NavigationModul({
 }) {
   const user = useUser();
   const [open, setOpen] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [isScrolling] = useState(false);
 
   useEffect(() => {
     if (open) {

@@ -1,3 +1,4 @@
+import React from "react";
 type ProjectsHeadersProps = {
   headers: string[];
   className?: string;
@@ -5,6 +6,8 @@ type ProjectsHeadersProps = {
 
 export const ProjectsHeaders: React.FC<ProjectsHeadersProps> = ({
   headers, className,
+  headers,
+  className,
 }) => {
   return (
     <>

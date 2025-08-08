@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import React from "react";
+>>>>>>> 61c49fb4092e629ee3e6ba62acc2616082680b58
 import { mockMessages } from "@/mock/NavigationMessage/navigationMessage";
 
 export const ForNavigationMessage = () => {

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import styles from "./Workers.module.css";
 import { useState } from "react";
 import { mockWorkers } from "@/mock/Workers/workersMock";
@@ -13,6 +14,7 @@ import { CrewFormModal } from "@/components/Workers/CrewFormModal/CrewFormModal"
 import { WorkerFormModal } from "@/components/Workers/WorkerFormModal/WorkerFormModal";
 import { handleDelete, handleSave } from "@/utils/dataHandlers";
 import Calendar from "../../../components/Calendar/Calendar";
+import { Calendar } from "../../../components/Calendar/Calendar";
 
 export function Workers() {
   const [workers, setWorkers] = useState<Worker[]>(mockWorkers);

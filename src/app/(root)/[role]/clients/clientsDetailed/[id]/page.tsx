@@ -1,3 +1,4 @@
+import React from "react";
 import { ClientsDetailed } from "@/features/clients/ClientsDetailed/ClientsDetailed";
 
 interface Params {

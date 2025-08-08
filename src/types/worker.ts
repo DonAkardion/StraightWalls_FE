@@ -1,5 +1,3 @@
-import { Crew } from "./crew";
-
 export interface Worker {
   id: string;
   name: string;

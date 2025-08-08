@@ -13,8 +13,7 @@ interface CrewFormModalProps {
 
 export function CrewFormModal({
   initialData,
-  onSubmit,
-  onClose,
+
   workers,
 }: CrewFormModalProps) {
   const [formData, setFormData] = useState<Crew>(
@@ -32,11 +31,6 @@ export function CrewFormModal({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSave = () => {
-    onSubmit(formData);
-    onClose();
   };
 
   return (
