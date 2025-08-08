@@ -47,6 +47,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         value={service.price}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
+        min={0}
       />
 
       <div className={`${styles.ServiceModalInputTytle}`}>Кількість</div>
@@ -57,6 +58,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         value={service.amount}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
+        min={0}
       />
     </div>
   );

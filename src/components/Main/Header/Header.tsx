@@ -11,11 +11,14 @@ import {
   Menu,
   Close,
 } from "../../../../public/icons";
+import { useRouter } from "next/navigation";
 
 export const Header = () => {
   const user = useUser();
   const role = useUser().role;
   const [open, setOpen] = useState(false);
+
+  const router = useRouter()
 
   useEffect(() => {
     const body = document.body;
@@ -43,9 +46,10 @@ export const Header = () => {
         className={`${styles.headerContainer} lg:pt-3 lg:pb-3 lg:pr-[60px] lg:pl-[60px] md:pr-[30px] md:pl-[30px] pt-[6px] pb-[10px] pl-[20px] pr-[20px] flex gap-[30px] justify-between items-center`}
       >
         <img
-          className={`${styles.headerContainerImg}  md:h-[60px] h-[34px]`}
+          className={`${styles.headerContainerImg} hover:cursor-pointer md:h-[60px] h-[34px]`}
           src={Logo.src}
           alt="Logo"
+          onClick={() => router.push("/")}
         />
         <button
           className={`${styles.headerMobileMenuBtn} md:hidden flex`}
@@ -86,7 +90,7 @@ export const Header = () => {
           className={`${styles.headerContainerLinks} hidden md:flex gap-[30px] w-[430px] items-center`}
         >
           <Link
-            href="/addProject"
+            href={`/${role}/addProject`}
             className={styles.navigation}
             prefetch={false}
           >

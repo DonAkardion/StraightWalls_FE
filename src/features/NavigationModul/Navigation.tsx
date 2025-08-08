@@ -4,6 +4,7 @@ import { useUser } from "@/hooks/useUser";
 import React, { useState, useEffect } from "react";
 import { NavigationButton } from "@/components/Navigation/NavigationButton";
 import { NavigationMenu } from "@/components/Navigation/NavigationMenu";
+import { NavigationMessage } from "@/components/Navigation/NavigationMessage/NavigationMessage";
 
 export default function NavigationModul({
   children,
@@ -35,6 +36,7 @@ export default function NavigationModul({
         style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
       >
         <NavigationMenu role={user.role} isOpen onClose={() => {}} />
+        <NavigationMessage />
       </aside>
 
       {/* Mobile Sidebar */}
@@ -74,7 +76,6 @@ export default function NavigationModul({
           isScrolling={isScrolling}
         />
       </div>
-
       {/* Main Content */}
 
       <main

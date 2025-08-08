@@ -6,7 +6,6 @@ import { Client } from "@/types/client";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import styles from "./ClientsList.module.css";
-import { Pen, Trash } from "../../../public/icons";
 
 interface Props {
   clients: Client[];
