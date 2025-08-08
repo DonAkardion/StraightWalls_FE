@@ -14,8 +14,23 @@ interface Props {
   client: Client;
   project: Project;
 }
+const statusMap: Record<Project["status"], string> = {
+  Done: "Виконано",
+  "In progress": "В процесі",
+  Waiting: "Очікує",
+  Canceled: "Відхилено",
+};
+
+const statusColorMap: Record<Project["status"], string> = {
+  Done: styles.statusDone,
+  "In progress": styles.statusInProgress,
+  Waiting: styles.statusWaiting,
+  Canceled: styles.statusCanceled,
+};
 
 export function ProjectInfo({ client, project }: Props) {
+  const translatedStatus = statusMap[project.status] || project.status;
+  const statusColorClass = statusColorMap[project.status] || "";
   return (
     <div
       className={`${styles.infoContainer} flex flex-col justify-center items-center`}
@@ -28,10 +43,30 @@ export function ProjectInfo({ client, project }: Props) {
             <span>{project.name}</span> <span>№ 123</span>
           </h2>
         </div>
-        <div className={`${styles.projectInfoStatus}`}>{project.status}</div>
-        <div className={`${styles.projectInfoBackBtn}`}>
+        <div
+          className={`${styles.projectInfoStatus} flex h-[44px] min-w-[288px]  `}
+        >
+          <div
+            className={`${styles.projectInfoStatusContainer} flex justify-start items-center w-full pt-[10px] pb-[10px] pl-[10px]`}
+          >
+            <div
+              className={`${styles.projectInfoStatusIcon} ${statusColorClass} rounded-full w-[24px] h-[24px] mr-[6px]`}
+            ></div>
+            <div className={`${styles.projectInfoStatusText}`}>
+              {translatedStatus}
+            </div>
+          </div>
+          <button
+            className={`${styles.projectInfoStatusChageBtn} flex justify-end w-full  items-center pt-[14px] pb-[14px] pr-[28px] `}
+          >
+            Змінити статус
+          </button>
+        </div>
+        <div
+          className={`${styles.projectInfoBackBtn} absolute top-[13px] left-[18px] flex items-center gap-[5px]`}
+        >
           <img
-            className={`${styles.infoItemImg} `}
+            className={`${styles.infoItemImgBack} `}
             src={ArrowLeft.src}
             alt="Назад"
           />
