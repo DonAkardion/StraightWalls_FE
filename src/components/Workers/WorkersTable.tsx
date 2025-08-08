@@ -17,7 +17,6 @@ interface WorkersTableProps {
 
 export function WorkersTable({
   workers,
-  crews,
   onDelete,
   onEdit,
   onAdd,
