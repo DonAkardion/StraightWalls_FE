@@ -32,6 +32,8 @@ interface TableProps<T> {
   // перехід до детального огляду
   onRowClick?: (id: string) => void;
   enableTooltips?: boolean;
+  // Функція для отримання класу рядка за елементом даних
+  getRowClassName?: (item: T) => string;
 }
 
 export function Table<T extends { id: string }>({
@@ -48,6 +50,7 @@ export function Table<T extends { id: string }>({
   renderInspection,
   enableTooltips,
   className,
+  getRowClassName,
 }: TableProps<T>) {
   return (
     <div className=" ">
@@ -89,7 +92,7 @@ export function Table<T extends { id: string }>({
                 <tr
                   className={`${
                     expandedId === item.id ? styles.noBottomBorderRow : ""
-                  }`}
+                  } ${getRowClassName ? getRowClassName(item) : ""}`}
                 >
                   <td className="w-[10px] md:w-[20px]"></td>
 

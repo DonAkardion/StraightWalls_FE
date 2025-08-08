@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { mockProjects } from "@/mock/Project/mockProjects";
 
 interface Props {
@@ -7,9 +7,9 @@ interface Props {
 }
 
 export function ProjectsDetailed({ projectId }: Props) {
-  const client = mockProjects.find((c) => c.id === projectId);
+  const project = mockProjects.find((c) => c.id === projectId);
 
-  if (!client) {
+  if (!project) {
     return <div>ProjectsDetailed не знайдено</div>;
   }
 

@@ -130,6 +130,19 @@
 :global(.CrewsTableWrap) .indentCellLast {
   display: none;
 }
+/* правила для Projects */
+.completedRow {
+  color: var(--green);
+}
+.waitingRow {
+  color: var(--blue);
+}
+.inprogressRow {
+  color: #ffb326;
+}
+.canceledRow {
+  color: var(--red);
+}
 
 @media (max-width: 768px) {
   .Tytle {
