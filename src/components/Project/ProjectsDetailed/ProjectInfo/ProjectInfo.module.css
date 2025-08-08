@@ -1,0 +1,33 @@
+.infoContainer {
+  font-family: var(--font-inter);
+}
+.projectInfoNameTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.clientInfo {
+  font-size: 16px;
+}
+.projectTotal {
+  background: var(--yellow-gradient);
+}
+.clientInfoItem {
+  display: flex;
+}
+.infoItemImg {
+  width: 26px;
+  height: 26px;
+  margin-right: 6px;
+}
+.totalBtnTextTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.totalBtnTextSum {
+  font-family: var(--font-jura);
+  font-size: 32px;
+  line-height: 39px;
+}
+.projectTotalBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
