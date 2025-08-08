@@ -7,11 +7,10 @@ interface Params {
 }
 
 interface Props {
-  params: Promise<Params>;
+  params: Params;
 }
 
 export default async function ProjectsDetailedPage({ params }: Props) {
-  const awaitedParams = await params;
-
+  const awaitedParams = params;
   return <ProjectsDetailed projectId={awaitedParams.id} />;
 }
