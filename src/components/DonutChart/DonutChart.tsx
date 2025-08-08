@@ -8,6 +8,7 @@ import {
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { mockProjects } from "@/mock/Project/mockProjects";
+import styles from "./DonutChart.module.css"
 
 ChartJS.register(ArcElement, Tooltip);
 
@@ -110,12 +111,12 @@ export const DoughnutChart = () => {
   };
 
   return (
-    <div className="max-w-[985px] flex items-center justify-around bg-white p-5 rounded-lg drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)] h-[250px]">
-      <div className="w-[180px]">
+    <div className={`max-w-[985px] flex items-center justify-around bg-white p-5 rounded-lg drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)] h-[250px] ${styles.donutChart}`}>
+      <div className={`w-[180px] ${styles.chartContainer}`}>
         <Doughnut data={data} options={options} plugins={[centerTextPlugin]} />
       </div>
-      <div className="flex flex-col justify-center">
-        <h3 className="mb-5 text-center font-semibold">Виконання проєктів</h3>
+      <div className={`flex flex-col justify-center ${styles.legendBlock}`}>
+        <h3 className={`mb-5 text-center font-semibold ${styles.legendTitle}`}>Виконання проєктів</h3>
         <div className="flex gap-10">
           <div>{leftColumn.map(renderLegendItem)}</div>
           <div>{rightColumn.map(renderLegendItem)}</div>

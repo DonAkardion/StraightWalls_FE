@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useState } from "react";
+import styles from "./GraphicChart.module.css"
 
 ChartJS.register(
   CategoryScale,
@@ -125,10 +126,10 @@ export const GraphicChart = () => {
   };
 
   return (
-    <div className="max-w-[985px] mt-15">
-      <h2 className="text-[36px] mb-2">Звіт по місяцях</h2>
+    <div className={`max-w-[985px] mt-15 ${styles.graphicChart}`}>
+      <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>Звіт по місяцях</h2>
       <div className="bg-white p-8 rounded-lg drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">
-        <div className="mb-4 space-x-2 ">
+        <div className={`mb-4 space-x-2 ${styles.graphicChartButtons}`}>
           {buttonsTitle.map((title) => (
             <button
               key={title}
