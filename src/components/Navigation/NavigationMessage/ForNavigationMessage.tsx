@@ -1,3 +1,4 @@
+import React from "react";
 import { mockMessages } from "@/mock/NavigationMessage/navigationMessage";
 
 export const ForNavigationMessage = () => {

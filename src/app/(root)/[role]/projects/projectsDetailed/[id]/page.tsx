@@ -1,3 +1,4 @@
+import React from "react";
 import { ProjectsDetailed } from "@/features/projects/ProjectsDetailed/ProjectsDetailed";
 
 interface Params {
@@ -12,5 +13,5 @@ interface Props {
 export default async function ProjectsDetailedPage({ params }: Props) {
   const awaitedParams = await params;
 
-  return <ProjectsDetailed clientId={awaitedParams.id} />;
+  return <ProjectsDetailed projectId={awaitedParams.id} />;
 }

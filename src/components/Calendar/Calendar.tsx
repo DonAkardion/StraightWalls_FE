@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "./Calendar.module.css";
 
 const info = [
@@ -27,14 +28,15 @@ const dates = [
 
 const getColorClass = (date: number) => {
   if ([2, 3, 4, 5].includes(date)) return "bg-[#0097C0] text-white";
-  if ([8, 9, 10, 11, 12, 15, 16, 17, 18, 19].includes(date)) return "bg-[#FFB326]";
+  if ([8, 9, 10, 11, 12, 15, 16, 17, 18, 19].includes(date))
+    return "bg-[#FFB326]";
   if (date === 31 || date === 30) return "bg-[#BD0F0F] text-white";
   return "bg-[#FFFFFF] text-black";
 };
 
-const Calendar = () => {
+export const Calendar = () => {
   return (
-    <div className="bg-white max-w-[980px] w-full rounded p-4 sm:p-6 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] font-inter mx-auto mb-10 mt-10">
+    <div className="bg-white  w-full rounded p-4 sm:p-6 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] font-inter mx-auto mb-10 ">
       <div className={`${styles.calendarDiv}`}>
         {info.map((text, idx) => (
           <button
@@ -71,5 +73,3 @@ const Calendar = () => {
     </div>
   );
 };
-
-export default Calendar;

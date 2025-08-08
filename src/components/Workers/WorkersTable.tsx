@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { mockWorkers } from "@/mock/Workers/workersMock";
-import { mockCrews } from "@/mock/Crew/crewMock";
+import React from "react";
+
 import { Table } from "@/components/Table/Table";
 import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
@@ -18,14 +17,13 @@ interface WorkersTableProps {
 
 export function WorkersTable({
   workers,
-  crews,
   onDelete,
   onEdit,
   onAdd,
   enableTooltips = true,
 }: WorkersTableProps) {
   return (
-    <div>
+    <div className="mb-[60px]">
       <Table
         title={"Робітники"}
         data={workers}
