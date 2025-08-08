@@ -6,13 +6,6 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Client } from "@/types/client";
-
-interface Props {
-  clientId: string;
-}
-
-export function ProjectsDetailed({ clientId }: Props) {
-  const client = mockClients.find((c) => c.id === clientId);
 import { mockProjects } from "@/mock/Project/mockProjects";
 
 interface Props {
@@ -27,5 +20,4 @@ export function ProjectsDetailed({ projectId }: Props) {
   }
 
   return <div className="pl-[10px] pr-[10px] pt-[76px]"></div>;
-}
 }

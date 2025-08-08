@@ -1,23 +1,27 @@
 "use client";
-import React from "react";
+
+import React, { useState } from "react";
 import styles from "./Projects.module.css";
-import { mockProjects } from "@/mock/Project/mockProjects";
-import { Project } from "@/types/project";
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { AllProjectsList } from "@/components/Projects/AllProjectsList";
+
 import { useParams } from "next/navigation";
-import { AllProjectsList } from "@/components/Project/AllProjectsList";
-import { Calendar } from "@/components/Calendar/Calendar";
-import { Crew } from "@/types/crew";
+
+import { mockProjects } from "@/mock/Project/mockProjects";
 import { mockCrews } from "@/mock/Crew/crewMock";
-import { Client } from "@/types/client";
 import { mockClients } from "@/mock/Clients/clientsMock";
+
+import { Project } from "@/types/project";
+import { Crew } from "@/types/crew";
+import { Client } from "@/types/client";
+
+import { AllProjectsList } from "@/components/Project/AllProjectsList";
+import  Calendar  from "@/components/Calendar/Calendar";
 import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
 
 export function Projects() {
   const { role } = useParams();
+  const roleStr = Array.isArray(role) ? role[0] : role ?? "";
+
   const [projects, setProjects] = useState<Project[]>(mockProjects);
   const [crews] = useState<Crew[]>(mockCrews);
   const [clients] = useState<Client[]>(mockClients);
@@ -35,24 +39,16 @@ export function Projects() {
         onDelete={(id) =>
           setProjects((prev) => prev.filter((p) => p.id !== id))
         }
-        onEdit={(updated) =>
-          setProjects((prev) =>
-            prev.map((p) => (p.id === updated.id ? updated : p))
-          )
-        }
-        onAdd={() => {}}
-        role={Array.isArray(role) ? role[0] : role}
-      />
-
-      <div>Calendar</div>
         onEdit={(updated) => {
           setModalData(updated);
           setCurrentForm(updated);
         }}
         onAdd={() => {}}
-        role={Array.isArray(role) ? role[0] : role}
-      {/* Переробити під реальні дані */}
+        role={roleStr}
+      />
+
       <Calendar />
+
       {currentForm && modalData && (
         <FormModal
           title="Редагувати проєкт"

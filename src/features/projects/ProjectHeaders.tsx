@@ -5,9 +5,7 @@ type ProjectsHeadersProps = {
 };
 
 export const ProjectsHeaders: React.FC<ProjectsHeadersProps> = ({
-  headers, className,
-  headers,
-  className,
+  headers, className
 }) => {
   return (
     <>

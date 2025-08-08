@@ -12,5 +12,5 @@ interface Props {
 
 export default async function ProjectsDetailedPage({ params }: Props) {
   const awaitedParams = params;
-  return <ProjectsDetailed clientId={awaitedParams.id} />;
+  return <ProjectsDetailed projectId={awaitedParams.id} />;
 }
