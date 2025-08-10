@@ -32,6 +32,9 @@ interface TableProps<T> {
   // перехід до детального огляду
   onRowClick?: (id: string) => void;
   enableTooltips?: boolean;
+  // Функція для отримання класу рядка за елементом даних
+  getRowClassName?: (item: T) => string;
+  showHeader?: boolean;
 }
 
 export function Table<T extends { id: string }>({
@@ -48,48 +51,52 @@ export function Table<T extends { id: string }>({
   renderInspection,
   enableTooltips,
   className,
+  getRowClassName,
+  showHeader = true,
 }: TableProps<T>) {
   return (
     <div className=" ">
       {title && <h2 className={`${styles.Tytle} mb-[15px]`}>{title}</h2>}
       <div
-        className={`${styles.TableWrap} relative rounded-[5px] pb-[10px] ${
-          className || ""
-        }`}
+        className={`${
+          styles.TableWrap
+        } relative rounded-[5px] pb-[20px] md:pb-[30px]  ${className || ""}`}
       >
         <table className={`${styles.Table} `}>
-          <thead className={`${styles.TableHead} md:h-[76px] h-[46px]`}>
-            <tr className={styles.TableTopRow}>
-              {showIndex && <th className={`${styles.indentCellBig}`}></th>}
-              <th className={`${styles.indentCellBig} `}></th>
-              <th className={`${styles.indentCellSmallFirst}`}></th>
-              <th className={`${styles.indentCellSmallSecond}`}></th>
-              {columns.map((col, index) => (
-                <th
-                  key={String(col.key)}
-                  className={`${styles.TableRowCell} ${
-                    index < 1 ? styles.leftAlignHeader : ""
-                  } ${styles.resizableColumn}`}
-                >
-                  {col.label}
-                </th>
-              ))}
+          {showHeader && (
+            <thead className={`${styles.TableHead} md:h-[76px] h-[46px]`}>
+              <tr className={styles.TableTopRow}>
+                {showIndex && <th className={`${styles.indentCellBig}`}></th>}
+                <th className={`${styles.indentCellBig} `}></th>
+                <th className={`${styles.indentCellSmallFirst}`}></th>
+                <th className={`${styles.indentCellSmallSecond}`}></th>
+                {columns.map((col, index) => (
+                  <th
+                    key={String(col.key)}
+                    className={`${styles.TableRowCell} ${
+                      index < 1 ? styles.leftAlignHeader : ""
+                    } ${styles.resizableColumn}`}
+                  >
+                    {col.label}
+                  </th>
+                ))}
 
-              <th className={`${styles.indentCellBig}`}></th>
-              <th className={`${styles.indentCellSmall}`}></th>
-              <th className={`${styles.indentCellLast}`}></th>
-              {/* {(onEdit || onDelete || onInspect) && (
+                <th className={`${styles.indentCellBig}`}></th>
+                <th className={`${styles.indentCellSmall}`}></th>
+                <th className={`${styles.indentCellLast}`}></th>
+                {/* {(onEdit || onDelete || onInspect) && (
                 <th className={`${styles.TableRowCell}`}></th>
               )} */}
-            </tr>
-          </thead>
+              </tr>
+            </thead>
+          )}
           <tbody className={styles.TableBody}>
             {data.map((item, index) => (
               <React.Fragment key={item.id}>
                 <tr
                   className={`${
                     expandedId === item.id ? styles.noBottomBorderRow : ""
-                  }`}
+                  } ${getRowClassName ? getRowClassName(item) : ""}`}
                 >
                   <td className="w-[10px] md:w-[20px]"></td>
 

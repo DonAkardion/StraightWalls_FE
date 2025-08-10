@@ -10,6 +10,7 @@ export { default as Worker } from "./Worker.svg";
 export { default as Paper } from "./Paper.svg";
 export { default as Cog } from "./Cog.svg";
 export { default as ArrowRight } from "./ArrowRight.svg";
+export { default as ArrowLeft } from "./ArrowLeft.svg";
 export { default as Purse } from "./Purse.svg";
 export { default as Phone } from "./Phone.svg";
 export { default as Mail } from "./Mail.svg";

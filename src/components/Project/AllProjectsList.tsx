@@ -6,6 +6,7 @@ import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import { Crew } from "@/types/crew";
 import { Client } from "@/types/client";
+import tableStyles from "@/components/Table/Table.module.css";
 
 interface Props {
   projects: Project[];
@@ -32,7 +33,7 @@ export const AllProjectsList = ({
 
   const handleRowClick = (id: string) => {
     if (!role) return;
-    router.push(`/${role}/projects/projectDetailed/${id}`);
+    router.push(`/${role}/projects/projectsDetailed/${id}`);
   };
 
   const getClientName = (clientId: string) =>
@@ -40,6 +41,21 @@ export const AllProjectsList = ({
 
   const getCrewName = (crewId: string) =>
     crews.find((c) => c.id === crewId)?.name ?? "Відсутня бригада";
+
+  const getRowClassName = (project: Project) => {
+    switch (project.status) {
+      case "Done":
+        return tableStyles.completedRow;
+      case "Waiting":
+        return tableStyles.waitingRow;
+      case "In progress":
+        return tableStyles.inprogressRow;
+      case "Canceled":
+        return tableStyles.canceledRow;
+      default:
+        return "";
+    }
+  };
 
   return (
     <div className="mb-[60px] relative">
@@ -54,6 +70,7 @@ export const AllProjectsList = ({
         }
         onRowClick={handleRowClick}
         enableTooltips={enableTooltips}
+        getRowClassName={getRowClassName}
         columns={[
           {
             key: "name",

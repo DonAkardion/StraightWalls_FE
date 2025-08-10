@@ -1,53 +1,44 @@
 "use client";
 
 import React from "react";
-
 import { Table } from "@/components/Table/Table";
-import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
+import { Crew } from "@/types/crew";
 
-interface WorkersTableProps {
+interface ProjectCrewWorkersTableProps {
   workers: Worker[];
+  crewId: string;
   crews: Crew[];
-  onDelete: (id: string) => void;
-  onEdit: (updated: Worker) => void;
-  onAdd: () => void;
   enableTooltips?: boolean;
 }
 
-export function WorkersTable({
+export function ProjectCrewWorkersTable({
   workers,
-  onDelete,
-  onEdit,
-  onAdd,
+  crewId,
   enableTooltips = true,
-}: WorkersTableProps) {
+}: ProjectCrewWorkersTableProps) {
+  const crewWorkers = workers.filter((worker) => worker.crewId === crewId);
+
   return (
-    <div className="mb-[60px]">
+    <div className="mb-[40px]">
       <Table
-        title={"Робітники"}
-        data={workers}
-        className="WorkersTableWrap"
+        data={crewWorkers}
+        className="ProjectCrewWorkersTableWrap"
         showIndex={true}
-        onDelete={(item) => onDelete(item.id)}
-        onEdit={onEdit}
-        onAdd={onAdd}
         enableTooltips={enableTooltips}
         columns={[
           {
             key: "name",
             label: "ПІБ виконавця",
-            tooltip: (worker) => `Назва бригади: ${worker.name}`,
+            tooltip: (worker) => `ПІБ виконавця: ${worker.name}`,
           },
           {
             key: "occupation",
             label: "Посада",
-            tooltip: (worker) => `Посада: ${worker.occupation}`,
           },
           {
             key: "salary",
             label: "Зарплата",
-            tooltip: (worker) => `Зарплата: ${worker.salary}`,
           },
           {
             key: "phone",
