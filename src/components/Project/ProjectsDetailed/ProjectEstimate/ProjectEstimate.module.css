@@ -1,0 +1,80 @@
+.estimateTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.totatCostSeparate {
+  background: none;
+}
+
+.totatCostSeparateTytle {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+}
+.totatCostMain {
+  background: var(--yellow-gradient);
+}
+.tableetweenWrap {
+  position: relative;
+  box-shadow: none;
+}
+
+.totatCostMainTytle {
+  font-family: var(--font-inter);
+  line-height: 17px;
+  font-size: 14px;
+}
+.totatCostMainSum {
+  font-family: var(--font-jura);
+  line-height: 17px;
+  font-size: 14px;
+}
+@media (width >= 48rem) {
+  .estimateTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .totatCostMainTytle {
+    line-height: 29px;
+    font-size: 24px;
+  }
+  .totatCostMainSum {
+    font-weight: 600;
+    font-style: SemiBold;
+
+    line-height: 38px;
+    font-size: 32px;
+  }
+  .totatCostSeparateTytle {
+    font-weight: 400;
+    line-height: 29px;
+  }
+  .totatCostSeparate {
+    background: var(--background);
+  }
+  /* Ліва тінь */
+  .tableetweenWrap::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100%;
+    box-shadow: -3px 0 15px 2px #00000040;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Права тінь */
+  .tableetweenWrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 100%;
+    box-shadow: 3px 0 15px 2px #00000040;
+    pointer-events: none;
+    z-index: -1;
+  }
+}

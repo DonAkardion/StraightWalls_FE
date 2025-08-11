@@ -1,0 +1,48 @@
+.notesTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.notesText {
+  font-size: 14px;
+}
+.notesList {
+  font-family: var(--font-inter);
+  font-size: 14px;
+}
+.notesListItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.notesListItemNumber {
+  width: 36px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--yellow-gradient);
+  flex-shrink: 0;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 18px;
+}
+@media (width >= 48rem /* 768px */) {
+  .notesTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .notesText {
+    font-size: 24px;
+  }
+  .notesListItemNumber {
+    width: 46px;
+    height: 46px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .notesListItemText {
+    font-size: 20px;
+  }
+}

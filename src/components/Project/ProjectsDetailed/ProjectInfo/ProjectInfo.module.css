@@ -1,0 +1,91 @@
+.infoContainer {
+  font-family: var(--font-inter);
+}
+.projectInfoNameTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.clientInfo {
+  font-size: 16px;
+}
+.projectTotal {
+  background: var(--yellow-gradient);
+}
+.clientInfoItem {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
+}
+.infoItemImg {
+  width: 26px;
+  height: 26px;
+}
+.projectInfoBackBtn {
+  font-size: 20px;
+  line-height: 24px;
+  color: #738084;
+}
+.infoItemImgBack {
+  height: 16px;
+  width: 20px;
+}
+.totalBtnTextTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.totalBtnTextSum {
+  font-family: var(--font-jura);
+  font-size: 32px;
+  line-height: 39px;
+}
+.projectInfoStatusChageBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+.statusDone {
+  background-color: var(--green); /* зелений */
+}
+
+.statusInProgress {
+  background-color: #ffb32680;
+}
+
+.statusWaiting {
+  background-color: var(--blue); /* синій */
+}
+
+.statusCanceled {
+  background-color: var(--red); /* червоний */
+}
+.projectInfoStatus {
+  border-radius: 5px;
+  font-size: 14px;
+}
+.projectInfoStatusContainer {
+  border: 1px solid transparent;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background: linear-gradient(white, white) padding-box,
+    var(--yellow-gradient) border-box;
+}
+.projectInfoStatusChageBtn {
+  background: var(--yellow-gradient);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.statusChangeContainer {
+  border: 1px solid transparent;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background: linear-gradient(white, white) padding-box,
+    var(--yellow-gradient) border-box;
+}
+@media (width >= 48rem /* 768px */) {
+  .projectInfoNameTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .projectInfoStatus {
+    font-size: 16px;
+  }
+}

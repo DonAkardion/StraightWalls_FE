@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { mockClients } from "@/mock/Clients/clientsMock";
 import styles from "./ClientsDetailed.module.css";
 import { useParams } from "next/navigation";
@@ -7,17 +7,43 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Client } from "@/types/client";
 import { mockProjects } from "@/mock/Project/mockProjects";
+import { mockServices } from "@/mock/Service/servicesMock";
+import { mockWorkers } from "@/mock/Workers/workersMock";
+import { mockCrews } from "@/mock/Crew/crewMock";
+import { mockClients } from "@/mock/Clients/clientsMock";
+import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/ProjectInfo";
+import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
+import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
+import { ProjectPayment } from "@/components/Project/ProjectsDetailed/ProjectPayment/ProjectPayment";
+import { ProjectCrew } from "@/components/Project/ProjectsDetailed/ProjectCrew";
+import { ProjectNotes } from "@/components/Project/ProjectsDetailed/ProjectNotes/ProjectNotes";
 
 interface Props {
   projectId: string;
 }
 
 export function ProjectsDetailed({ projectId }: Props) {
-  const client = mockProjects.find((c) => c.id === projectId);
-
-  if (!client) {
+  const project = mockProjects.find((c) => c.id === projectId);
+  if (!project) {
     return <div>ProjectsDetailed не знайдено</div>;
   }
+  const client = mockClients.find((cl) => cl.id === project.clientId);
 
-  return <div className="pl-[10px] pr-[10px] pt-[76px]"></div>;
+  return (
+    <div className=" max-w-[1126px] m-auto pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
+      <div>
+        {client && <ProjectInfo client={client} project={project} />}
+
+        <ProjectEstimate services={mockServices} />
+        <ProjectMaterials />
+        <ProjectPayment />
+        <ProjectCrew
+          project={project}
+          crews={mockCrews}
+          workers={mockWorkers}
+        />
+        <ProjectNotes />
+      </div>
+    </div>
+  );
 }
