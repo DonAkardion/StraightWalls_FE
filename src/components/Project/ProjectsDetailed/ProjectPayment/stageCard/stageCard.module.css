@@ -1,0 +1,27 @@
+.stageCard {
+  background: var(--background);
+  border-radius: 5px;
+  box-shadow: 1px 3px 15px 2px #00000040;
+}
+.stageCardTytle {
+  border-bottom: 1px solid #9c9999;
+}
+.cardBodyDesc {
+  font-size: 14px;
+}
+
+.statusDone {
+  background-color: var(--green); /* зелений */
+}
+
+.statusInProgress {
+  background-color: #ffb32680;
+}
+
+.statusWaiting {
+  background-color: var(--blue); /* синій */
+}
+
+.statusCanceled {
+  background-color: var(--red); /* червоний */
+}

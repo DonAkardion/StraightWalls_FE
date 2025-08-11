@@ -10,7 +10,8 @@ interface Props {
 
 export const ProjectEstimate = ({ services }: Props) => {
   return (
-    <section className={`${styles.sectionEstimate} mb-[40px] md:mb-[60px]`}>
+    <section className={`${styles.sectionEstimate} mb-[40px] md:mb-[126px]`}>
+      <h2 className={`${styles.estimateTytle} mb-[16px]`}>Кошторис</h2>
       <div className="relative">
         <ProjectServicesTable services={services} type="Основні послуги" />
         <div
