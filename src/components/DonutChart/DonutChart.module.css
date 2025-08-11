@@ -20,3 +20,12 @@
         text-align: center;
     }
 }
+
+.donutChart {
+    font-family: var(--font-jura);
+    box-shadow: 1px 3px 15px 2px #00000040;
+}
+
+.ukrLabel {
+    font-family: var(--font-inter);
+}
