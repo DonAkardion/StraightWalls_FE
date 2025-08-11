@@ -1,4 +1,4 @@
- .calendarDiv {
+.calendarDiv {
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -8,10 +8,11 @@
   scrollbar-gutter: stable;
 }
 
-/* .calendarDiv::-webkit-scrollbar {
+.calendarDiv::-webkit-scrollbar {
   height: 8px;
   background: #FFB32680;
   display: block;
+  border-radius: 8px;
 }
 
 .calendarDiv::-webkit-scrollbar-thumb {
@@ -23,7 +24,7 @@
 
 .calendarDiv::-webkit-scrollbar-track {
   background: #FFB32680;
-} */ 
+}
 
 @media (max-width: 1280px) {
   .calendarButton {

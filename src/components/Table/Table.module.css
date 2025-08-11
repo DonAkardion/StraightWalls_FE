@@ -106,16 +106,17 @@
 }
 /* Скрол */
 .TableWrap::-webkit-scrollbar {
-  height: 8px;
+  height: 6px;
 }
 
 .TableWrap::-webkit-scrollbar-track {
   background: var(--yellow-gradient);
+  border-radius: 8px
 }
 
 .TableWrap::-webkit-scrollbar-thumb {
   background-color: var(--color-black);
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .TableWrap::-webkit-scrollbar-thumb:hover {
@@ -124,7 +125,7 @@
 
 .TableWrap {
   scrollbar-color: var(--yellow-gradient);
-  scrollbar-width: thin;
+  /* scrollbar-width: thin; */
 }
 /* правила для Crews */
 :global(.CrewsTableWrap) .indentCellLast {
@@ -206,6 +207,12 @@
 
   /* правила для Clients */
   :global(.clientsTableWrap) .indentCellSmallSecond {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .inspectTr {
     display: none;
   }
 }

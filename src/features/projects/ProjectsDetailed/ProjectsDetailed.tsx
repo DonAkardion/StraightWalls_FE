@@ -1,5 +1,11 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
+import { mockClients } from "@/mock/Clients/clientsMock";
+import styles from "./ClientsDetailed.module.css";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Client } from "@/types/client";
 import { mockProjects } from "@/mock/Project/mockProjects";
 import { mockServices } from "@/mock/Service/servicesMock";
 import { mockWorkers } from "@/mock/Workers/workersMock";

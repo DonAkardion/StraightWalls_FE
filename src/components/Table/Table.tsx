@@ -8,6 +8,7 @@ import { TooltipWrapper } from "@/components/Table/TooltipWrapper/TooltipWrapper
 interface TableColumn<T> {
   key: keyof T | string;
   label: string;
+  icon?: string | React.ReactNode;
   render?: (item: T) => React.ReactNode;
   tooltip?: (item: T) => string;
 }
@@ -225,7 +226,7 @@ export function Table<T extends { id: string }>({
                   <td className="w-[10px] md:w-[40px]"></td>
                 </tr>
                 {expandedId === item.id && renderInspection && (
-                  <tr>
+                  <tr className={`${styles.inspectTr}`}>
                     <td colSpan={columns.length + 1} className="p-[10px] ">
                       {renderInspection(item)}
                     </td>
@@ -237,10 +238,10 @@ export function Table<T extends { id: string }>({
         </table>
         {onAdd && (
           <div
-            className={`${styles.TableStickyButtonWrap} sticky right-0 bottom-0 flex justify-end`}
+            className={`${styles.TableStickyButtonWrap} flex justify-center items-center`}
           >
             <button
-              className={`${styles.TableBtn}  md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
+              className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
               onClick={onAdd}
             >
               <span className={styles.TableBtnText}>Додати послугу</span>
