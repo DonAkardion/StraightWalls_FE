@@ -8,6 +8,7 @@ import { TooltipWrapper } from "@/components/Table/TooltipWrapper/TooltipWrapper
 interface TableColumn<T> {
   key: keyof T | string;
   label: string;
+  icon?: string | React.ReactNode;
   render?: (item: T) => React.ReactNode;
   tooltip?: (item: T) => string;
 }

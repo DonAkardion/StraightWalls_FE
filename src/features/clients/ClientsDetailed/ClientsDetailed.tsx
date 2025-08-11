@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-
 import { mockClients } from "@/mock/Clients/clientsMock";
+import { ClientsInitials } from "@/components/Clients/ClientsDetailed/ClientInitials/ClientsInitials";
 
 interface Props {
   clientId: string;
@@ -14,5 +14,5 @@ export function ClientsDetailed({ clientId }: Props) {
     return <div>Клієнта не знайдено</div>;
   }
 
-  return <div className="pl-[10px] pr-[10px] pt-[76px]"></div>;
+  return <ClientsInitials client={client}/>;
 }

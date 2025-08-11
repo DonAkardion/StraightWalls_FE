@@ -8,6 +8,7 @@ import {
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { mockProjects } from "@/mock/Project/mockProjects";
+import styles from "./DonutChart.module.css"
 
 ChartJS.register(ArcElement, Tooltip);
 
@@ -23,7 +24,7 @@ const centerTextPlugin: Plugin = {
     const doneValue = doneIndex >= 0 ? Number(dataset.data[doneIndex]) : 0;
     const percent = total > 0 ? Math.round((doneValue / total) * 100) : 0;
 
-    ctx.font = "bold 28px Arial";
+    ctx.font = "bold 28px 'Jura'";
     ctx.fillStyle = "#000";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -46,10 +47,10 @@ export const DoughnutChart = () => {
   const total = dataValues.reduce((acc, val) => acc + val, 0);
 
   const colors: Record<string, string> = {
-    "Done": "#4CAF50",
-    "In progress": "#FFC107",
-    "Waiting": "#36A2EB",
-    "Canceled": "#F44336"
+    "Done": "#15ae08",
+    "In progress": "#0097c0",
+    "Waiting": "#ffb32680",
+    "Canceled": "#b70000"
   };
 
   const ukrLabels: Record<string, string> = {
@@ -104,18 +105,18 @@ export const DoughnutChart = () => {
         >
           {percentage}%
         </div>
-        <span className="">{ukrLabels[label]}</span>
+        <span className={`${styles.ukrLabel}`}>{ukrLabels[label]}</span>
       </div>
     );
   };
 
   return (
-    <div className="max-w-[985px] flex items-center justify-around bg-white p-5 rounded-lg drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)] h-[250px]">
-      <div className="w-[180px]">
+    <div className={`max-w-[985px] flex items-center justify-around bg-white p-5 rounded-lg h-[250px] ${styles.donutChart}`}>
+      <div className={`w-[180px] ${styles.chartContainer}`}>
         <Doughnut data={data} options={options} plugins={[centerTextPlugin]} />
       </div>
-      <div className="flex flex-col justify-center">
-        <h3 className="mb-5 text-center font-semibold">Виконання проєктів</h3>
+      <div className={`flex flex-col justify-center ${styles.legendBlock}`}>
+        <h3 className={`mb-5 text-center font-semibold ${styles.legendTitle}`}>Виконання проєктів</h3>
         <div className="flex gap-10">
           <div>{leftColumn.map(renderLegendItem)}</div>
           <div>{rightColumn.map(renderLegendItem)}</div>

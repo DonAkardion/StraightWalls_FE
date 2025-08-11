@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useState } from "react";
+import styles from "./GraphicChart.module.css"
 
 ChartJS.register(
   CategoryScale,
@@ -73,62 +74,63 @@ export const GraphicChart = () => {
   };
 
   const options = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
-    },
-    scales: {
-      y: {
-        position: "right",
-        min: 10000,
-        max: 200000,
-        ticks: {
-          callback: function (tickValue: string | number): string {
-            const allowed = [10000, 50000, 100000, 150000, 200000];
-            if (typeof tickValue === "number" && allowed.includes(tickValue)) {
-              return tickValue.toLocaleString("uk-UA");
-            }
-            return "";
-          },
-          stepSize: 10000,
-          padding: 10,
+  responsive: true,
+  plugins: {
+    legend: { display: false },
+  },
+  scales: {
+    y: {
+      position: "right",
+      min: 10000,
+      max: 200000,
+      ticks: {
+        callback: function (tickValue: string | number): string {
+          const allowed = [10000, 50000, 100000, 150000, 200000];
+          if (typeof tickValue === "number" && allowed.includes(tickValue)) {
+            return tickValue.toLocaleString("uk-UA");
+          }
+          return "";
         },
-        grid: {
-          drawTicks: false,
-          drawBorder: false,
-          color: (context: any) => {
-            const tickValue = context.tick.value;
-            const allowed = [10000, 50000, 100000, 150000, 200000];
-            return allowed.includes(tickValue) ? "#000000" : "transparent";
-          },
-        },
+        stepSize: 10000,
+        padding: 10,
       },
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          maxRotation: 45,
-          minRotation: 45,
+      grid: {
+        drawTicks: false,
+        drawBorder: false,
+        color: (context: any) => {
+          const tickValue = context.tick.value;
+          const allowed = [10000, 50000, 100000, 150000, 200000];
+          return allowed.includes(tickValue) ? "#000000" : "transparent";
         },
       },
     },
-    elements: {
-      line: {
-        borderWidth: 1,
-        tension: 0,
+    x: {
+      grid: {
+        display: false,
       },
-      point: {
-        radius: 0,
+      ticks: {
+        maxRotation: 45,
+        minRotation: 45,
       },
     },
-  };
+  },
+  elements: {
+    line: {
+      borderWidth: 1,
+      tension: 0,
+    },
+    point: {
+      radius: 0,
+    },
+  },
+};
+
 
   return (
-    <div className="max-w-[985px] mt-15">
-      <h2 className="text-[36px] mb-2">Звіт по місяцях</h2>
-      <div className="bg-white p-8 rounded-lg drop-shadow-[0_4px_6px_rgba(0,0,0,0.4)]">
-        <div className="mb-4 space-x-2 ">
+    <div className={`max-w-[985px] mt-15 ${styles.graphicChart}`}>
+      <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>Звіт по місяцях</h2>
+      <div className={`${styles.graphiChart} bg-white p-8 rounded-lg`}>
+        <div className={`mb-4 space-x-2 ${styles.graphicChartButtons}`}>
           {buttonsTitle.map((title) => (
             <button
               key={title}
