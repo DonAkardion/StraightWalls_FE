@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Project } from "@/types/project";
 import { Client } from "@/types/client";
 import styles from "./ProjectInfo.module.css";
@@ -29,22 +30,25 @@ const statusColorMap: Record<Project["status"], string> = {
 };
 
 export function ProjectInfo({ client, project }: Props) {
+  const router = useRouter();
   const translatedStatus = statusMap[project.status] || project.status;
   const statusColorClass = statusColorMap[project.status] || "";
   return (
     <div
-      className={`${styles.infoContainer} flex flex-col justify-center items-center`}
+      className={`${styles.infoContainer} flex flex-col justify-center items-center md:items-start mb-[40px] md:mb-[60px]`}
     >
-      <div className={`${styles.projectInfo} flex flex-col mb-[26px] `}>
+      <div
+        className={`${styles.projectInfo} flex flex-col md:flex-row xl:gap-[60px] lg:gap-[20px] md:gap-[20px] items-center md:w-full mb-[26px] `}
+      >
         <div className={`${styles.projectInfoName}`}>
           <h2
-            className={`${styles.projectInfoNameTytle} flex gap-[20px] mb-[14px]`}
+            className={`${styles.projectInfoNameTytle} text-nowrap flex gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
           >
             <span>{project.name}</span> <span>№ 123</span>
           </h2>
         </div>
         <div
-          className={`${styles.projectInfoStatus} flex h-[44px] min-w-[288px]  `}
+          className={`${styles.projectInfoStatus} flex h-[44px] min-w-[288px] md:min-w-[292px] `}
         >
           <div
             className={`${styles.projectInfoStatusContainer} flex justify-start items-center w-full pt-[10px] pb-[10px] pl-[10px]`}
@@ -57,26 +61,31 @@ export function ProjectInfo({ client, project }: Props) {
             </div>
           </div>
           <button
-            className={`${styles.projectInfoStatusChageBtn} flex justify-end w-full  items-center pt-[14px] pb-[14px] pr-[28px] `}
+            className={`${styles.projectInfoStatusChageBtn} flex justify-end w-full  items-center pt-[14px] pb-[14px] pr-[28px] pl-[16px] whitespace-nowrap`}
           >
             Змінити статус
           </button>
         </div>
         <div
-          className={`${styles.projectInfoBackBtn} absolute top-[13px] left-[18px] flex items-center gap-[5px]`}
+          className={`${styles.projectInfoBackBtn} absolute md:static top-[13px] left-[18px] flex items-center gap-[5px] md:ml-auto `}
         >
-          <img
-            className={`${styles.infoItemImgBack} `}
-            src={ArrowLeft.src}
-            alt="Назад"
-          />
-          <span>Назад</span>
+          <button
+            className="flex items-center gap-[5px]"
+            onClick={() => router.back()}
+          >
+            <img
+              className={`${styles.infoItemImgBack} `}
+              src={ArrowLeft.src}
+              alt="Назад"
+            />
+            <span>Назад</span>
+          </button>
         </div>
       </div>
       <div
-        className={`${styles.clientInfo} flex flex-col items-center gap-[24px] mb-[40px]`}
+        className={`${styles.clientInfo} flex flex-col md:flex-row items-center gap-[24px] xl:gap-[50px] lg:gap-[10px] mb-[40px] md:mb-[26px] whitespace-nowrap overflow-x-auto`}
       >
-        <div className={`${styles.clientInfoItem}`}>
+        <div className={`${styles.clientInfoItem} `}>
           <img
             className={`${styles.infoItemImg} `}
             src={Person.src}

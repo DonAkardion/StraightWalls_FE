@@ -22,7 +22,7 @@ export function ProjectsDetailed({ projectId }: Props) {
   const client = mockClients.find((cl) => cl.id === project.clientId);
 
   return (
-    <div className="pl-[10px] pr-[10px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
+    <div className=" max-w-[1126px] m-auto pl-[10px] pr-[10px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
         {client && <ProjectInfo client={client} project={project} />}
         <h2 className={`${styles.moduleTytle}`}>Кошторис</h2>

@@ -13,11 +13,13 @@
 }
 .clientInfoItem {
   display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 6px;
 }
 .infoItemImg {
   width: 26px;
   height: 26px;
-  margin-right: 6px;
 }
 .projectInfoBackBtn {
   font-size: 20px;
@@ -70,4 +72,13 @@
   background: var(--yellow-gradient);
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+}
+@media (width >= 48rem /* 768px */) {
+  .projectInfoNameTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .projectInfoStatus {
+    font-size: 16px;
+  }
 }
