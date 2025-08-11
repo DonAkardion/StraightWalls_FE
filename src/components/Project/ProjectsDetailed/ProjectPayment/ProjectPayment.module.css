@@ -1,0 +1,62 @@
+.Payment {
+  font-family: var(--font-inter);
+}
+.totalItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--yellow-gradient);
+  padding: 16px 0;
+  border-radius: 5px;
+}
+
+.totalItemText {
+  font-size: 16px;
+  line-height: 18px;
+}
+.totalItemSum {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.datailedTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.datailedListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--yellow-gradient);
+  padding: 22px 14px;
+  border-radius: 5px;
+  font-size: 14px;
+  line-height: 18px;
+  max-height: 60px;
+}
+.datailedListItemSum {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+@media (width >= 48rem /* 768px */) {
+  .totalItem {
+    width: 100%;
+    padding: 18px 20px;
+  }
+  .totalItemText {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .totalItemSum {
+    font-family: var(--font-jura);
+    font-size: 64px;
+    line-height: 76px;
+  }
+
+  .datailedTytle {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}

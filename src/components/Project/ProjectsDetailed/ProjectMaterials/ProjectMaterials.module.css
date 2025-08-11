@@ -1,0 +1,42 @@
+.materialTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.totatCostSeparate {
+  background: none;
+}
+.totatCostMain {
+  background: var(--yellow-gradient);
+}
+.totatCostMainTytle {
+  font-family: var(--font-inter);
+  line-height: 17px;
+  font-size: 14px;
+}
+.totatCostMainSum {
+  font-family: var(--font-jura);
+  line-height: 17px;
+  font-size: 14px;
+}
+@media (width >= 48rem) {
+  .materialTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .totatCostSeparate {
+    background: var(--background);
+    box-shadow: none;
+  }
+
+  .totatCostMainTytle {
+    line-height: 29px;
+    font-size: 24px;
+  }
+  .totatCostMainSum {
+    font-weight: 600;
+    font-style: SemiBold;
+
+    line-height: 38px;
+    font-size: 32px;
+  }
+}
