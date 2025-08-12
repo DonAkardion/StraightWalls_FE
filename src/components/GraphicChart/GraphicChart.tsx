@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 
 import {
   Chart as ChartJS,
@@ -12,7 +13,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useState } from "react";
-import styles from "./GraphicChart.module.css"
+import styles from "./GraphicChart.module.css";
 
 ChartJS.register(
   CategoryScale,
@@ -74,61 +75,62 @@ export const GraphicChart = () => {
   };
 
   const options = {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-  },
-  scales: {
-    y: {
-      position: "right",
-      min: 10000,
-      max: 200000,
-      ticks: {
-        callback: function (tickValue: string | number): string {
-          const allowed = [10000, 50000, 100000, 150000, 200000];
-          if (typeof tickValue === "number" && allowed.includes(tickValue)) {
-            return tickValue.toLocaleString("uk-UA");
-          }
-          return "";
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+    },
+    scales: {
+      y: {
+        position: "right" as const,
+        min: 10000,
+        max: 200000,
+        ticks: {
+          callback: function (tickValue: string | number): string {
+            const allowed = [10000, 50000, 100000, 150000, 200000];
+            if (typeof tickValue === "number" && allowed.includes(tickValue)) {
+              return tickValue.toLocaleString("uk-UA");
+            }
+            return "";
+          },
+          stepSize: 10000,
+          padding: 10,
         },
-        stepSize: 10000,
-        padding: 10,
+        grid: {
+          drawTicks: false,
+          drawBorder: false,
+          color: (context: { tick: { value: number } }) => {
+            const tickValue = context.tick.value;
+            const allowed = [10000, 50000, 100000, 150000, 200000];
+            return allowed.includes(tickValue) ? "#000000" : "transparent";
+          },
+        },
       },
-      grid: {
-        drawTicks: false,
-        drawBorder: false,
-        color: (context: any) => {
-          const tickValue = context.tick.value;
-          const allowed = [10000, 50000, 100000, 150000, 200000];
-          return allowed.includes(tickValue) ? "#000000" : "transparent";
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
         },
       },
     },
-    x: {
-      grid: {
-        display: false,
+    elements: {
+      line: {
+        borderWidth: 1,
+        tension: 0,
       },
-      ticks: {
-        maxRotation: 45,
-        minRotation: 45,
+      point: {
+        radius: 0,
       },
     },
-  },
-  elements: {
-    line: {
-      borderWidth: 1,
-      tension: 0,
-    },
-    point: {
-      radius: 0,
-    },
-  },
-};
-
+  };
 
   return (
     <div className={`max-w-[985px] mt-15 ${styles.graphicChart}`}>
-      <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>Звіт по місяцях</h2>
+      <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>
+        Звіт по місяцях
+      </h2>
       <div className={`${styles.graphiChart} bg-white p-8 rounded-lg`}>
         <div className={`mb-4 space-x-2 ${styles.graphicChartButtons}`}>
           {buttonsTitle.map((title) => (

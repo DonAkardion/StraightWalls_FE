@@ -3,4 +3,5 @@ export interface Material {
   name: string;
   amount: number;
   price: string;
+  delivery?: string;
 }

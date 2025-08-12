@@ -5,7 +5,7 @@ import { ClientSelector } from "@/components/addProject/ClientSelector/ClientSel
 import { mockClients } from "@/mock/Clients/clientsMock";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { mockServices } from "@/mock/Service/servicesMock";
-import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
+import { MaterialsEditor } from "@/components/addProject/MaterialsEditor/MaterialsEditor";
 
 export function AddProject() {
   const [clientId, setClientId] = useState<string | null>(null);
@@ -37,7 +37,7 @@ export function AddProject() {
         onServicesChange={(updated) => setServices(updated)}
         tableClassName="projectEstimateTableWrap"
       />
-      <ProjectMaterials />
+      <MaterialsEditor />
       <button
         className={`${styles.nextPageBtn} h-[80px] w-full cursor-pointer rounded-[5px]`}
       >
