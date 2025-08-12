@@ -6,6 +6,11 @@
   line-height: 24px;
 }
 
+.nextPageBtn {
+  font-size: 24px;
+  background: var(--yellow-gradient);
+}
+
 @media (width >= 48rem /* 768px */) {
   .selectorTytle {
     font-size: 24px;

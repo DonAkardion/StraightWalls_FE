@@ -1,3 +1,4 @@
+import React from "react";
 type InfoItemProps = {
   icon: string;
   label: string;

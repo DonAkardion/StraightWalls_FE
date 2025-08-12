@@ -111,7 +111,7 @@
 
 .TableWrap::-webkit-scrollbar-track {
   background: var(--yellow-gradient);
-  border-radius: 8px
+  border-radius: 8px;
 }
 
 .TableWrap::-webkit-scrollbar-thumb {
@@ -144,7 +144,17 @@
 .canceledRow {
   color: var(--red);
 }
-
+/* правила для AddProject */
+:global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+  background: var(--yellow-gradient);
+}
+:global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+  background: var(--yellow-gradient);
+}
+:global(.projectEstimateTableWrap) .TableCellInspect {
+  display: none;
+}
+/* #TODO правила для...*/
 @media (max-width: 768px) {
   .Tytle {
     line-height: 24px;
@@ -208,6 +218,18 @@
   /* правила для Clients */
   :global(.clientsTableWrap) .indentCellSmallSecond {
     display: none;
+  }
+  /* правила для AddProject */
+  :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectEstimateTableWrap) .TableCellInspect {
+    display: table-cell;
   }
 }
 
