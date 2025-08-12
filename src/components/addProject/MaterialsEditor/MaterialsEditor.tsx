@@ -1,5 +1,5 @@
 "use client";
-
+import styles from "./MaterialsEditor.module.css";
 import React, { useMemo, useState } from "react";
 import { ProjectMaterialsTable } from "@/components/Project/ProjectsDetailed/ProjectMaterialsTable/ProjectMaterialsTable";
 import { mockMaterials } from "@/mock/Materials/materialsMock";
@@ -109,7 +109,9 @@ export function MaterialsEditor() {
         className="projectMaterialsEditorWrap"
       />
 
-      <div className="mt-4 rounded-[5px] p-4 flex justify-between items-center">
+      <div
+        className={`${styles.materialTotalCost} mt-4 rounded-[5px] p-4 flex justify-between items-center`}
+      >
         <div>Загальна вартість матеріалів</div>
         <div className="">{formatNumber(total)} грн</div>
       </div>
