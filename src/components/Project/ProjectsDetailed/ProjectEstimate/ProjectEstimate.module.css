@@ -14,7 +14,7 @@
 .totatCostMain {
   background: var(--yellow-gradient);
 }
-.tableetweenWrap {
+.tableBetweenWrap {
   position: relative;
   box-shadow: none;
 }
@@ -53,7 +53,7 @@
     background: var(--background);
   }
   /* Ліва тінь */
-  .tableetweenWrap::before {
+  .tableBetweenWrap::before {
     content: "";
     position: absolute;
     top: 0;
@@ -66,7 +66,7 @@
   }
 
   /* Права тінь */
-  .tableetweenWrap::after {
+  .tableBetweenWrap::after {
     content: "";
     position: absolute;
     top: 0;

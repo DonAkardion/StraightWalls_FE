@@ -1,17 +1,16 @@
 import React from "react";
 import { ProjectsDetailed } from "@/features/projects/ProjectsDetailed/ProjectsDetailed";
 
-interface Params {
-  role: string;
-  id: string;
+interface ProjectsDetailedPageProps {
+  params: Promise<{
+    role: string;
+    id: string;
+  }>;
 }
 
-interface Props {
-  params: Promise<Params>;
-}
-
-export default async function ProjectsDetailedPage({ params }: Props) {
-  const awaitedParams = await params;
-
-  return <ProjectsDetailed projectId={awaitedParams.id} />;
+export default async function ProjectsDetailedPage({
+  params,
+}: ProjectsDetailedPageProps) {
+  const { id } = await params;
+  return <ProjectsDetailed projectId={id} />;
 }

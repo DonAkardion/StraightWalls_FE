@@ -1,5 +1,8 @@
-import React from "react";
 import { ClientsDetailed } from "@/features/clients/ClientsDetailed/ClientsDetailed";
+import React from "react";
+import { ClientsInteraction } from "../../../../../../components/Clients/ClientsDetailed/ClientInteraction/ClientInteraction";
+import { ClientsBenefit } from "@/components/Clients/ClientsDetailed/ClientsBenefit/ClientsBenefit";
+import { ClientsProjectsTable } from "../../../../../../components/Clients/ClientsDetailed/ClientsProjectsTable/ClientsProjectsTable";
 
 interface Params {
   role: string;
@@ -13,5 +16,12 @@ interface Props {
 export default async function ClientsDetailedPage({ params }: Props) {
   const awaitedParams = await params;
 
-  return <ClientsDetailed clientId={awaitedParams.id} />;
+  return(
+    <div>
+        <ClientsDetailed clientId={awaitedParams.id} />
+        <ClientsProjectsTable />
+        <ClientsBenefit />
+        <ClientsInteraction />
+    </div>
+  )
 }

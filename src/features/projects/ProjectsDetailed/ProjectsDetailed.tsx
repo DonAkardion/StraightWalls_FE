@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
+import { mockClients } from "@/mock/Clients/clientsMock";
 import { mockProjects } from "@/mock/Project/mockProjects";
 import { mockServices } from "@/mock/Service/servicesMock";
 import { mockWorkers } from "@/mock/Workers/workersMock";
 import { mockCrews } from "@/mock/Crew/crewMock";
-import { mockClients } from "@/mock/Clients/clientsMock";
 import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/ProjectInfo";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
