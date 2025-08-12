@@ -144,14 +144,39 @@
 .canceledRow {
   color: var(--red);
 }
-/* правила для AddProject */
+/* правила для AddProject  Estimate*/
 :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
   background: var(--yellow-gradient);
 }
 :global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
   background: var(--yellow-gradient);
 }
+:global(.projectEstimateTableWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectEstimateTableWrap) .indentCellSmall {
+  display: none;
+}
 :global(.projectEstimateTableWrap) .TableCellInspect {
+  display: none;
+}
+/* правила для AddProject  Materials*/
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
+  background: var(--yellow-gradient);
+}
+:global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
+  background: var(--yellow-gradient);
+}
+:global(.projectMaterialsEditorWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .indentCellSmall {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(9) {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .TableCell:nth-child(7) {
   display: none;
 }
 /* #TODO правила для...*/
@@ -219,7 +244,7 @@
   :global(.clientsTableWrap) .indentCellSmallSecond {
     display: none;
   }
-  /* правила для AddProject */
+  /* правила для AddProject  Estimate*/
   :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
     display: table-cell;
     background: none;
