@@ -1,0 +1,19 @@
+.selectorContainer {
+  font-family: var(--font-inter);
+  font-size: 14px;
+}
+
+.selectorPlaceholder {
+  line-height: 18px;
+  color: var(--blue);
+}
+
+@media (width >= 48rem /* 768px */) {
+  .selectorContainer {
+    font-size: 16px;
+  }
+  .selectorPlaceholder {
+    font-size: 20px;
+    line-height: 24px;
+  }
+}

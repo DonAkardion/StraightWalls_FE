@@ -122,6 +122,9 @@
 .TableWrap::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-black);
 }
+.inspectTr {
+  display: none;
+}
 
 .TableWrap {
   scrollbar-color: var(--yellow-gradient);
@@ -161,6 +164,9 @@
   display: none;
 }
 /* правила для AddProject  Materials*/
+:global(.projectMaterialsEditorWrap) .indentCellSmallSecond {
+  width: 20px;
+}
 :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
   background: var(--yellow-gradient);
   width: 120px;
@@ -188,6 +194,20 @@
 }
 :global(.projectMaterialsEditorWrap) .TableCellInspect {
   display: none;
+}
+/* правила для AddProject  MaterialsIncome*/
+:global(.projectMaterialsIncomeEditorWrap) .indentCellLast {
+  display: table-cell;
+}
+:global(.projectMaterialsIncomeEditorWrap) .TableRowCell:nth-child(7) {
+  background: var(--yellow-gradient);
+  width: 120px;
+}
+:global(.projectMaterialsIncomeEditorWrap) .TableCell:nth-child(5) {
+  background: var(--yellow-gradient);
+}
+:global(.projectMaterialsIncomeEditorWrap) .indentCellSmallSecond {
+  width: 20px;
 }
 /* #TODO правила для...*/
 @media (max-width: 768px) {
@@ -245,6 +265,9 @@
   .noBottomBorderRow td {
     border-bottom: none !important;
   }
+  .inspectTr {
+    display: table-row;
+  }
   /* правила для Crews */
   :global(.CrewsTableWrap) .indentCellSmallSecond {
     width: 20px;
@@ -273,12 +296,14 @@
     display: table-cell;
   }
   /* правила для AddProject  Materials*/
+
   :global(.projectMaterialsEditorWrap) .indentCellLast {
     display: table-cell;
   }
   :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
     display: table-cell;
     background: none;
+    width: auto;
   }
   :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
     display: table-cell;
@@ -290,10 +315,17 @@
   :global(.projectMaterialsEditorWrap) .TableCellInspect {
     display: table-cell;
   }
-}
-
-@media (min-width: 768px) {
-  .inspectTr {
-    display: none;
+  /* правила для AddProject  MaterialsIncome*/
+  :global(.projectMaterialsIncomeEditorWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.projectMaterialsIncomeEditorWrap) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectMaterialsIncomeEditorWrap) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
   }
 }

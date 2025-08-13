@@ -54,27 +54,33 @@ export function ProjectMaterialsTable({
   const rows = data ?? mockMaterials;
 
   const renderInspectFields = (item: Material) =>
-    cols.map((c) => {
-      const value = (() => {
-        if (c.render) {
-          const node = c.render(item);
-          if (typeof node === "string" || typeof node === "number")
-            return String(node);
-          return "";
-        } else {
-          if (typeof c.key === "string" && c.key in item) {
-            const v = (item as unknown as Record<string, unknown>)[c.key];
-            return v === undefined || v === null ? "" : String(v);
+    cols
+      .filter((c) => c.key !== "name" && c.key !== "amount")
+      .map((c) => {
+        const value = (() => {
+          if (c.render) {
+            const node = c.render(item);
+            if (typeof node === "string" || typeof node === "number")
+              return String(node);
+            return "";
+          } else {
+            if (typeof c.key === "string" && c.key in item) {
+              const v = (item as unknown as Record<string, unknown>)[c.key];
+              return v === undefined || v === null ? "" : String(v);
+            }
+            return "";
           }
-          return "";
-        }
-      })();
+        })();
 
-      return {
-        label: c.label,
-        value: () => value,
-      };
-    });
+        // якщо value порожнє, не включаємо в інспект
+        if (value.trim() === "") return null;
+
+        return {
+          label: c.label,
+          value: () => value,
+        };
+      })
+      .filter(Boolean) as { label: string; value: () => string }[];
 
   return (
     <div>

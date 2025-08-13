@@ -2,6 +2,7 @@
 import React from "react";
 import styles from "./ProjectPayment.module.css";
 import { StageCard } from "./stageCard/stageCard";
+import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
 
 export function ProjectPayment() {
   return (
@@ -27,34 +28,16 @@ export function ProjectPayment() {
             <span className={`${styles.totalItemSum} `}>60 521,5</span>
           </div>
         </div>
-        <div className={`${styles.generalStatsDatailed} `}>
-          <h2 className={`${styles.datailedTytle} mb-[16px]`}>Оплата:</h2>
-
-          <div className={`${styles.datailedList} flex flex-col gap-[16px]`}>
-            <div className={`${styles.datailedListItem}`}>
-              <span className={`${styles.datailedListItemText}`}>
-                Вартість усіх виконаних робіт
-              </span>
-              <span className={`${styles.datailedListItemSum}`}>
-                72 521,5 грн
-              </span>
-            </div>
-            <div className={`${styles.datailedListItem}`}>
-              <span className={`${styles.datailedListItemText}`}>
-                Вартість усіх використанних матеріалів
-              </span>
-              <span className={`${styles.datailedListItemSum}`}>
-                31 454 грн
-              </span>
-            </div>
-            <div className={`${styles.datailedListItem}`}>
-              <span className={`${styles.datailedListItemText}`}>
-                Аванс при заїзді бригади{" "}
-              </span>
-              <span className={`${styles.datailedListItemSum}`}>2 000 грн</span>
-            </div>
-          </div>
-        </div>
+        <PaymentDetails
+          items={[
+            { label: "Вартість усіх виконаних робіт", value: "72 521,5 грн" },
+            {
+              label: "Вартість усіх використанних матеріалів",
+              value: "31 454 грн",
+            },
+            { label: "Аванс при заїзді бригади", value: "2 000 грн" },
+          ]}
+        />
       </div>
       <div className={`${styles.stages} grid md:grid-cols-2 gap-[24px]`}>
         <StageCard
