@@ -45,7 +45,7 @@ export function MaterialsEditor() {
               e.stopPropagation();
               changeAmount(m.id, Math.max(0, m.amount - 1));
             }}
-            className="hidden md:inline-flex w-6 h-6 items-center justify-center bg-white rounded"
+            className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
             aria-label="decrease"
           >
             −
@@ -54,7 +54,7 @@ export function MaterialsEditor() {
           <input
             type="number"
             min={0}
-            value={m.amount}
+            value={m.amount === 0 ? "" : m.amount}
             onChange={(e) => {
               e.stopPropagation();
               const v = e.target.value === "" ? 0 : Number(e.target.value);
@@ -62,7 +62,8 @@ export function MaterialsEditor() {
               changeAmount(m.id, v);
             }}
             onClick={(e) => e.stopPropagation()}
-            className="w-[80px] md:w-12 text-center rounded px-1 py-0"
+            className={`${styles.editInput} w-[80px] md:w-12 text-center rounded px-1 py-0`}
+            placeholder="0"
           />
 
           <button
@@ -71,7 +72,7 @@ export function MaterialsEditor() {
               e.stopPropagation();
               changeAmount(m.id, m.amount + 1);
             }}
-            className="hidden md:inline-flex w-6 h-6 items-center justify-center bg-white rounded"
+            className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
             aria-label="increase"
           >
             +

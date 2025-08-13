@@ -93,7 +93,7 @@ export const ProjectServicesTable = ({
                 >
                   <button
                     onClick={(e) => handleDecrease(e, s)}
-                    className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center  justify-center bg-white"
+                    className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center  justify-center bg-white cursor-pointer"
                     type="button"
                   >
                     −
@@ -105,11 +105,11 @@ export const ProjectServicesTable = ({
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleInputChange(e, s)}
                     className={`${styles.editInput} md:w-12 w-[100px] text-center rounded px-1 py-0`}
-                    placeholder=""
+                    placeholder="0"
                   />
                   <button
                     onClick={(e) => handleIncrease(e, s)}
-                    className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center justify-center bg-white"
+                    className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center justify-center bg-white cursor-pointer"
                     type="button"
                   >
                     +

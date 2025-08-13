@@ -163,6 +163,13 @@
 /* правила для AddProject  Materials*/
 :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
   background: var(--yellow-gradient);
+  width: 120px;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(7) {
+  width: 120px;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(8) {
+  width: 120px;
 }
 :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
   background: var(--yellow-gradient);
@@ -177,6 +184,9 @@
   display: none;
 }
 :global(.projectMaterialsEditorWrap) .TableCell:nth-child(7) {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .TableCellInspect {
   display: none;
 }
 /* #TODO правила для...*/
@@ -254,6 +264,30 @@
     background: none;
   }
   :global(.projectEstimateTableWrap) .TableCellInspect {
+    display: table-cell;
+  }
+  :global(.projectEstimateTableWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.projectEstimateTableWrap) .indentCellSmall {
+    display: table-cell;
+  }
+  /* правила для AddProject  Materials*/
+  :global(.projectMaterialsEditorWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectMaterialsEditorWrap) .indentCellSmall {
+    display: table-cell;
+  }
+  :global(.projectMaterialsEditorWrap) .TableCellInspect {
     display: table-cell;
   }
 }
