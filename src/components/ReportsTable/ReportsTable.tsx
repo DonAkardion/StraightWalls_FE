@@ -12,11 +12,46 @@ interface Material {
 }
 
 const data: Material[] = [
-  { id: "1", name: "Гіпс", quantity: "4 т", unitPrice: "500 грн", supplier: "ТОВ компанія", icon: "" },
-  { id: "2", name: "Гіпс", quantity: "4 т", unitPrice: "500 грн", supplier: "ТОВ компанія", icon: "" },
-  { id: "3", name: "Гіпс", quantity: "4 т", unitPrice: "500 грн", supplier: "ТОВ компанія", icon: "" },
-  { id: "4", name: "Гіпс", quantity: "4 т", unitPrice: "500 грн", supplier: "ТОВ компанія", icon: "" },
-  { id: "5", name: "Гіпс", quantity: "4 т", unitPrice: "500 грн", supplier: "ТОВ компанія", icon: "" },
+  {
+    id: "1",
+    name: "Гіпс",
+    quantity: "4 т",
+    unitPrice: "500 грн",
+    supplier: "ТОВ компанія",
+    icon: "",
+  },
+  {
+    id: "2",
+    name: "Гіпс",
+    quantity: "4 т",
+    unitPrice: "500 грн",
+    supplier: "ТОВ компанія",
+    icon: "",
+  },
+  {
+    id: "3",
+    name: "Гіпс",
+    quantity: "4 т",
+    unitPrice: "500 грн",
+    supplier: "ТОВ компанія",
+    icon: "",
+  },
+  {
+    id: "4",
+    name: "Гіпс",
+    quantity: "4 т",
+    unitPrice: "500 грн",
+    supplier: "ТОВ компанія",
+    icon: "",
+  },
+  {
+    id: "5",
+    name: "Гіпс",
+    quantity: "4 т",
+    unitPrice: "500 грн",
+    supplier: "ТОВ компанія",
+    icon: "",
+  },
 ];
 
 const columns = [
@@ -26,9 +61,14 @@ const columns = [
   { key: "supplier", label: "Постачальник" },
   {
     key: "icon",
-    label: (
+    label: "",
+    render: () => (
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <img src={burgerTable.src} alt="icon" style={{ width: 25, height: 25 }} />
+        <img
+          src={burgerTable.src}
+          alt="icon"
+          style={{ width: 25, height: 25 }}
+        />
       </div>
     ),
   },

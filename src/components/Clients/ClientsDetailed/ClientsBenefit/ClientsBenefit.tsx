@@ -1,4 +1,5 @@
-import styles from "./ClientsBenefit.module.css"
+import React from "react";
+import styles from "./ClientsBenefit.module.css";
 
 export const ClientsBenefit = () => {
   return (
@@ -10,17 +11,21 @@ export const ClientsBenefit = () => {
         </div>
         <div className={`${styles.clientsProfit} mt-5 rounded`}>
           <div className="flex justify-between items-center px-5 py-3">
-            <p className="text-[20px] text-black">Вартість усіх виконаних робіт</p>
+            <p className="text-[20px] text-black">
+              Вартість усіх виконаних робіт
+            </p>
             <h2 className={`${styles.clientsPrice}`}>41 057,5 грн</h2>
           </div>
         </div>
         <div className={`${styles.clientsProfit} mt-5 rounded`}>
           <div className="flex justify-between items-center px-5 py-3">
-            <p className="text-[20px] text-black">Вартість усіх використанних матеріалів</p>
+            <p className="text-[20px] text-black">
+              Вартість усіх використанних матеріалів
+            </p>
             <h2 className={`${styles.clientsPrice}`}>31 454 грн</h2>
           </div>
         </div>
       </div>
     </section>
   );
-}
+};

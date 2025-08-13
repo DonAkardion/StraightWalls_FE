@@ -1,0 +1,57 @@
+.materialTotalCostBlock {
+  background: none;
+}
+.materialTotalCost {
+  background: var(--yellow-gradient);
+  font-family: var(--font-inter);
+}
+
+.materialTotalCostTytle {
+  font-size: 14px;
+  line-height: 18px;
+}
+.materialTotalCostSum {
+  font-size: 14px;
+  line-height: 18px;
+}
+.materialPaymentTytle {
+  font-family: var(--font-inter);
+  font-size: 20px;
+  line-height: 24px;
+}
+.materialPaymentText {
+  background: var(--yellow-gradient);
+  font-family: var(--font-inter);
+  font-size: 14px;
+  line-height: 18px;
+}
+@media (width >= 48rem /* 768px */) {
+  .materialTotalCostBlock {
+    background: var(--background);
+    box-shadow: 1px 3px 15px 2px #00000040;
+  }
+  .materialTotalCostTytle {
+    font-size: 24px;
+    line-height: 28px;
+  }
+  .materialTotalCostSum {
+    font-family: var(--font-jura);
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 600;
+  }
+  .materialPaymentTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+  .materialPaymentTextTytle {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .materialPaymentTextSum {
+    font-family: var(--font-jura);
+    font-size: 32px;
+    line-height: 38px;
+    font-weight: 600;
+  }
+}

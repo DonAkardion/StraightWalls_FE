@@ -18,7 +18,7 @@ export const Header = () => {
   const role = useUser().role;
   const [open, setOpen] = useState(false);
 
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const body = document.body;
@@ -115,7 +115,7 @@ export const Header = () => {
             ></div>
           </Link>
           <Link
-            href="/cabinet"
+            href="/"
             className={`${styles.navigationUser} flex shrink-0 items-center gap-[15px]`}
             prefetch={false}
           >
@@ -171,7 +171,7 @@ export const Header = () => {
               </div>
             </Link>
             <Link
-              href="/addProject"
+              href={`/${role}/addProject`}
               onClick={closeMenu}
               className={styles.mobileMenuNavigation}
               prefetch={false}

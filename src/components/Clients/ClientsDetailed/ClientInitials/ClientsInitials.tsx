@@ -1,17 +1,16 @@
+import React from "react";
 import { useRouter } from "next/navigation";
 import backIcon from "../../../../../public/icons/Back.svg";
 import { columns } from "@/features/clients/ClientsColumns/ClientsColumns";
 import { IconButton } from "@/features/clients/ClientsColumns/ClientsButtons";
 import { iconMap } from "@/features/clients/ClientsColumns/iconMap";
-import styles from "./ClientsInitials.module.css"
+import styles from "./ClientsInitials.module.css";
 import { Client } from "@/types/client";
 import { ClientInfoItem } from "../ClientInfo/ClientInfo";
-
 
 type Props = {
   client: Client;
 };
-
 
 export const ClientsInitials = ({ client }: Props) => {
   const router = useRouter();
@@ -46,4 +45,4 @@ export const ClientsInitials = ({ client }: Props) => {
       </div>
     </div>
   );
-}
+};
