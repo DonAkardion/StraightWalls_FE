@@ -15,6 +15,7 @@ function formatNumber(n: number) {
 export function MaterialsEditor() {
   // Локальна копія матеріалів з моковими delivery
   const [materials, setMaterials] = useState<Material[]>(mockMaterials);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const total = useMemo(
     () => materials.reduce((acc, m) => acc + m.amount * parsePrice(m.price), 0),
@@ -45,7 +46,7 @@ export function MaterialsEditor() {
               e.stopPropagation();
               changeAmount(m.id, Math.max(0, m.amount - 1));
             }}
-            className="hidden md:inline-flex w-6 h-6 items-center justify-center bg-white rounded"
+            className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
             aria-label="decrease"
           >
             −
@@ -54,7 +55,7 @@ export function MaterialsEditor() {
           <input
             type="number"
             min={0}
-            value={m.amount}
+            value={m.amount === 0 ? "" : m.amount}
             onChange={(e) => {
               e.stopPropagation();
               const v = e.target.value === "" ? 0 : Number(e.target.value);
@@ -62,7 +63,8 @@ export function MaterialsEditor() {
               changeAmount(m.id, v);
             }}
             onClick={(e) => e.stopPropagation()}
-            className="w-[80px] md:w-12 text-center rounded px-1 py-0"
+            className={`${styles.editInput} w-[80px] md:w-12 text-center rounded px-1 py-0`}
+            placeholder="0"
           />
 
           <button
@@ -71,7 +73,7 @@ export function MaterialsEditor() {
               e.stopPropagation();
               changeAmount(m.id, m.amount + 1);
             }}
-            className="hidden md:inline-flex w-6 h-6 items-center justify-center bg-white rounded"
+            className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
             aria-label="increase"
           >
             +
@@ -89,9 +91,26 @@ export function MaterialsEditor() {
       label: "Доставка",
       render: (m: Material) => m.delivery ?? "",
     },
+    {
+      // окрема колонка для кнопки інспекту — повністю керуємо розгортанням через expandedId
+      key: "inspect",
+      label: "",
+      render: (m: Material) => (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpandedId((prev) => (prev === m.id ? null : m.id));
+          }}
+          className="px-2 py-1 rounded border"
+          aria-expanded={expandedId === m.id}
+        >
+          {expandedId === m.id ? "Згорнути" : "Деталі"}
+        </button>
+      ),
+    },
   ];
 
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const handleInspect = (item: Material) => {
     setExpandedId((prev) => (prev === item.id ? null : item.id));
   };
@@ -108,12 +127,21 @@ export function MaterialsEditor() {
         enableTooltips={true}
         className="projectMaterialsEditorWrap"
       />
-
-      <div
-        className={`${styles.materialTotalCost} mt-4 rounded-[5px] p-4 flex justify-between items-center`}
-      >
-        <div>Загальна вартість матеріалів</div>
-        <div className="">{formatNumber(total)} грн</div>
+      <div className={`${styles.materialTotalCostWrap} relative`}>
+        <div
+          className={`${styles.materialTotalCostBlock} md:absolute md:top-[-10px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}
+        >
+          <div
+            className={`${styles.materialTotalCost}  rounded-[5px] p-4 h-[56px] md:h-[74px] flex justify-between items-center`}
+          >
+            <div className={`${styles.materialTotalCostTytle}`}>
+              Загальна вартість матеріалів
+            </div>
+            <div className={`${styles.materialTotalCostSum}`}>
+              {formatNumber(total)} грн
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

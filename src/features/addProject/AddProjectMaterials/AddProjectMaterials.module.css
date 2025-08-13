@@ -1,11 +1,24 @@
-.materialTotalCostBlock {
-  background: none;
-}
-.materialTotalCost {
-  background: var(--yellow-gradient);
+/* SelectorStyles */
+
+.selectorTytle {
   font-family: var(--font-inter);
+  font-size: 20px;
+  line-height: 24px;
 }
 
+.nextPageBtn {
+  font-size: 24px;
+  background: var(--yellow-gradient);
+}
+.nextPageBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+@media (width >= 48rem /* 768px */) {
+  .selectorTytle {
+    font-size: 24px;
+    line-height: 30px;
+  }
+}
 .materialTotalCostTytle {
   font-size: 14px;
   line-height: 18px;

@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "./ProjectServicesTable.module.css";
+import styles from "./MaterialIncomeTable.module.css";
 import { Table } from "@/components/Table/Table";
-import { Service, ServiceType } from "@/types/service";
+import { MaterialIncome } from "@/types/materialIncome";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 
 interface Props {
-  services: Service[];
-  type: ServiceType;
+  materials: MaterialIncome[];
   showHeader?: boolean;
   editable?: boolean;
   onAmountChange?: (id: string, newAmount: number) => void;
@@ -16,56 +15,43 @@ interface Props {
   enableTooltips?: boolean;
 }
 
-export const ProjectServicesTable = ({
-  services,
-  type,
+export const MaterialIncomeTable = ({
+  materials,
   showHeader = true,
   editable = false,
   onAmountChange,
   className,
   enableTooltips = true,
 }: Props) => {
-  const filtered = services.filter((s) => s.serviceType === type);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
-
-  const handleDecrease = (e: React.MouseEvent, item: Service) => {
+  const handleDecrease = (e: React.MouseEvent, item: MaterialIncome) => {
     e.stopPropagation();
     const next = Math.max(0, item.amount - 1);
-    if (onAmountChange) {
-      onAmountChange(item.id, next);
-    }
+    if (onAmountChange) onAmountChange(item.id, next);
   };
 
-  const handleIncrease = (e: React.MouseEvent, item: Service) => {
+  const handleIncrease = (e: React.MouseEvent, item: MaterialIncome) => {
     e.stopPropagation();
     const next = item.amount + 1;
-    if (onAmountChange) {
-      onAmountChange(item.id, next);
-    }
+    if (onAmountChange) onAmountChange(item.id, next);
   };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    service: Service
+    item: MaterialIncome
   ) => {
     e.stopPropagation();
     const value = e.target.value;
-
-    // не дозволяємо від'ємні значення
     if (value !== "" && Number(value) < 0) return;
-
-    // передаємо пустий інпут як 0 або як порожнє значення
-    if (onAmountChange) {
-      onAmountChange(service.id, value === "" ? 0 : Number(value));
-    }
+    if (onAmountChange)
+      onAmountChange(item.id, value === "" ? 0 : Number(value));
   };
 
   return (
-    <div className="">
-      <Table<Service>
-        data={filtered}
+    <div>
+      <Table<MaterialIncome>
+        data={materials}
         className={className}
         showIndex={true}
         showHeader={showHeader}
@@ -78,37 +64,36 @@ export const ProjectServicesTable = ({
           {
             key: "name",
             label: "Найменування послуги",
-            tooltip: (і) => `Найменування послуги: ${і.name}`,
+            tooltip: (i) => i.name,
           },
-          { key: "unit", label: "Од. вимір." },
-
+          { key: "price", label: "Сума", render: (i) => i.price },
           {
             key: "amount",
             label: "Кількість",
-            render: (s) =>
+            render: (i) =>
               editable ? (
                 <div
                   className={`${styles.editContainer} h-full flex justify-center items-center gap-1`}
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
-                    onClick={(e) => handleDecrease(e, s)}
-                    className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center  justify-center bg-white cursor-pointer"
+                    onClick={(e) => handleDecrease(e, i)}
+                    className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center justify-center bg-white cursor-pointer"
                     type="button"
                   >
                     −
                   </button>
                   <input
                     type="number"
-                    value={s.amount === 0 ? "" : s.amount}
+                    value={i.amount === 0 ? "" : i.amount}
                     min={0}
                     onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => handleInputChange(e, s)}
+                    onChange={(e) => handleInputChange(e, i)}
                     className={`${styles.editInput} md:w-12 w-[100px] text-center rounded px-1 py-0`}
                     placeholder="0"
                   />
                   <button
-                    onClick={(e) => handleIncrease(e, s)}
+                    onClick={(e) => handleIncrease(e, i)}
                     className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center justify-center bg-white cursor-pointer"
                     type="button"
                   >
@@ -116,40 +101,21 @@ export const ProjectServicesTable = ({
                   </button>
                 </div>
               ) : (
-                String(s.amount)
+                String(i.amount)
               ),
           },
-          {
-            key: "price",
-            label: "Вартість, грн",
-            render: (s) => formatNumber(s.price),
-          },
-          {
-            key: "sum",
-            label: "Сума",
-            render: (s) => formatNumber(s.price * s.amount),
-          },
+          { key: "area", label: "Квадратура", render: (i) => i.area },
+          { key: "income", label: "Заробіток", render: (i) => i.income },
         ]}
-        renderInspection={(s) => (
-          <Inspect<Service>
-            item={s}
+        renderInspection={(i) => (
+          <Inspect<MaterialIncome>
+            item={i}
             getId={(item) => item.id}
-            // onEdit={role === "admin" ? onEdit : undefined}
-            // onDelete={role === "admin" ? onDelete : undefined}
-
             fields={[
-              {
-                label: "Од. вимір.",
-                value: (item) => item.unit,
-              },
-              {
-                label: "Вартість, грн",
-                value: (item) => item.price,
-              },
-              {
-                label: "Кількість",
-                value: (item) => item.amount,
-              },
+              { label: "Сума", value: (item) => item.price },
+              { label: "Кількість", value: (item) => item.amount },
+              { label: "Квадратура", value: (item) => item.area },
+              { label: "Заробіток", value: (item) => item.income },
             ]}
           />
         )}

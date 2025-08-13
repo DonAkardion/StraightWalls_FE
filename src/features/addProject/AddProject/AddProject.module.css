@@ -10,7 +10,9 @@
   font-size: 24px;
   background: var(--yellow-gradient);
 }
-
+.nextPageBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
 @media (width >= 48rem /* 768px */) {
   .selectorTytle {
     font-size: 24px;
