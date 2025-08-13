@@ -25,6 +25,20 @@
   font-size: 14px;
   line-height: 18px;
 }
+.editInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+.editInput::-webkit-outer-spin-button,
+.editInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.editInput {
+  -moz-appearance: textfield;
+}
+
 @media (width >= 48rem /* 768px */) {
   .materialTotalCostBlock {
     background: var(--background);
