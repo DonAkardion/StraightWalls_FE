@@ -1,12 +1,8 @@
 import React from "react";
-import { Balance } from "./Balance/Balance";
+// import { Balance } from "../../components/HomePage/Balance/Balance";
 
 const HomePage = () => {
-  return (
-    <>
-      <Balance />
-    </>
-  );
+  return <>{/* <Balance /> */}</>;
 };
 
 export default HomePage;

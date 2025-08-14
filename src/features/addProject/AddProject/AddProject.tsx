@@ -51,11 +51,12 @@ export function AddProject() {
         tableClassName="projectEstimateTableWrap"
       />
 
-      <button
-        className={`${styles.nextPageBtn} h-[80px] w-full cursor-pointer rounded-[5px]`}
+      <Link
+        href={`/${role}/addProject/addProjectMaterials`}
+        className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
       >
-        <Link href={`/${role}/addProject/addProjectMaterials`}>Відправити</Link>
-      </button>
+        Відправити
+      </Link>
     </section>
   );
 }

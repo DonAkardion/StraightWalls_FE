@@ -12,7 +12,11 @@ function formatNumber(n: number) {
   return n.toFixed(2).replace(".", ",");
 }
 
-export function MaterialsEditor() {
+interface MaterialsEditorProps {
+  editable?: boolean;
+}
+
+export function MaterialsEditor({ editable = false }: MaterialsEditorProps) {
   // Локальна копія матеріалів з моковими delivery
   const [materials, setMaterials] = useState<Material[]>(mockMaterials);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -35,51 +39,54 @@ export function MaterialsEditor() {
     {
       key: "amount",
       label: "Кількість",
-      render: (m: Material) => (
-        <div
-          className="flex items-center justify-center gap-2"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              changeAmount(m.id, Math.max(0, m.amount - 1));
-            }}
-            className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
-            aria-label="decrease"
-          >
-            −
-          </button>
-
-          <input
-            type="number"
-            min={0}
-            value={m.amount === 0 ? "" : m.amount}
-            onChange={(e) => {
-              e.stopPropagation();
-              const v = e.target.value === "" ? 0 : Number(e.target.value);
-              if (Number.isNaN(v)) return;
-              changeAmount(m.id, v);
-            }}
+      render: (m: Material) =>
+        editable ? (
+          <div
+            className="flex items-center justify-center gap-2"
             onClick={(e) => e.stopPropagation()}
-            className={`${styles.editInput} w-[80px] md:w-12 text-center rounded px-1 py-0`}
-            placeholder="0"
-          />
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              changeAmount(m.id, m.amount + 1);
-            }}
-            className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
-            aria-label="increase"
           >
-            +
-          </button>
-        </div>
-      ),
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                changeAmount(m.id, Math.max(0, m.amount - 1));
+              }}
+              className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
+              aria-label="decrease"
+            >
+              −
+            </button>
+
+            <input
+              type="number"
+              min={0}
+              value={m.amount === 0 ? "" : m.amount}
+              onChange={(e) => {
+                e.stopPropagation();
+                const v = e.target.value === "" ? 0 : Number(e.target.value);
+                if (Number.isNaN(v)) return;
+                changeAmount(m.id, v);
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className={`${styles.editInput} w-[80px] md:w-12 text-center rounded px-1 py-0`}
+              placeholder="0"
+            />
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                changeAmount(m.id, m.amount + 1);
+              }}
+              className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
+              aria-label="increase"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <span>{m.amount}</span>
+        ),
     },
     {
       key: "stock", // унікальний ключ, не amount

@@ -1,0 +1,28 @@
+.driversBalance {
+  font-family: var(--font-inter);
+}
+.tytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+.totalDriversbalanceListItem {
+  font-size: 14px;
+  line-height: 18px;
+  background: var(--yellow-gradient);
+}
+@media (width >= 48rem /* 768px */) {
+  .tytle {
+    font-size: 24px;
+    line-height: 28px;
+  }
+  .ListItemValue {
+    font-size: 32px;
+    line-height: 38px;
+    font-family: var(--font-jura);
+    font-weight: 600;
+  }
+  .ListItemName {
+    font-size: 24px;
+    line-height: 28px;
+  }
+}

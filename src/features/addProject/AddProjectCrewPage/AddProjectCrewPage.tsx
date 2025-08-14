@@ -27,11 +27,13 @@ export function AddProjectCrewPage() {
         <CrewSelector crews={mockCrews} value={crewId} onChange={setCrewId} />
       </div>
       <AddProjectCrew crewId={crewId} crews={mockCrews} workers={mockWorkers} />
-      <button
-        className={`${styles.nextPageBtn} h-[80px] w-full cursor-pointer rounded-[5px]`}
+
+      <Link
+        href={`/${role}/addProject/addProjectConfirm`}
+        className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
       >
-        <Link href={`/${role}/addProject/addProjectConfirm`}>Відправити</Link>
-      </button>
+        Відправити
+      </Link>
     </section>
   );
 }

@@ -45,14 +45,12 @@ export function AddProjectConfirm() {
 
       <ProjectEstimate
         services={services}
-        editable={true}
         onServicesChange={(updated) => setServices(updated)}
         tableClassName="projectEstimateTableWrap"
       />
       <MaterialsEditor />
       <MaterialIncomeEditor
         materialsIncome={mockMaterialsIncome}
-        editable={true}
         onMaterialsIncomeChange={() => {}}
         tableClassName="projectMaterialsIncomeEditorWrap"
       />
@@ -73,12 +71,14 @@ export function AddProjectConfirm() {
           ]}
         />
       </div>
-      <button
+
+      <Link
+        href={`/${role}/`}
         onClick={handleSubmit}
-        className={`${styles.nextPageBtn} h-[80px] w-full cursor-pointer rounded-[5px]`}
+        className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
       >
-        <Link href={`/${role}/`}>Відправити</Link>
-      </button>
+        Відправити
+      </Link>
     </section>
   );
 }

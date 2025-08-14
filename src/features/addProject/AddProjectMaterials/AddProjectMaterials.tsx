@@ -15,7 +15,7 @@ export function AddProjectMaterials() {
     <section
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
     >
-      <MaterialsEditor />
+      <MaterialsEditor editable={true} />
       <MaterialIncomeEditor
         materialsIncome={mockMaterialsIncome}
         editable={true}
@@ -28,11 +28,12 @@ export function AddProjectMaterials() {
         />
       </div>
 
-      <button
-        className={`${styles.nextPageBtn} h-[80px] w-full cursor-pointer rounded-[5px]`}
+      <Link
+        href={`/${role}/addProject/addProjectCrew`}
+        className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
       >
-        <Link href={`/${role}/addProject/addProjectCrew`}>Відправити</Link>
-      </button>
+        Відправити
+      </Link>
     </section>
   );
 }

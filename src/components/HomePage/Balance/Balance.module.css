@@ -1,0 +1,46 @@
+.balance {
+  font-family: var(--font-inter);
+}
+.tytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.totalbalanceListItem {
+  border-radius: 5px;
+  height: 84px;
+  width: 100%;
+  background: var(--yellow-gradient);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  gap: 9px;
+}
+.ListItemName {
+  width: 160px;
+}
+.ListItemValue {
+  width: 160px;
+  font-size: 20px;
+}
+@media (width >= 48rem /* 768px */) {
+  .tytle {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  .totalbalanceListItem {
+    height: 138px;
+    width: calc((100% - 72px) / 4);
+  }
+  .ListItemName {
+    font-size: 20px;
+    line-height: 24px;
+  }
+  .ListItemValue {
+    font-family: var(--font-jura);
+    font-size: 46px;
+    line-height: 54px;
+  }
+}
