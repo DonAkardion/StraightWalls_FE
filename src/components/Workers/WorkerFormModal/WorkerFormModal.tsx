@@ -8,11 +8,7 @@ interface WorkerFormModalProps {
   onClose: () => void;
 }
 
-export function WorkerFormModal({
-  initialData,
-  onSubmit,
-  onClose,
-}: WorkerFormModalProps) {
+export function WorkerFormModal({ initialData }: WorkerFormModalProps) {
   const [formData, setFormData] = useState<Worker>(
     initialData || {
       id: crypto.randomUUID(),
@@ -27,39 +23,36 @@ export function WorkerFormModal({
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    onSubmit(formData);
-    onClose();
-  };
-
   return (
-    <div>
+    <div className="p-4 flex flex-col gap-4">
       <input
         name="name"
         value={formData.name}
         onChange={handleChange}
         placeholder="ПІБ"
+        className="border rounded px-2 py-1"
       />
       <input
         name="occupation"
         value={formData.occupation}
         onChange={handleChange}
         placeholder="Посада"
+        className="border rounded px-2 py-1"
       />
       <input
         name="phone"
         value={formData.phone}
         onChange={handleChange}
         placeholder="Телефон"
+        className="border rounded px-2 py-1"
       />
       <input
         name="salary"
         value={formData.salary}
         onChange={handleChange}
         placeholder="Зарплата"
+        className="border rounded px-2 py-1"
       />
-      <button onClick={handleSubmit}>Зберегти</button>
-      <button onClick={onClose}>Скасувати</button>
     </div>
   );
 }
