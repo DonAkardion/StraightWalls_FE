@@ -2,8 +2,63 @@
     background: var(--yellow-gradient);
     font-family: var(--font-inter);
     box-shadow: 1px 3px 15px 2px #00000040;
+    padding: 12px 20px;
+    border-radius: 8px;
 }
 
 .clientsPrice {
     font-family: var(--font-jura);
+    white-space: nowrap; /* не переносити числа */
+    font-size: 32px;
+}
+
+/* Заголовок у блоці */
+.clientsLabel {
+    font-size: 20px;
+    color: black;
+}
+
+/* 📱 Планшети */
+@media (max-width: 850px) {
+    .clientsProfit {
+        width: 100%;
+        max-width: 610px;
+        margin: auto;
+        margin-top: 20px;
+        padding: 10px 16px;
+    }
+    .clientsLabel {
+        font-size: 18px;
+    }
+    .clientsPrice {
+        font-size: 26px;
+    }
+}
+
+/* 📱 Телефони */
+@media (max-width: 600px) {
+    .clientsProfit {
+        max-width: 550px;
+        padding: 8px 14px;
+    }
+    .clientsLabel {
+        font-size: 16px;
+    }
+    .clientsPrice {
+        font-size: 22px;
+    }
+}
+
+/* 📱 Дуже маленькі екрани */
+@media (max-width: 400px) {
+    .clientsProfit {
+        max-width: 380px;
+        padding: 6px 12px;
+    }
+    .clientsLabel {
+        font-size: 15px;
+    }
+    .clientsPrice {
+        font-size: 20px;
+    }
 }

@@ -4,6 +4,7 @@ import React from "react";
 import { Trash, Pen, Eye } from "../../../public/icons";
 import styles from "./Table.module.css";
 import { TooltipWrapper } from "@/components/Table/TooltipWrapper/TooltipWrapper";
+import Link from "next/link";
 
 interface TableColumn<T> {
   key: keyof T | string;
@@ -36,6 +37,9 @@ interface TableProps<T> {
   // Функція для отримання класу рядка за елементом даних
   getRowClassName?: (item: T) => string;
   showHeader?: boolean;
+  // Функція для переходу на сторінку (Додати бригаду)
+  addLink?: string;
+  addLinkId?: string;
 }
 
 export function Table<T extends { id: string }>({
@@ -54,6 +58,8 @@ export function Table<T extends { id: string }>({
   className,
   getRowClassName,
   showHeader = true,
+  addLink,
+  addLinkId,
 }: TableProps<T>) {
   return (
     <div className=" ">
@@ -236,18 +242,25 @@ export function Table<T extends { id: string }>({
             ))}
           </tbody>
         </table>
-        {onAdd && (
-          <div
-            className={`${styles.TableStickyButtonWrap} flex justify-center items-center`}
-          >
+        {onAdd || addLink ? (
+        <div className={`${styles.TableStickyButtonWrap} flex justify-center items-center`}>
+          {addLink ? (
+            <Link
+              href={addLinkId ? `${addLink}/${addLinkId}` : addLink}
+              className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)] flex justify-center items-center`}
+            >
+              <span className={styles.TableBtnText}>Додати послугу</span>
+            </Link>
+          ) : (
             <button
               className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
               onClick={onAdd}
             >
               <span className={styles.TableBtnText}>Додати послугу</span>
             </button>
-          </div>
-        )}
+          )}
+        </div>
+      ) : null}
       </div>
     </div>
   );

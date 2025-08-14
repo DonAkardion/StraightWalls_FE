@@ -111,7 +111,7 @@ export const DoughnutChart = () => {
   };
 
   return (
-    <div className={`max-w-[985px] flex items-center justify-around bg-white p-5 rounded-lg h-[250px] ${styles.donutChart}`}>
+    <div className={`flex items-center justify-around bg-white p-5 rounded-lg h-[250px] mb-10 ${styles.donutChart}`}>
       <div className={`w-[180px] ${styles.chartContainer}`}>
         <Doughnut data={data} options={options} plugins={[centerTextPlugin]} />
       </div>

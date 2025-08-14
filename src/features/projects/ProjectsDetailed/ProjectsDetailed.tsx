@@ -1,6 +1,5 @@
 "use client";
 import React, { useMemo } from "react";
-import { mockClients } from "@/mock/Clients/clientsMock";
 import styles from "./ClientsDetailed.module.css";
 import { useParams } from "next/navigation";
 import Link from "next/link";

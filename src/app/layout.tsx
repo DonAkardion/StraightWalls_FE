@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, Jura, Koulen } from "next/font/google";
+import { CrewProvider } from './../features/addWorker/addWorkerContext';
 
 const jura = Jura({
   variable: "--font-jura",
@@ -34,7 +35,11 @@ export default function RootLayout({
       lang="en"
       className={`${jura.variable} ${koulen.variable} ${inter.variable}`}
     >
-      <body className="">{children}</body>
+      <body className="">
+        <CrewProvider>
+        {children}
+        </CrewProvider>
+        </body>
     </html>
   );
 }

@@ -14,7 +14,7 @@ export const ForNavigationMessage = () => {
             </div>
             <div>
               <span className="text-red-600 font-semibold">
-                {interaction.price} ₴
+                {interaction.price} грн
               </span>
             </div>
           </div>
