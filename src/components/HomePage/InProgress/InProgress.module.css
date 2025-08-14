@@ -1,0 +1,12 @@
+.tytle {
+  font-family: var(--font-inter);
+  font-size: 20px;
+  line-height: 24px;
+}
+
+@media (width >= 48rem /* 768px */) {
+  .tytle {
+    font-size: 32px;
+    line-height: 38px;
+  }
+}

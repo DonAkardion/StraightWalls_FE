@@ -1,0 +1,58 @@
+import { InProgress } from "@/types/inProgress";
+
+export const mockMaterials: InProgress[] = [
+  {
+    id: "1",
+    projectID: "7392",
+    projectCrew: "102",
+    currentStage: "Done",
+    nextStage: "Done",
+    materialsIncome: 25000,
+    crewSalary: 12000,
+  },
+  {
+    id: "2",
+    projectID: "1934",
+    projectCrew: "103",
+    currentStage: "Waiting",
+    nextStage: "Done",
+    materialsIncome: 15000,
+    crewSalary: 8000,
+  },
+  {
+    id: "3",
+    projectID: "3029",
+    projectCrew: "106",
+    currentStage: "Done",
+    nextStage: "Done",
+    materialsIncome: 22000,
+    crewSalary: 11000,
+  },
+  {
+    id: "4",
+    projectID: "4467",
+    projectCrew: "108",
+    currentStage: "Waiting",
+    nextStage: "Done",
+    materialsIncome: 14000,
+    crewSalary: 7500,
+  },
+  {
+    id: "5",
+    projectID: "6743",
+    projectCrew: "110",
+    currentStage: "Done",
+    nextStage: "Done",
+    materialsIncome: 26000,
+    crewSalary: 12500,
+  },
+  {
+    id: "6",
+    projectID: "2890",
+    projectCrew: "111",
+    currentStage: "Waiting",
+    nextStage: "Done",
+    materialsIncome: 16000,
+    crewSalary: 9000,
+  },
+];
