@@ -35,11 +35,11 @@ export default function RootLayout({
       lang="en"
       className={`${jura.variable} ${koulen.variable} ${inter.variable}`}
     >
+    <CrewProvider>
       <body className="">
-        <CrewProvider>
         {children}
-        </CrewProvider>
-        </body>
+      </body>
+    </CrewProvider>
     </html>
   );
 }

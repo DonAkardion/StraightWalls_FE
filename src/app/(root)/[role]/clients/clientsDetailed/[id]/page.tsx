@@ -1,9 +1,10 @@
-import { ClientsDetailed } from "@/features/clients/ClientsDetailed/ClientsDetailed";
+import { ClientsInteraction } from "../../../../../../components/Clients/ClientsDetailed/ClientInteraction/ClientInteraction";
+import { ClientsBenefit } from "../../../../../../components/Clients/ClientsDetailed/ClientsBenefit/ClientsBenefit";
+import { ClientsContainer } from "../../../../../../components/Clients/ClientsDetailed/ClientsContainer";
+import { ClientsProjectsTable } from "../../../../../../components/Clients/ClientsDetailed/ClientsProjectsTable/ClientsProjectsTable";
+import { ClientsDetailed } from "../../../../../../features/clients/ClientsDetailed/ClientsDetailed";
 import React from "react";
-import { ClientsInteraction } from "@/components/Clients/ClientsDetailed/ClientInteraction/ClientInteraction";
-import { ClientsBenefit } from "@/components/Clients/ClientsDetailed/ClientsBenefit/ClientsBenefit";
-import { ClientsProjectsTable } from "@/components/Clients/ClientsDetailed/ClientsProjectsTable/ClientsProjectsTable";
-import { ClientsContainer } from "@/components/Clients/ClientsDetailed/ClientsContainer";
+
 
 interface Params {
   role: string;

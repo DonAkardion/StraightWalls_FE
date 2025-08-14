@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
-import { DoughnutChart } from "@/components/DonutChart/DonutChart";
-import { GraphicChart } from "@/components/GraphicChart/GraphicChart";
-import MaterialsTable from "@/components/ReportsTable/ReportsTable";
-import { ReportsContainer } from './ReportsContainer';
+import { ReportsContainer } from "./ReportsContainer";
+import { DoughnutChart } from "../../components/DonutChart/DonutChart";
+import MaterialsTable from "../../components/ReportsTable/ReportsTable";
+import { GraphicChart } from "../../components/GraphicChart/GraphicChart";
+
 
 
 export function Reports() {
