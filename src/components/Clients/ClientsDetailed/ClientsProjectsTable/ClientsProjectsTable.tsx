@@ -1,8 +1,19 @@
 "use client";
 
+import React from "react";
+
 import { Table } from "@/components/Table/Table";
 import { clientsProjectsData } from "@/mock/Clients/clientsProjectsTable";
-import { ProjectsHeaders } from "./../../../../features/projects/ProjectHeaders";
+import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
+
+interface Project {
+  id: string | number;
+  projectNumber: string;
+  cost: string | number;
+  team: string;
+  period: string;
+  status: "active" | "inactive" | string;
+}
 
 export const ClientsProjectsTable = () => {
   const projectColumns = [
@@ -13,7 +24,7 @@ export const ClientsProjectsTable = () => {
     {
       key: "status",
       label: "",
-      render: (item) => (
+      render: (item: Project) => (
         <span
           style={{
             display: "inline-block",
@@ -39,7 +50,6 @@ export const ClientsProjectsTable = () => {
         data={clientsProjectsData}
         columns={projectColumns}
         showIndex={false}
-        onRowClick={(id) => console.log("Clicked project id:", id)}
       />
     </div>
   );

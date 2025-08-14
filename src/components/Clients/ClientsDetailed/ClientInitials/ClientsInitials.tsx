@@ -1,3 +1,4 @@
+import React from "react";
 import { useRouter } from "next/navigation";
 import backIcon from "../../../../../public/icons/Back.svg";
 import { columns } from "@/features/clients/ClientsColumns/ClientsColumns";

@@ -1,3 +1,4 @@
+import React from "react";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
 import { InteractionsMessage } from "./ClientsInteraction";
 

@@ -4,9 +4,7 @@ import styles from "./ClientsInteraction.module.css";
 
 export const InteractionsMessage = () => {
   return (
-    <div
-      className={`${styles.interactionDiv} border border-[#FFB326] px-8 py-4 rounded mt-3 max-w-full`}
-    >
+    <div className="w-full m-auto border border-[#FFB326] px-8 py-4 rounded mt-3">
       {clientsInteractions.map((interaction, index) => (
         <ClientsText
           key={index}

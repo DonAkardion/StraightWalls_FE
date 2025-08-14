@@ -1,0 +1,17 @@
+.pastOrder {
+  color: var(--green);
+}
+.currentOrder {
+  color: #a89d00;
+}
+.futureOrder {
+  color: var(--blue);
+}
+.hideOnMobile {
+  display: none;
+}
+@media (width >= 48rem /* 768px */) {
+  .hideOnMobile {
+    display: flex;
+  }
+}

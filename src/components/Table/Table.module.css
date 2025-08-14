@@ -111,7 +111,7 @@
 
 .TableWrap::-webkit-scrollbar-track {
   background: var(--yellow-gradient);
-  border-radius: 8px
+  border-radius: 8px;
 }
 
 .TableWrap::-webkit-scrollbar-thumb {
@@ -121,6 +121,9 @@
 
 .TableWrap::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-black);
+}
+.inspectTr {
+  display: none;
 }
 
 .TableWrap {
@@ -143,6 +146,103 @@
 }
 .canceledRow {
   color: var(--red);
+}
+/* правила для AddProject  Estimate*/
+:global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+  background: var(--yellow-gradient);
+}
+:global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+  background: var(--yellow-gradient);
+}
+:global(.projectEstimateTableWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectEstimateTableWrap) .indentCellSmall {
+  display: none;
+}
+:global(.projectEstimateTableWrap) .TableCellInspect {
+  display: none;
+}
+/* правила для AddProject  Materials*/
+:global(.projectMaterialsEditorWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
+  background: var(--yellow-gradient);
+  width: 120px;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(7) {
+  width: 120px;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(8) {
+  width: 120px;
+}
+:global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
+  background: var(--yellow-gradient);
+}
+:global(.projectMaterialsEditorWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .indentCellSmall {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(9) {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .TableCell:nth-child(7) {
+  display: none;
+}
+:global(.projectMaterialsEditorWrap) .TableCellInspect {
+  display: none;
+}
+/* правила для AddProject  MaterialsIncome*/
+:global(.projectMaterialsIncomeEditorWrap) .indentCellLast {
+  display: table-cell;
+}
+:global(.projectMaterialsIncomeEditorWrap) .TableRowCell:nth-child(7) {
+  background: var(--yellow-gradient);
+  width: 120px;
+}
+:global(.projectMaterialsIncomeEditorWrap) .TableCell:nth-child(5) {
+  background: var(--yellow-gradient);
+}
+:global(.projectMaterialsIncomeEditorWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для HomePage  InProgressTable*/
+:global(.InProgressTableWrap) .indentCellLast {
+  display: none;
+}
+:global(.InProgressTableWrap) .TableCell {
+  vertical-align: bottom;
+}
+:global(.InProgressTableWrap) .TableCell:nth-child(2) {
+  vertical-align: top;
+}
+:global(.InProgressTableWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для ProjectDetailed  Estimate*/
+:global(.projectDetailedEstimateTableWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectDetailedEstimateTableWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для ProjectDetailed  Materials*/
+:global(.projectDetailedMaterialsWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectDetailedMaterialsWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для Reports Materials*/
+:global(.reportsMaterialsWrap) .indentCellLast {
+  display: none;
+}
+
+:global(.reportsMaterialsWrap) .indentCellSmallSecond {
+  width: 20px;
 }
 
 @media (max-width: 768px) {
@@ -200,6 +300,9 @@
   .noBottomBorderRow td {
     border-bottom: none !important;
   }
+  .inspectTr {
+    display: table-row;
+  }
   /* правила для Crews */
   :global(.CrewsTableWrap) .indentCellSmallSecond {
     width: 20px;
@@ -209,10 +312,80 @@
   :global(.clientsTableWrap) .indentCellSmallSecond {
     display: none;
   }
-}
+  /* правила для AddProject  Estimate*/
+  :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectEstimateTableWrap) .TableCellInspect {
+    display: table-cell;
+  }
+  :global(.projectEstimateTableWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.projectEstimateTableWrap) .indentCellSmall {
+    display: table-cell;
+  }
+  /* правила для AddProject  Materials*/
 
-@media (min-width: 768px) {
-  .inspectTr {
-    display: none;
+  :global(.projectMaterialsEditorWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectMaterialsEditorWrap) .indentCellSmall {
+    display: table-cell;
+  }
+  :global(.projectMaterialsEditorWrap) .TableCellInspect {
+    display: table-cell;
+  }
+  /* правила для AddProject  MaterialsIncome*/
+  :global(.projectMaterialsIncomeEditorWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.projectMaterialsIncomeEditorWrap) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectMaterialsIncomeEditorWrap) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
+  }
+  /* правила для HomePage  InProgressTable*/
+  :global(.InProgressTableWrap) .indentCellLast {
+    display: table-cell;
+  }
+  /* правила для ProjectDetailed  Estimate*/
+  :global(.projectDetailedEstimateTableWrap) .indentCellLast {
+    display: table-cell;
+  }
+  /* правила для ProjectDetailed  Materials*/
+  :global(.projectDetailedMaterialsWrap) .indentCellLast {
+    display: table-cell;
+  }
+  /* правила для Reports Materials*/
+  :global(.reportsMaterialsWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .TableRowCell:nth-child(6) {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .TableCell:nth-child(4) {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .TableCellInspect {
+    display: table-cell;
   }
 }

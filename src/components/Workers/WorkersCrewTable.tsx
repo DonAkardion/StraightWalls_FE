@@ -55,10 +55,6 @@ export function WorkersCrewTable({
             render: (crew: Crew) =>
               workers.filter((worker) => worker.crewId === crew.id).length,
             label: "Кількість робітників",
-            tooltip: (crew) =>
-              `Кількість робітників: ${
-                workers.filter((w) => w.crewId === crew.id).length
-              }`,
           },
           {
             key: "brigadier",
@@ -73,7 +69,17 @@ export function WorkersCrewTable({
           {
             key: "status",
             label: "Статус",
-            tooltip: (crew) => `Статус: ${crew.status}`,
+            render: (crew: Crew) => {
+              if (!crew.status) {
+                return (
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="h-4 w-4 rounded-full bg-green-600"></div>
+                    <span>Вільні</span>
+                  </div>
+                );
+              }
+              return <span>{crew.status}</span>;
+            },
           },
         ]}
       />

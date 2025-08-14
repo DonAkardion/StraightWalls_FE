@@ -46,7 +46,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         placeholder="Ціна"
         value={service.price}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        className="border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none "
         min={0}
       />
 
@@ -57,7 +57,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         placeholder="Кількість"
         value={service.amount}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        className={`${styles.inputField}  border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none `}
         min={0}
       />
     </div>

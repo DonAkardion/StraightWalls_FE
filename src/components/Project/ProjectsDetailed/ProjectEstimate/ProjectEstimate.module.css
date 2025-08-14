@@ -5,6 +5,19 @@
 .totatCostSeparate {
   background: none;
 }
+.editInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+.editInput::-webkit-outer-spin-button,
+.editInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.editInput {
+  -moz-appearance: textfield;
+}
 
 .totatCostSeparateTytle {
   font-weight: 400;
@@ -14,7 +27,7 @@
 .totatCostMain {
   background: var(--yellow-gradient);
 }
-.tableetweenWrap {
+.tableBetweenWrap {
   position: relative;
   box-shadow: none;
 }
@@ -53,7 +66,7 @@
     background: var(--background);
   }
   /* Ліва тінь */
-  .tableetweenWrap::before {
+  .tableBetweenWrap::before {
     content: "";
     position: absolute;
     top: 0;
@@ -66,7 +79,7 @@
   }
 
   /* Права тінь */
-  .tableetweenWrap::after {
+  .tableBetweenWrap::after {
     content: "";
     position: absolute;
     top: 0;

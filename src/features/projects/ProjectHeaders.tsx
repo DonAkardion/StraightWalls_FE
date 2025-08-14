@@ -10,7 +10,7 @@ export const ProjectsHeaders: React.FC<ProjectsHeadersProps> = ({
   return (
     <>
       {headers.map((header, index) => (
-        <h3 key={index} className={`${className} w-full text-center`}>
+        <h3 key={index} className={`${className} w-full`}>
           {header}
         </h3>
       ))}
