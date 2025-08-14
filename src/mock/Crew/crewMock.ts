@@ -53,25 +53,25 @@ export const mockCrews: Crew[] = [
   {
     id: "109",
     name: "Ств Козак",
-    brigadier: null,
+    brigadier: mockWorkers[9],
     status: "Об’єкт №700",
   },
   {
     id: "110",
     name: "Ств Дяченко",
-    brigadier: null,
+    brigadier: mockWorkers[10],
     status: null,
   },
   {
     id: "111",
     name: "Ств Шевченко",
-    brigadier: null,
+    brigadier: mockWorkers[11],
     status: null,
   },
   {
     id: "112",
     name: "Ств Іванчук",
-    brigadier: null,
+    brigadier: mockWorkers[1],
     status: null,
   },
 ];

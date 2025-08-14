@@ -47,7 +47,6 @@ export function WorkersTable({
           {
             key: "salary",
             label: "Зарплата",
-            tooltip: (worker) => `Зарплата: ${worker.salary}`,
           },
           {
             key: "phone",
