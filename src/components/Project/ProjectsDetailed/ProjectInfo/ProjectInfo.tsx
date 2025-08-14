@@ -101,7 +101,7 @@ export function ProjectInfo({ client, project }: Props) {
           className={`${styles.projectInfoBackBtn} absolute md:static top-[13px] left-[18px] flex items-center gap-[5px] md:ml-auto `}
         >
           <button
-            className="flex items-center gap-[5px]"
+            className="flex items-center gap-[5px] cursor-pointer"
             onClick={() => router.back()}
           >
             <img

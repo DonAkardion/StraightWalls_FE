@@ -16,6 +16,7 @@ export function ProjectMaterials() {
       <ProjectMaterialsTable
         expandedId={expandedId}
         onInspect={handleInspect}
+        className="projectDetailedMaterialsWrap"
       />
       <div
         className={`${styles.totatCostSeparate} md:absolute md:bottom-[-60px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px] `}

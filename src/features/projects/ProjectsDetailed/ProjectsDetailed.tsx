@@ -28,7 +28,10 @@ export function ProjectsDetailed({ projectId }: Props) {
       <div>
         {client && <ProjectInfo client={client} project={project} />}
 
-        <ProjectEstimate services={mockServices} />
+        <ProjectEstimate
+          services={mockServices}
+          tableClassName="projectDetailedEstimateTableWrap"
+        />
         <ProjectMaterials />
         <ProjectPayment />
         <ProjectCrew

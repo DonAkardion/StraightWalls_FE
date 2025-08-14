@@ -209,7 +209,42 @@
 :global(.projectMaterialsIncomeEditorWrap) .indentCellSmallSecond {
   width: 20px;
 }
-/* #TODO правила для...*/
+/* правила для HomePage  InProgressTable*/
+:global(.InProgressTableWrap) .indentCellLast {
+  display: none;
+}
+:global(.InProgressTableWrap) .TableCell {
+  vertical-align: bottom;
+}
+:global(.InProgressTableWrap) .TableCell:nth-child(2) {
+  vertical-align: top;
+}
+:global(.InProgressTableWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для ProjectDetailed  Estimate*/
+:global(.projectDetailedEstimateTableWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectDetailedEstimateTableWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для ProjectDetailed  Materials*/
+:global(.projectDetailedMaterialsWrap) .indentCellLast {
+  display: none;
+}
+:global(.projectDetailedMaterialsWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+/* правила для Reports Materials*/
+:global(.reportsMaterialsWrap) .indentCellLast {
+  display: none;
+}
+
+:global(.reportsMaterialsWrap) .indentCellSmallSecond {
+  width: 20px;
+}
+
 @media (max-width: 768px) {
   .Tytle {
     line-height: 24px;
@@ -327,5 +362,30 @@
   :global(.projectMaterialsIncomeEditorWrap) .TableCell:nth-child(5) {
     display: table-cell;
     background: none;
+  }
+  /* правила для HomePage  InProgressTable*/
+  :global(.InProgressTableWrap) .indentCellLast {
+    display: table-cell;
+  }
+  /* правила для ProjectDetailed  Estimate*/
+  :global(.projectDetailedEstimateTableWrap) .indentCellLast {
+    display: table-cell;
+  }
+  /* правила для ProjectDetailed  Materials*/
+  :global(.projectDetailedMaterialsWrap) .indentCellLast {
+    display: table-cell;
+  }
+  /* правила для Reports Materials*/
+  :global(.reportsMaterialsWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .TableRowCell:nth-child(6) {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .TableCell:nth-child(4) {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .TableCellInspect {
+    display: table-cell;
   }
 }

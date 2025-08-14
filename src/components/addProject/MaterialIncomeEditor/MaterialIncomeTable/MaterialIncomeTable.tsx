@@ -89,7 +89,7 @@ export const MaterialIncomeTable = ({
                     min={0}
                     onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleInputChange(e, i)}
-                    className={`${styles.editInput} md:w-12 w-[100px] text-center rounded px-1 py-0`}
+                    className={`${styles.editInput} md:w-12 w-[90px] text-center rounded px-1 py-0`}
                     placeholder="0"
                   />
                   <button
@@ -113,7 +113,6 @@ export const MaterialIncomeTable = ({
             getId={(item) => item.id}
             fields={[
               { label: "Сума", value: (item) => item.price },
-              { label: "Кількість", value: (item) => item.amount },
               { label: "Квадратура", value: (item) => item.area },
               { label: "Заробіток", value: (item) => item.income },
             ]}
