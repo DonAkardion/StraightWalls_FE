@@ -45,6 +45,7 @@ export const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
       {visible &&
         createPortal(
           <div
+            className="hidden md:flex"
             style={{
               position: "absolute",
               top: coords.top,
