@@ -15,6 +15,7 @@ export { default as Purse } from "./Purse.svg";
 export { default as Phone } from "./Phone.svg";
 export { default as Mail } from "./Mail.svg";
 export { default as Eye } from "./Eye.svg";
+export { default as EyeOpen } from "./EyeOpen.svg";
 export { default as Pen } from "./Pen.svg";
 export { default as Trash } from "./Trash.svg";
 

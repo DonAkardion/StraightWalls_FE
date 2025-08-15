@@ -1,4 +1,5 @@
 import "./globals.css";
+import React from "react";
 import type { Metadata } from "next";
 import { Inter, Jura, Koulen } from "next/font/google";
 
@@ -34,9 +35,7 @@ export default function RootLayout({
       lang="en"
       className={`${jura.variable} ${koulen.variable} ${inter.variable}`}
     >
-      <body className="">
-        {children}
-      </body>
+      <body className="">{children}</body>
     </html>
   );
 }
