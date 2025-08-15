@@ -1,26 +1,25 @@
 "use client";
 import React from "react";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Plugin
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Plugin } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { mockProjects } from "@/mock/Project/mockProjects";
-import styles from "./DonutChart.module.css"
+import styles from "./DonutChart.module.css";
+import { TooltipItem } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip);
 
 const centerTextPlugin: Plugin = {
   id: "centerText",
   afterDraw(chart) {
-    const { ctx, chartArea: { width, height, left, top } } = chart;
+    const {
+      ctx,
+      chartArea: { width, height, left, top },
+    } = chart;
     ctx.save();
 
     const dataset = chart.data.datasets[0];
-    const total = dataset.data.reduce((acc, val) => acc + Number(val), 0);
-    const doneIndex = chart.data.labels.indexOf("Done");
+    const total = (dataset.data as number[]).reduce((acc, val) => acc + val, 0);
+    const doneIndex = chart.data.labels?.indexOf("Done") ?? -1;
     const doneValue = doneIndex >= 0 ? Number(dataset.data[doneIndex]) : 0;
     const percent = total > 0 ? Math.round((doneValue / total) * 100) : 0;
 
@@ -30,34 +29,34 @@ const centerTextPlugin: Plugin = {
     ctx.textBaseline = "middle";
     ctx.fillText(`${percent}%`, left + width / 2, top + height / 2);
     ctx.restore();
-  }
+  },
 };
 
 export const DoughnutChart = () => {
   const tasksStatus: Record<string, number> = {};
 
-  mockProjects.forEach(project => {
+  mockProjects.forEach((project) => {
     const status = project.status;
     tasksStatus[status] = (tasksStatus[status] || 0) + 1;
   });
 
   const orderedStatuses = ["Done", "In progress", "Waiting", "Canceled"];
-  const filteredSortedLabels = orderedStatuses.filter(s => s in tasksStatus);
-  const dataValues = filteredSortedLabels.map(label => tasksStatus[label]);
+  const filteredSortedLabels = orderedStatuses.filter((s) => s in tasksStatus);
+  const dataValues = filteredSortedLabels.map((label) => tasksStatus[label]);
   const total = dataValues.reduce((acc, val) => acc + val, 0);
 
   const colors: Record<string, string> = {
-    "Done": "#15ae08",
+    Done: "#15ae08",
     "In progress": "#0097c0",
-    "Waiting": "#ffb32680",
-    "Canceled": "#b70000"
+    Waiting: "#ffb32680",
+    Canceled: "#b70000",
   };
 
   const ukrLabels: Record<string, string> = {
-    "Done": "Виконано",
+    Done: "Виконано",
     "In progress": "В процесі",
-    "Waiting": "Очікує",
-    "Canceled": "Відхилено"
+    Waiting: "Очікує",
+    Canceled: "Відхилено",
   };
 
   const data = {
@@ -66,10 +65,10 @@ export const DoughnutChart = () => {
       {
         label: "Кількість проєктів",
         data: dataValues,
-        backgroundColor: filteredSortedLabels.map(l => colors[l]),
-        borderWidth: 0
-      }
-    ]
+        backgroundColor: filteredSortedLabels.map((l) => colors[l]),
+        borderWidth: 0,
+      },
+    ],
   };
 
   const options = {
@@ -80,15 +79,15 @@ export const DoughnutChart = () => {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: context => {
+          label: (context: TooltipItem<"doughnut">) => {
             const label = context.label || "";
             const value = context.parsed || 0;
             const percentage = total ? ((value / total) * 100).toFixed(0) : "0";
             return `${label}: ${percentage}%`;
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   };
 
   const leftColumn = ["Done", "In progress"];
@@ -111,12 +110,16 @@ export const DoughnutChart = () => {
   };
 
   return (
-    <div className={`flex items-center justify-around bg-white p-5 rounded-lg h-[250px] mb-10 ${styles.donutChart}`}>
+    <div
+      className={`flex items-center justify-around bg-white p-5 rounded-lg h-[250px] mb-10 ${styles.donutChart}`}
+    >
       <div className={`max-w-[180px] ${styles.chartContainer}`}>
         <Doughnut data={data} options={options} plugins={[centerTextPlugin]} />
       </div>
       <div className={`flex flex-col justify-center ${styles.legendBlock}`}>
-        <h3 className={`mb-5 text-center font-semibold ${styles.legendTitle}`}>Виконання проєктів</h3>
+        <h3 className={`mb-5 text-center font-semibold ${styles.legendTitle}`}>
+          Виконання проєктів
+        </h3>
         <div className="flex gap-10">
           <div>{leftColumn.map(renderLegendItem)}</div>
           <div>{rightColumn.map(renderLegendItem)}</div>
