@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Trash, Pen, Eye } from "../../../public/icons";
+import { Trash, Pen, Eye, EyeOpen } from "../../../public/icons";
 import styles from "./Table.module.css";
 import { TooltipWrapper } from "@/components/Table/TooltipWrapper/TooltipWrapper";
 import Link from "next/link";
@@ -40,6 +40,8 @@ interface TableProps<T> {
   // Функція для переходу на сторінку (Додати бригаду)
   addLink?: string;
   addLinkId?: string;
+  // Додати назву кнопки
+  addButtonText?: string;
 }
 
 export function Table<T extends { id: string }>({
@@ -60,6 +62,7 @@ export function Table<T extends { id: string }>({
   showHeader = true,
   addLink,
   addLinkId,
+  addButtonText,
 }: TableProps<T>) {
   return (
     <div className=" ">
@@ -151,40 +154,11 @@ export function Table<T extends { id: string }>({
                             }}
                             title="Закрити перегляд"
                           >
-                            {/* Перекреслене око /// #TODO змінити*/}
-                            <svg
+                            <img
+                              src={EyeOpen.src}
+                              alt="Inspect"
                               className={`${styles.TableItemIcon} ${styles.TableItemIconInspect} w-[21px] h-[21px] cursor-pointer`}
-                              width="21"
-                              height="21"
-                              viewBox="0 0 25 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M12.5 18C6.98 18 2.5 12 2.5 12C2.5 12 6.98 6 12.5 6C18.02 6 22.5 12 22.5 12C22.5 12 18.02 18 12.5 18Z"
-                                stroke="#000000"
-                                strokeWidth="2"
-                                strokeMiterlimit="10"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M12.5 14.5C13.8807 14.5 15 13.3807 15 12C15 10.6193 13.8807 9.5 12.5 9.5C11.1193 9.5 10 10.6193 10 12C10 13.3807 11.1193 14.5 12.5 14.5Z"
-                                stroke="#000000"
-                                strokeWidth="2"
-                                strokeMiterlimit="10"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d="M22.5 2L2.5 22"
-                                stroke="#000000"
-                                strokeWidth="2"
-                                strokeMiterlimit="10"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+                            />
                           </button>
                         ) : (
                           <button
@@ -263,7 +237,7 @@ export function Table<T extends { id: string }>({
                 href={addLinkId ? `${addLink}/${addLinkId}` : addLink}
                 className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)] flex justify-center items-center`}
               >
-                <span className={styles.TableBtnText}>Додати послугу</span>
+                <span className={styles.TableBtnText}>{addButtonText}</span>
               </Link>
             ) : (
               <button
@@ -273,8 +247,7 @@ export function Table<T extends { id: string }>({
                   onAdd?.();
                 }}
               >
-                {/* #TODO Винести назву кнопки */}
-                <span className={styles.TableBtnText}>Додати послугу</span>
+                <span className={styles.TableBtnText}>{addButtonText}</span>
               </button>
             )}
           </div>

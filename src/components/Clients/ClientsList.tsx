@@ -45,6 +45,7 @@ export const ClientsList = ({
         }
         onRowClick={handleRowClick} // перехід
         enableTooltips={enableTooltips}
+        addButtonText="Додати клієнта"
         columns={[
           {
             key: "name",

@@ -50,6 +50,7 @@ export const ServiceList = ({
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
+      addButtonText="Додати послугу"
       columns={[
         { key: "name", label: isMobile ? "Назва" : "Найменування послуги" },
         { key: "unit", label: "Од. вимір." },

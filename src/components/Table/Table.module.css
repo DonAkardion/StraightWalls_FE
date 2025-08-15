@@ -61,6 +61,15 @@
   max-height: 21px;
   object-fit: contain;
 }
+.TableItemIconOpened {
+  width: 21px;
+  height: 21px;
+  min-width: 21px;
+  min-height: 21px;
+  max-width: 21px;
+  max-height: 21px;
+  object-fit: contain;
+}
 .TableItemInspect {
   display: none;
 }
@@ -146,6 +155,9 @@
 }
 .canceledRow {
   color: var(--red);
+}
+:global(.projectsTableWrap) .indentCellSmallSecond {
+  display: none;
 }
 /* правила для AddProject  Estimate*/
 :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
@@ -272,6 +284,9 @@
     font-size: 16px;
   }
   .TableItemIcon {
+    display: none;
+  }
+  .TableItemIconOpened {
     display: none;
   }
   .TableItemIconInspect {

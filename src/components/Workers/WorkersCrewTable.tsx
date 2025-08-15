@@ -6,7 +6,6 @@ import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
 import { useCrew } from "@/features/addWorker/addWorkerContext";
 
-
 interface WorkersCrewTableProps {
   crews: Crew[];
   workers: Worker[];
@@ -27,7 +26,7 @@ export function WorkersCrewTable({
   const ctx = useCrew();
 
   const crews = initialCrews.concat(
-  (ctx?.crews.filter(c => !initialCrews.find(ic => ic.id === c.id))) || []
+    ctx?.crews.filter((c) => !initialCrews.find((ic) => ic.id === c.id)) || []
   );
   const workers = initialWorkers;
 
@@ -44,6 +43,7 @@ export function WorkersCrewTable({
         addLink="/admin/workers/addWorker"
         addLinkId="123"
         enableTooltips={enableTooltips}
+        addButtonText="Додати бригаду"
         columns={[
           {
             key: "name",
@@ -60,7 +60,9 @@ export function WorkersCrewTable({
             key: "brigadier",
             label: "Бригадир",
             render: (crew: Crew) =>
-              typeof crew.brigadier === "object" ? `${crew.brigadier?.name}` : "",
+              typeof crew.brigadier === "object"
+                ? `${crew.brigadier?.name}`
+                : "",
             tooltip: (crew) =>
               typeof crew.brigadier === "object"
                 ? `Бригадир: ${crew.brigadier?.name}`
