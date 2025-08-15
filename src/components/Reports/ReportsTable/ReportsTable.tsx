@@ -62,16 +62,11 @@ const columns = [
   { key: "supplier", label: "Постачальник" },
   {
     key: "icon",
-    label: "",
-    render: () => (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <img
+    label: (<img
           src={burgerTable.src}
           alt="icon"
           style={{ width: 25, height: 25 }}
-        />
-      </div>
-    ),
+        />),
   },
 ];
 

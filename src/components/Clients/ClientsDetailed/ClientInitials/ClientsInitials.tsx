@@ -17,11 +17,11 @@ export const ClientsInitials = ({ client }: Props) => {
 
   return (
     <div className={`${styles.clientsInitialsDiv} w-full`}>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between">
         <h2 className="text-black text-[30px] font-sans">{client.name}</h2>
         <div
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-sm text-gray-500 hover:underline cursor-pointer"
+          className={`${styles.backBtnMobile} flex items-center gap-2 text-sm text-gray-500 hover:underline cursor-pointer`}
         >
           <IconButton
             icon={backIcon}
@@ -31,7 +31,7 @@ export const ClientsInitials = ({ client }: Props) => {
           <span className="text-gray-500 text-[17px]">Назад</span>
         </div>
       </div>
-      <div className="flex flex-wrap items-center gap-10">
+      <div className={`${styles.infoItemsWrapper} flex flex-wrap items-center gap-10`}>
         {columns
           .filter((column) => column !== "name")
           .map((column) => (

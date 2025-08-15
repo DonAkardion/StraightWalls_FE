@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-
+import styles from "./ClientsProjectsTable.module.css"
 import { Table } from "@/components/Table/Table";
 import { clientsProjectsData } from "@/mock/Clients/clientsProjectsTable";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
@@ -41,7 +41,7 @@ export const ClientsProjectsTable = () => {
   ];
 
   return (
-    <div className="w-full">
+    <div className={`${styles.clientsProjectsTable} w-full`}>
       <ProjectsHeaders
         headers={["Проєкти"]}
         className="text-black text-[36px] mt-5 mb-3 font-inter"
