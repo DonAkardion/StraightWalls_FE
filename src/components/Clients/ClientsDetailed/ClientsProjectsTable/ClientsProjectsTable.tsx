@@ -41,10 +41,10 @@ export const ClientsProjectsTable = () => {
   ];
 
   return (
-    <div style={{ width: "1000px", margin: "auto" }}>
+    <div className="w-full">
       <ProjectsHeaders
         headers={["Проєкти"]}
-        className="text-black text-[32px] mt-5 mb-3 font-inter"
+        className="text-black text-[36px] mt-5 mb-3 font-inter"
       />
       <Table
         data={clientsProjectsData}

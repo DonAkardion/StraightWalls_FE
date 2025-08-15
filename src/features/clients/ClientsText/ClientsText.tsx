@@ -8,9 +8,9 @@ export const ClientsText: React.FC<ClientsTextProps> = ({ clientsText, className
   return (
     <div>
         {clientsText.map((text, index) => (
-            <p key={index} className={`text-black text-[20px] ${className}`}>
+            <label key={index} className={`text-black text-[20px] ${className} block`}>
             {text}
-            </p>
+            </label>
         ))}
     </div>
   );

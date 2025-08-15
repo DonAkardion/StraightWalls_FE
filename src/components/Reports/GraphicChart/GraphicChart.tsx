@@ -1,6 +1,4 @@
 "use client";
-import React from "react";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +11,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { useState } from "react";
-import styles from "./GraphicChart.module.css";
+import styles from "./GraphicChart.module.css"
 
 ChartJS.register(
   CategoryScale,
@@ -28,32 +26,14 @@ ChartJS.register(
 type ChartType = "Продажі" | "Прибуток" | "Витрати";
 
 const months = [
-  "Січень",
-  "Лютий",
-  "Березень",
-  "Квітень",
-  "Травень",
-  "Червень",
-  "Липень",
-  "Серпень",
-  "Вересень",
-  "Жовтень",
-  "Листопад",
-  "Грудень",
+  "Січень","Лютий","Березень","Квітень","Травень","Червень",
+  "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень",
 ];
 
 const dataSets: Record<ChartType, number[]> = {
-  Продажі: [
-    12000, 8000, 11000, 14000, 12000, 16000, 15000, 18000, 19000, 17000, 15500,
-    16500,
-  ].map((x) => x * 10),
-  Прибуток: [
-    4000, 5500, 6000, 2500, 2900, 3000, 2800, 3500, 4000, 4100, 4300, 5000,
-  ].map((x) => x * 10),
-  Витрати: [
-    10000, 9000, 9500, 11500, 9800, 13000, 12200, 14500, 17000, 13700, 12400,
-    12900,
-  ].map((x) => x * 10),
+  Продажі: [12000,8000,11000,14000,12000,16000,15000,18000,19000,17000,15500,16500].map(x => x * 10),
+  Прибуток: [4000,5500,6000,2500,2900,3000,2800,3500,4000,4100,4300,5000].map(x => x * 10),
+  Витрати: [10000,9000,9500,11500,9800,13000,12200,14500,17000,13700,12400,12900].map(x => x * 10),
 };
 
 export const GraphicChart = () => {
@@ -81,7 +61,7 @@ export const GraphicChart = () => {
     },
     scales: {
       y: {
-        position: "right" as const,
+        position: "right",
         min: 10000,
         max: 200000,
         ticks: {
@@ -98,7 +78,7 @@ export const GraphicChart = () => {
         grid: {
           drawTicks: false,
           drawBorder: false,
-          color: (context: { tick: { value: number } }) => {
+          color: (context: any) => {
             const tickValue = context.tick.value;
             const allowed = [10000, 50000, 100000, 150000, 200000];
             return allowed.includes(tickValue) ? "#000000" : "transparent";
@@ -106,31 +86,19 @@ export const GraphicChart = () => {
         },
       },
       x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          maxRotation: 45,
-          minRotation: 45,
-        },
+        grid: { display: false },
+        ticks: { maxRotation: 45, minRotation: 45 },
       },
     },
     elements: {
-      line: {
-        borderWidth: 1,
-        tension: 0,
-      },
-      point: {
-        radius: 0,
-      },
+      line: { borderWidth: 1, tension: 0 },
+      point: { radius: 0 },
     },
   };
 
   return (
-    <div className={`w-full mt-15 ${styles.graphicChart}`}>
-      <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>
-        Звіт по місяцях
-      </h2>
+    <div className={`mt-15 ${styles.graphicChart}`}>
+      <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>Звіт по місяцях</h2>
       <div className={`${styles.graphiChart} bg-white p-8 rounded-lg`}>
         <div className={`mb-4 space-x-2 ${styles.graphicChartButtons}`}>
           {buttonsTitle.map((title) => (
@@ -150,5 +118,3 @@ export const GraphicChart = () => {
     </div>
   );
 };
-
-export default GraphicChart;

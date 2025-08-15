@@ -19,7 +19,7 @@ const data: Material[] = [
     quantity: "4 т",
     unitPrice: "500 грн",
     supplier: "ТОВ компанія",
-    icon: "",
+    icon: ""
   },
   {
     id: "2",
@@ -27,7 +27,7 @@ const data: Material[] = [
     quantity: "4 т",
     unitPrice: "500 грн",
     supplier: "ТОВ компанія",
-    icon: "",
+    icon: ""
   },
   {
     id: "3",
@@ -35,7 +35,7 @@ const data: Material[] = [
     quantity: "4 т",
     unitPrice: "500 грн",
     supplier: "ТОВ компанія",
-    icon: "",
+    icon: ""
   },
   {
     id: "4",
@@ -43,7 +43,7 @@ const data: Material[] = [
     quantity: "4 т",
     unitPrice: "500 грн",
     supplier: "ТОВ компанія",
-    icon: "",
+    icon: ""
   },
   {
     id: "5",
@@ -51,7 +51,7 @@ const data: Material[] = [
     quantity: "4 т",
     unitPrice: "500 грн",
     supplier: "ТОВ компанія",
-    icon: "",
+    icon: ""
   },
 ];
 
@@ -62,16 +62,7 @@ const columns = [
   { key: "supplier", label: "Постачальник" },
   {
     key: "icon",
-    label: "",
-    render: () => (
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <img
-          src={burgerTable.src}
-          alt="icon"
-          style={{ width: 25, height: 25 }}
-        />
-      </div>
-    ),
+    label: (<img src={burgerTable.src} alt="menu" style={{ width: 25, height: 25, margin: "0 auto" }} />),
   },
 ];
 
