@@ -12,7 +12,7 @@ export const NavigationMessage = () => {
       </button>
       <ProjectsHeaders
         headers={["Прострочені платежі"]}
-        className="text-black text-[12px] text-center mt-10 font-inter"
+        className="text-black text-[18px] mt-10 font-inter text-center"
       />
       <ForNavigationMessage />
     </div>

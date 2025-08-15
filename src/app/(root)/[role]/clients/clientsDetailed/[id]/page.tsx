@@ -1,8 +1,10 @@
-import { ClientsDetailed } from "@/features/clients/ClientsDetailed/ClientsDetailed";
-import React from "react";
 import { ClientsInteraction } from "../../../../../../components/Clients/ClientsDetailed/ClientInteraction/ClientInteraction";
-import { ClientsBenefit } from "@/components/Clients/ClientsDetailed/ClientsBenefit/ClientsBenefit";
+import { ClientsBenefit } from "../../../../../../components/Clients/ClientsDetailed/ClientsBenefit/ClientsBenefit";
+import { ClientsContainer } from "../../../../../../components/Clients/ClientsDetailed/ClientsContainer";
 import { ClientsProjectsTable } from "../../../../../../components/Clients/ClientsDetailed/ClientsProjectsTable/ClientsProjectsTable";
+import { ClientsDetailed } from "../../../../../../features/clients/ClientsDetailed/ClientsDetailed";
+import React from "react";
+
 
 interface Params {
   role: string;
@@ -16,12 +18,12 @@ interface Props {
 export default async function ClientsDetailedPage({ params }: Props) {
   const awaitedParams = await params;
 
-  return(
-    <div>
-        <ClientsDetailed clientId={awaitedParams.id} />
-        <ClientsProjectsTable />
-        <ClientsBenefit />
-        <ClientsInteraction />
-    </div>
-  )
+  return (
+    <ClientsContainer>
+      <ClientsDetailed clientId={awaitedParams.id} />
+      <ClientsProjectsTable />
+      <ClientsBenefit />
+      <ClientsInteraction />
+    </ClientsContainer>
+  );
 }

@@ -4,7 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Plugin } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { mockProjects } from "@/mock/Project/mockProjects";
 import styles from "./DonutChart.module.css";
-import type { TooltipItem } from "chart.js";
+import { TooltipItem } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip);
 
@@ -111,9 +111,9 @@ export const DoughnutChart = () => {
 
   return (
     <div
-      className={`w-full flex items-center justify-around bg-white p-5 rounded-lg h-[250px] ${styles.donutChart}`}
+      className={`flex items-center justify-around bg-white p-5 rounded-lg h-[250px] mb-10 ${styles.donutChart}`}
     >
-      <div className={`w-[180px] ${styles.chartContainer}`}>
+      <div className={`max-w-[180px] ${styles.chartContainer}`}>
         <Doughnut data={data} options={options} plugins={[centerTextPlugin]} />
       </div>
       <div className={`flex flex-col justify-center ${styles.legendBlock}`}>

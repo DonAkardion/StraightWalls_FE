@@ -4,6 +4,8 @@ import React from "react";
 import { Table } from "@/components/Table/Table";
 import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
+import { useCrew } from "@/features/addWorker/addWorkerContext";
+
 
 interface WorkersCrewTableProps {
   crews: Crew[];
@@ -15,13 +17,20 @@ interface WorkersCrewTableProps {
 }
 
 export function WorkersCrewTable({
-  crews,
-  workers,
+  crews: initialCrews,
+  workers: initialWorkers,
   onDelete,
   onEdit,
   onAdd,
   enableTooltips = true,
 }: WorkersCrewTableProps) {
+  const ctx = useCrew();
+
+  const crews = initialCrews.concat(
+  (ctx?.crews.filter(c => !initialCrews.find(ic => ic.id === c.id))) || []
+  );
+  const workers = initialWorkers;
+
   return (
     <div className="mb-[60px]">
       <Table
@@ -32,6 +41,8 @@ export function WorkersCrewTable({
         onDelete={(item) => onDelete(item.id)}
         onEdit={onEdit}
         onAdd={onAdd}
+        addLink="/admin/workers/addWorker"
+        addLinkId="123"
         enableTooltips={enableTooltips}
         columns={[
           {
@@ -44,27 +55,31 @@ export function WorkersCrewTable({
             render: (crew: Crew) =>
               workers.filter((worker) => worker.crewId === crew.id).length,
             label: "Кількість робітників",
-            tooltip: (crew) =>
-              `Кількість робітників: ${
-                workers.filter((w) => w.crewId === crew.id).length
-              }`,
           },
           {
             key: "brigadier",
             label: "Бригадир",
             render: (crew: Crew) =>
-              typeof crew.brigadier === "object"
-                ? `${crew.brigadier?.name}`
-                : "",
-            tooltip: (crew: Crew) =>
+              typeof crew.brigadier === "object" ? `${crew.brigadier?.name}` : "",
+            tooltip: (crew) =>
               typeof crew.brigadier === "object"
                 ? `Бригадир: ${crew.brigadier?.name}`
-                : `Бригадир: ${""}`,
+                : `Бригадир:`,
           },
           {
             key: "status",
             label: "Статус",
-            tooltip: (crew) => `Статус: ${crew.status}`,
+            render: (crew: Crew) => {
+              if (!crew.status) {
+                return (
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="h-4 w-4 rounded-full bg-green-600"></div>
+                    <span>Вільні</span>
+                  </div>
+                );
+              }
+              return <span>{crew.status}</span>;
+            },
           },
         ]}
       />

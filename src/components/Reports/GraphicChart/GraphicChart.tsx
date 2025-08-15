@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-
 import {
+  ChartOptions,
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -74,60 +74,52 @@ export const GraphicChart = () => {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"line"> = {
     responsive: true,
     plugins: {
       legend: { display: false },
     },
     scales: {
       y: {
-        position: "right" as const,
+        type: "linear",
+        position: "right",
         min: 10000,
         max: 200000,
         ticks: {
-          callback: function (tickValue: string | number): string {
+          stepSize: 10000,
+          padding: 10,
+          callback: (value) => {
             const allowed = [10000, 50000, 100000, 150000, 200000];
-            if (typeof tickValue === "number" && allowed.includes(tickValue)) {
-              return tickValue.toLocaleString("uk-UA");
+            if (typeof value === "number" && allowed.includes(value)) {
+              return value.toLocaleString("uk-UA");
             }
             return "";
           },
-          stepSize: 10000,
-          padding: 10,
         },
         grid: {
           drawTicks: false,
-          drawBorder: false,
-          color: (context: { tick: { value: number } }) => {
-            const tickValue = context.tick.value;
+
+          color: (ctx) => {
+            const val = ctx.tick?.value;
             const allowed = [10000, 50000, 100000, 150000, 200000];
-            return allowed.includes(tickValue) ? "#000000" : "transparent";
+            return allowed.includes(val ?? 0) ? "#000000" : "transparent";
           },
         },
       },
       x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          maxRotation: 45,
-          minRotation: 45,
-        },
+        type: "category",
+        grid: { display: false },
+        ticks: { maxRotation: 45, minRotation: 45 },
       },
     },
     elements: {
-      line: {
-        borderWidth: 1,
-        tension: 0,
-      },
-      point: {
-        radius: 0,
-      },
+      line: { borderWidth: 1, tension: 0.4 },
+      point: { radius: 0 },
     },
   };
 
   return (
-    <div className={`w-full mt-15 ${styles.graphicChart}`}>
+    <div className={`mt-15 ${styles.graphicChart}`}>
       <h2 className={`text-[36px] mb-2 ${styles.graphicChartTitle}`}>
         Звіт по місяцях
       </h2>
@@ -150,5 +142,3 @@ export const GraphicChart = () => {
     </div>
   );
 };
-
-export default GraphicChart;

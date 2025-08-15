@@ -14,6 +14,7 @@ import { CrewFormModal } from "@/components/Workers/CrewFormModal/CrewFormModal"
 import { WorkerFormModal } from "@/components/Workers/WorkerFormModal/WorkerFormModal";
 import { handleDelete, handleSave } from "@/utils/dataHandlers";
 import Calendar from "../../../components/Calendar/Calendar";
+import { AddWorkerModal } from "@/components/AddWorker/AddWorkerModal/AddWorkerModal";
 
 export function Workers() {
   const [workers, setWorkers] = useState<Worker[]>(mockWorkers);
@@ -47,6 +48,12 @@ export function Workers() {
 
   const openAddWorkerModal = () => setModalData({});
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const handleAddWorker = (newWorker: Worker) => {
+    setWorkers((prev) => [...prev, newWorker]);
+    setIsModalOpen(false)
+  }
+
   return (
     <section
       className={`${styles.workers} max-w-[1126px] m-auto pt-[40px] pl-[20px] pb-[36px] pr-[20px] md:pt-[60px] md:pl-[60px] md:pr-[84px] md:pb-[68px]`}
@@ -64,7 +71,7 @@ export function Workers() {
         crews={crews}
         onDelete={deleteWorker}
         onEdit={openEditWorkerModal}
-        onAdd={openAddWorkerModal}
+        onAdd={() => setIsModalOpen(true)}
       />
       {modalData?.crew && (
         <FormModal
@@ -93,6 +100,12 @@ export function Workers() {
           />
         </FormModal>
       )}
+      {isModalOpen && (
+              <AddWorkerModal
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleAddWorker}
+              />
+            )}
 
       <Calendar />
     </section>

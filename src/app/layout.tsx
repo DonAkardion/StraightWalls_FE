@@ -34,7 +34,9 @@ export default function RootLayout({
       lang="en"
       className={`${jura.variable} ${koulen.variable} ${inter.variable}`}
     >
-      <body className="">{children}</body>
+      <body className="">
+        {children}
+      </body>
     </html>
   );
 }

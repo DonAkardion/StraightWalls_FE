@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { Table } from "@/components/Table/Table";
 import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
+import { AddWorkerModal } from "../AddWorker/AddWorkerModal/AddWorkerModal";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -47,7 +48,6 @@ export function WorkersTable({
           {
             key: "salary",
             label: "Зарплата",
-            tooltip: (worker) => `Зарплата: ${worker.salary}`,
           },
           {
             key: "phone",
