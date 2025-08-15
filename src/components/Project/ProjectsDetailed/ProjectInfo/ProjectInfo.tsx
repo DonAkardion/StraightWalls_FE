@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Project } from "@/types/project";
 import { Client } from "@/types/client";
@@ -36,6 +36,8 @@ export function ProjectInfo({ client, project }: Props) {
     project.status
   );
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const translatedStatus = statusMap[mockStatus] || mockStatus;
   const statusColorClass = statusColorMap[mockStatus] || "";
 
@@ -43,6 +45,21 @@ export function ProjectInfo({ client, project }: Props) {
     setMockStatus(newStatus);
     setShowDropdown(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div
       className={`${styles.infoContainer} flex flex-col justify-center items-center md:items-start mb-[40px] md:mb-[60px]`}
@@ -59,6 +76,7 @@ export function ProjectInfo({ client, project }: Props) {
         </div>
         <div
           className={`${styles.projectInfoStatus} relative flex h-[44px] min-w-[288px] md:min-w-[292px] `}
+          ref={containerRef}
         >
           <div
             className={`${styles.projectInfoStatusContainer} flex justify-start items-center w-full pt-[10px] pb-[10px] pl-[10px]`}

@@ -46,13 +46,11 @@ export function Workers() {
 
   const openEditWorkerModal = (worker: Worker) => setModalData({ worker });
 
-  const openAddWorkerModal = () => setModalData({});
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleAddWorker = (newWorker: Worker) => {
     setWorkers((prev) => [...prev, newWorker]);
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
 
   return (
     <section
@@ -101,11 +99,11 @@ export function Workers() {
         </FormModal>
       )}
       {isModalOpen && (
-              <AddWorkerModal
-                onClose={() => setIsModalOpen(false)}
-                onSubmit={handleAddWorker}
-              />
-            )}
+        <AddWorkerModal
+          onClose={() => setIsModalOpen(false)}
+          onSubmit={handleAddWorker}
+        />
+      )}
 
       <Calendar />
     </section>

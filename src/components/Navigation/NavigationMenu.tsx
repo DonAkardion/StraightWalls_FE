@@ -157,7 +157,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
               src={Papers.src}
               alt="Projects"
             />
-            <div>Проэкти</div>
+            <div>Проєкти</div>
           </Link>
           <Link
             href={`/${role}/clients`}

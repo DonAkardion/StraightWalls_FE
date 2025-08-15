@@ -34,6 +34,7 @@ export function WorkersTable({
         onEdit={onEdit}
         onAdd={onAdd}
         enableTooltips={enableTooltips}
+        addButtonText="Додати робітника"
         columns={[
           {
             key: "name",

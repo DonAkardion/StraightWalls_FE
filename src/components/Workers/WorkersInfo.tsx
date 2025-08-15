@@ -8,7 +8,7 @@ export const WorkersInfo = () => {
   const totalWorkers = mockWorkers.length;
   const totalCrews = mockCrews.length;
 
-  const freeCrews = mockCrews.filter((crew) => crew.brigadier === null).length;
+  const freeCrews = mockCrews.filter((crew) => crew.status === null).length;
   const busyCrews = totalCrews - freeCrews;
 
   return (

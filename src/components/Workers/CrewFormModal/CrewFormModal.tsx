@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
+import styles from "./CrewFormModal.module.css";
 
 interface CrewFormModalProps {
   initialData?: Crew;
@@ -34,17 +35,19 @@ export function CrewFormModal({
   };
 
   return (
-    <div className="p-4 flex flex-col gap-4">
+    <div className="flex flex-col md:gap-3 gap-2 p-2">
+      <div className={`${styles.ModalInputTytle}`}>Назва</div>
       <input
         type="text"
         name="name"
         placeholder="Назва"
         value={formData.name}
         onChange={handleChange}
-        className="border rounded px-2 py-1"
+        className="border-b-1 p-2 pb-1 outline-none"
       />
+      <div className={`${styles.ModalInputTytle}`}>Оберіть бригадира</div>
       <select
-        className="border rounded px-2 py-1"
+        className="appearance-none border-b-1 p-2 pb-1 outline-none"
         name="brigadier"
         value={formData.brigadier?.id || ""}
         onChange={(e) => {
@@ -53,20 +56,20 @@ export function CrewFormModal({
           setFormData({ ...formData, brigadier: selectedWorker });
         }}
       >
-        <option value="">Оберіть бригадира</option>
         {workers.map((worker) => (
           <option key={worker.id} value={worker.id}>
             {worker.name}
           </option>
         ))}
       </select>
+      <div className={`${styles.ModalInputTytle}`}>Статус</div>
       <input
         type="text"
         name="status"
         placeholder="Статус"
         value={formData.status ?? ""}
         onChange={handleChange}
-        className="border rounded px-2 py-1"
+        className="border-b-1 p-2 pb-1 outline-none"
       />
     </div>
   );

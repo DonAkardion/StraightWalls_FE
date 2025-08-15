@@ -1,5 +1,6 @@
 "use client";
 import { useUser } from "@/hooks/useUser";
+import styles from "./Navigation.module.css";
 import React, { useState, useEffect } from "react";
 import { NavigationButton } from "@/components/Navigation/NavigationButton";
 import { NavigationMenu } from "@/components/Navigation/NavigationMenu";
@@ -40,24 +41,24 @@ export default function NavigationModul({
 
       {/* Mobile Sidebar */}
 
-      {open && (
-        <aside
-          className="fixed top-0 w-[246px] z-[40] bg-white lg:hidden transform transition-transform duration-300 ease-in-out translate-x-0"
-          style={{
-            height: "100vh",
-            overflow: "hidden",
-            boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)",
-          }}
-        >
-          <div className="">
-            <NavigationMenu
-              role={user.role}
-              isOpen={true}
-              onClose={() => setOpen(false)}
-            />
-          </div>
-        </aside>
-      )}
+      <aside
+        className={`${styles.mobileSidebar} ${
+          open ? styles.mobileSidebarOpen : ""
+        } fixed top-0 w-[246px] z-[40] bg-white lg:hidden`}
+        style={{
+          height: "100vh",
+          overflow: "hidden",
+          boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)",
+        }}
+      >
+        <div className="">
+          <NavigationMenu
+            role={user.role}
+            isOpen={true}
+            onClose={() => setOpen(false)}
+          />
+        </div>
+      </aside>
 
       {/* Toggle Button */}
 

@@ -134,9 +134,6 @@ export const ProjectServicesTable = ({
           <Inspect<Service>
             item={s}
             getId={(item) => item.id}
-            // onEdit={role === "admin" ? onEdit : undefined}
-            // onDelete={role === "admin" ? onDelete : undefined}
-
             fields={[
               {
                 label: "Од. вимір.",

@@ -41,3 +41,14 @@
   font-size: 32px;
   line-height: 58px;
 }
+.headerMobileMenu {
+  pointer-events: none;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+}
+
+.headerMobileMenuOpen {
+  transform: scale(1);
+  opacity: 1;
+}

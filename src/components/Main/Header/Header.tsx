@@ -130,61 +130,62 @@ export const Header = () => {
           </Link>
         </nav>
       </div>
-      {open && (
+
+      <div
+        id="mobileMenu"
+        className={`${styles.headerMobileMenu} ${
+          open ? styles.headerMobileMenuOpen : ""
+        } absolute top-0 left-0 z-[-1] w-full bg-white md:hidden`}
+      >
         <div
-          id="mobileMenu"
-          className={`${styles.headerMobileMenu} absolute top-0 left-0 z-[-1] w-full bg-white md:hidden`}
+          className={`${styles.headerMobileMenuWrapper} flex flex-col gap-[28px] h-screen justify-center items-center`}
         >
-          <div
-            className={`${styles.headerMobileMenuWrapper} flex flex-col gap-[28px] h-screen justify-center items-center`}
+          <Link
+            href="/cabinet"
+            onClick={closeMenu}
+            className={`${styles.mobileMenuUser} flex flex-col mb-[44px] shrink-0 items-center gap-[15px]`}
+            prefetch={false}
           >
-            <Link
-              href="/cabinet"
-              onClick={closeMenu}
-              className={`${styles.mobileMenuUser} flex flex-col mb-[44px] shrink-0 items-center gap-[15px]`}
-              prefetch={false}
+            <img
+              className={`${styles.mobileMenuUserIcon} w-[68px] h-[74px]`}
+              src={Person.src}
+              alt="Search"
+            />
+            <div className={`${styles.mobileMenuUserName} w-full `}>
+              Олексій
+            </div>
+          </Link>
+          <Link
+            href={`/${role}/notifications`}
+            onClick={closeMenu}
+            className={`${styles.mobileMenuLink} relative shrink-0`}
+            prefetch={false}
+          >
+            <div
+              className={`${styles.mobileMenuAddProjectBtn} flex max-w-[450px] min-w-[351px] items-center gap-[10px] justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
             >
               <img
-                className={`${styles.mobileMenuUserIcon} w-[68px] h-[74px]`}
-                src={Person.src}
-                alt="Search"
+                src={Bell.src}
+                alt="Notifications"
+                className={`${styles.mobileMenuImg}  w-[31px] h-[31px] `}
               />
-              <div className={`${styles.mobileMenuUserName} w-full `}>
-                Олексій
-              </div>
-            </Link>
-            <Link
-              href={`/${role}/notifications`}
-              onClick={closeMenu}
-              className={`${styles.mobileMenuLink} relative shrink-0`}
-              prefetch={false}
+              Сповіщення
+            </div>
+          </Link>
+          <Link
+            href={`/${role}/addProject`}
+            onClick={closeMenu}
+            className={styles.mobileMenuNavigation}
+            prefetch={false}
+          >
+            <div
+              className={`${styles.mobileMenuAddProjectBtn} flex max-w-[450px] min-w-[351px] items-center justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
             >
-              <div
-                className={`${styles.mobileMenuAddProjectBtn} flex max-w-[450px] min-w-[351px] items-center gap-[10px] justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
-              >
-                <img
-                  src={Bell.src}
-                  alt="Notifications"
-                  className={`${styles.mobileMenuImg}  w-[31px] h-[31px] `}
-                />
-                Сповіщення
-              </div>
-            </Link>
-            <Link
-              href={`/${role}/addProject`}
-              onClick={closeMenu}
-              className={styles.mobileMenuNavigation}
-              prefetch={false}
-            >
-              <div
-                className={`${styles.mobileMenuAddProjectBtn} flex max-w-[450px] min-w-[351px] items-center justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
-              >
-                Додати проєкт
-              </div>
-            </Link>
-          </div>
+              Додати проєкт
+            </div>
+          </Link>
         </div>
-      )}
+      </div>
     </header>
   );
 };
