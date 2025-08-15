@@ -3,6 +3,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import styles from "./ProjectEstimate.module.css";
 import { Service } from "@/types/service";
 import { ProjectServicesTable } from "./ProjectEstimateTable/ProjectServicesTable";
+import { usePathname } from "next/navigation";
+import { useUser } from "@/hooks/useUser";
 
 interface Props {
   services: Service[];
@@ -18,6 +20,8 @@ export const ProjectEstimate = ({
   tableClassName,
 }: Props) => {
   const [localServices, setLocalServices] = useState<Service[]>(services);
+  const pathname = usePathname();
+  const user = useUser();
 
   // Синхронізуємо, якщо зовнішні services зміняться
   useEffect(() => {
@@ -82,6 +86,18 @@ export const ProjectEstimate = ({
                 {formatNumber(totalMain)} грн
               </div>
             </div>
+            {pathname === `/${user.role}/addProject` && (
+              <div className="w-full flex justify-center">
+                <div
+                  className={`${styles.confirmButton} rounded-[5px] mt-[20px] mb-[10px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
+                >
+                  <button className="w-full h-full flex items-center justify-center text-center">
+                    Підтвердити
+                  </button>
+                </div>
+              </div>
+            )}
+
             <h3
               className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[18px] pt-[10px]`}
             >
@@ -89,7 +105,9 @@ export const ProjectEstimate = ({
             </h3>
           </div>
         </div>
-
+        {pathname === `/${user.role}/addProject` && (
+          <div className="h-[76px] "></div>
+        )}
         <ProjectServicesTable
           services={localServices}
           type="Додаткові роботи"

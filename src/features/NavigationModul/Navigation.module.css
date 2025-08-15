@@ -1,0 +1,12 @@
+.mobileSidebar {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  pointer-events: none;
+}
+
+.mobileSidebarOpen {
+  pointer-events: all;
+  transform: scale(1);
+  opacity: 1;
+}

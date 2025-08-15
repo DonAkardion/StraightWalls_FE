@@ -44,12 +44,19 @@ export function AddProject() {
           onChange={setClientId}
         />
       </div>
-      <ProjectEstimate
-        services={services}
-        editable={true}
-        onServicesChange={(updated) => setServices(updated)}
-        tableClassName="projectEstimateTableWrap"
-      />
+      <div className="relative">
+        <ProjectEstimate
+          services={services}
+          editable={true}
+          onServicesChange={(updated) => setServices(updated)}
+          tableClassName="projectEstimateTableWrap"
+        />
+        <span
+          className={`${styles.clientsSendToViber} absolute top-[6px] right-[5px] md:top-[20px] md:right-[5px] cursor-pointer`}
+        >
+          Відправити на Viber
+        </span>
+      </div>
 
       <Link
         href={`/${role}/addProject/addProjectMaterials`}

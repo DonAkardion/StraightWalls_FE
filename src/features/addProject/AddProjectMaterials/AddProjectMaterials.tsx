@@ -15,7 +15,14 @@ export function AddProjectMaterials() {
     <section
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
     >
-      <MaterialsEditor editable={true} />
+      <div className="relative">
+        <MaterialsEditor editable={true} />
+        <span
+          className={`${styles.clientsDownloadPDF} absolute top-[26px] right-[5px] md:top-[30px] md:right-[5px] cursor-pointer`}
+        >
+          Завантажити PDF
+        </span>
+      </div>
       <MaterialIncomeEditor
         materialsIncome={mockMaterialsIncome}
         editable={true}

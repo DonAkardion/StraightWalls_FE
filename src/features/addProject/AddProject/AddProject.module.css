@@ -1,5 +1,16 @@
+.clients {
+  font-family: var(--font-inter);
+}
+.clientsSendToViber {
+  font-size: 16px;
+  line-height: 18px;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+}
 /* SelectorStyles */
-
+.ProjectEstimate .confirmButton {
+  display: flex;
+}
 .selectorTytle {
   font-family: var(--font-inter);
   font-size: 20px;

@@ -8,7 +8,7 @@ import Link from "next/link";
 
 interface TableColumn<T> {
   key: keyof T | string;
-  label: string;
+  label: string | React.ReactNode;
   icon?: string | React.ReactNode;
   render?: (item: T) => React.ReactNode;
   tooltip?: (item: T) => string;
