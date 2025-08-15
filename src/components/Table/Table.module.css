@@ -256,6 +256,17 @@
 :global(.reportsMaterialsWrap) .indentCellSmallSecond {
   width: 20px;
 }
+:global(.reportsMaterialsWrap) .indentCellSmall {
+  display: none;
+}
+:global(.reportsMaterialsWrap) .TableCellInspect {
+  display: none;
+}
+/* правила для ClientsDetailed Projects*/
+
+:global(.clientsDetailedProjectsWrap) .indentCellLast {
+  display: none;
+}
 
 @media (max-width: 768px) {
   .Tytle {
@@ -401,6 +412,20 @@
     display: table-cell;
   }
   :global(.reportsMaterialsWrap) .TableCellInspect {
+    display: table-cell;
+  }
+  :global(.reportsMaterialsWrap) .indentCellSmall {
+    display: table-cell;
+  }
+
+  /* правила для ClientsDetailed Projects*/
+  :global(.clientsDetailedProjectsWrap) .indentCellLast {
+    display: table-cell;
+  }
+  :global(.clientsDetailedProjectsWrap) .indentCellSmallSecond {
+    display: none;
+  }
+  :global(.clientsDetailedProjectsWrap) .indentCellSmall {
     display: table-cell;
   }
 }

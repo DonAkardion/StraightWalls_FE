@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import styles from "./ClientsProjectsTable.module.css"
+import React, { useState } from "react";
+import styles from "./ClientsProjectsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { clientsProjectsData } from "@/mock/Clients/clientsProjectsTable";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
@@ -16,8 +16,9 @@ interface Project {
 }
 
 export const ClientsProjectsTable = () => {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const projectColumns = [
-    { key: "projectNumber", label: "Номер проекту" },
+    { key: "projectNumber", label: "Номер проєкту" },
     { key: "cost", label: "Вартість" },
     { key: "team", label: "Бригада" },
     { key: "period", label: "Початок / кінець" },
@@ -48,8 +49,37 @@ export const ClientsProjectsTable = () => {
       />
       <Table
         data={clientsProjectsData}
+        expandedId={expandedId}
         columns={projectColumns}
         showIndex={false}
+        className="clientsDetailedProjectsWrap"
+        onInspect={(item) =>
+          setExpandedId((prev) => (prev === item.id ? null : item.id))
+        }
+        renderInspection={(projectColumns) => (
+          <div className=" pb-1  bg-white border-b-1 relative">
+            <div className="pl-[20px] pr-[10px] flex flex-col gap-2 ">
+              <div className={`${styles.inspectRow} flex justify-between`}>
+                <p>
+                  <span>Вартість: </span>
+                  <span className="text-sm ">{projectColumns.cost}</span>
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <p>
+                  <span>Бригада: </span>
+                  <span className="text-sm ">{projectColumns.team}</span>
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <p>
+                  <span>Початок / кінець: </span>
+                  <span className="text-sm ">{projectColumns.period}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       />
     </div>
   );

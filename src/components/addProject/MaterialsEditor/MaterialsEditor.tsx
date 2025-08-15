@@ -124,7 +124,7 @@ export function MaterialsEditor({ editable = false }: MaterialsEditorProps) {
 
   return (
     <section className="relative mb-[40px]">
-      <h2 className="mb-[16px] text-[20px]">Матеріали</h2>
+      <h2 className="mb-[10px] ">Матеріали</h2>
 
       <ProjectMaterialsTable
         data={materials}

@@ -65,9 +65,12 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
           <span className={`${styles.selectorPlaceholder}`}>{placeholder}</span>
         )}
       </div>
-
-      {open && (
-        <div className="absolute top-0 left-0 right-0 bg-white border rounded-[5px] shadow-lg z-10">
+      <div className={styles.dropdownPanel}>
+        <div
+          className={` absolute top-0 left-0 right-0 bg-white border rounded-[5px] shadow-lg z-10 ${
+            open ? styles.dropdownOpen : styles.dropdownClosed
+          }`}
+        >
           <input
             type="text"
             className="w-full border-b p-[20px] md:px-[30px] md:py-[16px] outline-none"
@@ -92,7 +95,7 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
             )}
           </ul>
         </div>
-      )}
+      </div>
     </div>
   );
 };

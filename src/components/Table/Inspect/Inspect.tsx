@@ -1,5 +1,5 @@
 "use client";
-
+import styles from "./Inspect.module.css";
 import React from "react";
 import { Pen, Trash } from "../../../../public/icons";
 
@@ -26,7 +26,9 @@ export function Inspect<T>({
   const id = getId(item);
 
   return (
-    <div className="flex justify-between items-start bg-white border-b pb-[10px]">
+    <div
+      className={`${styles.Inspect}  flex justify-between items-start bg-white border-b pb-[10px]`}
+    >
       {/* Left column: fields */}
       <div className="flex flex-col gap-2 ml-[10px]">
         {fields.map(({ label, value }, index) => (
