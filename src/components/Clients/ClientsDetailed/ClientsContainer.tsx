@@ -4,7 +4,7 @@ type Props = {
 
 export const ClientsContainer = ({ children }: Props) => {
   return (
-    <div className="w-full pt-[60px] pl-[81px] pr-[59px]">
+    <div className="max-w-[1126px] m-auto pt-[60px] pl-[81px] pr-[59px]">
       {children}
     </div>
   );
