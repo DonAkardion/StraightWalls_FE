@@ -133,6 +133,7 @@
 }
 .inspectTr {
   display: none;
+  max-width: 100%;
 }
 
 .TableWrap {
@@ -218,6 +219,9 @@
   width: 20px;
 }
 /* правила для HomePage  InProgressTable*/
+:global(.InProgressTableWrap) .TableRowCell {
+  padding: 0 6px;
+}
 :global(.InProgressTableWrap) .indentCellLast {
   display: none;
 }
@@ -388,6 +392,12 @@
   /* правила для HomePage  InProgressTable*/
   :global(.InProgressTableWrap) .indentCellLast {
     display: table-cell;
+  }
+  :global(.InProgressTableWrap) .TableCell {
+    vertical-align: middle;
+  }
+  :global(.InProgressTableWrap) .TableCell:nth-child(2) {
+    vertical-align: middle;
   }
   /* правила для ProjectDetailed  Estimate*/
   :global(.projectDetailedEstimateTableWrap) .indentCellLast {

@@ -1,19 +1,23 @@
 "use client";
 import React from "react";
-import styles from "./AddProjectCrew.module.css";
+import styles from "./ProjectCrew.module.css";
 import { Crew } from "@/types/crew";
+import { Project } from "@/types/project";
 import { Worker } from "@/types/worker";
-import { ProjectCrewWorkersTable } from "@/components/Project/ProjectsDetailed/ProjectCrewWorkersTable/ProjectCrewWorkersTable";
+import { ProjectCrewWorkersTable } from "../ProjectCrewWorkersTable/ProjectCrewWorkersTable";
 
 interface Props {
-  crewId: string | null;
+  project: Project;
   crews: Crew[];
   workers: Worker[];
 }
-export const AddProjectCrew = ({ crewId, crews, workers }: Props) => {
-  const crew = crews.find((c) => c.id === crewId);
-  if (!crewId || !crew) return null;
-  const crewWorkers = workers.filter((w) => w.crewId === crewId);
+
+export const ProjectCrew = ({ project, crews, workers }: Props) => {
+  const crew = crews.find((c) => c.id === project.crewId);
+  if (!project.crewId || !crew) return null;
+
+  const crewWorkers = workers.filter((w) => w.crewId === project.crewId);
+
   return (
     <section>
       <h2 className={`${styles.sectionTytle}`}>
@@ -22,11 +26,11 @@ export const AddProjectCrew = ({ crewId, crews, workers }: Props) => {
       {crewWorkers.length > 0 ? (
         <ProjectCrewWorkersTable
           workers={workers}
-          crewId={crewId}
+          crewId={project.crewId}
           crews={crews}
         />
       ) : (
-        <p className={`${styles.Warning} text-2xl py-[20px] px-[10px]`}>
+        <p className={`${styles.Warning} py-[20px] px-[10px]`}>
           У цій бригаді поки немає робітників
         </p>
       )}

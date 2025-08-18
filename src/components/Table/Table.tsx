@@ -219,7 +219,10 @@ export function Table<T extends { id: string }>({
                 </tr>
                 {expandedId === item.id && renderInspection && (
                   <tr className={`${styles.inspectTr}`}>
-                    <td colSpan={columns.length + 1} className="p-[10px] ">
+                    <td
+                      colSpan={columns.length + 1}
+                      className=" sm:pl-[10px] pl-[6px] pr-[10px] "
+                    >
                       {renderInspection(item)}
                     </td>
                   </tr>
