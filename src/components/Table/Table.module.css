@@ -21,7 +21,7 @@
 .TableTopRow {
   border-radius: 5px;
 
-  background: var(--yellow-gradient);
+  background: var(--yellow);
 }
 .TableRowCell {
   font-family: var(--font-koulen);
@@ -169,6 +169,32 @@
 :global(.projectsTableWrap) .indentCellSmallSecond {
   display: none;
 }
+:global(.projectsTableWrap) .indentCellBig {
+  width: 40px;
+}
+:global(.projectsTableWrap) .indentCellSmall,
+:global(.projectsTableWrap) .indentCellLast {
+  background: #fdfff266;
+}
+:global(.projectsTableWrap) .indentCellSmall {
+  position: relative;
+}
+:global(.projectsTableWrap) .indentCellSmall::before,
+:global(.projectsTableWrap) .indentCellSmall::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+:global(.projectsTableWrap) .indentCellSmall::before {
+  left: 36%;
+  background: var(--green);
+  box-shadow: 25px 0 0 var(--yellow), 51px 0 0 var(--blue);
+}
+
 /* правила для AddProject  Estimate*/
 :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
   background: #ffb32666;
@@ -341,6 +367,22 @@
   .inspectTr {
     display: table-row;
   }
+  /* правила для Projects */
+  :global(.projectsTableWrap) .indentCellBig {
+    width: 40px;
+  }
+  :global(.projectsTableWrap) .indentCellSmall,
+  :global(.projectsTableWrap) .indentCellLast {
+    background: none;
+  }
+  :global(.projectsTableWrap) .indentCellSmall {
+    position: relative;
+  }
+  :global(.projectsTableWrap) .indentCellSmall::before,
+  :global(.projectsTableWrap) .indentCellSmall::after {
+    display: none;
+  }
+
   /* правила для Crews WorkersPage */
   :global(.CrewsTableWrap) .indentCellSmallSecond {
     width: 20px;

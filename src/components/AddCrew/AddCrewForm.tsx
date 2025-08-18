@@ -57,7 +57,17 @@ export default function AddCrewForm() {
   }, []);
 
   return (
-    <section className="max-w-[1126px] m-auto pt-[60px] pl-[81px] pr-[59px]">
+    <section className="
+        max-w-[1126px] 
+        m-auto 
+        pt-[30px] 
+        px-4 
+        sm:px-6 
+        md:pt-[65px] 
+        md:pl-[81px] 
+        md:pr-[59px] 
+        mb-20
+      ">
       <h2 className="md:text-[28px] mb-4">Додати бригаду</h2>
       <form
         className={`${styles.addCrewForm} bg-white rounded-md p-5 md:p-6`}

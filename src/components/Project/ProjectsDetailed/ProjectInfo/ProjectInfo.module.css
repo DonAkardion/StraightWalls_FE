@@ -35,7 +35,7 @@
   line-height: 24px;
 }
 .totalBtnTextSum {
-  font-family: var(--font-jura);
+  font-family: var(--font-inter);
   font-size: 32px;
   line-height: 39px;
 }
@@ -87,5 +87,10 @@
   }
   .projectInfoStatus {
     font-size: 16px;
+  }
+  .totalBtnTextSum {
+    font-family: var(--font-jura);
+    font-size: 64px;
+    line-height: 76px;
   }
 }

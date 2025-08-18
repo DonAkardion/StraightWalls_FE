@@ -148,7 +148,12 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           <Link
             href={`/${role}/projects`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/projects` ? styles.activeLink : ""}
+          ${
+            pathname.startsWith(`/${role}/projects`) ||
+            pathname.startsWith(`/${role}/addProject`)
+              ? styles.activeLink
+              : ""
+          }
           `}
             prefetch={false}
           >
@@ -162,7 +167,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           <Link
             href={`/${role}/clients`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/clients` ? styles.activeLink : ""}
+          ${pathname.startsWith(`/${role}/clients`) ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -176,7 +181,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           <Link
             href={`/${role}/settings`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/settings` ? styles.activeLink : ""}
+          ${pathname.startsWith(`/${role}/settings`) ? styles.activeLink : ""}
           `}
             prefetch={false}
           >

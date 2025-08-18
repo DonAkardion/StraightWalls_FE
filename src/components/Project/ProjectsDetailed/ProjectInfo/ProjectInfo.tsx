@@ -96,7 +96,7 @@ export function ProjectInfo({ client, project }: Props) {
           </button>
           {showDropdown && (
             <div
-              className={`${styles.statusChangeContainer} absolute top-[-4px] left-0 mt-1 w-[130px] rounded-[5px] z-10`}
+              className={`${styles.statusChangeContainer} absolute top-[-4px] left-0 mt-1 w-[136px] md:w-[130px] rounded-[5px] z-10`}
             >
               {Object.entries(statusMap).map(([key, label]) => (
                 <div
@@ -169,9 +169,11 @@ export function ProjectInfo({ client, project }: Props) {
       </div>
       <div className={`${styles.projectTotal} w-full rounded-[5px]`}>
         <button
-          className={`${styles.projectTotalBtn} w-full h-[106px]  rounded-[5px]`}
+          className={`${styles.projectTotalBtn} w-full h-[106px] md:h-[144px] rounded-[5px]`}
         >
-          <div className={`${styles.projectTotalBtnText} flex flex-col`}>
+          <div
+            className={`${styles.projectTotalBtnText} flex flex-col md:gap-0 gap-[10px]`}
+          >
             <span className={`${styles.totalBtnTextTytle}`}>
               Орієнтована варість
             </span>
