@@ -55,7 +55,7 @@ export function AddProjectConfirm() {
         onMaterialsIncomeChange={() => {}}
         tableClassName="projectMaterialsIncomeEditorWrap"
       /> */}
-      {/* <div className={`${styles.Separator} h-[80px]`}></div> */}
+      <div className={`${styles.Separator} md:h-[80px]`}></div>
       <AddProjectCrew crewId={crewId} crews={mockCrews} workers={mockWorkers} />
       <div className={`${styles.PaymentDetailsWrap} mb-[60px] mt-[60px]`}>
         <PaymentDetails

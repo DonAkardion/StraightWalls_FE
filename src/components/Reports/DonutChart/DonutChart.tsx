@@ -97,9 +97,9 @@ export const DoughnutChart = () => {
     const value = tasksStatus[label];
     const percentage = total ? ((value / total) * 100).toFixed(0) : "0";
     return (
-      <div key={label} className="flex items-center mb-4">
+      <div key={label} className="flex gap-3 items-center mb-4">
         <div
-          className="w-13 h-13 rounded-full text-white flex items-center justify-center font-bold mr-4 shadow-xl"
+          className="w-13 h-13 rounded-full text-white flex items-center justify-center font-bold shadow-xl"
           style={{ backgroundColor: colors[label] }}
         >
           {percentage}%
@@ -121,8 +121,12 @@ export const DoughnutChart = () => {
           Виконання проєктів
         </h3>
         <div className="flex gap-10">
-          <div className={`${styles.leftLegendBlock}`}>{leftColumn.map(renderLegendItem)}</div>
-          <div className={`${styles.rightLegendBlock}`}>{rightColumn.map(renderLegendItem)}</div>
+          <div className={`${styles.leftLegendBlock}`}>
+            {leftColumn.map(renderLegendItem)}
+          </div>
+          <div className={`${styles.rightLegendBlock}`}>
+            {rightColumn.map(renderLegendItem)}
+          </div>
         </div>
       </div>
     </div>
