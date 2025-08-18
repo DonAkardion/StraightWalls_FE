@@ -161,10 +161,10 @@
 }
 /* правила для AddProject  Estimate*/
 :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
-  background: var(--yellow-gradient);
+  background: #ffb32666;
 }
 :global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
-  background: var(--yellow-gradient);
+  background: #ffb32666;
 }
 :global(.projectEstimateTableWrap) .indentCellLast {
   display: none;
@@ -180,7 +180,7 @@
   width: 20px;
 }
 :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
-  background: var(--yellow-gradient);
+  background: #ffb32666;
   width: 120px;
 }
 :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(7) {
@@ -190,7 +190,7 @@
   width: 120px;
 }
 :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
-  background: var(--yellow-gradient);
+  background: #ffb32666;
 }
 :global(.projectMaterialsEditorWrap) .indentCellLast {
   display: none;
@@ -212,11 +212,12 @@
   display: table-cell;
 }
 :global(.projectMaterialsIncomeEditorWrap) .TableRowCell:nth-child(7) {
-  background: var(--yellow-gradient);
+  background: #ffb32666;
+
   width: 120px;
 }
 :global(.projectMaterialsIncomeEditorWrap) .TableCell:nth-child(5) {
-  background: var(--yellow-gradient);
+  background: #ffb32666;
 }
 :global(.projectMaterialsIncomeEditorWrap) .indentCellSmallSecond {
   width: 20px;

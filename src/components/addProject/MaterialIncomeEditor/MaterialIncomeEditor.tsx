@@ -65,7 +65,7 @@ export const MaterialIncomeEditor = ({
           className={`${styles.tableBetweenWrap} relative h-[126px] md:h-[48px] w-full z-[10]`}
         >
           <div
-            className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-36%] md:h-[142px] w-full z-[10] rounded-[5px]`}
+            className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-14%] md:h-[142px] w-full z-[10] rounded-[5px]`}
           >
             <div
               className={`${styles.totatCostMain} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full z-[11] rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
@@ -78,7 +78,7 @@ export const MaterialIncomeEditor = ({
               </div>
             </div>
             <h3
-              className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[18px] pt-[10px]`}
+              className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[40px] pt-[10px]`}
             >
               Додаткові роботи
             </h3>
