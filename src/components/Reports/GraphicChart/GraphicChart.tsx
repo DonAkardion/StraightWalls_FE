@@ -75,48 +75,54 @@ export const GraphicChart = () => {
   };
 
   const options: ChartOptions<"line"> = {
-    responsive: true,
-    plugins: {
-      legend: { display: false },
+  responsive: true,
+  layout: {
+    padding: {
+      right: 30,
     },
-    scales: {
-      y: {
-        type: "linear",
-        position: "right",
-        min: 10000,
-        max: 200000,
-        ticks: {
-          stepSize: 10000,
-          padding: 10,
-          callback: (value) => {
-            const allowed = [10000, 50000, 100000, 150000, 200000];
-            if (typeof value === "number" && allowed.includes(value)) {
-              return value.toLocaleString("uk-UA");
-            }
-            return "";
-          },
+  },
+  plugins: {
+    legend: { display: false },
+  },
+  scales: {
+    y: {
+      position: "right",
+      min: 10000,
+      max: 200000,
+      ticks: {
+        stepSize: 10000,
+        padding: 10,
+        callback: (value) => {
+          const allowed = [10000, 50000, 100000, 150000, 200000];
+          if (typeof value === "number" && allowed.includes(value)) {
+            return value.toLocaleString("uk-UA");
+          }
+          return "";
         },
-        grid: {
-          drawTicks: false,
+      },
+      grid: {
+        drawTicks: false,
+        color: (ctx) => {
+          const val = ctx.tick?.value;
+          const allowed = [10000, 50000, 100000, 150000, 200000];
+          return allowed.includes(val ?? 0) ? "#000000" : "transparent";
+        },
+      },
+    },
+    x: {
+      grid: { display: false },
+      ticks: {
+        maxRotation: 45,
+        minRotation: 45,
+        font: {
+          size: window.innerWidth <= 780 ? 10 : 12,
+        },
+      },
+    },
+  },
+};
 
-          color: (ctx) => {
-            const val = ctx.tick?.value;
-            const allowed = [10000, 50000, 100000, 150000, 200000];
-            return allowed.includes(val ?? 0) ? "#000000" : "transparent";
-          },
-        },
-      },
-      x: {
-        type: "category",
-        grid: { display: false },
-        ticks: { maxRotation: 45, minRotation: 45 },
-      },
-    },
-    elements: {
-      line: { borderWidth: 1, tension: 0.4 },
-      point: { radius: 0 },
-    },
-  };
+
 
   return (
     <div className={`mt-15 ${styles.graphicChart}`}>

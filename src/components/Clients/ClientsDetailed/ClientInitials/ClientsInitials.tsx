@@ -16,7 +16,7 @@ export const ClientsInitials = ({ client }: Props) => {
   const router = useRouter();
 
   return (
-    <div className={`${styles.clientsInitialsDiv} w-full`}>
+    <div className={`${styles.clientsInitialsDiv} w-full relative`}>
       <div className="flex items-center justify-between">
         <h2 className="text-black text-[30px] font-sans">{client.name}</h2>
         <div
