@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import styles from "./AllProjectsList.module.css";
 import { useRouter } from "next/navigation";
 import { Project } from "@/types/project";
 import { Table } from "@/components/Table/Table";
@@ -17,6 +18,7 @@ interface Props {
   onAdd: () => void;
   role?: string;
   enableTooltips?: boolean;
+  tablesTytle?: string;
 }
 
 export const AllProjectsList = ({
@@ -27,6 +29,7 @@ export const AllProjectsList = ({
   onEdit,
   role,
   enableTooltips = true,
+  tablesTytle,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const router = useRouter();
@@ -59,6 +62,9 @@ export const AllProjectsList = ({
 
   return (
     <div className="mb-[60px] relative">
+      <h2 className={`${styles.projectsTytle} mb-[10px] md:mb-[16px]`}>
+        {tablesTytle}
+      </h2>
       <Table<Project>
         data={projects}
         expandedId={expandedId}

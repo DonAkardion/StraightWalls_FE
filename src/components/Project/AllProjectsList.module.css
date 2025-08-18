@@ -1,0 +1,11 @@
+.projectsTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+@media (width >= 48rem /* 768px */) {
+  .projectsTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}

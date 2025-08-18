@@ -1,3 +1,7 @@
+.materialsTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
 .materialTotalCostBlock {
   background: none;
 }
@@ -40,6 +44,10 @@
 }
 
 @media (width >= 48rem /* 768px */) {
+  .materialsTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
   .materialTotalCostBlock {
     background: var(--background);
     box-shadow: 1px 3px 15px 2px #00000040;

@@ -238,13 +238,13 @@ export function Table<T extends { id: string }>({
             {addLink ? (
               <Link
                 href={addLinkId ? `${addLink}/${addLinkId}` : addLink}
-                className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)] flex justify-center items-center`}
+                className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[20px] mr-[10px] mb-0 ml-[10px] md:mt-[30px] md:mr-[40px] md:mb-0 md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)] flex justify-center items-center`}
               >
                 <span className={styles.TableBtnText}>{addButtonText}</span>
               </Link>
             ) : (
               <button
-                className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[12px] mr-[10px] mb-[12px] ml-[10px] md:mt-[38px] md:mr-[40px] md:mb-[38px] md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
+                className={`${styles.TableBtn} md:h-[48px] h-[35px] mt-[20px] mr-[10px] mb-0 ml-[10px] md:mt-[30px] md:mr-[40px] md:mb-0 md:ml-[20px] rounded-[5px] w-[calc(100%-20px)] md:w-[calc(100%-60px)]`}
                 onClick={(e) => {
                   e.stopPropagation();
                   onAdd?.();

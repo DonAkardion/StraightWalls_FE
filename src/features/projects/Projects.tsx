@@ -14,7 +14,7 @@ import { Crew } from "@/types/crew";
 import { Client } from "@/types/client";
 
 import { AllProjectsList } from "@/components/Project/AllProjectsList";
-import  Calendar  from "@/components/Calendar/Calendar";
+import Calendar from "@/components/Calendar/Calendar";
 import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
 
@@ -45,6 +45,7 @@ export function Projects() {
         }}
         onAdd={() => {}}
         role={roleStr}
+        tablesTytle="Всі проєкти"
       />
 
       <Calendar />
