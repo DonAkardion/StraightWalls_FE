@@ -88,4 +88,8 @@
   .projectInfoStatus {
     font-size: 16px;
   }
+  .totalBtnTextSum {
+    font-size: 64px;
+    line-height: 76px;
+  }
 }

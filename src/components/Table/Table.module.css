@@ -21,7 +21,7 @@
 .TableTopRow {
   border-radius: 5px;
 
-  background: var(--yellow-gradient);
+  background: var(--yellow);
 }
 .TableRowCell {
   font-family: var(--font-koulen);
