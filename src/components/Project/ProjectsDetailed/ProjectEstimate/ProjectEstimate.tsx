@@ -63,7 +63,9 @@ export const ProjectEstimate = ({
 
   return (
     <section className={`${styles.sectionEstimate} mb-[40px] md:mb-[126px]`}>
-      <h2 className={`${styles.estimateTytle} mb-[16px]`}>{tablesTytle}</h2>
+      <h2 className={`${styles.estimateTytle} mb-[10px] md:mb-[16px]`}>
+        {tablesTytle}
+      </h2>
       <div className="">
         <ProjectServicesTable
           services={localServices}
@@ -106,9 +108,6 @@ export const ProjectEstimate = ({
               Додаткові роботи
             </h3>
           </div>
-          {/* <div
-            className={` absolute top-[-30px] right-[34%] w-[120px] h-[120px] bg-amber-700 z-10`}
-          ></div> */}
         </div>
         {pathname === `/${user.role}/addProject` && (
           <div className="md:hidden h-[76px] "></div>

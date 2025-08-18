@@ -39,9 +39,9 @@ export function AddProjectConfirm() {
     <section
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
     >
-      <div
+      {/* <div
         className={`${styles.selector} flex flex-col md:flex-row items-center gap-[15px] md:gap-[22px] mb-[30px]`}
-      ></div>
+      ></div> */}
 
       <ProjectEstimate
         services={services}
@@ -49,13 +49,13 @@ export function AddProjectConfirm() {
         tableClassName="projectEstimateTableWrap"
         tablesTytle="Складання кошторису"
       />
-      <MaterialsEditor />
+      <MaterialsEditor tablesTytle="Матеріали" />
       {/* <MaterialIncomeEditor
         materialsIncome={mockMaterialsIncome}
         onMaterialsIncomeChange={() => {}}
         tableClassName="projectMaterialsIncomeEditorWrap"
       /> */}
-      <div className={`${styles.Separator} h-[80px]`}></div>
+      {/* <div className={`${styles.Separator} h-[80px]`}></div> */}
       <AddProjectCrew crewId={crewId} crews={mockCrews} workers={mockWorkers} />
       <div className={`${styles.PaymentDetailsWrap} mb-[60px] mt-[60px]`}>
         <PaymentDetails

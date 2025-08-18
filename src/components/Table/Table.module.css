@@ -2,6 +2,7 @@
   overflow-x: auto;
   width: 100%;
   box-shadow: 1px 3px 15px 2px #00000040;
+  position: relative; /* change */
 }
 
 .Table {
@@ -133,16 +134,25 @@
 }
 .inspectTr {
   display: none;
+  max-width: 100%;
 }
 
 .TableWrap {
   scrollbar-color: var(--yellow-gradient);
   /* scrollbar-width: thin; */
 }
-/* правила для Crews */
-:global(.CrewsTableWrap) .indentCellLast {
-  display: none;
+.TableStickyButtonWrap {
+  position: sticky;
+  left: 0;
+  top: 10px; /* відступ від верху TableWrap */
+  display: flex;
+  justify-content: flex-end;
+  z-index: 10;
 }
+.TableBtn {
+  white-space: nowrap;
+}
+
 /* правила для Projects */
 .completedRow {
   color: var(--green);
@@ -211,6 +221,9 @@
   display: none;
 }
 /* правила для AddProject  MaterialsIncome*/
+:global(.projectMaterialsIncomeEditorWrap) .TableRowCell {
+  padding: 0 6px;
+}
 :global(.projectMaterialsIncomeEditorWrap) .indentCellLast {
   display: table-cell;
 }
@@ -218,6 +231,9 @@
   width: 20px;
 }
 /* правила для HomePage  InProgressTable*/
+:global(.InProgressTableWrap) .TableRowCell {
+  padding: 0 6px;
+}
 :global(.InProgressTableWrap) .indentCellLast {
   display: none;
 }
@@ -325,11 +341,14 @@
   .inspectTr {
     display: table-row;
   }
-  /* правила для Crews */
+  /* правила для Crews WorkersPage */
   :global(.CrewsTableWrap) .indentCellSmallSecond {
     width: 20px;
   }
-
+  /* правила для Workers WorkersPage */
+  :global(.WorkersTableWrap) .indentCellSmallSecond {
+    width: 20px;
+  }
   /* правила для Clients */
   :global(.clientsTableWrap) .indentCellSmallSecond {
     display: none;
@@ -388,6 +407,12 @@
   /* правила для HomePage  InProgressTable*/
   :global(.InProgressTableWrap) .indentCellLast {
     display: table-cell;
+  }
+  :global(.InProgressTableWrap) .TableCell {
+    vertical-align: middle;
+  }
+  :global(.InProgressTableWrap) .TableCell:nth-child(2) {
+    vertical-align: middle;
   }
   /* правила для ProjectDetailed  Estimate*/
   :global(.projectDetailedEstimateTableWrap) .indentCellLast {

@@ -141,7 +141,7 @@ export const Header = () => {
           className={`${styles.headerMobileMenuWrapper} flex flex-col gap-[28px] h-screen justify-center items-center`}
         >
           <Link
-            href="/cabinet"
+            href="/"
             onClick={closeMenu}
             className={`${styles.mobileMenuUser} flex flex-col mb-[44px] shrink-0 items-center gap-[15px]`}
             prefetch={false}
@@ -149,7 +149,7 @@ export const Header = () => {
             <img
               className={`${styles.mobileMenuUserIcon} w-[68px] h-[74px]`}
               src={Person.src}
-              alt="Search"
+              alt="User"
             />
             <div className={`${styles.mobileMenuUserName} w-full `}>
               Олексій

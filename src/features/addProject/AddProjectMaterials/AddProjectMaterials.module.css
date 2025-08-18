@@ -2,8 +2,8 @@
   font-family: var(--font-inter);
 }
 .clientsDownloadPDF {
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 14px;
+  line-height: 16px;
   text-decoration: underline;
   text-decoration-skip-ink: none;
 }
@@ -49,6 +49,11 @@
   line-height: 18px;
 }
 @media (width >= 48rem /* 768px */) {
+  .clientsDownloadPDF {
+    font-size: 16px;
+    line-height: 18px;
+  }
+
   .materialTotalCostBlock {
     background: var(--background);
     box-shadow: 1px 3px 15px 2px #00000040;

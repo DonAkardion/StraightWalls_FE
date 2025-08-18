@@ -16,7 +16,9 @@ export const AddProjectCrew = ({ crewId, crews, workers }: Props) => {
   const crewWorkers = workers.filter((w) => w.crewId === crewId);
   return (
     <section>
-      <h2 className="">Бригада {crew.name}</h2>
+      <h2 className={`${styles.sectionTytle} mb-[10px] md:mb-[16px]`}>
+        Бригада &quot;{crew.name}&quot;
+      </h2>
       {crewWorkers.length > 0 ? (
         <ProjectCrewWorkersTable
           workers={workers}

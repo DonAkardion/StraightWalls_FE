@@ -32,7 +32,7 @@ export function Inspect<T>({
       {/* Left column: fields */}
       <div className="flex flex-col gap-2 ml-[10px]">
         {fields.map(({ label, value }, index) => (
-          <div key={index} className="text-sm">
+          <div key={index} className="text-sm flex gap-1">
             <span className="font-medium">{label}: </span>
             <span>{value(item)}</span>
           </div>
