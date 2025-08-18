@@ -171,7 +171,9 @@ export function ProjectInfo({ client, project }: Props) {
         <button
           className={`${styles.projectTotalBtn} w-full h-[106px] md:h-[144px] rounded-[5px]`}
         >
-          <div className={`${styles.projectTotalBtnText} flex flex-col`}>
+          <div
+            className={`${styles.projectTotalBtnText} flex flex-col md:gap-0 gap-[10px]`}
+          >
             <span className={`${styles.totalBtnTextTytle}`}>
               Орієнтована варість
             </span>
