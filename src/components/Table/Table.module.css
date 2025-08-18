@@ -173,7 +173,7 @@
   width: 40px;
 }
 :global(.projectsTableWrap) .indentCellSmall,
-.indentCellLast {
+:global(.projectsTableWrap) .indentCellLast {
   background: #fdfff266;
 }
 :global(.projectsTableWrap) .indentCellSmall {
@@ -372,7 +372,7 @@
     width: 40px;
   }
   :global(.projectsTableWrap) .indentCellSmall,
-  .indentCellLast {
+  :global(.projectsTableWrap) .indentCellLast {
     background: none;
   }
   :global(.projectsTableWrap) .indentCellSmall {
