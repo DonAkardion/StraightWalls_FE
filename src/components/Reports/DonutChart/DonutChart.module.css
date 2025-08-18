@@ -29,3 +29,22 @@
 .ukrLabel {
     font-family: var(--font-inter);
 }
+
+@media (max-width: 525px) {
+    .leftLegendBlock .rightLegendBlock {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .leftLegendBlock > div,
+  .rightLegendBlock > div {
+    flex-direction: column;
+    align-items: center;   
+  }
+
+  .leftLegendBlock > div span,
+  .rightLegendBlock > div span {
+    margin-top: 5px;
+  }
+}
