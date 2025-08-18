@@ -25,3 +25,23 @@
 .graphiChart {
     box-shadow: 1px 3px 15px 2px #00000040;
 }
+
+@media (max-width: 780px) {
+  .graphicChartTitle {
+    font-size: 26px;
+  }
+
+  .graphicChartButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; 
+    gap: 10px;
+  }
+
+  .graphiChart {
+    box-shadow: 1px 3px 15px 2px #00000040;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+}
