@@ -169,6 +169,32 @@
 :global(.projectsTableWrap) .indentCellSmallSecond {
   display: none;
 }
+:global(.projectsTableWrap) .indentCellBig {
+  width: 40px;
+}
+:global(.projectsTableWrap) .indentCellSmall,
+.indentCellLast {
+  background: #fdfff266;
+}
+:global(.projectsTableWrap) .indentCellSmall {
+  position: relative;
+}
+:global(.projectsTableWrap) .indentCellSmall::before,
+:global(.projectsTableWrap) .indentCellSmall::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+:global(.projectsTableWrap) .indentCellSmall::before {
+  left: 36%;
+  background: var(--green);
+  box-shadow: 25px 0 0 var(--yellow), 51px 0 0 var(--blue);
+}
+
 /* правила для AddProject  Estimate*/
 :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
   background: #ffb32666;

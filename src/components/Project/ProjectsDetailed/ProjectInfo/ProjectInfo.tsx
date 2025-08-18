@@ -96,7 +96,7 @@ export function ProjectInfo({ client, project }: Props) {
           </button>
           {showDropdown && (
             <div
-              className={`${styles.statusChangeContainer} absolute top-[-4px] left-0 mt-1 w-[130px] rounded-[5px] z-10`}
+              className={`${styles.statusChangeContainer} absolute top-[-4px] left-0 mt-1 w-[136px] md:w-[130px] rounded-[5px] z-10`}
             >
               {Object.entries(statusMap).map(([key, label]) => (
                 <div
