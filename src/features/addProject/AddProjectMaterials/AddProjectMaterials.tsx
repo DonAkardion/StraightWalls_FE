@@ -25,7 +25,7 @@ export function AddProjectMaterials() {
       </div>
       <MaterialIncomeEditor
         materialsIncome={mockMaterialsIncome}
-        editable={true}
+        editable={false}
         onMaterialsIncomeChange={() => {}}
         tableClassName="projectMaterialsIncomeEditorWrap"
       />

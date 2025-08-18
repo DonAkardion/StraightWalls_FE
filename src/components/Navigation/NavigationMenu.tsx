@@ -35,6 +35,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
               ? styles.activeLink
               : ""
           } 
+        
           `}
             prefetch={false}
           >
@@ -47,8 +48,13 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           </Link>
           <Link
             href={`/${role}/projects`}
-            className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/projects` ? styles.activeLink : ""}
+            className={`${styles.navigationMenuListLink} 
+            ${
+              pathname.startsWith(`/${role}/projects`) ||
+              pathname.startsWith(`/${role}/addProject`)
+                ? styles.activeLink
+                : ""
+            }
           `}
             prefetch={false}
           >
@@ -62,7 +68,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           <Link
             href={`/${role}/clients`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/clients` ? styles.activeLink : ""}
+          ${pathname.startsWith(`/${role}/clients`) ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -76,7 +82,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           <Link
             href={`/${role}/workers`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/workers` ? styles.activeLink : ""}
+          ${pathname.startsWith(`/${role}/workers`) ? styles.activeLink : ""}
           `}
             prefetch={false}
           >
@@ -104,14 +110,8 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
           <Link
             href={`/${role}/settings`}
             className={`${styles.navigationMenuListLink}
-          ${pathname === `/${role}/settings` ? styles.activeLink : ""}
-          ${
-            [`/${role}/settings/serviceSettings`, `/${role}/settings`].includes(
-              pathname
-            )
-              ? styles.activeLink
-              : ""
-          } 
+          
+          ${pathname.startsWith(`/${role}/settings`) ? styles.activeLink : ""}
           `}
             prefetch={false}
           >

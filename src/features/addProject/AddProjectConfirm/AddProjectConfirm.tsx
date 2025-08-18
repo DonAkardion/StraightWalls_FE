@@ -10,8 +10,8 @@ import { useProjectCreation } from "@/features/addProject/ProjectCreationContext
 import { mockCrews } from "@/mock/Crew/crewMock";
 import { mockWorkers } from "@/mock/Workers/workersMock";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
-import { MaterialIncomeEditor } from "@/components/addProject/MaterialIncomeEditor/MaterialIncomeEditor";
-import { mockMaterialsIncome } from "@/mock/Materials/materialsIncomeMock";
+// import { MaterialIncomeEditor } from "@/components/addProject/MaterialIncomeEditor/MaterialIncomeEditor";
+// import { mockMaterialsIncome } from "@/mock/Materials/materialsIncomeMock";
 
 export function AddProjectConfirm() {
   const params = useParams();
@@ -47,13 +47,14 @@ export function AddProjectConfirm() {
         services={services}
         onServicesChange={(updated) => setServices(updated)}
         tableClassName="projectEstimateTableWrap"
+        tablesTytle="Складання кошторису"
       />
       <MaterialsEditor />
-      <MaterialIncomeEditor
+      {/* <MaterialIncomeEditor
         materialsIncome={mockMaterialsIncome}
         onMaterialsIncomeChange={() => {}}
         tableClassName="projectMaterialsIncomeEditorWrap"
-      />
+      /> */}
       <div className={`${styles.Separator} h-[80px]`}></div>
       <AddProjectCrew crewId={crewId} crews={mockCrews} workers={mockWorkers} />
       <div className={`${styles.PaymentDetailsWrap} mb-[60px] mt-[60px]`}>

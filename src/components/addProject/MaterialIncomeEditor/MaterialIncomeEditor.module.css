@@ -1,0 +1,11 @@
+.totatCostSeparateTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+@media (width >= 48rem /* 768px */) {
+  .totatCostSeparateTytle {
+    font-size: 24px;
+    line-height: 28px;
+  }
+}

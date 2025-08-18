@@ -11,6 +11,7 @@ interface Props {
   editable?: boolean;
   onServicesChange?: (services: Service[]) => void;
   tableClassName?: string;
+  tablesTytle?: string;
 }
 
 export const ProjectEstimate = ({
@@ -18,6 +19,7 @@ export const ProjectEstimate = ({
   editable = false,
   onServicesChange,
   tableClassName,
+  tablesTytle,
 }: Props) => {
   const [localServices, setLocalServices] = useState<Service[]>(services);
   const pathname = usePathname();
@@ -61,7 +63,7 @@ export const ProjectEstimate = ({
 
   return (
     <section className={`${styles.sectionEstimate} mb-[40px] md:mb-[126px]`}>
-      <h2 className={`${styles.estimateTytle} mb-[16px]`}>Кошторис</h2>
+      <h2 className={`${styles.estimateTytle} mb-[16px]`}>{tablesTytle}</h2>
       <div className="">
         <ProjectServicesTable
           services={localServices}
@@ -74,7 +76,7 @@ export const ProjectEstimate = ({
           className={`${styles.tableBetweenWrap} relative h-[126px] md:h-[48px] w-full z-[10]`}
         >
           <div
-            className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-36%] md:h-[142px] w-full z-[10] rounded-[5px]`}
+            className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-16%] md:h-[142px] w-full z-[10] md:rounded-none rounded-[5px]`}
           >
             <div
               className={`${styles.totatCostMain} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full z-[11] rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
@@ -99,14 +101,17 @@ export const ProjectEstimate = ({
             )}
 
             <h3
-              className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[18px] pt-[10px]`}
+              className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[26px] pt-[10px]`}
             >
               Додаткові роботи
             </h3>
           </div>
+          {/* <div
+            className={` absolute top-[-30px] right-[34%] w-[120px] h-[120px] bg-amber-700 z-10`}
+          ></div> */}
         </div>
         {pathname === `/${user.role}/addProject` && (
-          <div className="h-[76px] "></div>
+          <div className="md:hidden h-[76px] "></div>
         )}
         <ProjectServicesTable
           services={localServices}
@@ -116,13 +121,13 @@ export const ProjectEstimate = ({
           className={tableClassName}
         />
         <div
-          className={`${styles.tableBetweenWrap} relative h-[60px] md:h-[48px] w-full z-[10]`}
+          className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
         >
           <div
-            className={`${styles.totatCostSeparate} md:absolute md:bottom-[-20px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px] `}
+            className={`${styles.totatCostSeparate} md:absolute md:bottom-[-20px] w-full mt-[15px] md:mt-0 z-[10]  rounded-[5px]  `}
           >
             <div
-              className={`${styles.totatCostMain}  flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
+              className={`${styles.totatCostMain} ${styles.totatCostMainSwadow} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
             >
               <div className={`${styles.totatCostMainTytle} `}>
                 Загальна вартість додаткових робіт

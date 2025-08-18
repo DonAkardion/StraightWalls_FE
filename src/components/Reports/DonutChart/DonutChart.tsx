@@ -121,8 +121,8 @@ export const DoughnutChart = () => {
           Виконання проєктів
         </h3>
         <div className="flex gap-10">
-          <div>{leftColumn.map(renderLegendItem)}</div>
-          <div>{rightColumn.map(renderLegendItem)}</div>
+          <div className={`${styles.leftLegendBlock}`}>{leftColumn.map(renderLegendItem)}</div>
+          <div className={`${styles.rightLegendBlock}`}>{rightColumn.map(renderLegendItem)}</div>
         </div>
       </div>
     </div>
