@@ -1,10 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
-import styles from "./ClientsDetailed.module.css";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Client } from "@/types/client";
+import React from "react";
 import { mockClients } from "@/mock/Clients/clientsMock";
 import { mockProjects } from "@/mock/Project/mockProjects";
 import { mockServices } from "@/mock/Service/servicesMock";
@@ -36,6 +31,7 @@ export function ProjectsDetailed({ projectId }: Props) {
         <ProjectEstimate
           services={mockServices}
           tableClassName="projectDetailedEstimateTableWrap"
+          tablesTytle="Кошторис"
         />
         <ProjectMaterials />
         <ProjectPayment />
