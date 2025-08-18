@@ -14,9 +14,13 @@ function formatNumber(n: number) {
 
 interface MaterialsEditorProps {
   editable?: boolean;
+  tablesTytle?: string;
 }
 
-export function MaterialsEditor({ editable = false }: MaterialsEditorProps) {
+export function MaterialsEditor({
+  editable = false,
+  tablesTytle,
+}: MaterialsEditorProps) {
   // Локальна копія матеріалів з моковими delivery
   const [materials, setMaterials] = useState<Material[]>(mockMaterials);
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -124,8 +128,9 @@ export function MaterialsEditor({ editable = false }: MaterialsEditorProps) {
 
   return (
     <section className="relative mb-[40px]">
-      <h2 className="mb-[10px] ">Матеріали</h2>
-
+      <h2 className={`${styles.materialsTytle} mb-[10px] md:mb-[16px]`}>
+        {tablesTytle}
+      </h2>
       <ProjectMaterialsTable
         data={materials}
         columns={columns}
@@ -136,7 +141,7 @@ export function MaterialsEditor({ editable = false }: MaterialsEditorProps) {
       />
       <div className={`${styles.materialTotalCostWrap} relative`}>
         <div
-          className={`${styles.materialTotalCostBlock} md:absolute md:top-[-10px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}
+          className={`${styles.materialTotalCostBlock} md:absolute md:top-[-8px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}
         >
           <div
             className={`${styles.materialTotalCost}  rounded-[5px] p-4 h-[56px] md:h-[74px] flex justify-between items-center`}

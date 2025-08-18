@@ -12,7 +12,7 @@ interface DriversBalanceProps {
 
 export const DriversBalance: React.FC<DriversBalanceProps> = ({ items }) => {
   return (
-    <section className={`${styles.driversBalance} md-[40px] md:mb-[60px] `}>
+    <section className={`${styles.driversBalance} mb-[40px] md:mb-[60px] `}>
       <div className={`${styles.tytle} mb-[15px] `}>Сума у водіїв</div>
       <ul
         className={`${styles.totalDriversbalanceList} flex flex-col w-full gap-[15px]`}

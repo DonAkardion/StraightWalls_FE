@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate.module.css";
+import lockalStyles from "./MaterialIncomeEditor.module.css";
 import { MaterialIncome } from "@/types/materialIncome";
 import { MaterialIncomeTable } from "./MaterialIncomeTable/MaterialIncomeTable";
 
@@ -10,6 +11,7 @@ interface Props {
   editable?: boolean;
   onMaterialsIncomeChange?: (materials: MaterialIncome[]) => void;
   tableClassName?: string;
+  tablesTytle?: string;
 }
 
 export const MaterialIncomeEditor = ({
@@ -17,6 +19,7 @@ export const MaterialIncomeEditor = ({
   editable = false,
   onMaterialsIncomeChange,
   tableClassName,
+  tablesTytle,
 }: Props) => {
   const [localMaterialsIncome, setLocalMaterialsIncome] =
     useState<MaterialIncome[]>(materialsIncome);
@@ -50,8 +53,10 @@ export const MaterialIncomeEditor = ({
 
   return (
     <section className={`${styles.sectionMaterials} mb-[40px]  md:mt-[126px]`}>
-      <h2 className={`${styles.editorTitle} mb-[16px]`}>
-        Заробіток на матеріалах
+      <h2
+        className={`${lockalStyles.materialsIncomeTytle} mb-[10px] md:mb-[16px]`}
+      >
+        {tablesTytle}
       </h2>
       <div>
         <MaterialIncomeTable

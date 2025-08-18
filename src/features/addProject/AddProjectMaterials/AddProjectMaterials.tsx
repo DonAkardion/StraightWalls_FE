@@ -16,9 +16,9 @@ export function AddProjectMaterials() {
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
     >
       <div className="relative">
-        <MaterialsEditor editable={true} />
+        <MaterialsEditor editable={true} tablesTytle="Матеріали" />
         <span
-          className={`${styles.clientsDownloadPDF} absolute top-[26px] right-[5px] md:top-[30px] md:right-[5px] cursor-pointer`}
+          className={`${styles.clientsDownloadPDF} absolute top-[10px] right-[5px] md:top-[26px] md:right-[5px] cursor-pointer`}
         >
           Завантажити PDF
         </span>
@@ -28,6 +28,7 @@ export function AddProjectMaterials() {
         editable={false}
         onMaterialsIncomeChange={() => {}}
         tableClassName="projectMaterialsIncomeEditorWrap"
+        tablesTytle="Заробіток на матеріалах"
       />
       <div className={`${styles.materialPayment} my-[40px] md:my-[100px] `}>
         <PaymentDetails

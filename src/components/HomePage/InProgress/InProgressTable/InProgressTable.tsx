@@ -161,17 +161,17 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
       expandedId={expandedId}
       className={className}
       renderInspection={() => (
-        <div className="p-2 md:hidden flex flex-col gap-1">
+        <div className="p-2 pl-3 md:hidden flex flex-col gap-1">
           {orders.map((order, idx) => (
             <div
               key={idx}
-              className={
+              className={`${
                 idx === 0
                   ? styles.pastOrder
                   : idx === 1
                   ? styles.currentOrder
                   : styles.futureOrder
-              }
+              } ${styles.inspectText}`}
             >
               <div className="flex justify-between gap-2 text-nowrap">
                 <span className="w-1/2 truncate">{order.label}</span>

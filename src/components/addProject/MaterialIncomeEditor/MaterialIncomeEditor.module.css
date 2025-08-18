@@ -2,10 +2,17 @@
   font-size: 20px;
   line-height: 24px;
 }
-
+.materialsIncomeTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
 @media (width >= 48rem /* 768px */) {
   .totatCostSeparateTytle {
     font-size: 24px;
     line-height: 28px;
+  }
+  .materialsIncomeTytle {
+    font-size: 36px;
+    line-height: 44px;
   }
 }

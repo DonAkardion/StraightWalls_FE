@@ -12,6 +12,7 @@
 .notesListItem {
   display: flex;
   flex-direction: row;
+  align-items: center;
   justify-content: flex-start;
   gap: 16px;
 }
@@ -27,6 +28,11 @@
   border-radius: 5px;
   font-size: 14px;
   line-height: 18px;
+}
+.notesListItemText {
+  display: flex;
+  align-items: center;
+  line-height: 24px;
 }
 @media (width >= 48rem /* 768px */) {
   .notesTytle {

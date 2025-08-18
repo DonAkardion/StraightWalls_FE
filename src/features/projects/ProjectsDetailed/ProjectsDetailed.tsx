@@ -9,7 +9,7 @@ import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/P
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
 import { ProjectPayment } from "@/components/Project/ProjectsDetailed/ProjectPayment/ProjectPayment";
-import { ProjectCrew } from "@/components/Project/ProjectsDetailed/ProjectCrew";
+import { ProjectCrew } from "@/components/Project/ProjectsDetailed/ProjectCrew/ProjectCrew";
 import { ProjectNotes } from "@/components/Project/ProjectsDetailed/ProjectNotes/ProjectNotes";
 
 interface Props {
@@ -40,7 +40,15 @@ export function ProjectsDetailed({ projectId }: Props) {
           crews={mockCrews}
           workers={mockWorkers}
         />
-        <ProjectNotes />
+        <ProjectNotes
+          subtitle="Також звертаємо Вашу увагу, що Замовник забезпечує:"
+          notes={[
+            "Повний доступ до Об'єкта (Дозвіл на проведення штукатурних робіт (в різних ЖК свої умови, уточніть на охороні))",
+            "Повний доступ до стін та наявність санвузла",
+            "Водопровід, каналізацію для квартир",
+            "Електроенергію 220/380В",
+          ]}
+        />
       </div>
     </div>
   );
