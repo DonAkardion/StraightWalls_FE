@@ -367,6 +367,22 @@
   .inspectTr {
     display: table-row;
   }
+  /* правила для Projects */
+  :global(.projectsTableWrap) .indentCellBig {
+    width: 40px;
+  }
+  :global(.projectsTableWrap) .indentCellSmall,
+  .indentCellLast {
+    background: none;
+  }
+  :global(.projectsTableWrap) .indentCellSmall {
+    position: relative;
+  }
+  :global(.projectsTableWrap) .indentCellSmall::before,
+  :global(.projectsTableWrap) .indentCellSmall::after {
+    display: none;
+  }
+
   /* правила для Crews WorkersPage */
   :global(.CrewsTableWrap) .indentCellSmallSecond {
     width: 20px;
