@@ -78,7 +78,7 @@ export const MaterialIncomeEditor = ({
               </div>
             </div>
             <h3
-              className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[40px] pt-[10px]`}
+              className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[26px] pt-[10px]`}
             >
               Додаткові роботи
             </h3>
@@ -92,13 +92,13 @@ export const MaterialIncomeEditor = ({
           className={tableClassName}
         />
         <div
-          className={`${styles.tableBetweenWrap} relative h-[60px] md:h-[48px] w-full z-[10]`}
+          className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
         >
           <div
             className={`${styles.totatCostSeparate} md:absolute md:bottom-[-20px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px] `}
           >
             <div
-              className={`${styles.totatCostMain}  flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
+              className={`${styles.totatCostMain} ${styles.totatCostMainSwadow}  flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
             >
               <div className={`${styles.totatCostMainTytle} `}>
                 Загальний заробіток на матеріалах з додаткових робіт

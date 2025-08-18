@@ -24,7 +24,7 @@ export const AddProjectCrew = ({ crewId, crews, workers }: Props) => {
           crews={crews}
         />
       ) : (
-        <p className={`${styles.Warning}`}>
+        <p className={`${styles.Warning} text-2xl py-[20px] px-[10px]`}>
           У цій бригаді поки немає робітників
         </p>
       )}
