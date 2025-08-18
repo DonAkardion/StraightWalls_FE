@@ -169,7 +169,7 @@ export function ProjectInfo({ client, project }: Props) {
       </div>
       <div className={`${styles.projectTotal} w-full rounded-[5px]`}>
         <button
-          className={`${styles.projectTotalBtn} w-full h-[106px]  rounded-[5px]`}
+          className={`${styles.projectTotalBtn} w-full h-[106px] md:h-[144px] rounded-[5px]`}
         >
           <div className={`${styles.projectTotalBtnText} flex flex-col`}>
             <span className={`${styles.totalBtnTextTytle}`}>
