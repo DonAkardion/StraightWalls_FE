@@ -17,16 +17,24 @@ export default function AddWorkerForm() {
   const headerElements = [
     <div key="name" className="flex items-center gap-2 text-[18px] text-black">
       <span className="w-7"></span>
-      ПІБ виконавця
+      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+        ПІБ виконавця
+      </span>
     </div>,
     <div key="position" className="flex justify-center items-center text-[18px] text-black">
-      Посада
+      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+        Посада
+      </span>
     </div>,
     <div key="salary" className="flex justify-center items-center text-[18px] text-black">
-      Зарплата
+      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+        Зарплата
+      </span>
     </div>,
     <div key="contacts" className="flex justify-center items-center text-[18px] text-black">
-      Контакти
+      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+        Контакти
+      </span>
     </div>,
   ];
 
@@ -45,15 +53,29 @@ export default function AddWorkerForm() {
             <div className={`${styles.borderBottom} grid grid-cols-4 px-6 py-3 transition`}>
               <div className="flex items-center gap-2 text-black">
                 <span className="text-black">{i + 1}</span>
-                <span>{w.name}</span>
+                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+                  {w.name}
+                </span>
               </div>
-              <div className="flex justify-center items-center text-black">{w.position}</div>
-              <div className="flex justify-center items-center text-black">{w.salary}</div>
-              <div className="flex justify-center items-center text-black">{w.contacts}</div>
-             </div>
+              <div className="flex justify-center items-center text-black">
+                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+                  {w.position}
+                </span>
+              </div>
+              <div className="flex justify-center items-center text-black">
+                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+                  {w.salary}
+                </span>
+              </div>
+              <div className="flex justify-center items-center text-black">
+                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+                  {w.contacts}
+                </span>
+              </div>
+            </div>
             <div className="border-b-2 mx-auto w-[95%]"></div>
           </React.Fragment>
-))}
+        ))}
 
         <div className="grid grid-cols-4 px-6 py-3">
           <div className="flex items-center gap-2">
