@@ -4,7 +4,7 @@ import styles from "./ProjectEstimate.module.css";
 import { Service } from "@/types/service";
 import { ProjectServicesTable } from "./ProjectEstimateTable/ProjectServicesTable";
 import { usePathname } from "next/navigation";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Props {
   services: Service[];
@@ -23,7 +23,8 @@ export const ProjectEstimate = ({
 }: Props) => {
   const [localServices, setLocalServices] = useState<Service[]>(services);
   const pathname = usePathname();
-  const user = useUser();
+  const { user } = useUser();
+  const role = user?.role;
 
   // Синхронізуємо, якщо зовнішні services зміняться
   useEffect(() => {
@@ -90,7 +91,7 @@ export const ProjectEstimate = ({
                 {formatNumber(totalMain)} грн
               </div>
             </div>
-            {pathname === `/${user.role}/addProject` && (
+            {pathname === `/${role}/addProject` && (
               <div className="w-full flex justify-center">
                 <div
                   className={`${styles.confirmButton} rounded-[5px] mt-[20px] mb-[10px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
@@ -109,7 +110,7 @@ export const ProjectEstimate = ({
             </h3>
           </div>
         </div>
-        {pathname === `/${user.role}/addProject` && (
+        {pathname === `/${role}/addProject` && (
           <div className="md:hidden h-[76px] "></div>
         )}
         <ProjectServicesTable

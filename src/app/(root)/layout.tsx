@@ -1,7 +1,7 @@
 import React from "react";
 import { Header } from "@/components/Main/Header/Header";
 import NavigationModul from "@/features/NavigationModul/Navigation";
-
+import { AuthGate } from "@/context/AuthGate";
 export default function RootLayout({
   children,
 }: {
@@ -9,9 +9,11 @@ export default function RootLayout({
 }) {
   return (
     <div className="relative min-h-screen">
-      <Header />
+      <AuthGate>
+        <Header />
 
-      <NavigationModul>{children}</NavigationModul>
+        <NavigationModul>{children}</NavigationModul>
+      </AuthGate>
     </div>
   );
 }

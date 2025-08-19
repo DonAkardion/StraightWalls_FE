@@ -2,6 +2,7 @@ import "./globals.css";
 import React from "react";
 import type { Metadata } from "next";
 import { Inter, Jura, Koulen } from "next/font/google";
+import { UserProvider } from "@/context/UserContextProvider";
 
 const jura = Jura({
   variable: "--font-jura",
@@ -35,7 +36,9 @@ export default function RootLayout({
       lang="en"
       className={`${jura.variable} ${koulen.variable} ${inter.variable}`}
     >
-      <body className="">{children}</body>
+      <body className="">
+        <UserProvider>{children}</UserProvider>
+      </body>
     </html>
   );
 }

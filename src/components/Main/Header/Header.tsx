@@ -1,5 +1,5 @@
 "use client";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@/context/UserContextProvider";
 import React, { useState, useEffect } from "react";
 import styles from "./Header.module.css";
 import Link from "next/link";
@@ -14,11 +14,18 @@ import {
 import { useRouter } from "next/navigation";
 
 export const Header = () => {
-  const user = useUser();
-  const role = useUser().role;
+  const { user, isLoading, logout } = useUser();
   const [open, setOpen] = useState(false);
 
+  if (isLoading || !user) return null;
+  const role = user.role;
+
   const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/login");
+  };
 
   useEffect(() => {
     const body = document.body;
@@ -40,6 +47,7 @@ export const Header = () => {
 
   const toggleMenu = () => setOpen((prev) => !prev);
   const closeMenu = () => setOpen(false);
+
   return (
     <header className={`${styles.header} flex-col z-[50] relative`}>
       <div
@@ -114,20 +122,21 @@ export const Header = () => {
               className={`${styles.personalNotifyMark} rounded-full top-[-2px] right-[1px] w-[11px] h-[11px] absolute`}
             ></div>
           </Link>
-          <Link
-            href="/"
+          <button
+            type="button"
+            onClick={handleLogout}
             className={`${styles.navigationUser} flex shrink-0 items-center gap-[15px]`}
-            prefetch={false}
           >
             <img
               className={`${styles.navigationUserIcon} w-[42px] h-[42px]`}
               src={Person.src}
               alt="Search"
             />
+
             <div className={`${styles.navigationUserName} w-full `}>
-              <span>{user.name}</span>
+              <span>{user.full_name}</span>
             </div>
-          </Link>
+          </button>
         </nav>
       </div>
 
@@ -140,11 +149,10 @@ export const Header = () => {
         <div
           className={`${styles.headerMobileMenuWrapper} flex flex-col gap-[28px] h-screen justify-center items-center`}
         >
-          <Link
-            href="/"
-            onClick={closeMenu}
+          <button
+            type="button"
+            onClick={handleLogout}
             className={`${styles.mobileMenuUser} flex flex-col mb-[44px] shrink-0 items-center gap-[15px]`}
-            prefetch={false}
           >
             <img
               className={`${styles.mobileMenuUserIcon} w-[68px] h-[74px]`}
@@ -154,7 +162,7 @@ export const Header = () => {
             <div className={`${styles.mobileMenuUserName} w-full `}>
               Олексій
             </div>
-          </Link>
+          </button>
           <Link
             href={`/${role}/notifications`}
             onClick={closeMenu}
