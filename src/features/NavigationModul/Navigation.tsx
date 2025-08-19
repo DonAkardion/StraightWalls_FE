@@ -1,19 +1,23 @@
 "use client";
-import { useUser } from "@/hooks/useUser";
 import styles from "./Navigation.module.css";
 import React, { useState, useEffect } from "react";
 import { NavigationButton } from "@/components/Navigation/NavigationButton";
 import { NavigationMenu } from "@/components/Navigation/NavigationMenu";
 import { NavigationMessage } from "@/components/Navigation/NavigationMessage/NavigationMessage";
+import { useUser } from "@/context/UserContextProvider";
 
 export default function NavigationModul({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user = useUser();
+  const { user, isLoading } = useUser();
   const [open, setOpen] = useState(false);
   const [isScrolling] = useState(false);
+
+  if (isLoading) return null;
+
+  const role = user!.role;
 
   useEffect(() => {
     if (open) {
@@ -35,7 +39,7 @@ export default function NavigationModul({
         className="hidden lg:block absolute top-0 left-0 bottom-0 w-[311px] min-h-[1000px] bg-white z-[40]"
         style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
       >
-        <NavigationMenu role={user.role} isOpen onClose={() => {}} />
+        <NavigationMenu role={role} isOpen onClose={() => {}} />
         <NavigationMessage />
       </aside>
 
@@ -53,7 +57,7 @@ export default function NavigationModul({
       >
         <div className="">
           <NavigationMenu
-            role={user.role}
+            role={role}
             isOpen={true}
             onClose={() => setOpen(false)}
           />
