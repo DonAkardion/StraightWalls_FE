@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import styles from "./AddWorkerModal.module.css";
-import { X } from "lucide-react";
 
 interface AddWorkerModalProps {
   onClose: () => void;
@@ -118,6 +117,5 @@ export const AddWorkerModal = ({ onClose, onSubmit }: AddWorkerModalProps) => {
       </div>
     </div>
   </div>
-);
-
+)
 };
