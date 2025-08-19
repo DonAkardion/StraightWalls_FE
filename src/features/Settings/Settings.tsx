@@ -17,7 +17,7 @@ export function Settings() {
           className={`${styles.settingsLinksList} grid grid-cols-1 justify-items-center md:grid-cols-2 gap-x-[40px] gap-y-[40px] md:gap-y-[30px]`}
         >
           <Link
-            href="/"
+            href="/admin/manageCustomers/"
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
