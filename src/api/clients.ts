@@ -33,6 +33,17 @@ export async function getClients(
   return res.data;
 }
 
+// GET /api/clients/:id
+export async function getClientById(
+  token: string,
+  id: number
+): Promise<Client> {
+  const res = await fetcher<ClientResponse>(`${API_BASE}/api/clients/${id}`, {
+    token,
+  });
+  return res.data;
+}
+
 // POST /api/clients
 export async function createClient(
   token: string,

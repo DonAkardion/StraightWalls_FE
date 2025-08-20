@@ -1,4 +1,5 @@
-type ProjectsButtonsProps = { 
+import React from "react";
+type ProjectsButtonsProps = {
   icon: { src: string } | string;
   alt: string;
   onClick: () => void;
