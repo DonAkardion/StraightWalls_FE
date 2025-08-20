@@ -9,6 +9,13 @@
   box-shadow: 1px 3px 15px 2px #00000040;
   background-color: var(--background);
 }
+.searchContainer {
+  font-family: var(--font-koulen);
+  font-size: 20px;
+  line-height: 36px;
+  font-style: normal;
+  font-weight: 400;
+}
 .searchInput {
   outline: none;
 }
