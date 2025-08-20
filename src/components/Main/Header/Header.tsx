@@ -118,8 +118,10 @@ export const Header = () => {
               alt="Search"
             />
 
-            <div className={`${styles.navigationUserName} w-full `}>
-              <span>{user.full_name}</span>
+            <div
+              className={`${styles.navigationUserName} w-full max-w-[100px] `}
+            >
+              <span className=" ">{user.full_name}</span>
             </div>
           </button>
         </nav>

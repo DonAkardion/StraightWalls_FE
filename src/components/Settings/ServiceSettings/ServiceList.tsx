@@ -12,6 +12,7 @@ interface Props {
   onDelete: (id: number) => void;
   onEdit: (updated: Service) => void;
   onAdd: () => void;
+  enableTooltips?: boolean;
 }
 
 export const ServiceList = ({
@@ -20,6 +21,7 @@ export const ServiceList = ({
   onDelete,
   onEdit,
   onAdd,
+  enableTooltips = true,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -42,6 +44,7 @@ export const ServiceList = ({
       onAdd={onAdd}
       onEdit={onEdit}
       onDelete={(item) => onDelete(item.id)}
+      enableTooltips={enableTooltips}
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
@@ -55,7 +58,12 @@ export const ServiceList = ({
         {
           key: "price",
           label: "Вартість, грн",
-          render: (s) => `${s.price.toFixed(2)} грн`,
+          render: (s) => `${s.price} грн`,
+        },
+        {
+          key: "description",
+          label: "Опис",
+          tooltip: (s) => `Опис: ${s.description}`,
         },
       ]}
       renderInspection={(s) => (
@@ -76,7 +84,7 @@ export const ServiceList = ({
             <div className="flex justify-between">
               <p>
                 <span>Ціна: </span>
-                <span className="text-sm">{s.price.toFixed(2)} грн</span>
+                <span className="text-sm">{s.price} грн</span>
               </p>
               <img
                 src={Pen.src}

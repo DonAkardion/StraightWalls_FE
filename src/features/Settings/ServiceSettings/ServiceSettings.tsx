@@ -105,26 +105,26 @@ export function ServiceSettings() {
 
   return (
     <section
-      className={`relative max-w-[1126px] m-auto md:pt-[60px] md:pr-[80px] md:pl-[60px] md:pb-[40px] pt-[40px] pr-[14px] pb-[74px] pl-[26px]`}
+      className={`relative max-w-[1126px] m-auto md:pt-[60px] md:pr-[80px] md:pl-[60px] md:pb-[40px] pt-[40px] pr-[14px] pb-[74px] pl-[26px] `}
     >
-      <h2 className="text-xl font-bold mb-4">Основні послуги</h2>
-      <ServiceList
-        type="main"
-        services={mainServices}
-        onAdd={() => openAddModal("main")}
-        onEdit={openEditModal}
-        onDelete={(id) => deleteService(id)}
-      />
-
-      <h2 className="text-xl font-bold mt-10 mb-4">Додаткові роботи</h2>
-      <ServiceList
-        type="additional"
-        services={additionalServices}
-        onAdd={() => openAddModal("additional")}
-        onEdit={openEditModal}
-        onDelete={(id) => deleteService(id)}
-      />
-
+      <div className="mb-[40px] md:mb-[60px]">
+        <ServiceList
+          type="main"
+          services={mainServices}
+          onAdd={() => openAddModal("main")}
+          onEdit={openEditModal}
+          onDelete={(id) => deleteService(id)}
+        />
+      </div>
+      <div>
+        <ServiceList
+          type="additional"
+          services={additionalServices}
+          onAdd={() => openAddModal("additional")}
+          onEdit={openEditModal}
+          onDelete={(id) => deleteService(id)}
+        />
+      </div>
       {currentForm && (
         <FormModal
           title={currentForm.id ? "Редагувати послугу" : "Нова послуга"}
