@@ -1,17 +1,30 @@
 export interface FetcherOptions extends Omit<RequestInit, "body" | "headers"> {
-  data?: Record<string, string>; // JSON payload
+  data?: unknown; // JSON payload (не тільки string, може бути масив)
   token?: string; // JWT token
   headers?: Record<string, string>; // additional headers
+  params?: Record<string, string | number | boolean>; // query params
 }
 
 export async function fetcher<T>(
   url: string,
   options: FetcherOptions = {}
 ): Promise<T> {
-  const { data, token, headers = {}, ...rest } = options;
+  const { data, token, headers = {}, params, ...rest } = options;
+
+  // Add params to URL
+  let finalUrl = url;
+  if (params && Object.keys(params).length > 0) {
+    const query = new URLSearchParams(
+      Object.entries(params).reduce((acc, [key, val]) => {
+        acc[key] = String(val);
+        return acc;
+      }, {} as Record<string, string>)
+    ).toString();
+    finalUrl += `?${query}`;
+  }
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(finalUrl, {
       ...rest,
       headers: {
         "Content-Type": "application/json",
