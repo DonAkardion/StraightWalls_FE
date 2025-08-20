@@ -1,6 +1,7 @@
 import { fetcher } from "@/utils/fetcher";
 
-const LOGIN_URL = "http://195.35.56.196:8000/api/platform/auth/login";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const LOGIN_URL = `${API_URL}/api/platform/auth/login`;
 
 export interface LoginResponse {
   user: {

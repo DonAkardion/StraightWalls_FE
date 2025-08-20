@@ -160,7 +160,7 @@ export const Header = () => {
               alt="User"
             />
             <div className={`${styles.mobileMenuUserName} w-full `}>
-              Олексій
+              <span>{user.full_name}</span>
             </div>
           </button>
           <Link

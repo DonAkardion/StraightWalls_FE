@@ -8,7 +8,7 @@ import { Inspect } from "@/components/Table/Inspect/Inspect";
 
 interface Props {
   clients: Client[];
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   onEdit: (updated: Client) => void;
   onAdd: () => void;
   role?: string;
@@ -23,10 +23,10 @@ export const ClientsList = ({
   onAdd,
   enableTooltips = true,
 }: Props) => {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const router = useRouter();
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = (id: number) => {
     if (!role) return;
     router.push(`/${role}/clients/clientsDetailed/${id}`);
   };
@@ -43,34 +43,25 @@ export const ClientsList = ({
         onInspect={(item) =>
           setExpandedId((prev) => (prev === item.id ? null : item.id))
         }
-        onRowClick={handleRowClick} // перехід
+        onRowClick={handleRowClick}
         enableTooltips={enableTooltips}
         addButtonText="Додати клієнта"
         columns={[
           {
-            key: "name",
-            label: "Ім'я",
-            tooltip: (client) => `Повне ім’я: ${client.name}`,
+            key: "full_name",
+            label: "Конактна особа",
+            tooltip: (client) => `Повне ім’я: ${client.full_name}`,
           },
           {
-            key: "contactName",
-            label: "Контактна особа",
-            tooltip: (client) => `Контактна особа: ${client.contactName}`,
-          },
-          {
-            key: "address",
-            label: "Адреса",
-            tooltip: (client) => `Адреса: ${client.address}`,
-          },
-          {
-            key: "phone",
+            key: "phone_number",
             label: "Телефон",
-            tooltip: (client) => `Телефон: ${client.phone}`,
+            tooltip: (client) => `Телефон: ${client.phone_number}`,
           },
           {
-            key: "mail",
-            label: "Пошта",
-            tooltip: (client) => `Пошта: ${client.mail}`,
+            key: "objects",
+            label: "Об’єкти",
+            tooltip: (client) => client.objects.join(", "),
+            render: (client) => client.objects.join(", "),
           },
         ]}
         renderInspection={(client) => (
@@ -81,20 +72,12 @@ export const ClientsList = ({
             onDelete={role === "admin" ? onDelete : undefined}
             fields={[
               {
-                label: "Контактна особа",
-                value: (item) => item.contactName,
-              },
-              {
-                label: "Адреса",
-                value: (item) => item.address,
-              },
-              {
                 label: "Телефон",
-                value: (item) => item.phone,
+                value: (item) => item.phone_number,
               },
               {
-                label: "Пошта",
-                value: (item) => item.mail,
+                label: "Об’єкти",
+                value: (item) => item.objects.join(", "),
               },
             ]}
           />

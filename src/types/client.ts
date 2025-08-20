@@ -1,8 +1,8 @@
 export interface Client {
-  id: string;
-  name: string;
-  contactName: string;
-  address: string;
-  phone: string;
-  mail: string;
+  id: number;
+  full_name: string;
+  phone_number: string;
+  objects: string[];
+  created_at?: string;
+  updated_at?: string;
 }

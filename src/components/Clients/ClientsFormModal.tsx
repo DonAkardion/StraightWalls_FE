@@ -5,18 +5,17 @@ import { Client } from "@/types/client";
 
 interface Props {
   client?: Client;
-  onChange: (client: Client) => void;
+  onChange: (client: Omit<Client, "id" | "created_at" | "updated_at">) => void;
 }
 
 export const ClientFormModal = ({ client, onChange }: Props) => {
-  const [form, setForm] = useState<Client>(
+  const [form, setForm] = useState<
+    Omit<Client, "id" | "created_at" | "updated_at">
+  >(
     client || {
-      id: crypto.randomUUID(),
-      name: "",
-      contactName: "",
-      address: "",
-      phone: "+380",
-      mail: "",
+      full_name: "",
+      phone_number: "+380",
+      objects: [],
     }
   );
 
@@ -32,60 +31,46 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
     }));
   };
 
+  const handleObjectsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    const objectsArray = value.split(",").map((obj) => obj.trim());
+    setForm((prev) => ({ ...prev, objects: objectsArray }));
+  };
+
   return (
     <>
       <label>
         <div>Ім’я</div>
         <input
           type="text"
-          name="name"
+          name="full_name"
           placeholder="Ім’я"
-          value={form.name}
+          value={form.full_name}
           onChange={handleChange}
           className="border-b-1 p-2 pb-1 outline-none w-full"
         />
       </label>
-      <label>
-        <div>Контактна особа</div>
-        <input
-          type="text"
-          name="contactName"
-          placeholder="Контактна особа"
-          value={form.contactName}
-          onChange={handleChange}
-          className="border-b-1 p-2 pb-1 outline-none w-full"
-        />
-      </label>
-      <label>
-        <div>Адреса</div>
-        <input
-          type="text"
-          name="address"
-          placeholder="Адреса"
-          value={form.address}
-          onChange={handleChange}
-          className="border-b-1 p-2 pb-1 outline-none w-full"
-        />
-      </label>
+
       <label>
         <div>Телефон</div>
         <input
           type="text"
-          name="phone"
+          name="phone_number"
           placeholder="+380..."
-          value={form.phone}
+          value={form.phone_number}
           onChange={handleChange}
           className="border-b-1 p-2 pb-1 outline-none w-full"
         />
       </label>
+
       <label>
-        <div>Пошта</div>
+        <div>Об&apos;єкти </div>
         <input
-          type="email"
-          name="mail"
-          placeholder="example@mail.com"
-          value={form.mail}
-          onChange={handleChange}
+          type="text"
+          name="objects"
+          placeholder="Офіс, Склад, Магазин"
+          value={form.objects.join(", ")}
+          onChange={handleObjectsChange}
           className="border-b-1 p-2 pb-1 outline-none w-full"
         />
       </label>
