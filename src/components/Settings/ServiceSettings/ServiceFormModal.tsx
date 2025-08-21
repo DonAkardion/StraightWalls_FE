@@ -20,12 +20,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
 
     onChange({
       ...service,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : name === "price"
-          ? parseFloat(value)
-          : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -59,7 +54,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         type="number"
         name="price"
         placeholder="Ціна"
-        value={service.price}
+        value={service.price ?? ""}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none "
         min={0}

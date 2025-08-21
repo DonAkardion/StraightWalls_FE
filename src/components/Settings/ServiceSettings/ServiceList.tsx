@@ -26,7 +26,7 @@ export const ServiceList = ({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  const filtered = services.filter((s) => s.service_type === type);
+  const filtered = services.filter((service) => service.service_type === type);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -58,12 +58,32 @@ export const ServiceList = ({
         {
           key: "price",
           label: "Вартість, грн",
-          render: (s) => `${s.price} грн`,
+          render: (service) => `${service.price} грн`,
         },
         {
           key: "description",
           label: "Опис",
-          tooltip: (s) => `Опис: ${s.description}`,
+          tooltip: (service) => `Опис: ${service.description}`,
+        },
+        {
+          key: "is_active",
+          label: "Статус",
+          render: (service: Service) => {
+            if (service.is_active) {
+              return (
+                <div className="flex justify-center items-center gap-2">
+                  <div className="h-4 w-4 rounded-full bg-green-600"></div>
+                  <span>Активна</span>
+                </div>
+              );
+            }
+            return (
+              <div className="flex justify-center items-center gap-2">
+                <div className="h-4 w-4 rounded-full bg-red-600"></div>
+                <span>Неактивна</span>
+              </div>
+            );
+          },
         },
       ]}
       renderInspection={(s) => (
