@@ -6,7 +6,7 @@ import { ProjectMaterialsTable } from "../ProjectMaterialsTable/ProjectMaterials
 import { Material } from "@/types/material";
 
 export function ProjectMaterials() {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const handleInspect = (item: Material) => {
     setExpandedId((prev) => (prev === item.id ? null : item.id));
   };

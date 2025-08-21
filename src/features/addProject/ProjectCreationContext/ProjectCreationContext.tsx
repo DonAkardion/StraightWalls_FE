@@ -6,8 +6,8 @@ import { Material } from "@/types/material";
 import { Service } from "@/types/service";
 
 interface ProjectCreationData {
-  clientId: string | null;
-  setClientId: (id: string | null) => void;
+  clientId: number | null;
+  setClientId: (id: number | null) => void;
 
   services: Service[];
   setServices: (services: Service[]) => void;
@@ -15,8 +15,8 @@ interface ProjectCreationData {
   materials: Material[];
   setMaterials: (materials: Material[]) => void;
 
-  crewId: string | null;
-  setCrewId: (id: string | null) => void;
+  crewId: number | null;
+  setCrewId: (id: number | null) => void;
 
   resetProject: () => void;
 }
@@ -36,14 +36,14 @@ export const ProjectCreationProvider = ({
     materials: [],
     crewId: null,
   };
-  const [clientId, setClientId] = useState<string | null>(
+  const [clientId, setClientId] = useState<number | null>(
     initialState.clientId
   );
   const [services, setServices] = useState<Service[]>(initialState.services);
   const [materials, setMaterials] = useState<Material[]>(
     initialState.materials
   );
-  const [crewId, setCrewId] = useState<string | null>(initialState.crewId);
+  const [crewId, setCrewId] = useState<number | null>(initialState.crewId);
 
   const resetProject = () => {
     setClientId(initialState.clientId);

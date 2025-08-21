@@ -2,7 +2,7 @@ import { MaterialIncome } from "@/types/materialIncome";
 
 export const mockMaterialsIncome: MaterialIncome[] = [
   {
-    id: "834615",
+    id: 834615,
     name: "Штукатурка стін гіпсова",
     price: "6 394 грн",
     amount: 16,
@@ -11,7 +11,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834616",
+    id: 834616,
     name: "Фарба акрилова",
     price: "1 250 грн",
     amount: 10,
@@ -20,7 +20,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834617",
+    id: 834617,
     name: "Ламінат",
     price: "950 грн",
     amount: 20,
@@ -29,7 +29,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834618",
+    id: 834618,
     name: "Плитка керамічна",
     price: "450 грн",
     amount: 30,
@@ -38,7 +38,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834619",
+    id: 834619,
     name: "Сантехнічна фурнітура",
     price: "3 200 грн",
     amount: 5,
@@ -47,7 +47,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834620",
+    id: 834620,
     name: "Лак для дерева",
     price: "750 грн",
     amount: 12,
@@ -56,7 +56,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834621",
+    id: 834621,
     name: "Гіпсокартон",
     price: "450 грн",
     amount: 25,
@@ -65,7 +65,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834622",
+    id: 834622,
     name: "Малярна стрічка",
     price: "50 грн",
     amount: 40,
@@ -74,7 +74,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834623",
+    id: 834623,
     name: "Клей для плитки",
     price: "120 грн",
     amount: 15,
@@ -83,7 +83,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834624",
+    id: 834624,
     name: "Пінопласт",
     price: "200 грн",
     amount: 10,
@@ -92,7 +92,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834625",
+    id: 834625,
     name: "Малярні валики",
     price: "150 грн",
     amount: 10,
@@ -101,7 +101,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834626",
+    id: 834626,
     name: "ДСП плити",
     price: "600 грн",
     amount: 8,
@@ -110,7 +110,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834627",
+    id: 834627,
     name: "Металеві кутики",
     price: "80 грн",
     amount: 20,
@@ -119,7 +119,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Основні послуги",
   },
   {
-    id: "834628",
+    id: 834628,
     name: "Електричні дроти",
     price: "120 грн",
     amount: 30,
@@ -128,7 +128,7 @@ export const mockMaterialsIncome: MaterialIncome[] = [
     serviceType: "Додаткові роботи",
   },
   {
-    id: "834629",
+    id: 834629,
     name: "Сантехнічні труби",
     price: "300 грн",
     amount: 15,

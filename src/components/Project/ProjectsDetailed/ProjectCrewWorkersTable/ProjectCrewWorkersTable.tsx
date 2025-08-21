@@ -7,7 +7,7 @@ import { Crew } from "@/types/crew";
 
 interface ProjectCrewWorkersTableProps {
   workers: Worker[];
-  crewId: string;
+  crewId: number;
   crews: Crew[];
   enableTooltips?: boolean;
 }

@@ -9,14 +9,14 @@ export const AuthGate = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!isLoading) {
-      if (!user || !user.isAuthenticated) {
+      if (!user || !user.is_active) {
         router.replace("/login"); // client-side redirect
       }
     }
   }, [isLoading, user, router]);
 
   if (isLoading) return null; // user aweit
-  if (!user || !user.isAuthenticated) return null;
+  if (!user || !user.is_active) return null;
 
   return <>{children}</>;
 };

@@ -4,7 +4,7 @@ import { ProjectsDetailed } from "@/features/projects/ProjectsDetailed/ProjectsD
 interface ProjectsDetailedPageProps {
   params: Promise<{
     role: string;
-    id: string;
+    id: number;
   }>;
 }
 

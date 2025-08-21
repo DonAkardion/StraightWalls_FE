@@ -13,7 +13,7 @@ interface Props {
   projects: Project[];
   clients: Client[];
   crews: Crew[];
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   onEdit: (updated: Project) => void;
   onAdd: () => void;
   role?: string;
@@ -23,7 +23,7 @@ interface Props {
 
 export const AllProjectsList = ({
   projects,
-  clients,
+  // clients,
   crews,
   onDelete,
   onEdit,
@@ -31,18 +31,18 @@ export const AllProjectsList = ({
   enableTooltips = true,
   tablesTytle,
 }: Props) => {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const router = useRouter();
 
-  const handleRowClick = (id: string) => {
+  const handleRowClick = (id: number) => {
     if (!role) return;
     router.push(`/${role}/projects/projectsDetailed/${id}`);
   };
 
-  const getClientName = (clientId: string) =>
-    clients.find((c) => c.id === clientId)?.name ?? "Відсутній Клієнт";
+  // const getClientName = (clientId: number) =>
+  //   clients.find((c) => c.id === clientId)?.full_name ?? "Відсутній Клієнт";
 
-  const getCrewName = (crewId: string) =>
+  const getCrewName = (crewId: number) =>
     crews.find((c) => c.id === crewId)?.name ?? "Відсутня бригада";
 
   const getRowClassName = (project: Project) => {
@@ -86,8 +86,8 @@ export const AllProjectsList = ({
           {
             key: "clientId",
             label: "Клієнт",
-            render: (project) => getClientName(project.clientId),
-            tooltip: (project) => `Клієнт: ${getClientName(project.clientId)}`,
+            // render: (project) => getClientName(project.clientId),
+            // tooltip: (project) => `Клієнт: ${getClientName(project.clientId)}`,
           },
           {
             key: "budget",
@@ -115,10 +115,10 @@ export const AllProjectsList = ({
             onEdit={role === "admin" ? onEdit : undefined}
             onDelete={role === "admin" ? onDelete : undefined}
             fields={[
-              {
-                label: "Клієнт",
-                value: (item) => getClientName(item.clientId),
-              },
+              // {
+              //   label: "Клієнт",
+              //   value: (item) => getClientName(item.clientId),
+              // },
               {
                 label: "Бригада",
                 value: (item) => getCrewName(item.crewId),

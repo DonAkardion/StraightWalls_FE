@@ -6,8 +6,8 @@ import { Client } from "@/types/client";
 
 interface ClientSelectorProps {
   clients: Client[];
-  value: string | null;
-  onChange: (clientId: string | null) => void;
+  value: number | null;
+  onChange: (clientId: number | null) => void;
   placeholder?: string;
 }
 
@@ -26,11 +26,11 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
   const filteredClients = useMemo(() => {
     if (!search.trim()) return clients;
     return clients.filter((c) =>
-      c.name.toLowerCase().includes(search.toLowerCase())
+      c.full_name.toLowerCase().includes(search.toLowerCase())
     );
   }, [clients, search]);
 
-  const handleSelect = (clientId: string) => {
+  const handleSelect = (clientId: number) => {
     onChange(clientId);
     setOpen(false);
     setSearch("");
@@ -60,7 +60,7 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
         onClick={() => setOpen((prev) => !prev)}
       >
         {selectedClient ? (
-          selectedClient.name
+          selectedClient.full_name
         ) : (
           <span className={`${styles.selectorPlaceholder}`}>{placeholder}</span>
         )}
@@ -87,7 +87,7 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
                   className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
                   onClick={() => handleSelect(client.id)}
                 >
-                  {client.name}
+                  {client.full_name}
                 </li>
               ))
             ) : (

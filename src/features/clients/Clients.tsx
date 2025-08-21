@@ -130,7 +130,7 @@ export function Clients() {
           }
         >
           <ClientFormModal
-            client={"id" in currentForm ? currentForm : undefined}
+            client={"id" in currentForm ? (currentForm as Client) : undefined}
             onChange={(updated) => setCurrentForm(updated)}
           />
         </FormModal>

@@ -14,7 +14,9 @@ export default function AddCrewForm() {
 
   const [name, setName] = useState("");
   const [brigadierSearch, setBrigadierSearch] = useState("");
-  const [selectedBrigadier, setSelectedBrigadier] = useState<Worker | null>(null);
+  const [selectedBrigadier, setSelectedBrigadier] = useState<Worker | null>(
+    null
+  );
   const [status, setStatus] = useState("");
   const [showList, setShowList] = useState(false);
 
@@ -28,7 +30,7 @@ export default function AddCrewForm() {
     e.preventDefault();
 
     const newCrew: Crew = {
-      id: Date.now().toString(),
+      id: 1, //замінити !
       name,
       brigadier: selectedBrigadier,
       status: status || null,
@@ -46,7 +48,10 @@ export default function AddCrewForm() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setShowList(false);
       }
     };
@@ -57,7 +62,8 @@ export default function AddCrewForm() {
   }, []);
 
   return (
-    <section className="
+    <section
+      className="
         max-w-[1126px] 
         m-auto 
         pt-[30px] 
@@ -67,11 +73,10 @@ export default function AddCrewForm() {
         md:pl-[81px] 
         md:pr-[59px] 
         mb-20
-      ">
+      "
+    >
       <h2 className="md:text-[28px] mb-4">Додати бригаду</h2>
-      <form
-        className={`${styles.addCrewForm} bg-white rounded-md p-5 md:p-6`}
-      >
+      <form className={`${styles.addCrewForm} bg-white rounded-md p-5 md:p-6`}>
         <div className="grid md:grid-cols-[180px_1fr] items-center gap-2 md:gap-4">
           <label className="text-[20px] text-black">Назва бригади</label>
           <input
@@ -82,7 +87,10 @@ export default function AddCrewForm() {
             className={`${styles.addCrewInput} h-10 md:h-11 rounded border border-black px-5 text-[16px]`}
           />
         </div>
-        <div className="grid md:grid-cols-[180px_1fr] items-start gap-2 md:gap-4 mt-4 relative" ref={containerRef}>
+        <div
+          className="grid md:grid-cols-[180px_1fr] items-start gap-2 md:gap-4 mt-4 relative"
+          ref={containerRef}
+        >
           <label className="text-[20px] text-black">Бригадир</label>
           <div className="flex flex-col relative">
             <input
@@ -113,7 +121,7 @@ export default function AddCrewForm() {
           </div>
         </div>
         <div className="grid md:grid-cols-[180px_1fr] items-center gap-2 md:gap-4 mt-4">
-          <label className="text-[20px] text-black">Поточний об'єкт</label>
+          <label className="text-[20px] text-black">Поточний об&apos;єкт</label>
           <input
             type="text"
             value={status}
@@ -125,14 +133,14 @@ export default function AddCrewForm() {
         <AddWorkerForm />
       </form>
       <div className="mt-10">
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className={`${styles.addCrewButton} cursor-pointer w-full h-12 md:h-[54px] rounded-md text-[18px] text-black transition`}
-          >
-            Додати
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className={`${styles.addCrewButton} cursor-pointer w-full h-12 md:h-[54px] rounded-md text-[18px] text-black transition`}
+        >
+          Додати
+        </button>
+      </div>
     </section>
   );
 }

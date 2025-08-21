@@ -1,7 +1,7 @@
 import { Project } from "./project";
 
 export interface InProgress {
-  id: string;
+  id: number;
   projectID: string;
   projectCrew: Project["crewId"];
   currentStage: Project["status"];

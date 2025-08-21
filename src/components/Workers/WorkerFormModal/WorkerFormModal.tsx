@@ -12,7 +12,7 @@ interface WorkerFormModalProps {
 export function WorkerFormModal({ initialData }: WorkerFormModalProps) {
   const [formData, setFormData] = useState<Worker>(
     initialData || {
-      id: crypto.randomUUID(),
+      id: 1, // change later
       name: "",
       occupation: "",
       phone: "",

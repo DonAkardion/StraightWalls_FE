@@ -14,7 +14,7 @@ type Col<T> = {
 };
 
 interface Props {
-  expandedId?: string | null;
+  expandedId?: number | null;
   onInspect?: (item: Material) => void;
   enableTooltips?: boolean;
   columns?: Col<Material>[];

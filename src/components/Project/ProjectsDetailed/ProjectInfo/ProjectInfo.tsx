@@ -140,7 +140,7 @@ export function ProjectInfo({ client, project }: Props) {
             src={Person.src}
             alt="Person"
           />
-          <span>{client.contactName}</span>
+          <span>{client.full_name}</span>
         </div>
         <div className={`${styles.clientInfoItem}`}>
           <img
@@ -148,7 +148,7 @@ export function ProjectInfo({ client, project }: Props) {
             src={Phone.src}
             alt="Phone"
           />
-          <span>{client.phone}</span>
+          <span>{client.phone_number}</span>
         </div>
         <div className={`${styles.clientInfoItem}`}>
           <img
@@ -156,7 +156,7 @@ export function ProjectInfo({ client, project }: Props) {
             src={Home.src}
             alt="Home "
           />
-          <span>{client.address}</span>
+          <span>{client.objects}</span>
         </div>
         <div className={`${styles.clientInfoItem}`}>
           <img
@@ -164,7 +164,7 @@ export function ProjectInfo({ client, project }: Props) {
             src={Mail.src}
             alt="Mail "
           />
-          <span>{client.mail}</span>
+          <span>{client.phone_number}</span>
         </div>
       </div>
       <div className={`${styles.projectTotal} w-full rounded-[5px]`}>
