@@ -51,10 +51,6 @@ export function WorkersTable({
             tooltip: (worker) => `Посада: ${worker.occupation}`,
           },
           {
-            key: "salary",
-            label: "Зарплата",
-          },
-          {
             key: "phone",
             label: "Контакти",
             tooltip: (worker) => `Контакти: ${worker.phone}`,
@@ -68,10 +64,6 @@ export function WorkersTable({
               {
                 label: "Посада",
                 value: (item) => item.occupation,
-              },
-              {
-                label: "Зарплата",
-                value: (item) => item.salary,
               },
               {
                 label: "Контакти",

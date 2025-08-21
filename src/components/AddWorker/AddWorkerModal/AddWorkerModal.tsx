@@ -1,121 +1,149 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./AddWorkerModal.module.css";
+import { handleAddWorker } from "@/api/crews";
+import { useUser } from "@/context/UserContextProvider";
+import { Worker } from "@/types/worker";
+
 
 interface AddWorkerModalProps {
   onClose: () => void;
-  onSubmit: (worker: {
-    id: string;
-    name: string;
-    occupation: string;
-    salary: string;
-    phone: string;
-  }) => void;
+  onAdd: (worker: Worker) => void;
 }
 
-export const AddWorkerModal = ({ onClose, onSubmit }: AddWorkerModalProps) => {
-    const [formData, setFormData] = useState({
-        name: "",
-        occupation: "",
-        salary: "",
-        phone: "",
-    })
+export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
+  const { user } = useUser();
+  const [token, setToken] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    full_name: "",
+    position: "",
+    phone_number: ""
+  });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      setFormData((prev) => ({
-        ...prev, [e.target.name]: e.target.value
-      }))
+  useEffect(() => {
+    if (user?.isAuthenticated) {
+      const savedToken = localStorage.getItem("token");
+      setToken(savedToken);
     }
+  }, [user?.isAuthenticated]);
 
-    const handleAdd = () => {
-      const isAllFilled = Object.values(formData).every((val) => val.trim() !== "")
-      if(!isAllFilled) {
-        alert("Please, fill all the gaps")
-        return
-      } else {
-          onSubmit({
-            id: Date.now().toString(),
-            ...formData
-          })
-      }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleAdd = async () => {
+    const isAllFilled = Object.values(formData).every(
+      (val) => val.trim() !== ""
+    );
+    if (!isAllFilled) {
+      alert("Будь ласка, заповніть усі поля");
+      return;
+    }
+      console.log("TOKEN", token);
+    try {
+      const addedWorker = await handleAddWorker(
+        {
+          full_name: formData.full_name,
+          phone_number: formData.phone_number,
+          position: formData.position,
+          team_id: 1,
+        },
+        token!
+      );
+      console.log("Працівник створений");
+      onAdd(addedWorker.data.worker);
       onClose();
-      console.log(formData)
-    }
+    } catch (error) {
+  if (error instanceof Error) {
+    alert(error.message);
+  } else {
+    alert("Сталася невідома помилка");
+  }
+}
+
+  };
 
   return (
-  <div className={styles.modalOverlay}>
-    <div className={`${styles.modalContent} ${styles.addCrewForm}`}>
-      <label className="text-xl mb-10 text-black">
-        Новий робітник
-      </label>
+    <div className={styles.modalOverlay}>
+      <div className={`${styles.modalContent} ${styles.addCrewForm}`}>
+        <label className="text-xl mb-10 text-black">Новий робітник</label>
 
-      <div className="space-y-3 mb-5">
-        <label>
-          <div className={styles.addCrewInputTitle}>ПІБ виконавця</div>
-          <input
-            type="text"
-            name="name"
-            placeholder="ПІБ виконавця"
-            value={formData.name}
-            onChange={handleChange}
-            className="border-b-1 p-2 pb-1 outline-none w-full"
-          />
-        </label>
+        <div className="space-y-3 mb-5">
+          <label>
+            <div className={styles.addCrewInputTitle}>ПІБ виконавця</div>
+            <input
+              type="text"
+              name="full_name"
+              placeholder="ПІБ виконавця"
+              value={formData.full_name}
+              onChange={handleChange}
+              className="border-b-1 p-2 pb-1 outline-none w-full"
+            />
+          </label>
 
-        <label>
-          <div className={styles.addCrewInputTitle}>Посада</div>
-          <input
-            type="text"
-            name="occupation"
-            placeholder="Посада"
-            value={formData.occupation}
-            onChange={handleChange}
-            className="border-b-1 p-2 pb-1 outline-none w-full"
-          />
-        </label>
+          <label>
+            <div className={styles.addCrewInputTitle}>Посада</div>
+            <input
+              type="text"
+              name="position"
+              placeholder="Посада"
+              value={formData.position}
+              onChange={handleChange}
+              className="border-b-1 p-2 pb-1 outline-none w-full"
+            />
+          </label>
 
-        <label>
-          <div className={styles.addCrewInputTitle}>Зарплата</div>
-          <input
-            type="text"
-            name="salary"
-            placeholder="Зарплата"
-            value={formData.salary}
-            onChange={handleChange}
-            className="border-b-1 p-2 pb-1 outline-none w-full"
-          />
-        </label>
+          <label>
+            <div className={styles.addCrewInputTitle}>Контакти</div>
+            <input
+              type="text"
+              name="phone_number"
+              placeholder="Контакти"
+              value={formData.phone_number}
+              onChange={handleChange}
+              className="border-b-1 p-2 pb-1 outline-none w-full"
+            />
+          </label>
 
-        <label>
-          <div className={styles.addCrewInputTitle}>Контакти</div>
-          <input
-            type="text"
-            name="phone"
-            placeholder="Контакти"
-            value={formData.phone}
-            onChange={handleChange}
-            className="border-b-1 p-2 pb-1 outline-none w-full"
-          />
-        </label>
-      </div>
+          {/* <label>
+            <div className={styles.addCrewInputTitle}>Бригада</div>
+            <select
+              name="team_id"
+              value={formData.team_id}
+              onChange={handleChange}
+              className="border-b-1 p-2 pb-1 outline-none w-full"
+            >
+              <option value="">Оберіть бригаду</option>
+              {crews.map((crew) => (
+                <option key={crew.id} value={crew.id}>
+                  {crew.name}
+                </option>
+              ))}
+            </select>
+          </label> */}
+        </div>
 
-      <div className="flex justify-end gap-5">
-        <button
-        onClick={onClose}
-        className={`${styles.addCrewCancelBtn} rounded`}
-      >
-        Скасувати
-      </button>
-      <button
-        onClick={handleAdd}
-        className={`${styles.addCrewButton} rounded`}
-      >
-        Додати
-      </button>
+        <div className="flex justify-end gap-5">
+          <button
+            onClick={onClose}
+            className={`${styles.addCrewCancelBtn} rounded`}
+          >
+            Скасувати
+          </button>
+          <button
+            onClick={handleAdd}
+            className={`${styles.addCrewButton} rounded`}
+          >
+            Додати
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-)
+  );
 };

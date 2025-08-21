@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./AddCustomerForm.module.css";
-import { handleAddCustomer } from "@/utils/fetchRequests";
+import { handleAddCustomer } from "@/api/users";
+import { useUser } from "@/context/UserContextProvider";
 
 interface AddCustomerModalProps {
   onClose: () => void;
@@ -13,9 +14,18 @@ export const AddCustomerModal = ({ onClose, onSubmit }: AddCustomerModalProps) =
   const [customerData, setCustomerData] = useState({
     login: "",
     password: "",
-    role: "driver", // початкова роль
+    role: "driver",
     full_name: "",
   });
+  const { user } = useUser()
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if(user?.isAuthenticated) {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken)
+    }
+  }, [user?.isAuthenticated])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setCustomerData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -29,7 +39,7 @@ export const AddCustomerModal = ({ onClose, onSubmit }: AddCustomerModalProps) =
     }
 
     try {
-      const newUser = await handleAddCustomer(customerData);
+      const newUser = await handleAddCustomer(customerData, token!);
       onSubmit(newUser);
       setCustomerData({ login: "", password: "", role: "driver", full_name: "" });
       onClose();

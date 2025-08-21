@@ -47,10 +47,11 @@ export function Workers() {
   const openEditWorkerModal = (worker: Worker) => setModalData({ worker });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleAddWorker = (newWorker: Worker) => {
-    setWorkers((prev) => [...prev, newWorker]);
+
+  const handleAddWorker = (worker: Worker) => {
+    setWorkers((prev) => [...prev, worker]);
     setIsModalOpen(false);
-  };
+  }
 
   return (
     <section
@@ -101,7 +102,7 @@ export function Workers() {
       {isModalOpen && (
         <AddWorkerModal
           onClose={() => setIsModalOpen(false)}
-          onSubmit={handleAddWorker}
+          onAdd={handleAddWorker}
         />
       )}
 

@@ -59,7 +59,7 @@ export function WorkersCrewTable({
           {
             key: "workersCount",
             render: (crew: Crew) =>
-              workers.filter((worker) => worker.crewId === crew.id).length,
+              workers.filter((worker) => worker?.crewId === crew.id).length,
             label: "Кількість робітників",
           },
           {
