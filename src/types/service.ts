@@ -1,10 +1,11 @@
-export type ServiceType = "Основні послуги" | "Додаткові роботи";
-
 export interface Service {
-  id: string;
+  id: number;
   name: string;
-  unit: string;
+  unit_of_measurement: string;
   price: number;
-  amount: number;
-  serviceType: ServiceType;
+  service_type: "main" | "additional";
+  description?: string;
+  is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
