@@ -27,7 +27,7 @@ export function Workers() {
 
   // операції над Crew
 
-  const deleteCrew = (id: string) => setCrews((prev) => handleDelete(prev, id));
+  const deleteCrew = (id: number) => setCrews((prev) => handleDelete(prev, id));
 
   const saveCrew = (crew: Crew) => setCrews((prev) => handleSave(prev, crew));
 
@@ -38,7 +38,7 @@ export function Workers() {
 
   //операції над Worker
 
-  const deleteWorker = (id: string) =>
+  const deleteWorker = (id: number) =>
     setWorkers((prev) => handleDelete(prev, id));
 
   const saveWorker = (worker: Worker) =>

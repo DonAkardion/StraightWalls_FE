@@ -29,7 +29,7 @@ export const MaterialIncomeEditor = ({
     setLocalMaterialsIncome(materialsIncome);
   }, [materialsIncome]);
 
-  const handleAmountChange = (id: string, newAmount: number) => {
+  const handleAmountChange = (id: number, newAmount: number) => {
     setLocalMaterialsIncome((prev) => {
       const updated = prev.map((m) =>
         m.id === id ? { ...m, amount: newAmount } : m

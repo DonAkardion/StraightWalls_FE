@@ -12,7 +12,7 @@ export default function Home() {
     if (pathname === "/login") return;
 
     if (!isLoading) {
-      if (!user || !user.isAuthenticated) {
+      if (!user || !user.is_active) {
         router.replace("/login");
       } else if (user.role === "admin") {
         router.replace("/admin");

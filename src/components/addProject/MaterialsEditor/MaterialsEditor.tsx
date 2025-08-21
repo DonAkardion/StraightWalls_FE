@@ -23,14 +23,14 @@ export function MaterialsEditor({
 }: MaterialsEditorProps) {
   // Локальна копія матеріалів з моковими delivery
   const [materials, setMaterials] = useState<Material[]>(mockMaterials);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const total = useMemo(
     () => materials.reduce((acc, m) => acc + m.amount * parsePrice(m.price), 0),
     [materials]
   );
 
-  const changeAmount = (id: string, next: number) => {
+  const changeAmount = (id: number, next: number) => {
     setMaterials((prev) =>
       prev.map((m) =>
         m.id === id ? { ...m, amount: Math.max(0, Math.floor(next)) } : m

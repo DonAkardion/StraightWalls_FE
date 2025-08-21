@@ -6,8 +6,8 @@ import { Crew } from "@/types/crew";
 
 interface CrewSelectorProps {
   crews: Crew[];
-  value: string | null;
-  onChange: (crewId: string | null) => void;
+  value: number | null;
+  onChange: (crewId: number | null) => void;
   placeholder?: string;
 }
 export const CrewSelector: React.FC<CrewSelectorProps> = ({
@@ -29,7 +29,7 @@ export const CrewSelector: React.FC<CrewSelectorProps> = ({
     );
   }, [crews, search]);
 
-  const handleSelect = (crewId: string) => {
+  const handleSelect = (crewId: number) => {
     onChange(crewId);
     setOpen(false);
     setSearch("");

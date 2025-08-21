@@ -16,7 +16,7 @@ interface Project {
 }
 
 export const ClientsProjectsTable = () => {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const projectColumns = [
     { key: "projectNumber", label: "Номер проєкту" },
     { key: "cost", label: "Вартість" },

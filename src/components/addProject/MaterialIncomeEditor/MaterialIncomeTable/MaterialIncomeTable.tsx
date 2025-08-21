@@ -10,7 +10,7 @@ interface Props {
   materials: MaterialIncome[];
   showHeader?: boolean;
   editable?: boolean;
-  onAmountChange?: (id: string, newAmount: number) => void;
+  onAmountChange?: (id: number, newAmount: number) => void;
   className?: string;
   enableTooltips?: boolean;
 }
@@ -23,7 +23,7 @@ export const MaterialIncomeTable = ({
   className,
   enableTooltips = true,
 }: Props) => {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const handleDecrease = (e: React.MouseEvent, item: MaterialIncome) => {
     e.stopPropagation();

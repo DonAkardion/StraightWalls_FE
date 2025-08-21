@@ -4,7 +4,8 @@ type Props = {
 
 export const ManageCustomersContainer = ({ children }: Props) => {
   return (
-    <div className="
+    <div
+      className="
         max-w-[1126px] 
         m-auto 
         pt-[30px] 

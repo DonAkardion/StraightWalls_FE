@@ -6,7 +6,7 @@ import { Worker } from "@/types/worker";
 import { ProjectCrewWorkersTable } from "@/components/Project/ProjectsDetailed/ProjectCrewWorkersTable/ProjectCrewWorkersTable";
 
 interface Props {
-  crewId: string | null;
+  crewId: number | null;
   crews: Crew[];
   workers: Worker[];
 }

@@ -1,7 +1,7 @@
 export type ServiceType = "Основні послуги" | "Додаткові роботи";
 
 export interface MaterialIncome {
-  id: string;
+  id: number;
   name: string;
   price: string;
   amount: number;

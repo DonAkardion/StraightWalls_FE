@@ -1,8 +1,8 @@
 export interface Worker {
-  id: string;
+  id: number;
   name: string;
   occupation: string;
   salary: string;
   phone: string;
-  crewId?: string | null;
+  crewId?: number | null;
 }

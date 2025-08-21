@@ -1,27 +1,33 @@
 import { token } from "@/components/ManageCustomers/ManageCustomersList";
 
-export const handleDelete = async (id: string) => {
-    const res = await fetch(`http://195.35.56.196:8000/api/platform/users/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-        }
-    });
-    if(res.ok) console.log("Користувача видалено");
-}
+export const handleDelete = async (id: number) => {
+  const res = await fetch(
+    `http://195.35.56.196:8000/api/platform/users/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (res.ok) console.log("Користувача видалено");
+};
 
-export const handleEdit = async (id: string, password: string) => {
-    const res = await fetch(`http://195.35.56.196:8000/api/platform/users/${id}/password`, {
-        method: "PATCH",
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password: password })
-    });
-    if(res.ok) console.log("Пароль змінено");
-}
+export const handleEdit = async (id: number, password: string) => {
+  const res = await fetch(
+    `http://195.35.56.196:8000/api/platform/users/${id}/password`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ password: password }),
+    }
+  );
+  if (res.ok) console.log("Пароль змінено");
+};
 
 export const handleAddCustomer = async (customerData: {
   login: string;
@@ -32,7 +38,7 @@ export const handleAddCustomer = async (customerData: {
   const res = await fetch("http://195.35.56.196:8000/api/platform/users", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(customerData),

@@ -9,7 +9,7 @@ import { Inspect } from "@/components/Table/Inspect/Inspect";
 interface WorkersTableProps {
   workers: Worker[];
   crews: Crew[];
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   onEdit: (updated: Worker) => void;
   onAdd: () => void;
   enableTooltips?: boolean;
@@ -22,7 +22,7 @@ export function WorkersTable({
   onAdd,
   enableTooltips = true,
 }: WorkersTableProps) {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   return (
     <div className="mb-[60px]">
       <Table<Worker>
