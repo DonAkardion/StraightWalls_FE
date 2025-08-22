@@ -19,16 +19,26 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
     }
   );
 
+  const [errors, setErrors] = useState<{ full_name?: string }>({});
+
   useEffect(() => {
     onChange(form);
   }, [form]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // простенька валідація
+    if (name === "full_name" && !value.trim()) {
+      setErrors((prev) => ({ ...prev, full_name: "Ім’я є обов’язковим" }));
+    } else if (name === "full_name") {
+      setErrors((prev) => ({ ...prev, full_name: undefined }));
+    }
   };
 
   const handleObjectsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +49,7 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
 
   return (
     <>
-      <label>
+      <label className="block mb-3">
         <div>Ім’я</div>
         <input
           type="text"
@@ -47,11 +57,16 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
           placeholder="Ім’я"
           value={form.full_name}
           onChange={handleChange}
-          className="border-b-1 p-2 pb-1 outline-none w-full"
+          className={`border-b-1 p-2 pb-1 outline-none w-full ${
+            errors.full_name ? "border-red-500" : "border-black"
+          }`}
         />
+        {errors.full_name && (
+          <p className="text-red-500 text-sm mt-1">{errors.full_name}</p>
+        )}
       </label>
 
-      <label>
+      <label className="block mb-3">
         <div>Телефон</div>
         <input
           type="text"
@@ -63,8 +78,8 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
         />
       </label>
 
-      <label>
-        <div>Об&apos;єкти </div>
+      <label className="block mb-3">
+        <div>Об&apos;єкти</div>
         <input
           type="text"
           name="objects"
