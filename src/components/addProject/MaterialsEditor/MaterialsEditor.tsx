@@ -2,12 +2,8 @@
 import styles from "./MaterialsEditor.module.css";
 import React, { useMemo, useState } from "react";
 import { ProjectMaterialsTable } from "@/components/Project/ProjectsDetailed/ProjectMaterialsTable/ProjectMaterialsTable";
-import { mockMaterials } from "@/mock/Materials/materialsMock";
-import { Material } from "@/types/material";
+import { ProjectMaterial } from "@/types/projectComponents";
 
-function parsePrice(price: string) {
-  return Number(String(price).replace(",", "."));
-}
 function formatNumber(n: number) {
   return n.toFixed(2).replace(".", ",");
 }
@@ -15,115 +11,118 @@ function formatNumber(n: number) {
 interface MaterialsEditorProps {
   editable?: boolean;
   tablesTytle?: string;
+  materials: ProjectMaterial[];
+  onAdd: (material: ProjectMaterial) => void;
+  onUpdate: (id: number, updated: ProjectMaterial) => void;
+  onDelete: (id: number) => void;
 }
 
 export function MaterialsEditor({
   editable = false,
   tablesTytle,
+  materials,
+  onAdd,
+  onUpdate,
+  onDelete,
 }: MaterialsEditorProps) {
-  // Локальна копія матеріалів з моковими delivery
-  const [materials, setMaterials] = useState<Material[]>(mockMaterials);
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
+  // локальний state для "нового рядка"
+  const [newMaterial, setNewMaterial] = useState<
+    Omit<ProjectMaterial, "id" | "project_id" | "created_at" | "updated_at">
+  >({
+    name: "",
+    description: "",
+    cost: 0,
+    quantity: 0,
+    unit: "",
+    unit_price: 0,
+  });
+
   const total = useMemo(
-    () => materials.reduce((acc, m) => acc + m.amount * parsePrice(m.price), 0),
+    () => materials.reduce((acc, m) => acc + m.quantity * m.unit_price, 0),
     [materials]
   );
-
-  const changeAmount = (id: number, next: number) => {
-    setMaterials((prev) =>
-      prev.map((m) =>
-        m.id === id ? { ...m, amount: Math.max(0, Math.floor(next)) } : m
-      )
-    );
-  };
 
   const columns = [
     { key: "name", label: "Найменування матеріалів" },
     {
-      key: "amount",
+      key: "quantity",
       label: "Кількість",
-      render: (m: Material) =>
+      render: (m: ProjectMaterial) =>
         editable ? (
-          <div
-            className="flex items-center justify-center gap-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                changeAmount(m.id, Math.max(0, m.amount - 1));
-              }}
-              className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
-              aria-label="decrease"
-            >
-              −
-            </button>
-
-            <input
-              type="number"
-              min={0}
-              value={m.amount === 0 ? "" : m.amount}
-              onChange={(e) => {
-                e.stopPropagation();
-                const v = e.target.value === "" ? 0 : Number(e.target.value);
-                if (Number.isNaN(v)) return;
-                changeAmount(m.id, v);
-              }}
-              onClick={(e) => e.stopPropagation()}
-              className={`${styles.editInput} w-[80px] md:w-12 text-center rounded px-1 py-0`}
-              placeholder="0"
-            />
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                changeAmount(m.id, m.amount + 1);
-              }}
-              className="hidden md:inline-flex w-4 h-4 pb-[3px] items-center justify-center bg-white rounded cursor-pointer"
-              aria-label="increase"
-            >
-              +
-            </button>
-          </div>
+          <input
+            type="number"
+            min={0}
+            value={m.quantity}
+            onChange={(e) =>
+              onUpdate(m.id, { ...m, quantity: Number(e.target.value) })
+            }
+            className={`${styles.editInput} w-[80px] text-center rounded px-1 py-0`}
+          />
         ) : (
-          <span>{m.amount}</span>
+          <span>{m.quantity}</span>
+        ),
+    },
+    { key: "unit", label: "Одиниця виміру" },
+    {
+      key: "unit_price",
+      label: "Ціна за одиницю",
+      render: (m: ProjectMaterial) =>
+        editable ? (
+          <input
+            type="number"
+            min={0}
+            value={m.unit_price}
+            onChange={(e) =>
+              onUpdate(m.id, { ...m, unit_price: Number(e.target.value) })
+            }
+            className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
+          />
+        ) : (
+          <span>{m.unit_price}</span>
         ),
     },
     {
-      key: "stock", // унікальний ключ, не amount
-      label: "Залишок",
-      render: (m: Material) => String(m.amount),
+      key: "total",
+      label: "Сума",
+      render: (m: ProjectMaterial) => formatNumber(m.quantity * m.unit_price),
     },
     {
-      key: "delivery",
-      label: "Доставка",
-      render: (m: Material) => m.delivery ?? "",
-    },
-    {
-      // окрема колонка для кнопки інспекту — повністю керуємо розгортанням через expandedId
-      key: "inspect",
+      key: "actions",
       label: "",
-      render: (m: Material) => (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setExpandedId((prev) => (prev === m.id ? null : m.id));
-          }}
-          className="px-2 py-1 rounded border"
-          aria-expanded={expandedId === m.id}
-        >
-          {expandedId === m.id ? "Згорнути" : "Деталі"}
-        </button>
-      ),
+      render: (m: ProjectMaterial) =>
+        editable && (
+          <button className="text-red-500" onClick={() => onDelete(m.id)}>
+            Видалити
+          </button>
+        ),
     },
   ];
 
-  const handleInspect = (item: Material) => {
+  const handleInspect = (item: ProjectMaterial) => {
     setExpandedId((prev) => (prev === item.id ? null : item.id));
+  };
+
+  const handleAddNew = () => {
+    if (!newMaterial.name || newMaterial.quantity <= 0) return;
+
+    onAdd({
+      ...newMaterial,
+      id: Date.now(),
+      project_id: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+
+    setNewMaterial({
+      name: "",
+      description: "",
+      cost: 0,
+      quantity: 0,
+      unit: "",
+      unit_price: 0,
+    });
   };
 
   return (
@@ -131,6 +130,8 @@ export function MaterialsEditor({
       <h2 className={`${styles.materialsTytle} mb-[10px] md:mb-[16px]`}>
         {tablesTytle}
       </h2>
+
+      {/* Таблиця матеріалів */}
       <ProjectMaterialsTable
         data={materials}
         columns={columns}
@@ -139,6 +140,62 @@ export function MaterialsEditor({
         enableTooltips={true}
         className="projectMaterialsEditorWrap"
       />
+
+      {/* Рядок для додавання нового матеріалу */}
+      {editable && (
+        <div className={`${styles.editContainer} flex gap-2 `}>
+          <input
+            type="text"
+            placeholder="Назва"
+            value={newMaterial.name}
+            onChange={(e) =>
+              setNewMaterial((prev) => ({ ...prev, name: e.target.value }))
+            }
+            className={`${styles.editInput} flex-1 rounded px-2 py-1`}
+          />
+          <input
+            type="number"
+            placeholder="Кількість"
+            value={newMaterial.quantity || ""}
+            onChange={(e) =>
+              setNewMaterial((prev) => ({
+                ...prev,
+                quantity: Number(e.target.value),
+              }))
+            }
+            className={`${styles.editInput} w-[100px] rounded px-2 py-1`}
+          />
+          <input
+            type="text"
+            placeholder="Од."
+            value={newMaterial.unit}
+            onChange={(e) =>
+              setNewMaterial((prev) => ({ ...prev, unit: e.target.value }))
+            }
+            className={`${styles.editInput} w-[80px] rounded px-2 py-1`}
+          />
+          <input
+            type="number"
+            placeholder="Ціна"
+            value={newMaterial.unit_price || ""}
+            onChange={(e) =>
+              setNewMaterial((prev) => ({
+                ...prev,
+                unit_price: Number(e.target.value),
+              }))
+            }
+            className={`${styles.editInput} w-[120px] rounded px-2 py-1`}
+          />
+          <button
+            onClick={handleAddNew}
+            className="bg-green-500 text-white px-4 py-1 rounded"
+          >
+            Додати
+          </button>
+        </div>
+      )}
+
+      {/* Загальна вартість */}
       <div className={`${styles.materialTotalCostWrap} relative`}>
         <div
           className={`${styles.materialTotalCostBlock} md:absolute md:top-[-8px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}

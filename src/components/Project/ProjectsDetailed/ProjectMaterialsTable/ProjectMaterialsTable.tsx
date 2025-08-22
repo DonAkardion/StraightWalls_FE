@@ -3,8 +3,8 @@
 import React from "react";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
-import { Material } from "@/types/material";
-import { mockMaterials } from "@/mock/Materials/materialsMock";
+import { ProjectMaterial } from "@/types/projectComponents";
+import { Pen, Trash, Plus } from "lucide-react";
 
 type Col<T> = {
   key: keyof T | string;
@@ -15,11 +15,14 @@ type Col<T> = {
 
 interface Props {
   expandedId?: number | null;
-  onInspect?: (item: Material) => void;
+  onInspect?: (item: ProjectMaterial) => void;
   enableTooltips?: boolean;
-  columns?: Col<Material>[];
-  data?: Material[];
+  columns?: Col<ProjectMaterial>[];
+  data?: ProjectMaterial[];
   className?: string;
+  onAdd?: () => void;
+  onEdit?: (item: ProjectMaterial) => void;
+  onDelete?: (item: ProjectMaterial) => void;
 }
 
 export function ProjectMaterialsTable({
@@ -29,33 +32,68 @@ export function ProjectMaterialsTable({
   columns,
   data,
   className,
+  onAdd,
+  onEdit,
+  onDelete,
 }: Props) {
-  const parsePrice = (price: string) => Number(String(price).replace(",", "."));
-
-  const defaultColumns: Col<Material>[] = [
+  const defaultColumns: Col<ProjectMaterial>[] = [
     {
       key: "name",
       label: "Назва матеріалу",
       tooltip: (m) => `Матеріал: ${m.name}`,
     },
-    { key: "amount", label: "Кількість" },
-    { key: "price", label: "Ціна" },
+    { key: "unit", label: "Одиниця" },
+    { key: "quantity", label: "Кількість" },
+    {
+      key: "unit_price",
+      label: "Ціна за одиницю",
+      render: (m) => m.unit_price.toFixed(2).replace(".", ","),
+    },
     {
       key: "totalPrice",
       label: "Сума",
-      render: (material: Material) =>
-        (material.amount * parsePrice(material.price))
-          .toFixed(2)
-          .replace(".", ","),
+      render: (m) => (m.quantity * m.unit_price).toFixed(2).replace(".", ","),
     },
   ];
 
-  const cols = columns ?? defaultColumns;
-  const rows = data ?? mockMaterials;
+  const actionColumn: Col<ProjectMaterial> = {
+    key: "actions",
+    label: "Дії",
+    render: (material: ProjectMaterial) => (
+      <div className="flex gap-2">
+        {onEdit && (
+          <button
+            onClick={() => onEdit(material)}
+            className="text-blue-600 hover:text-blue-800"
+          >
+            <Pen size={16} />
+          </button>
+        )}
+        {onDelete && (
+          <button
+            onClick={() => onDelete(material)}
+            className="text-red-600 hover:text-red-800"
+          >
+            <Trash size={16} />
+          </button>
+        )}
+      </div>
+    ),
+  };
 
-  const renderInspectFields = (item: Material) =>
+  const cols =
+    onEdit || onDelete
+      ? [...(columns ?? defaultColumns), actionColumn]
+      : columns ?? defaultColumns;
+
+  // Тепер без моків
+  const rows = data ?? [];
+
+  const renderInspectFields = (item: ProjectMaterial) =>
     cols
-      .filter((c) => c.key !== "name" && c.key !== "amount")
+      .filter(
+        (c) => c.key !== "name" && c.key !== "quantity" && c.key !== "actions"
+      )
       .map((c) => {
         const value = (() => {
           if (c.render) {
@@ -72,7 +110,6 @@ export function ProjectMaterialsTable({
           }
         })();
 
-        // якщо value порожнє, не включаємо в інспект
         if (value.trim() === "") return null;
 
         return {
@@ -84,16 +121,27 @@ export function ProjectMaterialsTable({
 
   return (
     <div>
-      <Table<Material>
+      {onAdd && (
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={onAdd}
+            className="flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+          >
+            <Plus size={16} /> Додати матеріал
+          </button>
+        </div>
+      )}
+
+      <Table<ProjectMaterial>
         data={rows}
         expandedId={expandedId}
         columns={cols}
-        showIndex={true}
+        showIndex
         enableTooltips={enableTooltips}
         onInspect={onInspect}
         className={className}
         renderInspection={(material) => (
-          <Inspect<Material>
+          <Inspect<ProjectMaterial>
             item={material}
             getId={(it) => it.id}
             fields={renderInspectFields(material)}

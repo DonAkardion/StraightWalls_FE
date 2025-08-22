@@ -13,6 +13,7 @@ import { getClients } from "@/api/clients";
 import { getServices } from "@/api/services";
 import { Client } from "@/types/client";
 import { useUser } from "@/context/UserContextProvider";
+import { ProjectNameInput } from "@/components/addProject/ProjectNameInput/ProjectNameInput";
 
 export function AddProject() {
   const { clientId, setClientId, services, setServices, resetProject } =
@@ -24,6 +25,8 @@ export function AddProject() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [localSelection, setLocalSelection] =
+    useState<ServiceWithQuantity[]>(services);
 
   const didInitRef = useRef(false);
   useEffect(() => {
@@ -53,6 +56,7 @@ export function AddProject() {
           (s) => ({ ...s, quantity: 0 })
         );
         setServices(servicesWithQuantity);
+        setLocalSelection(servicesWithQuantity);
       } catch (err) {
         console.error(err);
         setError("Не вдалося завантажити дані");
@@ -63,6 +67,11 @@ export function AddProject() {
 
     fetchData();
   }, [resetProject, token, setServices]);
+
+  // оновлення контексту після зміни локальної selection
+  useEffect(() => {
+    setServices(localSelection);
+  }, [localSelection, setServices]);
 
   // Обробка змін кількості послуг
   const handleSelectionChange = (
@@ -80,7 +89,15 @@ export function AddProject() {
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
     >
       <div
-        className={`${styles.selector} flex flex-col md:flex-row items-center gap-[15px] md:gap-[22px] mb-[30px]`}
+        className={`${styles.selector} flex flex-col md:flex-row items-center justify-between gap-[15px] md:gap-[22px] mb-[30px]`}
+      >
+        <span className={`${styles.selectorTytle} whitespace-nowrap`}>
+          Назва Проэкту
+        </span>
+        <ProjectNameInput />
+      </div>
+      <div
+        className={`${styles.selector} flex flex-col md:flex-row items-center justify-between gap-[15px] md:gap-[22px] mb-[30px]`}
       >
         <span className={`${styles.selectorTytle} whitespace-nowrap`}>
           ПІБ клієнта

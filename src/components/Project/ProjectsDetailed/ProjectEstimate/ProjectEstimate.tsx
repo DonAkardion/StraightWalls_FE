@@ -26,27 +26,41 @@ export const ProjectEstimate = ({
   tableClassName,
   tablesTitle,
 }: Props) => {
-  const [selection, setSelection] = useState<ServiceSelection[]>(
+  const [selection, setSelection] = useState<ServiceSelection[]>(() =>
     services.map((s) => ({ serviceId: s.id, quantity: 0 }))
   );
+
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const pathname = usePathname();
   const { user } = useUser();
   const role = user?.role;
 
-  // Синхронізація при зміні services
+  // Ініціалізація тільки якщо кількість послуг змінилася
   useEffect(() => {
-    setSelection(services.map((s) => ({ serviceId: s.id, quantity: 0 })));
+    setSelection((prev) => {
+      if (prev.length !== services.length) {
+        return services.map((s) => ({ serviceId: s.id, quantity: 0 }));
+      }
+      return prev;
+    });
   }, [services]);
 
   const handleQuantityChange = (serviceId: number, newQuantity: number) => {
-    setSelection((prev) => {
-      const updated = prev.map((sel) =>
+    setSelection((prev) =>
+      prev.map((sel) =>
         sel.serviceId === serviceId ? { ...sel, quantity: newQuantity } : sel
-      );
-      if (onSelectionChange) onSelectionChange(updated);
-      return updated;
-    });
+      )
+    );
+  };
+
+  const handleConfirm = () => {
+    if (isConfirmed) {
+      setIsConfirmed(false);
+    } else {
+      setIsConfirmed(true);
+      if (onSelectionChange) onSelectionChange(selection);
+    }
   };
 
   const mainServices = useMemo(
@@ -85,7 +99,7 @@ export const ProjectEstimate = ({
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   return (
-    <section className={`${styles.sectionEstimate} mb-[40px] md:mb-[126px]`}>
+    <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[156px]`}>
       <h2 className={`${styles.estimateTytle} mb-[10px] md:mb-[16px]`}>
         {tablesTitle}
       </h2>
@@ -93,16 +107,17 @@ export const ProjectEstimate = ({
       <ProjectServicesTable
         services={mainServices}
         selection={selection}
-        editable={editable}
+        editable={!isConfirmed && editable}
         onQuantityChange={handleQuantityChange}
         className={tableClassName}
+        confirmed={isConfirmed}
       />
 
       <div
         className={`${styles.tableBetweenWrap} relative h-[126px] md:h-[48px] w-full z-[10]`}
       >
         <div
-          className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-16%] md:h-[142px] w-full z-[10] md:rounded-none rounded-[5px]`}
+          className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-16%] md:h-[132px] w-full z-[10] md:rounded-none rounded-[5px]`}
         >
           <div
             className={`${styles.totatCostMain} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full z-[11] rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]`}
@@ -114,19 +129,22 @@ export const ProjectEstimate = ({
               {formatNumber(totalMain)} грн
             </div>
           </div>
-
           {pathname === `/${role}/addProject` && (
             <div className="w-full flex justify-center">
               <div
-                className={`${styles.confirmButton} rounded-[5px] mt-[20px] mb-[10px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
+                className={`${styles.confirmButton} ${
+                  isConfirmed ? styles.confirmed : ""
+                } flex md:hidden rounded-[5px] mt-[20px] mb-[10px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
               >
-                <button className="w-full h-full flex items-center justify-center text-center">
-                  Підтвердити
+                <button
+                  onClick={handleConfirm}
+                  className="w-full h-full flex items-center justify-center text-center"
+                >
+                  {isConfirmed ? "Редагувати" : "Підтвердити"}
                 </button>
               </div>
             </div>
           )}
-
           <h3
             className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[26px] pt-[10px]`}
           >
@@ -142,16 +160,17 @@ export const ProjectEstimate = ({
       <ProjectServicesTable
         services={additionalServices}
         selection={selection}
-        editable={editable}
+        editable={!isConfirmed && editable}
         onQuantityChange={handleQuantityChange}
         className={tableClassName}
+        confirmed={isConfirmed}
       />
 
       <div
         className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
       >
         <div
-          className={`${styles.totatCostSeparate} md:absolute md:bottom-[-20px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px]`}
+          className={`${styles.totatCostSeparate} md:absolute md:bottom-[-148px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px]`}
         >
           <div
             className={`${styles.totatCostMain} ${styles.totatCostMainSwadow} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]`}
@@ -163,6 +182,22 @@ export const ProjectEstimate = ({
               {formatNumber(totalAdditional)} грн
             </div>
           </div>
+          {pathname === `/${role}/addProject` && (
+            <div className="w-full flex justify-center">
+              <div
+                className={`${styles.confirmButton} ${
+                  isConfirmed ? styles.confirmed : ""
+                } flex rounded-[5px] md:mt-[40px] md:mb-[40px] mb-[20px] mt-[20px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
+              >
+                <button
+                  onClick={handleConfirm}
+                  className="w-full h-full flex items-center justify-center text-center"
+                >
+                  {isConfirmed ? "Редагувати" : "Підтвердити"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </section>

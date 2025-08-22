@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Material } from "@/types/material";
+import { ProjectMaterial } from "@/types/projectComponents";
 import { Service } from "@/types/service";
 
 export interface ServiceWithQuantity extends Service {
@@ -23,8 +23,8 @@ interface ProjectCreationData {
   services: ServiceWithQuantity[];
   setServices: (services: ServiceWithQuantity[]) => void;
 
-  materials: Material[];
-  setMaterials: (materials: Material[]) => void;
+  materials: ProjectMaterial[];
+  setMaterials: (materials: ProjectMaterial[]) => void;
 
   resetProject: () => void;
 }
@@ -44,7 +44,7 @@ export const ProjectCreationProvider = ({
     clientId: null,
     crewId: null,
     services: [] as ServiceWithQuantity[],
-    materials: [] as Material[],
+    materials: [] as ProjectMaterial[],
   };
 
   const [name, setName] = useState(initialState.name);
@@ -56,7 +56,7 @@ export const ProjectCreationProvider = ({
   const [services, setServices] = useState<ServiceWithQuantity[]>(
     initialState.services
   );
-  const [materials, setMaterials] = useState<Material[]>(
+  const [materials, setMaterials] = useState<ProjectMaterial[]>(
     initialState.materials
   );
 
