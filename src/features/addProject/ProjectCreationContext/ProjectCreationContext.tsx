@@ -1,22 +1,30 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Material } from "@/types/material";
-// import { Crew } from "@/types/crew";
-// import { Worker } from "@/types/worker";
 import { Service } from "@/types/service";
 
+export interface ServiceWithQuantity extends Service {
+  quantity: number;
+}
+
 interface ProjectCreationData {
+  name: string;
+  setName: (name: string) => void;
+
+  description: string;
+  setDescription: (desc: string) => void;
+
   clientId: number | null;
   setClientId: (id: number | null) => void;
 
-  services: Service[];
-  setServices: (services: Service[]) => void;
+  crewId: number | null;
+  setCrewId: (id: number | null) => void;
+
+  services: ServiceWithQuantity[];
+  setServices: (services: ServiceWithQuantity[]) => void;
 
   materials: Material[];
   setMaterials: (materials: Material[]) => void;
-
-  crewId: number | null;
-  setCrewId: (id: number | null) => void;
 
   resetProject: () => void;
 }
@@ -31,38 +39,51 @@ export const ProjectCreationProvider = ({
   children: ReactNode;
 }) => {
   const initialState = {
+    name: "",
+    description: "",
     clientId: null,
-    services: [],
-    materials: [],
     crewId: null,
+    services: [] as ServiceWithQuantity[],
+    materials: [] as Material[],
   };
+
+  const [name, setName] = useState(initialState.name);
+  const [description, setDescription] = useState(initialState.description);
   const [clientId, setClientId] = useState<number | null>(
     initialState.clientId
   );
-  const [services, setServices] = useState<Service[]>(initialState.services);
+  const [crewId, setCrewId] = useState<number | null>(initialState.crewId);
+  const [services, setServices] = useState<ServiceWithQuantity[]>(
+    initialState.services
+  );
   const [materials, setMaterials] = useState<Material[]>(
     initialState.materials
   );
-  const [crewId, setCrewId] = useState<number | null>(initialState.crewId);
 
   const resetProject = () => {
+    setName(initialState.name);
+    setDescription(initialState.description);
     setClientId(initialState.clientId);
+    setCrewId(initialState.crewId);
     setServices(initialState.services);
     setMaterials(initialState.materials);
-    setCrewId(initialState.crewId);
   };
 
   return (
     <ProjectCreationContext.Provider
       value={{
+        name,
+        setName,
+        description,
+        setDescription,
         clientId,
         setClientId,
+        crewId,
+        setCrewId,
         services,
         setServices,
         materials,
         setMaterials,
-        crewId,
-        setCrewId,
         resetProject,
       }}
     >
@@ -73,10 +94,9 @@ export const ProjectCreationProvider = ({
 
 export const useProjectCreation = () => {
   const context = useContext(ProjectCreationContext);
-  if (!context) {
+  if (!context)
     throw new Error(
       "useProjectCreation must be used within ProjectCreationProvider"
     );
-  }
   return context;
 };
