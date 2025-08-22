@@ -2,7 +2,7 @@ import { fetcher } from "@/utils/fetcher";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const handleDelete = async (id: string, token: string): Promise<void> => {
+export const handleDelete = async (id: number, token: string): Promise<void> => {
     await fetcher(`${apiUrl}/api/platform/users/${id}`, {
         method: "DELETE",
         token
@@ -10,7 +10,7 @@ export const handleDelete = async (id: string, token: string): Promise<void> => 
     console.log("Користувача успішно видалено")
 }
 
-export const handleEdit = async (id: string, password: string, token: string) => {
+export const handleEdit = async (id: number, password: string, token: string) => {
     await fetcher<void>(`${apiUrl}/api/platform/users/${id}/password`, {
         method: "PATCH",
         token,

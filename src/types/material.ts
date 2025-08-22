@@ -1,5 +1,5 @@
 export interface Material {
-  id: string;
+  id: number;
   name: string;
   amount: number;
   price: string;

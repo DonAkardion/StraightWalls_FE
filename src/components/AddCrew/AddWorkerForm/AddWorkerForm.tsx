@@ -9,7 +9,6 @@ export default function AddWorkerForm() {
     {
       name: "Галушко Іван Степанович",
       position: "Водій",
-      salary: "12 000 грн",
       contacts: "+380 95 61 56 123",
     },
   ];
@@ -24,11 +23,6 @@ export default function AddWorkerForm() {
     <div key="position" className="flex justify-center items-center text-[18px] text-black">
       <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
         Посада
-      </span>
-    </div>,
-    <div key="salary" className="flex justify-center items-center text-[18px] text-black">
-      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
-        Зарплата
       </span>
     </div>,
     <div key="contacts" className="flex justify-center items-center text-[18px] text-black">
@@ -60,11 +54,6 @@ export default function AddWorkerForm() {
               <div className="flex justify-center items-center text-black">
                 <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
                   {w.position}
-                </span>
-              </div>
-              <div className="flex justify-center items-center text-black">
-                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
-                  {w.salary}
                 </span>
               </div>
               <div className="flex justify-center items-center text-black">

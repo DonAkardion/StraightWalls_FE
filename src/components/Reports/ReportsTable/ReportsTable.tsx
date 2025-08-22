@@ -4,7 +4,7 @@ import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 
 interface Material {
-  id: string;
+  id: number;
   name: string;
   quantity: string;
   unitPrice: string;
@@ -14,7 +14,7 @@ interface Material {
 
 const data: Material[] = [
   {
-    id: "1",
+    id: 1,
     name: "Гіпс",
     quantity: "4 т",
     unitPrice: "500 грн",
@@ -22,7 +22,7 @@ const data: Material[] = [
     icon: "",
   },
   {
-    id: "2",
+    id: 2,
     name: "Гіпс",
     quantity: "4 т",
     unitPrice: "500 грн",
@@ -30,7 +30,7 @@ const data: Material[] = [
     icon: "",
   },
   {
-    id: "3",
+    id: 3,
     name: "Гіпс",
     quantity: "4 т",
     unitPrice: "500 грн",
@@ -38,7 +38,7 @@ const data: Material[] = [
     icon: "",
   },
   {
-    id: "4",
+    id: 4,
     name: "Гіпс",
     quantity: "4 т",
     unitPrice: "500 грн",
@@ -46,7 +46,7 @@ const data: Material[] = [
     icon: "",
   },
   {
-    id: "5",
+    id: 5,
     name: "Гіпс",
     quantity: "4 т",
     unitPrice: "500 грн",
@@ -69,7 +69,7 @@ const columns = [
 ];
 
 export function MaterialsTable() {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   return (
     <div className="mt-15">
       <Table<Material>

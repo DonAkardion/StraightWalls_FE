@@ -19,7 +19,7 @@ export function CrewFormModal({
 }: CrewFormModalProps) {
   const [formData, setFormData] = useState<Crew>(
     initialData ?? {
-      id: crypto.randomUUID(),
+      id: 1, // change later
       name: "",
       brigadier: null,
       status: "active",
@@ -50,15 +50,15 @@ export function CrewFormModal({
         className="appearance-none border-b-1 p-2 pb-1 outline-none"
         name="brigadier"
         value={formData.brigadier?.id || ""}
-        onChange={(e) => {
-          const selectedWorker =
-            workers.find((w) => w.id === e.target.value) || null;
-          setFormData({ ...formData, brigadier: selectedWorker });
-        }}
+        // onChange={(e) => {
+        //   const selectedWorker = null
+        //     workers.find((w) => w.id === e.target.value) || null;
+        //   setFormData({ ...formData, brigadier: selectedWorker });
+        // }}
       >
         {workers.map((worker) => (
           <option key={worker.id} value={worker.id}>
-            {worker.name}
+            {worker.full_name}
           </option>
         ))}
       </select>

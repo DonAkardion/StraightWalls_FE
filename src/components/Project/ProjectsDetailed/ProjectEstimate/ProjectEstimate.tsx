@@ -17,7 +17,7 @@ interface Props {
 export const ProjectEstimate = ({
   services,
   editable = false,
-  onServicesChange,
+  // onServicesChange,
   tableClassName,
   tablesTytle,
 }: Props) => {
@@ -31,32 +31,32 @@ export const ProjectEstimate = ({
     setLocalServices(services);
   }, [services]);
 
-  const handleAmountChange = (id: string, newAmount: number) => {
-    setLocalServices((prev) => {
-      const updated = prev.map((s) =>
-        s.id === id ? { ...s, amount: newAmount } : s
-      );
-      if (onServicesChange) {
-        onServicesChange(updated);
-      }
-      return updated;
-    });
-  };
+  // const handleAmountChange = (id: number, newAmount: number) => {
+  //   setLocalServices((prev) => {
+  //     const updated = prev.map((s) =>
+  //       s.id === id ? { ...s, amount: newAmount } : s
+  //     );
+  //     if (onServicesChange) {
+  //       onServicesChange(updated);
+  //     }
+  //     return updated;
+  //   });
+  // };
   const mainServices = useMemo(
-    () => localServices.filter((s) => s.serviceType === "Основні послуги"),
+    () => localServices.filter((s) => s.service_type === "main"),
     [localServices]
   );
   const additionalServices = useMemo(
-    () => localServices.filter((s) => s.serviceType === "Додаткові роботи"),
+    () => localServices.filter((s) => s.service_type === "additional"),
     [localServices]
   );
 
   const totalMain = useMemo(
-    () => mainServices.reduce((sum, s) => sum + s.price * s.amount, 0),
+    () => mainServices.reduce((sum, s) => sum + s.price * s.price, 0),
     [mainServices]
   );
   const totalAdditional = useMemo(
-    () => additionalServices.reduce((sum, s) => sum + s.price * s.amount, 0),
+    () => additionalServices.reduce((sum, s) => sum + s.price * s.price, 0),
     [additionalServices]
   );
 
@@ -70,9 +70,9 @@ export const ProjectEstimate = ({
       <div className="">
         <ProjectServicesTable
           services={localServices}
-          type="Основні послуги"
+          type="main"
           editable={editable}
-          onAmountChange={handleAmountChange}
+          // onAmountChange={handleAmountChange}
           className={tableClassName}
         />
         <div
@@ -115,9 +115,9 @@ export const ProjectEstimate = ({
         )}
         <ProjectServicesTable
           services={localServices}
-          type="Додаткові роботи"
+          type="additional"
           editable={editable}
-          onAmountChange={handleAmountChange}
+          // onAmountChange={handleAmountChange}
           className={tableClassName}
         />
         <div

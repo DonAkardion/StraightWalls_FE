@@ -53,7 +53,7 @@ export function ProjectsFormModal({
       >
         {clients.map((client) => (
           <option key={client.id} value={client.id}>
-            {client.name}
+            {client.full_name}
           </option>
         ))}
       </select>

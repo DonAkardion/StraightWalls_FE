@@ -4,13 +4,13 @@ import React, { useState } from "react";
 import { Table } from "@/components/Table/Table";
 import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
-import { useCrew } from "@/features/addWorker/addWorkerContext";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
+import { useCrew } from "@/features/addWorker/addWorkerContext";
 
 interface WorkersCrewTableProps {
   crews: Crew[];
   workers: Worker[];
-  onDelete: (id: string) => void;
+  onDelete: (id: number) => void;
   onEdit: (updated: Crew) => void;
   onAdd: () => void;
   enableTooltips?: boolean;
@@ -24,12 +24,14 @@ export function WorkersCrewTable({
   onAdd,
   enableTooltips = true,
 }: WorkersCrewTableProps) {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const ctx = useCrew();
 
-  const crews = initialCrews.concat(
-    ctx?.crews.filter((c) => !initialCrews.find((ic) => ic.id === c.id)) || []
-  );
+  const crews =
+    initialCrews.concat(
+      ctx?.crews.filter((c) => !initialCrews.find((ic) => ic.id === c.id)) ||
+        []
+    ) || [];
   const workers = initialWorkers;
 
   return (
@@ -46,8 +48,6 @@ export function WorkersCrewTable({
         onInspect={(item) =>
           setExpandedId((prev) => (prev === item.id ? null : item.id))
         }
-        addLink="/admin/workers/addWorker"
-        addLinkId="123"
         enableTooltips={enableTooltips}
         addButtonText="Додати бригаду"
         columns={[
@@ -58,21 +58,9 @@ export function WorkersCrewTable({
           },
           {
             key: "workersCount",
-            render: (crew: Crew) =>
-              workers.filter((worker) => worker?.crewId === crew.id).length,
             label: "Кількість робітників",
-          },
-          {
-            key: "brigadier",
-            label: "Бригадир",
             render: (crew: Crew) =>
-              typeof crew.brigadier === "object"
-                ? `${crew.brigadier?.name}`
-                : "",
-            tooltip: (crew) =>
-              typeof crew.brigadier === "object"
-                ? `Бригадир: ${crew.brigadier?.name}`
-                : `Бригадир:`,
+              workers.filter((worker) => worker.team_id === crew.id).length,
           },
           {
             key: "status",
@@ -98,14 +86,7 @@ export function WorkersCrewTable({
               {
                 label: "Кількість робітників",
                 value: (crew: Crew) =>
-                  workers.filter((worker) => worker.crewId === crew.id).length,
-              },
-              {
-                label: "Бригадир",
-                value: (crew: Crew) =>
-                  typeof crew.brigadier === "object"
-                    ? `${crew.brigadier?.name}`
-                    : "",
+                  workers.filter((worker) => worker.team_id === crew.id).length,
               },
               {
                 label: "Статус",

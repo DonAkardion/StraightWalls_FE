@@ -28,11 +28,11 @@ interface TableProps<T> {
   // Опціональний callback для кнопки "Додати"
   onAdd?: () => void;
   // Прапорець або id поточного "розкритого" рядка (для inline деталей)
-  expandedId?: string | null;
+  expandedId?: number | null;
   // передаємо класс для редизайну
   className?: string;
   // перехід до детального огляду
-  onRowClick?: (id: string) => void;
+  onRowClick?: (id: number) => void;
   enableTooltips?: boolean;
   // Функція для отримання класу рядка за елементом даних
   getRowClassName?: (item: T) => string;
@@ -44,7 +44,7 @@ interface TableProps<T> {
   addButtonText?: string;
 }
 
-export function Table<T extends { id: string }>({
+export function Table<T extends { id: number }>({
   title,
   showIndex,
   data,

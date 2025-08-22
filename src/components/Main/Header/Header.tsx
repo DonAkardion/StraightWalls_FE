@@ -1,16 +1,10 @@
 "use client";
 import { useUser } from "@/context/UserContextProvider";
+import { HeaderSearch } from "@/components/Main/Header/HeaderSearch";
 import React, { useState, useEffect } from "react";
 import styles from "./Header.module.css";
 import Link from "next/link";
-import {
-  Bell,
-  Logo,
-  Search,
-  Person,
-  Menu,
-  Close,
-} from "../../../../public/icons";
+import { Bell, Logo, Person, Menu, Close } from "../../../../public/icons";
 import { useRouter } from "next/navigation";
 
 export const Header = () => {
@@ -80,18 +74,9 @@ export const Header = () => {
           className={`${styles.headerContainerSearch} hidden md:flex md:flex-grow max-w-[484px] min-w-[180px] w-[30%]`}
         >
           <div
-            className={`${styles.search} pl-[30px] pr-[8px] w-full flex items-center border-1 rounded-[5px]`}
+            className={`${styles.headerContainerSearch} hidden md:flex md:flex-grow w-[30%]`}
           >
-            <input
-              type="text"
-              placeholder="Пошук"
-              className={`${styles.searchInput} w-full h-[50px] `}
-            ></input>
-            <img
-              className={`${styles.searchImg} w-[36px] h-[36px] cursor-pointer`}
-              src={Search.src}
-              alt="Search"
-            />
+            <HeaderSearch role={role} />
           </div>
         </div>
         <nav
@@ -133,8 +118,10 @@ export const Header = () => {
               alt="Search"
             />
 
-            <div className={`${styles.navigationUserName} w-full `}>
-              <span>{user.full_name}</span>
+            <div
+              className={`${styles.navigationUserName} w-full max-w-[100px] `}
+            >
+              <span className=" ">{user.full_name}</span>
             </div>
           </button>
         </nav>
@@ -160,7 +147,7 @@ export const Header = () => {
               alt="User"
             />
             <div className={`${styles.mobileMenuUserName} w-full `}>
-              Олексій
+              <span>{user.full_name}</span>
             </div>
           </button>
           <Link

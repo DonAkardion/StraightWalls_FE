@@ -15,8 +15,7 @@ export default function LoginPage() {
     try {
       const data = await loginUser(username, password);
 
-      login({ ...data.user, isAuthenticated: true });
-      localStorage.setItem("token", data.token);
+      login(data.user, data.token);
 
       if (data.user.role === "admin" || data.user.role === "accountant") {
         router.replace("/admin");

@@ -6,7 +6,6 @@ import { handleAddWorker } from "@/api/crews";
 import { useUser } from "@/context/UserContextProvider";
 import { Worker } from "@/types/worker";
 
-
 interface AddWorkerModalProps {
   onClose: () => void;
   onAdd: (worker: Worker) => void;
@@ -18,15 +17,14 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
   const [formData, setFormData] = useState({
     full_name: "",
     position: "",
-    phone_number: ""
+    phone_number: "",
+    team_id: 1,
   });
 
   useEffect(() => {
-    if (user?.isAuthenticated) {
-      const savedToken = localStorage.getItem("token");
-      setToken(savedToken);
-    }
-  }, [user?.isAuthenticated]);
+    const savedToken = localStorage.getItem("token");
+    setToken(savedToken);
+  }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -39,34 +37,30 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
 
   const handleAdd = async () => {
     const isAllFilled = Object.values(formData).every(
-      (val) => val.trim() !== ""
+      (val) => val !== null && val !== undefined && String(val).trim() !== ""
     );
     if (!isAllFilled) {
       alert("Будь ласка, заповніть усі поля");
       return;
     }
-      console.log("TOKEN", token);
+
+    if (!token) {
+      alert("Token not found");
+      return;
+    }
+
     try {
-      const addedWorker = await handleAddWorker(
-        {
-          full_name: formData.full_name,
-          phone_number: formData.phone_number,
-          position: formData.position,
-          team_id: 1,
-        },
-        token!
-      );
-      console.log("Працівник створений");
-      onAdd(addedWorker.data.worker);
+      const addedWorker = await handleAddWorker(formData, token);
+
+      onAdd(addedWorker.worker);
       onClose();
     } catch (error) {
-  if (error instanceof Error) {
-    alert(error.message);
-  } else {
-    alert("Сталася невідома помилка");
-  }
-}
-
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Сталася невідома помилка");
+      }
+    }
   };
 
   return (
@@ -110,23 +104,6 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />
           </label>
-
-          {/* <label>
-            <div className={styles.addCrewInputTitle}>Бригада</div>
-            <select
-              name="team_id"
-              value={formData.team_id}
-              onChange={handleChange}
-              className="border-b-1 p-2 pb-1 outline-none w-full"
-            >
-              <option value="">Оберіть бригаду</option>
-              {crews.map((crew) => (
-                <option key={crew.id} value={crew.id}>
-                  {crew.name}
-                </option>
-              ))}
-            </select>
-          </label> */}
         </div>
 
         <div className="flex justify-end gap-5">

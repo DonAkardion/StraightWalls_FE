@@ -1,9 +1,9 @@
 /**
  * Видаляє елемент з масиву за ID
  */
-export function handleDelete<T extends { id: string }>(
+export function handleDelete<T extends { id: number }>(
   items: T[],
-  id: string
+  id: number
 ): T[] {
   return items.filter((item) => item.id !== id);
 }
@@ -11,7 +11,7 @@ export function handleDelete<T extends { id: string }>(
 /**
  * Додає або оновлює елемент в масиві
  */
-export function handleSave<T extends { id: string }>(
+export function handleSave<T extends { id: number }>(
   items: T[],
   newItem: T
 ): T[] {

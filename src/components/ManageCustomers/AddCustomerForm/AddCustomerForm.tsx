@@ -1,6 +1,6 @@
-"use client"
-
+"use client";
 import { useEffect, useState } from "react";
+import React from "react";
 import styles from "./AddCustomerForm.module.css";
 import { handleAddCustomer } from "@/api/users";
 import { useUser } from "@/context/UserContextProvider";
@@ -10,7 +10,10 @@ interface AddCustomerModalProps {
   onSubmit: (newUser: any) => void;
 }
 
-export const AddCustomerModal = ({ onClose, onSubmit }: AddCustomerModalProps) => {
+export const AddCustomerModal = ({
+  onClose,
+  onSubmit,
+}: AddCustomerModalProps) => {
   const [customerData, setCustomerData] = useState({
     login: "",
     password: "",
@@ -21,18 +24,22 @@ export const AddCustomerModal = ({ onClose, onSubmit }: AddCustomerModalProps) =
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    if(user?.isAuthenticated) {
+    if(user?.is_active) {
       const storedToken = localStorage.getItem("token");
       setToken(storedToken)
     }
-  }, [user?.isAuthenticated])
+  }, [user?.is_active])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setCustomerData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleAddCustomerClick = async () => {
-    const isAllFilled = Object.values(customerData).every((val) => val.trim() !== "");
+    const isAllFilled = Object.values(customerData).every(
+      (val) => val.trim() !== ""
+    );
     if (!isAllFilled) {
       alert("Please, fill all the gaps");
       return;
@@ -41,7 +48,12 @@ export const AddCustomerModal = ({ onClose, onSubmit }: AddCustomerModalProps) =
     try {
       const newUser = await handleAddCustomer(customerData, token!);
       onSubmit(newUser);
-      setCustomerData({ login: "", password: "", role: "driver", full_name: "" });
+      setCustomerData({
+        login: "",
+        password: "",
+        role: "driver",
+        full_name: "",
+      });
       onClose();
     } catch (err) {
       console.log(err);
@@ -107,10 +119,16 @@ export const AddCustomerModal = ({ onClose, onSubmit }: AddCustomerModalProps) =
         </div>
 
         <div className="flex justify-end gap-5">
-          <button onClick={onClose} className={`${styles.addCrewCancelBtn} rounded`}>
+          <button
+            onClick={onClose}
+            className={`${styles.addCrewCancelBtn} rounded`}
+          >
             Скасувати
           </button>
-          <button onClick={handleAddCustomerClick} className={`${styles.addCrewButton} rounded`}>
+          <button
+            onClick={handleAddCustomerClick}
+            className={`${styles.addCrewButton} rounded`}
+          >
             Додати
           </button>
         </div>

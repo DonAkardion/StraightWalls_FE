@@ -14,7 +14,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
   data,
   className,
 }) => {
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const orders = [
     {

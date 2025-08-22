@@ -1,6 +1,6 @@
 import { ClientsText } from "@/features/clients/ClientsText/ClientsText";
 import { clientsInteractions } from "@/mock/Clients/clientsInteraction";
-import styles from "./ClientsInteraction.module.css";
+import React from "react";
 
 export const InteractionsMessage = () => {
   return (

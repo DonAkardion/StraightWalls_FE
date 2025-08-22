@@ -12,8 +12,8 @@ interface InspectProps<T> {
   item: T;
   fields: Field<T>[];
   onEdit?: (item: T) => void;
-  onDelete?: (id: string) => void;
-  getId: (item: T) => string;
+  onDelete?: (id: number) => void;
+  getId: (item: T) => number;
 }
 
 export function Inspect<T>({

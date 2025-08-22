@@ -5,7 +5,7 @@ import mailIcon from "../../../../public/icons/Mail.svg";
 
 export const iconMap: Record<string, string> = {
   contactName: contactPersonIcon.src,
-  phone: phoneIcon.src,
-  address: addressIcon.src,
+  phone_number: phoneIcon.src,
+  objects: addressIcon.src,
   mail: mailIcon.src,
 };

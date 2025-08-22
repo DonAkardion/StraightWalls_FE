@@ -13,7 +13,7 @@ import { ProjectCrew } from "@/components/Project/ProjectsDetailed/ProjectCrew/P
 import { ProjectNotes } from "@/components/Project/ProjectsDetailed/ProjectNotes/ProjectNotes";
 
 interface Props {
-  projectId: string;
+  projectId: number;
 }
 
 export function ProjectsDetailed({ projectId }: Props) {
