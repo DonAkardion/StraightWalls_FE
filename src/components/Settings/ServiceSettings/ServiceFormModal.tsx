@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Service } from "@/types/service";
 import styles from "./ServiceFormModal.module.css";
 
@@ -9,6 +9,18 @@ interface Props {
 }
 
 export const ServiceFormModal = ({ service, onChange }: Props) => {
+  const [form, setForm] = useState<Service>(service);
+
+  const [errors, setErrors] = useState<{
+    name?: string;
+    unit_of_measurement?: string;
+    price?: string;
+  }>({});
+
+  useEffect(() => {
+    onChange(form);
+  }, [form]);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -18,10 +30,34 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
     const checked =
       type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
 
-    onChange({
-      ...service,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const updatedValue = type === "checkbox" ? checked : value;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: updatedValue,
+    }));
+
+    // простенька валідація
+    if (name === "name" && !value.trim()) {
+      setErrors((prev) => ({ ...prev, name: "Назва є обов’язковою" }));
+    } else if (name === "name") {
+      setErrors((prev) => ({ ...prev, name: undefined }));
+    }
+
+    if (name === "unit_of_measurement" && !value.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        unit_of_measurement: "Одиниця вимірювання обов’язкова",
+      }));
+    } else if (name === "unit_of_measurement") {
+      setErrors((prev) => ({ ...prev, unit_of_measurement: undefined }));
+    }
+
+    if (name === "price" && (!value || Number(value) <= 0)) {
+      setErrors((prev) => ({ ...prev, price: "Вкажіть коректну ціну" }));
+    } else if (name === "price") {
+      setErrors((prev) => ({ ...prev, price: undefined }));
+    }
   };
 
   return (
@@ -32,10 +68,15 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         type="text"
         name="name"
         placeholder="Назва"
-        value={service.name}
+        value={form.name}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        className={`border-b-1 p-2 pb-1 outline-none ${
+          errors.name ? "border-red-500" : "border-black"
+        }`}
       />
+      {errors.name && (
+        <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+      )}
 
       {/* Одиниця вимірювання */}
       <div className={styles.ServiceModalInputTytle}>Одиниця вимірювання</div>
@@ -43,10 +84,17 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         type="text"
         name="unit_of_measurement"
         placeholder="Напр. м², год, шт"
-        value={service.unit_of_measurement}
+        value={form.unit_of_measurement}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        className={`border-b-1 p-2 pb-1 outline-none ${
+          errors.unit_of_measurement ? "border-red-500" : "border-black"
+        }`}
       />
+      {errors.unit_of_measurement && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.unit_of_measurement}
+        </p>
+      )}
 
       {/* Ціна */}
       <div className={styles.ServiceModalInputTytle}>Ціна за одиницю</div>
@@ -54,19 +102,24 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         type="number"
         name="price"
         placeholder="Ціна"
-        value={service.price ?? ""}
+        value={form.price ?? ""}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none "
+        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+          errors.price ? "border-red-500" : "border-black"
+        }`}
         min={0}
       />
+      {errors.price && (
+        <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+      )}
 
       {/* Тип послуги */}
       <div className={styles.ServiceModalInputTytle}>Тип послуги</div>
       <select
         name="service_type"
-        value={service.service_type}
+        value={form.service_type}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        className="border-b-1 p-2 pb-1 outline-none bg-transparent appearance-none"
       >
         <option value="main">Основна</option>
         <option value="additional">Додаткова</option>
@@ -77,7 +130,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
       <textarea
         name="description"
         placeholder="Додатковий опис"
-        value={service.description ?? ""}
+        value={form.description ?? ""}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none resize-none"
       />
@@ -87,7 +140,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         <input
           type="checkbox"
           name="is_active"
-          checked={service.is_active}
+          checked={form.is_active}
           onChange={handleChange}
         />
         Активна
