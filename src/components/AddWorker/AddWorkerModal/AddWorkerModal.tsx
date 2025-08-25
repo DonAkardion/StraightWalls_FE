@@ -1,51 +1,72 @@
 "use client";
-import React from "react";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import styles from "./AddWorkerModal.module.css";
-// import { randomInt } from "crypto";
+import { handleAddWorker } from "@/api/workers";
+import { useUser } from "@/context/UserContextProvider";
+import { Worker } from "@/types/worker";
+import { Crew } from "@/types/crew";
 
 interface AddWorkerModalProps {
   onClose: () => void;
-  onSubmit: (worker: {
-    id: number;
-    name: string;
-    occupation: string;
-    salary: string;
-    phone: string;
-  }) => void;
+  onAdd: (worker: Worker) => void;
 }
 
-export const AddWorkerModal = ({ onClose, onSubmit }: AddWorkerModalProps) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    occupation: "",
-    salary: "",
-    phone: "",
+export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
+  const { user } = useUser();
+  const [token, setToken] = useState<string | null>(null);
+  const [formData, setFormData] = useState<{
+    full_name: string;
+    position: string;
+    phone_number: string;
+    team_id: number | null;
+  }>({
+    full_name: "",
+    position: "",
+    phone_number: "",
+    team_id: 1,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    setToken(savedToken);
+  }, [user]);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const value = e.target.name === "team_id" ? Number(e.target.value) : e.target.value;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     }));
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     const isAllFilled = Object.values(formData).every(
-      (val) => val.trim() !== ""
+      (val) => val !== null && val !== undefined && String(val).trim() !== ""
     );
     if (!isAllFilled) {
-      alert("Please, fill all the gaps");
+      alert("Будь ласка, заповніть усі поля");
       return;
-    } else {
-      onSubmit({
-        id: 1, // change later
-        ...formData,
-      });
     }
-    onClose();
-    console.log(formData);
+
+    if (!token) {
+      alert("Token not found");
+      return;
+    }
+
+    try {
+      const addedWorker = await handleAddWorker(formData, token);
+      onAdd(addedWorker.worker);
+      onClose();
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Сталася невідома помилка");
+      }
+    }
   };
 
   return (
@@ -58,9 +79,9 @@ export const AddWorkerModal = ({ onClose, onSubmit }: AddWorkerModalProps) => {
             <div className={styles.addCrewInputTitle}>ПІБ виконавця</div>
             <input
               type="text"
-              name="name"
+              name="full_name"
               placeholder="ПІБ виконавця"
-              value={formData.name}
+              value={formData.full_name}
               onChange={handleChange}
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />
@@ -70,21 +91,9 @@ export const AddWorkerModal = ({ onClose, onSubmit }: AddWorkerModalProps) => {
             <div className={styles.addCrewInputTitle}>Посада</div>
             <input
               type="text"
-              name="occupation"
+              name="position"
               placeholder="Посада"
-              value={formData.occupation}
-              onChange={handleChange}
-              className="border-b-1 p-2 pb-1 outline-none w-full"
-            />
-          </label>
-
-          <label>
-            <div className={styles.addCrewInputTitle}>Зарплата</div>
-            <input
-              type="text"
-              name="salary"
-              placeholder="Зарплата"
-              value={formData.salary}
+              value={formData.position}
               onChange={handleChange}
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />
@@ -94,9 +103,9 @@ export const AddWorkerModal = ({ onClose, onSubmit }: AddWorkerModalProps) => {
             <div className={styles.addCrewInputTitle}>Контакти</div>
             <input
               type="text"
-              name="phone"
+              name="phone_number"
               placeholder="Контакти"
-              value={formData.phone}
+              value={formData.phone_number}
               onChange={handleChange}
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />

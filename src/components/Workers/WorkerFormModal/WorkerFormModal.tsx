@@ -1,61 +1,43 @@
 import React from "react";
 import { Worker } from "@/types/worker";
-import { useState } from "react";
 import styles from "./WorkerFormModal.module.css";
 
 interface WorkerFormModalProps {
-  initialData?: Worker;
-  onSubmit: (data: Worker) => void;
-  onClose: () => void;
+  formData: Worker;
+  setFormData: React.Dispatch<React.SetStateAction<Worker>>;
 }
 
-export function WorkerFormModal({ initialData }: WorkerFormModalProps) {
-  const [formData, setFormData] = useState<Worker>(
-    initialData || {
-      id: 1, // change later
-      name: "",
-      occupation: "",
-      phone: "",
-      salary: "",
-    }
-  );
-
+export function WorkerFormModal({ formData, setFormData }: WorkerFormModalProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
     <div className="flex flex-col md:gap-3 gap-2 p-2">
-      <div className={`${styles.ModalInputTytle}`}>Ім&apos;я</div>
+      <div className={styles.ModalInputTytle}>Ім&apos;я</div>
       <input
-        name="name"
-        value={formData.name}
+        name="full_name"
+        value={formData.full_name}
         onChange={handleChange}
         placeholder="ПІБ"
         className="border-b-1 p-2 pb-1 outline-none"
       />
-      <div className={`${styles.ModalInputTytle}`}>Посада</div>
+
+      <div className={styles.ModalInputTytle}>Посада</div>
       <input
-        name="occupation"
-        value={formData.occupation}
+        name="position"
+        value={formData.position}
         onChange={handleChange}
         placeholder="Посада"
         className="border-b-1 p-2 pb-1 outline-none"
       />
-      <div className={`${styles.ModalInputTytle}`}>Контакти</div>
+
+      <div className={styles.ModalInputTytle}>Контакти</div>
       <input
-        name="phone"
-        value={formData.phone}
+        name="phone_number"
+        value={formData.phone_number}
         onChange={handleChange}
         placeholder="Телефон"
-        className="border-b-1 p-2 pb-1 outline-none"
-      />
-      <div className={`${styles.ModalInputTytle}`}>Зарплата</div>
-      <input
-        name="salary"
-        value={formData.salary}
-        onChange={handleChange}
-        placeholder="Зарплата"
         className="border-b-1 p-2 pb-1 outline-none"
       />
     </div>

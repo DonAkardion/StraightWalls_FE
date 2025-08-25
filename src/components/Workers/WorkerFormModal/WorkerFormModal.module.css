@@ -9,3 +9,28 @@
     line-height: 18px;
   }
 }
+
+.addCrewButton {
+  background: var(--yellow-gradient);
+  color: var(--black);
+  cursor: pointer;
+  font-family: var(--font-inter);
+  box-shadow: 1px 3px 15px 2px #00000020;
+  transition: box-shadow 0.2s;
+  padding: 10px 16px;
+}
+
+.addCrewButton:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+
+.addCrewCancelBtn {
+  background: #d3d3d3;
+  cursor: pointer;
+  box-shadow: 1px 3px 15px 2px #00000020;
+  padding: 10px 10px;
+}
+
+.addCrewCancelBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #d3d3d3;
+}

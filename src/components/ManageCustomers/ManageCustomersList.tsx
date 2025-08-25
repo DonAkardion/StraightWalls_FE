@@ -4,35 +4,45 @@ import React, { useEffect, useState } from "react";
 import { Table } from "../Table/Table";
 import { ManageCustomersProps } from "@/types/manageCustomers";
 import { ChangePasswordModal } from "./ChangePasswordModal/ChangePasswordModal";
-import { handleDelete, handleEdit } from "@/utils/fetchRequests";
 import { AddCustomerModal } from "./AddCustomerForm/AddCustomerForm";
+import { fetcher } from "@/utils/fetcher";
+import { useUser } from "@/context/UserContextProvider";
+import { handleEdit } from "@/api/users";
+import { handleDelete } from "@/utils/dataHandlers";
 
-interface ManageCustomerProps {
-  onDelete: (id: number) => void;
-}
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImxvZ2luIjoiYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJmdWxsTmFtZSI6ItCh0LjRgdGC0LXQvNC90LjQuSDQkNC00LzRltC90ZbRgdGC0YDQsNGC0L7RgCIsImlhdCI6MTc1NTYwMTI3MywiZXhwIjoxNzU1Njg3NjczfQ.tlgv5y1aJ9XPKKlYr_wmn3CQ28v9ydDDlsQ81HnGClQ";
-
-export const ManageCustomers = ({ onDelete }: ManageCustomerProps) => {
+export const ManageCustomers = () => {
+  const { user } = useUser();
+  const [token, setToken] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [users, setUsers] = useState<ManageCustomersProps[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isCustomerOpenModal, setIsCustomerOpenModal] = useState(false);
 
+  useEffect(() => {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+    }, [user]);
+
+  // Fetch users
   const fetchUsers = async () => {
-    const res = await fetch("http://195.35.56.196:8000/api/platform/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return console.log("Error! The server didn't respond.");
-    const data = await res.json();
-    setUsers(data.data.users);
+    if (!token) return;
+    try {
+      const data = await fetcher<{ data: { users: ManageCustomersProps[] } }>(
+        `${apiUrl}/api/platform/users`,
+        { token }
+      );
+      setUsers(data.data.users);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    if (token) fetchUsers();
+  }, [token]);
 
   const handleOpenModal = (id: number) => {
     setEditingId(id);
@@ -40,8 +50,8 @@ export const ManageCustomers = ({ onDelete }: ManageCustomerProps) => {
   };
 
   const handleSavePassword = async (newPassword: string) => {
-    if (!editingId) return;
-    await handleEdit(editingId, newPassword);
+    if (editingId === null || !token) return;
+    await handleEdit(editingId, newPassword, token);
     setIsOpenModal(false);
     setEditingId(null);
     setUsers((prev) =>
@@ -50,9 +60,13 @@ export const ManageCustomers = ({ onDelete }: ManageCustomerProps) => {
   };
 
   const handleDeleteCustomer = async (id: number) => {
-    await handleDelete(id);
-    onDelete(id);
-    fetchUsers();
+    if (!token) return;
+    try {
+      await handleDelete(id, token);
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
   };
 
   const handleCustomerAdd = (response: any) => {
@@ -68,33 +82,21 @@ export const ManageCustomers = ({ onDelete }: ManageCustomerProps) => {
         data={users}
         expandedId={expandedId}
         columns={[
-          {
-            key: "login",
-            label: "Логін користувача",
-            tooltip: (user) => `Логін користувача: ${user.login}`,
-          },
+          { key: "login", label: "Логін користувача", tooltip: (u) => `Логін користувача: ${u.login}` },
           { key: "password", label: "Пароль користувача" },
-          {
-            key: "role",
-            label: "Роль користувача",
-            tooltip: (user) => `Роль користувача: ${user.role}`,
-          },
-          {
-            key: "full_name",
-            label: "Ім'я користувача",
-            tooltip: (user) => `Повне ім'я користувача: ${user.full_name}`,
-          },
+          { key: "role", label: "Роль користувача", tooltip: (u) => `Роль користувача: ${u.role}` },
+          { key: "full_name", label: "Ім'я користувача", tooltip: (u) => `Повне ім'я користувача: ${u.full_name}` },
         ]}
-        showIndex={true}
+        showIndex
         onAdd={() => setIsCustomerOpenModal(true)}
         onDelete={(item) => handleDeleteCustomer(item.id)}
         onEdit={(user) => handleOpenModal(user.id)}
-        className=""
         addButtonText="Додати робітника"
         onInspect={(item) =>
           setExpandedId((prev) => (prev === item.id ? null : item.id))
         }
       />
+
       {isOpenModal && (
         <ChangePasswordModal
           isOpen={isOpenModal}
@@ -102,6 +104,7 @@ export const ManageCustomers = ({ onDelete }: ManageCustomerProps) => {
           onClose={() => setIsOpenModal(false)}
         />
       )}
+
       {isCustomerOpenModal && (
         <AddCustomerModal
           onSubmit={handleCustomerAdd}

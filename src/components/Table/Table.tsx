@@ -107,7 +107,7 @@ export function Table<T extends { id: number }>({
                   onClick={() => onRowClick && onRowClick(item.id)}
                   style={{ cursor: onRowClick ? "pointer" : "default" }}
                   className={`${
-                    expandedId === item.id ? styles.noBottomBorderRow : ""
+                    expandedId === item?.id ? styles.noBottomBorderRow : ""
                   } ${getRowClassName ? getRowClassName(item) : ""}`}
                 >
                   <td className="w-[10px] md:w-[20px]"></td>

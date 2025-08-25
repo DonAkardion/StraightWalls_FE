@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { Table } from "@/components/Table/Table";
-import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
+import { Crew } from "@/types/crew";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 
 interface WorkersTableProps {
@@ -23,10 +23,11 @@ export function WorkersTable({
   enableTooltips = true,
 }: WorkersTableProps) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
+
   return (
     <div className="mb-[60px]">
       <Table<Worker>
-        title={"Робітники"}
+        title="Робітники"
         data={workers}
         expandedId={expandedId}
         className="WorkersTableWrap"
@@ -41,23 +42,19 @@ export function WorkersTable({
         addButtonText="Додати робітника"
         columns={[
           {
-            key: "name",
+            key: "full_name",
             label: "ПІБ виконавця",
-            tooltip: (worker) => `Назва бригади: ${worker.name}`,
+            tooltip: (worker) => `ПІБ: ${worker.full_name ?? "—"}`,
           },
           {
-            key: "occupation",
+            key: "position",
             label: "Посада",
-            tooltip: (worker) => `Посада: ${worker.occupation}`,
+            tooltip: (worker) => `Посада: ${worker.position ?? "—"}`,
           },
           {
-            key: "salary",
-            label: "Зарплата",
-          },
-          {
-            key: "phone",
+            key: "phone_number",
             label: "Контакти",
-            tooltip: (worker) => `Контакти: ${worker.phone}`,
+            tooltip: (worker) => `Контакти: ${worker.phone_number ?? "—"}`,
           },
         ]}
         renderInspection={(worker) => (
@@ -65,18 +62,8 @@ export function WorkersTable({
             item={worker}
             getId={(item) => item.id}
             fields={[
-              {
-                label: "Посада",
-                value: (item) => item.occupation,
-              },
-              {
-                label: "Зарплата",
-                value: (item) => item.salary,
-              },
-              {
-                label: "Контакти",
-                value: (item) => item.phone ?? "—",
-              },
+              { label: "Посада", value: (item) => item.position ?? "—" },
+              { label: "Контакти", value: (item) => item.phone_number ?? "—" },
             ]}
           />
         )}

@@ -32,6 +32,7 @@ export async function fetcher<T>(
         ...headers,
       },
       body: data ? JSON.stringify(data) : undefined,
+      cache: "no-store", 
     });
 
     const responseBody = await response.json().catch(() => null);

@@ -7,22 +7,20 @@ import styles from "./CrewFormModal.module.css";
 
 interface CrewFormModalProps {
   initialData?: Crew;
-  onSubmit: (data: Crew) => void;
-  onClose: () => void;
+  onChange: (data: Crew) => void;
   workers: Worker[];
 }
 
 export function CrewFormModal({
   initialData,
-
+  onChange,
   workers,
 }: CrewFormModalProps) {
   const [formData, setFormData] = useState<Crew>(
     initialData ?? {
-      id: 1, // change later
+      id: 0, 
       name: "",
-      brigadier: null,
-      status: "active",
+      status: "",
     }
   );
 
@@ -30,8 +28,10 @@ export function CrewFormModal({
     if (initialData) setFormData(initialData);
   }, [initialData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const updated = { ...formData, [e.target.name]: e.target.value };
+    setFormData(updated);
+    onChange(updated);
   };
 
   return (
@@ -45,23 +45,6 @@ export function CrewFormModal({
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
       />
-      <div className={`${styles.ModalInputTytle}`}>Оберіть бригадира</div>
-      <select
-        className="appearance-none border-b-1 p-2 pb-1 outline-none"
-        name="brigadier"
-        value={formData.brigadier?.id || ""}
-        // onChange={(e) => {
-        //   const selectedWorker = null
-        //     workers.find((w) => w.id === e.target.value) || null;
-        //   setFormData({ ...formData, brigadier: selectedWorker });
-        // }}
-      >
-        {workers.map((worker) => (
-          <option key={worker.id} value={worker.id}>
-            {worker.name}
-          </option>
-        ))}
-      </select>
       <div className={`${styles.ModalInputTytle}`}>Статус</div>
       <input
         type="text"
