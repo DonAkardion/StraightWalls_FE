@@ -11,20 +11,25 @@ interface CrewContextType {
   crews: Crew[];
   workers: Worker[];
   addCrew: (crew: Crew) => void;
+  addWorker: (worker: Worker) => void;
 }
 
 const CrewContext = createContext<CrewContextType | undefined>(undefined);
 
 export function CrewProvider({ children }: { children: ReactNode }) {
   const [crews, setCrews] = useState<Crew[]>(mockCrews);
-  const [workers] = useState<Worker[]>(mockWorkers);
+  const [workers, setWorkers] = useState<Worker[]>(mockWorkers);
 
   const addCrew = (crew: Crew) => {
     setCrews((prev) => [...prev, crew]);
   };
 
+  const addWorker = (worker: Worker) => {
+    setWorkers((prev) => [...prev, worker])
+  }
+
   return (
-    <CrewContext.Provider value={{ crews, workers, addCrew }}>
+    <CrewContext.Provider value={{ crews, workers, addCrew, addWorker }}>
       {children}
     </CrewContext.Provider>
   );

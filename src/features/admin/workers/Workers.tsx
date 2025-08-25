@@ -31,7 +31,7 @@ export function Workers() {
     full_name: "",
     position: "",
     phone_number: "",
-    team_id: 1,
+    team_id: null,
   });
   const [crewFormData, setCrewFormData] = useState<Crew>({
   id: 0,
