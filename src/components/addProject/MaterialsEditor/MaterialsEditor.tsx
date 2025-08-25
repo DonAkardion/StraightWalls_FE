@@ -64,10 +64,10 @@ export function MaterialsEditor({
           <span>{m.quantity}</span>
         ),
     },
-    { key: "unit", label: "Одиниця виміру" },
+    { key: "unit", label: "Од. вимір. " },
     {
       key: "unit_price",
-      label: "Ціна за одиницю",
+      label: "Вартість, грн",
       render: (m: ProjectMaterial) =>
         editable ? (
           <input
@@ -87,16 +87,6 @@ export function MaterialsEditor({
       key: "total",
       label: "Сума",
       render: (m: ProjectMaterial) => formatNumber(m.quantity * m.unit_price),
-    },
-    {
-      key: "actions",
-      label: "",
-      render: (m: ProjectMaterial) =>
-        editable && (
-          <button className="text-red-500" onClick={() => onDelete(m.id)}>
-            Видалити
-          </button>
-        ),
     },
   ];
 
@@ -131,87 +121,97 @@ export function MaterialsEditor({
         {tablesTytle}
       </h2>
 
-      {/* Таблиця матеріалів */}
-      <ProjectMaterialsTable
-        data={materials}
-        columns={columns}
-        expandedId={expandedId}
-        onInspect={handleInspect}
-        enableTooltips={true}
-        className="projectMaterialsEditorWrap"
-      />
+      {materials.length > 0 && (
+        <ProjectMaterialsTable
+          data={materials}
+          columns={columns}
+          expandedId={expandedId}
+          onInspect={handleInspect}
+          onDelete={(material) => onDelete(material.id)}
+          enableTooltips={true}
+          className="projectMaterialsEditorWrap"
+        />
+      )}
 
-      {/* Рядок для додавання нового матеріалу */}
       {editable && (
-        <div className={`${styles.editContainer} flex gap-2 `}>
-          <input
-            type="text"
-            placeholder="Назва"
-            value={newMaterial.name}
-            onChange={(e) =>
-              setNewMaterial((prev) => ({ ...prev, name: e.target.value }))
-            }
-            className={`${styles.editInput} flex-1 rounded px-2 py-1`}
-          />
-          <input
-            type="number"
-            placeholder="Кількість"
-            value={newMaterial.quantity || ""}
-            onChange={(e) =>
-              setNewMaterial((prev) => ({
-                ...prev,
-                quantity: Number(e.target.value),
-              }))
-            }
-            className={`${styles.editInput} w-[100px] rounded px-2 py-1`}
-          />
-          <input
-            type="text"
-            placeholder="Од."
-            value={newMaterial.unit}
-            onChange={(e) =>
-              setNewMaterial((prev) => ({ ...prev, unit: e.target.value }))
-            }
-            className={`${styles.editInput} w-[80px] rounded px-2 py-1`}
-          />
-          <input
-            type="number"
-            placeholder="Ціна"
-            value={newMaterial.unit_price || ""}
-            onChange={(e) =>
-              setNewMaterial((prev) => ({
-                ...prev,
-                unit_price: Number(e.target.value),
-              }))
-            }
-            className={`${styles.editInput} w-[120px] rounded px-2 py-1`}
-          />
-          <button
-            onClick={handleAddNew}
-            className="bg-green-500 text-white px-4 py-1 rounded"
+        <div
+          className={`${styles.inputModule} mt-[16px] mb-[20px] pl-[20px] pr-[20px] py-[16px]  rounded-[5px] `}
+        >
+          <div
+            className={`${styles.editContainer} flex flex-wrap  gap-y-[10px]`}
           >
-            Додати
-          </button>
+            <input
+              type="text"
+              placeholder="Назва"
+              value={newMaterial.name}
+              onChange={(e) =>
+                setNewMaterial((prev) => ({ ...prev, name: e.target.value }))
+              }
+              className={`${styles.editInput} flex-1 px-2 py-1 border-b-1`}
+            />
+            <input
+              type="number"
+              placeholder="Кількість"
+              value={newMaterial.quantity || ""}
+              onChange={(e) =>
+                setNewMaterial((prev) => ({
+                  ...prev,
+                  quantity: Number(e.target.value),
+                }))
+              }
+              className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1`}
+            />
+            <input
+              type="text"
+              placeholder="Од."
+              value={newMaterial.unit}
+              onChange={(e) =>
+                setNewMaterial((prev) => ({ ...prev, unit: e.target.value }))
+              }
+              className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1 `}
+            />
+            <input
+              type="number"
+              placeholder="Ціна"
+              value={newMaterial.unit_price || ""}
+              onChange={(e) =>
+                setNewMaterial((prev) => ({
+                  ...prev,
+                  unit_price: Number(e.target.value),
+                }))
+              }
+              className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1 `}
+            />
+            <button
+              onClick={handleAddNew}
+              className={`${styles.editInputBtn} ml-[10px] px-4 py-1 rounded-[5px] cursor-pointer`}
+            >
+              Додати
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Загальна вартість */}
-      <div className={`${styles.materialTotalCostWrap} relative`}>
-        <div
-          className={`${styles.materialTotalCostBlock} md:absolute md:top-[-8px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}
-        >
+      {/* Total cost */}
+      {materials.length > 0 && (
+        <div className={`${styles.materialTotalCostWrap} relative`}>
           <div
-            className={`${styles.materialTotalCost}  rounded-[5px] p-4 h-[56px] md:h-[74px] flex justify-between items-center`}
+            className={`${styles.materialTotalCostBlock} md:absolute md:top-[-8px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}
           >
-            <div className={`${styles.materialTotalCostTytle}`}>
-              Загальна вартість матеріалів
-            </div>
-            <div className={`${styles.materialTotalCostSum}`}>
-              {formatNumber(total)} грн
+            <div
+              className={`${styles.materialTotalCost}  rounded-[5px] p-4 h-[56px] md:h-[74px] flex justify-between items-center`}
+            >
+              <div className={`${styles.materialTotalCostTytle}`}>
+                Загальна вартість матеріалів
+              </div>
+              <div className={`${styles.materialTotalCostSum}`}>
+                {formatNumber(total)} грн
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+      {/* Add material */}
     </section>
   );
 }
