@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import styles from "./AddWorkerModal.module.css";
-import { handleAddWorker } from "@/api/crews";
+import { handleAddWorker } from "@/api/workers";
 import { useUser } from "@/context/UserContextProvider";
 import { Worker } from "@/types/worker";
+import { Crew } from "@/types/crew";
 
 interface AddWorkerModalProps {
   onClose: () => void;
@@ -14,7 +15,12 @@ interface AddWorkerModalProps {
 export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
   const { user } = useUser();
   const [token, setToken] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    full_name: string;
+    position: string;
+    phone_number: string;
+    team_id: number | null;
+  }>({
     full_name: "",
     position: "",
     phone_number: "",
@@ -29,9 +35,10 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    const value = e.target.name === "team_id" ? Number(e.target.value) : e.target.value;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: value,
     }));
   };
 
@@ -51,7 +58,6 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
 
     try {
       const addedWorker = await handleAddWorker(formData, token);
-
       onAdd(addedWorker.worker);
       onClose();
     } catch (error) {

@@ -13,9 +13,10 @@ import { WorkerFormModal } from "@/components/Workers/WorkerFormModal/WorkerForm
 import Calendar from "@/components/Calendar/Calendar";
 import { AddWorkerModal } from "@/components/AddWorker/AddWorkerModal/AddWorkerModal";
 import { handleDelete, handleSave } from "@/utils/dataHandlers";
-import { handleUpdateWorker, handleAddWorker, handleDeleteWorker } from "@/api/crews";
+import { handleUpdateWorker, handleAddWorker, handleDeleteWorker } from "@/api/workers";
 import { useUser } from "@/context/UserContextProvider";
 import { fetcher } from "@/utils/fetcher";
+import { getCrews, handleDeleteCrew, handleEditCrew } from "@/api/crews";
 
 export function Workers() {
   const [workers, setWorkers] = useState<Worker[]>([]);
@@ -32,14 +33,22 @@ export function Workers() {
     phone_number: "",
     team_id: 1,
   });
+  const [crewFormData, setCrewFormData] = useState<Crew>({
+  id: 0,
+  name: "",
+  status: "",
+});
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // token
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     setToken(storedToken);
   }, [user]);
 
+  // get-запити для робітників та бригад
   useEffect(() => {
     const getWorkers = async () => {
       if (!token) return;
@@ -49,7 +58,8 @@ export function Workers() {
           "https://api.rivni-stiny.click/api/workers",
           { token }
         );
-        setWorkers(response.data);
+        setWorkers(Array.isArray(response) ? response : response.data);
+
       } catch (error) {
         console.error("Помилка завантаження воркерів:", error);
       } finally {
@@ -60,10 +70,47 @@ export function Workers() {
     getWorkers();
   }, [token]);
 
-  const deleteCrew = (id: number) => setCrews((prev) => handleDelete(prev, id));
-  const saveCrew = (crew: Crew) => setCrews((prev) => handleSave(prev, crew));
-  const openEditModal = (crew: Crew) => setModalData({ crew });
-  const openAddModal = () => setModalData({});
+  useEffect(() => {
+    if(!token) return
+
+    const fetchCrews = async () => {
+      const data = await getCrews(token!);
+      setCrews(data)
+    }
+
+    fetchCrews();
+  }, [token])
+
+  // Crew
+  const deleteCrew = async (id: number) => {
+    if(!token) return
+    try {
+      await handleDeleteCrew(id, token!);
+      setCrews((prev) => handleDelete(prev, id));
+    } catch (error) {
+      console.log("Error:", error)
+    }
+  } 
+  const handleSaveCrew = async (crew: Crew) => {
+    if(!token) return
+    try {
+      const updatedCrew = await handleEditCrew(crew.id, crew, token!);
+      setCrews((prev) => handleSave(prev, updatedCrew))
+      closeModal()
+    } catch (error) {
+      console.log("Error:", error)
+    }
+  }
+    const openEditModal = (crew: Crew) => {
+    setCrewFormData(crew); 
+    setModalData({ crew });
+  };
+
+  const openAddModal = () => {
+    setCrewFormData({ id: 0, name: "", status: "" }); 
+    setModalData({ crew: {} as Crew });
+  };
+
   const closeModal = () => {
     setModalData(null);
     setFormData({
@@ -71,10 +118,11 @@ export function Workers() {
       full_name: "",
       position: "",
       phone_number: "",
-      team_id: 1,
+      team_id: 2,
     });
   };
 
+  // Worker
   const deleteWorker = async (id: number) => {
     try {
       await handleDeleteWorker(id, token!)
@@ -135,12 +183,11 @@ export function Workers() {
         <FormModal
           title={modalData.crew ? "Редагувати бригаду" : "Додати бригаду"}
           onClose={closeModal}
-          onSave={() => saveCrew(formData as unknown as Crew)}
+          onSave={() => handleSaveCrew(crewFormData)}
         >
           <CrewFormModal
             initialData={modalData.crew}
-            onSubmit={saveCrew}
-            onClose={closeModal}
+            onChange={(data) => setCrewFormData(data)}
             workers={workers}
           />
         </FormModal>

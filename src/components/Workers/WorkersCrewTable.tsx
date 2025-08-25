@@ -43,6 +43,8 @@ export function WorkersCrewTable({
         className="CrewsTableWrap"
         showIndex={true}
         onDelete={(item) => onDelete(item.id)}
+        addLink="/admin/workers/addWorker"
+        addLinkId={"123"}
         onEdit={onEdit}
         onAdd={onAdd}
         onInspect={(item) =>
