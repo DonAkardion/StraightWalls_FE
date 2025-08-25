@@ -46,11 +46,9 @@ export function AddProject() {
         setLoading(true);
         setError(null);
 
-        // Отримуємо клієнтів
         const clientsData = await getClients(token);
         setClients(clientsData);
 
-        // Отримуємо активні послуги
         const servicesData = await getServices(token, { active_only: true });
         const servicesWithQuantity: ServiceWithQuantity[] = servicesData.map(
           (s) => ({ ...s, quantity: 0 })
@@ -79,8 +77,12 @@ export function AddProject() {
   ) => {
     const newServices: ServiceWithQuantity[] = services.map((s) => {
       const found = updated.find((u) => u.serviceId === s.id);
-      return found ? { ...s, quantity: found.quantity } : s;
+
+      if (!found) return s;
+
+      return { ...s, quantity: found.quantity };
     });
+
     setServices(newServices);
   };
 

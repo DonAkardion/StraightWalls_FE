@@ -12,9 +12,9 @@ interface MaterialsEditorProps {
   editable?: boolean;
   tablesTytle?: string;
   materials: ProjectMaterial[];
-  onAdd: (material: ProjectMaterial) => void;
-  onUpdate: (id: number, updated: ProjectMaterial) => void;
-  onDelete: (id: number) => void;
+  onAdd?: (material: ProjectMaterial) => void;
+  onUpdate?: (id: number, updated: ProjectMaterial) => void;
+  onDelete?: (id: number) => void;
 }
 
 export function MaterialsEditor({
@@ -56,7 +56,9 @@ export function MaterialsEditor({
             min={0}
             value={m.quantity}
             onChange={(e) =>
-              onUpdate(m.id, { ...m, quantity: Number(e.target.value) })
+              editable && onUpdate
+                ? onUpdate(m.id, { ...m, quantity: Number(e.target.value) })
+                : null
             }
             className={`${styles.editInput} w-[80px] text-center rounded px-1 py-0`}
           />
@@ -75,7 +77,9 @@ export function MaterialsEditor({
             min={0}
             value={m.unit_price}
             onChange={(e) =>
-              onUpdate(m.id, { ...m, unit_price: Number(e.target.value) })
+              editable && onUpdate
+                ? onUpdate(m.id, { ...m, unit_price: Number(e.target.value) })
+                : null
             }
             className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
           />
@@ -97,22 +101,24 @@ export function MaterialsEditor({
   const handleAddNew = () => {
     if (!newMaterial.name || newMaterial.quantity <= 0) return;
 
-    onAdd({
-      ...newMaterial,
-      id: Date.now(),
-      project_id: 0,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
+    if (onAdd) {
+      onAdd({
+        ...newMaterial,
+        id: Date.now(),
+        project_id: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
 
-    setNewMaterial({
-      name: "",
-      description: "",
-      cost: 0,
-      quantity: 0,
-      unit: "",
-      unit_price: 0,
-    });
+      setNewMaterial({
+        name: "",
+        description: "",
+        cost: 0,
+        quantity: 0,
+        unit: "",
+        unit_price: 0,
+      });
+    }
   };
 
   return (
@@ -127,7 +133,11 @@ export function MaterialsEditor({
           columns={columns}
           expandedId={expandedId}
           onInspect={handleInspect}
-          onDelete={(material) => onDelete(material.id)}
+          onDelete={
+            editable && onDelete
+              ? (material) => onDelete(material.id)
+              : undefined
+          }
           enableTooltips={true}
           className="projectMaterialsEditorWrap"
         />
@@ -182,12 +192,14 @@ export function MaterialsEditor({
               }
               className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1 `}
             />
-            <button
-              onClick={handleAddNew}
-              className={`${styles.editInputBtn} ml-[10px] px-4 py-1 rounded-[5px] cursor-pointer`}
-            >
-              Додати
-            </button>
+            {editable && onAdd && (
+              <button
+                onClick={handleAddNew}
+                className={`${styles.editInputBtn} ml-[10px] px-4 py-1 rounded-[5px] cursor-pointer`}
+              >
+                Додати
+              </button>
+            )}
           </div>
         </div>
       )}

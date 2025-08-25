@@ -3,29 +3,37 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import styles from "./CrewSelector.module.css";
 import { Crew } from "@/types/crew";
+import { getCrews } from "@/api/crews";
+import { useUser } from "@/context/UserContextProvider";
 
 interface CrewSelectorProps {
-  crews: Crew[];
   value: number | null;
   onChange: (crewId: number | null) => void;
   placeholder?: string;
 }
+
 export const CrewSelector: React.FC<CrewSelectorProps> = ({
-  crews,
   value,
   onChange,
-  placeholder = "Пошук Бригади",
+  placeholder = "Пошук бригади",
 }) => {
+  const [crews, setCrews] = useState<Crew[]>([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const { token } = useUser();
+
+  useEffect(() => {
+    if (!token) return;
+    getCrews(token).then(setCrews);
+  }, [token]);
 
   const selectedCrew = crews.find((c) => c.id === value);
 
-  const filteredClients = useMemo(() => {
+  const filteredCrews = useMemo(() => {
     if (!search.trim()) return crews;
     return crews.filter((c) =>
-      c.name.toLowerCase().includes(search.toLowerCase())
+      (c.name ?? "").toLowerCase().includes(search.toLowerCase())
     );
   }, [crews, search]);
 
@@ -34,6 +42,7 @@ export const CrewSelector: React.FC<CrewSelectorProps> = ({
     setOpen(false);
     setSearch("");
   };
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -46,6 +55,7 @@ export const CrewSelector: React.FC<CrewSelectorProps> = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   return (
     <div
       className={`${styles.selectorContainer} relative w-full`}
@@ -73,8 +83,8 @@ export const CrewSelector: React.FC<CrewSelectorProps> = ({
             autoFocus
           />
           <ul className="max-h-60 overflow-y-auto">
-            {filteredClients.length > 0 ? (
-              filteredClients.map((crew) => (
+            {filteredCrews.length > 0 ? (
+              filteredCrews.map((crew) => (
                 <li
                   key={crew.id}
                   className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
