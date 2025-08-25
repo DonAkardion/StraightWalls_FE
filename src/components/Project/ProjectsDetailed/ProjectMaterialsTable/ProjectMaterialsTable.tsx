@@ -3,8 +3,7 @@
 import React from "react";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
-import { Material } from "@/types/material";
-import { mockMaterials } from "@/mock/Materials/materialsMock";
+import { ProjectMaterial } from "@/types/projectComponents";
 
 type Col<T> = {
   key: keyof T | string;
@@ -15,11 +14,14 @@ type Col<T> = {
 
 interface Props {
   expandedId?: number | null;
-  onInspect?: (item: Material) => void;
+  onInspect?: (item: ProjectMaterial) => void;
   enableTooltips?: boolean;
-  columns?: Col<Material>[];
-  data?: Material[];
+  columns?: Col<ProjectMaterial>[];
+  data?: ProjectMaterial[];
   className?: string;
+  onAdd?: () => void;
+  onEdit?: (item: ProjectMaterial) => void;
+  onDelete?: (item: ProjectMaterial) => void;
 }
 
 export function ProjectMaterialsTable({
@@ -29,33 +31,37 @@ export function ProjectMaterialsTable({
   columns,
   data,
   className,
+  onEdit,
+  onDelete,
 }: Props) {
-  const parsePrice = (price: string) => Number(String(price).replace(",", "."));
-
-  const defaultColumns: Col<Material>[] = [
+  const defaultColumns: Col<ProjectMaterial>[] = [
     {
       key: "name",
       label: "Назва матеріалу",
       tooltip: (m) => `Матеріал: ${m.name}`,
     },
-    { key: "amount", label: "Кількість" },
-    { key: "price", label: "Ціна" },
+    { key: "unit", label: "Одиниця" },
+    { key: "quantity", label: "Кількість" },
     {
-      key: "totalPrice",
+      key: "unit_price",
+      label: "Ціна за одиницю",
+      render: (m) => m.unit_price.toFixed(2).replace(".", ","),
+    },
+    {
+      key: "total",
       label: "Сума",
-      render: (material: Material) =>
-        (material.amount * parsePrice(material.price))
-          .toFixed(2)
-          .replace(".", ","),
+      render: (m) => (m.quantity * m.unit_price).toFixed(2).replace(".", ","),
     },
   ];
 
   const cols = columns ?? defaultColumns;
-  const rows = data ?? mockMaterials;
+  const rows = data ?? [];
 
-  const renderInspectFields = (item: Material) =>
+  const renderInspectFields = (item: ProjectMaterial) =>
     cols
-      .filter((c) => c.key !== "name" && c.key !== "amount")
+      .filter(
+        (c) => c.key !== "name" && c.key !== "quantity" && c.key !== "actions"
+      )
       .map((c) => {
         const value = (() => {
           if (c.render) {
@@ -66,37 +72,37 @@ export function ProjectMaterialsTable({
           } else {
             if (typeof c.key === "string" && c.key in item) {
               const v = (item as unknown as Record<string, unknown>)[c.key];
-              return v === undefined || v === null ? "" : String(v);
+              return v == null ? "" : String(v);
             }
             return "";
           }
         })();
 
-        // якщо value порожнє, не включаємо в інспект
         if (value.trim() === "") return null;
-
-        return {
-          label: c.label,
-          value: () => value,
-        };
+        return { label: c.label, value: () => value };
       })
       .filter(Boolean) as { label: string; value: () => string }[];
 
   return (
     <div>
-      <Table<Material>
+      <Table<ProjectMaterial>
         data={rows}
         expandedId={expandedId}
         columns={cols}
-        showIndex={true}
+        showIndex
         enableTooltips={enableTooltips}
         onInspect={onInspect}
+        onEdit={onEdit}
+        onDelete={onDelete}
         className={className}
         renderInspection={(material) => (
-          <Inspect<Material>
+          <Inspect<ProjectMaterial>
             item={material}
             getId={(it) => it.id}
             fields={renderInspectFields(material)}
+            onDelete={
+              onDelete ? (id) => onDelete({ id } as ProjectMaterial) : undefined
+            }
           />
         )}
       />

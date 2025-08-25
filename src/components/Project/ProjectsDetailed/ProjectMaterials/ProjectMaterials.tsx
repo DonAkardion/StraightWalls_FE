@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import styles from "./ProjectMaterials.module.css";
 import { ProjectMaterialsTable } from "../ProjectMaterialsTable/ProjectMaterialsTable";
-import { Material } from "@/types/material";
+// import { Material } from "@/types/material";
 
 export function ProjectMaterials() {
-  const [expandedId, setExpandedId] = useState<number | null>(null);
-  const handleInspect = (item: Material) => {
-    setExpandedId((prev) => (prev === item.id ? null : item.id));
-  };
+  // const [expandedId, setExpandedId] = useState<number | null>(null);
+  // const handleInspect = (item: Material) => {
+  //   setExpandedId((prev) => (prev === item.id ? null : item.id));
+  // };
   return (
     <section className="relative md:mb-[120px] mb-[40px]">
       <h2 className={`${styles.materialTytle} mb-[16px]`}>Матеріали </h2>
       <ProjectMaterialsTable
-        expandedId={expandedId}
-        onInspect={handleInspect}
+        // expandedId={expandedId}
+        // onInspect={handleInspect}
         className="projectDetailedMaterialsWrap"
       />
       <div

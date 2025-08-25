@@ -52,7 +52,7 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
 
   return (
     <div
-      className={`${styles.selectorContainer} relative w-full`}
+      className={`${styles.selectorContainer} relative w-[70%]`}
       ref={containerRef}
     >
       <div
@@ -72,6 +72,7 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
           }`}
         >
           <input
+            id="projectClient"
             type="text"
             className="w-full border-b p-[20px] md:px-[30px] md:py-[16px] outline-none"
             placeholder="Пошук клієнта..."
