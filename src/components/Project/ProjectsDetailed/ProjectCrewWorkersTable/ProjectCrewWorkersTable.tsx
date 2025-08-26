@@ -3,47 +3,39 @@
 import React from "react";
 import { Table } from "@/components/Table/Table";
 import { Worker } from "@/types/worker";
-import { Crew } from "@/types/crew";
 
 interface ProjectCrewWorkersTableProps {
   workers: Worker[];
-  crewId: number;
-  crews: Crew[];
   enableTooltips?: boolean;
 }
 
 export function ProjectCrewWorkersTable({
   workers,
-  crewId,
   enableTooltips = true,
 }: ProjectCrewWorkersTableProps) {
-  const crewWorkers = workers.filter((worker) => worker.crewId === crewId);
+  const crewWorkers = workers;
 
   return (
     <div className="mb-[40px]">
-      <Table
+      <Table<Worker>
         data={crewWorkers}
         className="ProjectCrewWorkersTableWrap"
         showIndex={true}
         enableTooltips={enableTooltips}
         columns={[
           {
-            key: "name",
+            key: "full_name",
             label: "ПІБ виконавця",
-            tooltip: (worker) => `ПІБ виконавця: ${worker.name}`,
+            tooltip: (worker) => `ПІБ виконавця: ${worker.full_name}`,
           },
           {
-            key: "occupation",
+            key: "position",
             label: "Посада",
           },
           {
-            key: "salary",
-            label: "Зарплата",
-          },
-          {
-            key: "phone",
+            key: "phone_number",
             label: "Контакти",
-            tooltip: (worker) => `Контакти: ${worker.phone}`,
+            tooltip: (worker) => `Контакти: ${worker.phone_number}`,
           },
         ]}
       />
