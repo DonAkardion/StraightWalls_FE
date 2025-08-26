@@ -1,10 +1,16 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { ProjectMaterial } from "@/types/projectComponents";
 import { Service } from "@/types/service";
+import { ProjectMaterial } from "@/types/projectComponents";
 
 export interface ServiceWithQuantity extends Service {
   quantity: number;
+}
+
+export interface MaterialWithCalc extends ProjectMaterial {
+  quantity: number;
+  delivery: number;
+  total: number;
 }
 
 interface ProjectCreationData {
@@ -23,8 +29,8 @@ interface ProjectCreationData {
   services: ServiceWithQuantity[];
   setServices: (services: ServiceWithQuantity[]) => void;
 
-  materials: ProjectMaterial[];
-  setMaterials: (materials: ProjectMaterial[]) => void;
+  materials: MaterialWithCalc[];
+  setMaterials: (materials: MaterialWithCalc[]) => void;
 
   resetProject: () => void;
 }
@@ -44,7 +50,7 @@ export const ProjectCreationProvider = ({
     clientId: null,
     crewId: null,
     services: [] as ServiceWithQuantity[],
-    materials: [] as ProjectMaterial[],
+    materials: [] as MaterialWithCalc[],
   };
 
   const [name, setName] = useState(initialState.name);
@@ -56,7 +62,7 @@ export const ProjectCreationProvider = ({
   const [services, setServices] = useState<ServiceWithQuantity[]>(
     initialState.services
   );
-  const [materials, setMaterials] = useState<ProjectMaterial[]>(
+  const [materials, setMaterials] = useState<MaterialWithCalc[]>(
     initialState.materials
   );
 

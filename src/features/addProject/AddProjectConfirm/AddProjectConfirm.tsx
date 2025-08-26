@@ -7,26 +7,69 @@ import { MaterialsEditor } from "@/components/addProject/MaterialsEditor/Materia
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 // import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
-import { useProjectCreation } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
+import { useUser } from "@/context/UserContextProvider";
+import { createProject } from "@/api/projects";
+import {
+  useProjectCreation,
+  ServiceWithQuantity,
+  MaterialWithCalc,
+} from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
+
+function mapWorks(services: ServiceWithQuantity[]) {
+  return services
+    .filter((s) => s.quantity > 0)
+    .map((s) => ({
+      name: s.name,
+      description: s.description,
+      cost: String(s.price),
+      quantity: String(s.quantity),
+      unit: s.unit_of_measurement,
+    }));
+}
+
+function mapMaterials(materials: MaterialWithCalc[]) {
+  return materials
+    .filter((m) => m.quantity > 0)
+    .map((m) => ({
+      name: m.name,
+      purchase_price: String(m.purchase_price),
+      selling_price: String(m.selling_price),
+      quantity: String(m.quantity),
+      delivery: m.delivery ? String(m.delivery) : "0",
+      unit: m.unit,
+    }));
+}
 
 export function AddProjectConfirm() {
   const params = useParams();
   const role = params.role as string;
 
-  const { name, description, clientId, crewId, services, materials } =
-    useProjectCreation();
+  const { name, clientId, crewId, services, materials } = useProjectCreation();
 
-  const handleSubmit = () => {
-    console.log("Проєкт до створення:", {
-      name,
-      description,
-      clientId,
-      crewId,
-      services,
-      materials,
-    });
+  const { token } = useUser();
+
+  const handleSubmit = async () => {
+    if (!token) return;
+
+    const payload = {
+      project: {
+        name: name,
+        client_id: String(clientId),
+        team_id: String(crewId),
+        status: "new",
+      },
+      works: mapWorks(services),
+      materials: mapMaterials(materials),
+    };
+
+    try {
+      const response = await createProject(payload, token);
+      console.log("Проєкт створено ✅", response);
+      // router.push(`/projects/${response.projectId}`);
+    } catch (error) {
+      console.error("Помилка створення проєкту", error);
+    }
   };
-
   return (
     <section
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}

@@ -33,14 +33,22 @@ export function MaterialsEditor({
   >({
     name: "",
     description: "",
-    cost: 0,
+    purchase_price: 0,
+    selling_price: 0,
     quantity: 0,
+    remaining_stock: 0,
+    delivery: 0,
     unit: "",
-    unit_price: 0,
+    total: 0,
   });
 
+  // Сумарна вартість матеріалів (по закупці + доставка)
   const total = useMemo(
-    () => materials.reduce((acc, m) => acc + m.quantity * m.unit_price, 0),
+    () =>
+      materials.reduce(
+        (acc, m) => acc + m.selling_price * m.quantity + m.delivery,
+        0
+      ),
     [materials]
   );
 
@@ -66,31 +74,78 @@ export function MaterialsEditor({
           <span>{m.quantity}</span>
         ),
     },
-    { key: "unit", label: "Од. вимір. " },
+    { key: "unit", label: "Од. вимір." },
     {
-      key: "unit_price",
-      label: "Вартість, грн",
+      key: "purchase_price",
+      label: "Купівля, грн",
       render: (m: ProjectMaterial) =>
         editable ? (
           <input
             type="number"
             min={0}
-            value={m.unit_price}
+            value={m.purchase_price}
             onChange={(e) =>
               editable && onUpdate
-                ? onUpdate(m.id, { ...m, unit_price: Number(e.target.value) })
+                ? onUpdate(m.id, {
+                    ...m,
+                    purchase_price: Number(e.target.value),
+                  })
                 : null
             }
             className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
           />
         ) : (
-          <span>{m.unit_price}</span>
+          <span>{m.purchase_price}</span>
+        ),
+    },
+    {
+      key: "selling_price",
+      label: "Продаж, грн",
+      render: (m: ProjectMaterial) =>
+        editable ? (
+          <input
+            type="number"
+            min={0}
+            value={m.selling_price}
+            onChange={(e) =>
+              editable && onUpdate
+                ? onUpdate(m.id, {
+                    ...m,
+                    selling_price: Number(e.target.value),
+                  })
+                : null
+            }
+            className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
+          />
+        ) : (
+          <span>{m.selling_price}</span>
+        ),
+    },
+    {
+      key: "delivery",
+      label: "Доставка, грн",
+      render: (m: ProjectMaterial) =>
+        editable ? (
+          <input
+            type="number"
+            min={0}
+            value={m.delivery}
+            onChange={(e) =>
+              editable && onUpdate
+                ? onUpdate(m.id, { ...m, delivery: Number(e.target.value) })
+                : null
+            }
+            className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
+          />
+        ) : (
+          <span>{m.delivery}</span>
         ),
     },
     {
       key: "total",
       label: "Сума",
-      render: (m: ProjectMaterial) => formatNumber(m.quantity * m.unit_price),
+      render: (m: ProjectMaterial) =>
+        formatNumber(m.selling_price * m.quantity + m.delivery),
     },
   ];
 
@@ -113,10 +168,13 @@ export function MaterialsEditor({
       setNewMaterial({
         name: "",
         description: "",
-        cost: 0,
+        purchase_price: 0,
+        selling_price: 0,
         quantity: 0,
+        remaining_stock: 0,
+        delivery: 0,
         unit: "",
-        unit_price: 0,
+        total: 0,
       });
     }
   };
@@ -145,10 +203,15 @@ export function MaterialsEditor({
 
       {editable && (
         <div
-          className={`${styles.inputModule} mt-[16px] mb-[20px] pl-[20px] pr-[20px] py-[16px]  rounded-[5px] `}
+          className={`${styles.inputModule} mt-[16px] mb-[20px] rounded-[5px]`}
         >
           <div
-            className={`${styles.editContainer} flex flex-wrap  gap-y-[10px]`}
+            className={`${styles.inputModuleTytle} pl-[36px] flex items-center h-[76px] w-full rounded-[5px] `}
+          >
+            <h3 className="">Створити Матеріал</h3>
+          </div>
+          <div
+            className={`${styles.editContainer} grid grid-cols-2 gap-3 p-4 pb-0 `}
           >
             <input
               type="text"
@@ -157,8 +220,9 @@ export function MaterialsEditor({
               onChange={(e) =>
                 setNewMaterial((prev) => ({ ...prev, name: e.target.value }))
               }
-              className={`${styles.editInput} flex-1 px-2 py-1 border-b-1`}
+              className={`${styles.editInput} max-w-[90%] flex-1 px-2 py-1 border-b-1 col-span-2`}
             />
+
             <input
               type="number"
               placeholder="Кількість"
@@ -169,7 +233,7 @@ export function MaterialsEditor({
                   quantity: Number(e.target.value),
                 }))
               }
-              className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1`}
+              className={`${styles.editInput} flex-1 max-w-[80%] px-2 py-1 border-b-1`}
             />
             <input
               type="text"
@@ -178,40 +242,65 @@ export function MaterialsEditor({
               onChange={(e) =>
                 setNewMaterial((prev) => ({ ...prev, unit: e.target.value }))
               }
-              className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1 `}
+              className={`${styles.editInput} flex-1 max-w-[80%] px-2 py-1 border-b-1`}
             />
             <input
               type="number"
-              placeholder="Ціна"
-              value={newMaterial.unit_price || ""}
+              placeholder="Ціна закупки"
+              value={newMaterial.purchase_price || ""}
               onChange={(e) =>
                 setNewMaterial((prev) => ({
                   ...prev,
-                  unit_price: Number(e.target.value),
+                  purchase_price: Number(e.target.value),
                 }))
               }
-              className={`${styles.editInput} flex-1 max-w-[120px] px-2 py-1 border-b-1 `}
+              className={`${styles.editInput} flex-1 max-w-[80%] px-2 py-1 border-b-1`}
             />
-            {editable && onAdd && (
+            <input
+              type="number"
+              placeholder="Ціна продажу"
+              value={newMaterial.selling_price || ""}
+              onChange={(e) =>
+                setNewMaterial((prev) => ({
+                  ...prev,
+                  selling_price: Number(e.target.value),
+                }))
+              }
+              className={`${styles.editInput} flex-1 max-w-[80%] px-2 py-1 border-b-1`}
+            />
+            <input
+              type="number"
+              placeholder="Доставка"
+              value={newMaterial.delivery || ""}
+              onChange={(e) =>
+                setNewMaterial((prev) => ({
+                  ...prev,
+                  delivery: Number(e.target.value),
+                }))
+              }
+              className={`${styles.editInput} flex-1 max-w-[80%] px-2 py-1 border-b-1`}
+            />
+          </div>
+          {editable && onAdd && (
+            <div className="flex justify-end pb-4 pr-[40px]">
               <button
                 onClick={handleAddNew}
-                className={`${styles.editInputBtn} ml-[10px] px-4 py-1 rounded-[5px] cursor-pointer`}
+                className={`${styles.editInputBtn} w-[40%] min-w-[120px] max-w-[260px] h-[40px] ml-[10px] px-4 py-1 rounded-[5px] cursor-pointer`}
               >
                 Додати
               </button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Total cost */}
       {materials.length > 0 && (
         <div className={`${styles.materialTotalCostWrap} relative`}>
           <div
             className={`${styles.materialTotalCostBlock} md:absolute md:top-[-8px] mt-4 md:mt-0 md:w-full h-[56px] md:h-[74px] z-[10] rounded-[5px]`}
           >
             <div
-              className={`${styles.materialTotalCost}  rounded-[5px] p-4 h-[56px] md:h-[74px] flex justify-between items-center`}
+              className={`${styles.materialTotalCost} rounded-[5px] p-4 h-[56px] md:h-[74px] flex justify-between items-center`}
             >
               <div className={`${styles.materialTotalCostTytle}`}>
                 Загальна вартість матеріалів
@@ -223,7 +312,6 @@ export function MaterialsEditor({
           </div>
         </div>
       )}
-      {/* Add material */}
     </section>
   );
 }

@@ -13,10 +13,13 @@ export interface ProjectMaterial {
   project_id: number;
   name: string;
   description?: string;
-  cost: number;
+  purchase_price: number;
+  selling_price: number;
   quantity: number;
+  remaining_stock: number;
+  delivery: number;
   unit: string;
-  unit_price: number;
+  total: number;
   created_at: string;
   updated_at: string;
 }
