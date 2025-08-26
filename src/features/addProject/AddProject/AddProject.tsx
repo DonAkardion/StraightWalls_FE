@@ -94,7 +94,7 @@ export function AddProject() {
         className={`${styles.selector} flex flex-col md:flex-row items-center justify-between gap-[15px] md:gap-[22px] mb-[30px]`}
       >
         <span className={`${styles.selectorTytle} whitespace-nowrap`}>
-          Назва Проэкту
+          Назва Проєкту
         </span>
         <ProjectNameInput />
       </div>
