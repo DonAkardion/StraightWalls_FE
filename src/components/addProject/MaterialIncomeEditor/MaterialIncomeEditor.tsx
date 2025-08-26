@@ -40,15 +40,15 @@ export const MaterialIncomeEditor = ({
   );
 
   // загальний заробіток
-  const totalIncome = useMemo(
+  const totalMaterilalsIncome = useMemo(
     () => materialRows.reduce((sum, m) => sum + m.income, 0),
     [materialRows]
   );
 
   // зберігаємо у контексті для подальшого використання
   useEffect(() => {
-    setMaterialsIncomeTotal(totalIncome);
-  }, [totalIncome, setMaterialsIncomeTotal]);
+    setMaterialsIncomeTotal(totalMaterilalsIncome);
+  }, [totalMaterilalsIncome, setMaterialsIncomeTotal]);
 
   return (
     <section className={`${styles.sectionMaterials} mb-[40px]  md:mt-[126px]`}>
@@ -77,7 +77,7 @@ export const MaterialIncomeEditor = ({
                   Загальний заробіток на матеріалах
                 </div>
                 <div className={`${styles.totatCostMainSum} shrink-0`}>
-                  {totalIncome} грн
+                  {totalMaterilalsIncome} грн
                 </div>
               </div>
               {/* <h3

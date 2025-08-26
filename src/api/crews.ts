@@ -1,5 +1,6 @@
 import { Crew } from "@/types/crew";
 import { fetcher } from "@/utils/fetcher";
+import { Worker } from "@/types/worker";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -8,7 +9,7 @@ export const getCrews = async (token: string): Promise<Crew[]> => {
     const response = await fetch("https://api.rivni-stiny.click/api/teams", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
       },
@@ -33,22 +34,26 @@ export const getCrews = async (token: string): Promise<Crew[]> => {
 };
 
 export const handleDeleteCrew = async (id: number, token: string) => {
-    await fetcher(`${apiUrl}/api/teams/${id}`, {
-      method: "DELETE",
-      token
-    })
-    console.log("Бригада була успішно видалена")
-}
+  await fetcher(`${apiUrl}/api/teams/${id}`, {
+    method: "DELETE",
+    token,
+  });
+  console.log("Бригада була успішно видалена");
+};
 
-export const handleEditCrew = async (id: number, crewsData: Partial<Crew>, token: string): Promise<Crew> => {
-    const response = await fetcher<{ data: Crew }>(`${apiUrl}/api/teams/${id}`, {
-      method: "PUT",
-      token,
-      data: crewsData
-    })
-    console.log("Бригада була успішно оновлена")
-    return response.data
-}
+export const handleEditCrew = async (
+  id: number,
+  crewsData: Partial<Crew>,
+  token: string
+): Promise<Crew> => {
+  const response = await fetcher<{ data: Crew }>(`${apiUrl}/api/teams/${id}`, {
+    method: "PUT",
+    token,
+    data: crewsData,
+  });
+  console.log("Бригада була успішно оновлена");
+  return response.data;
+};
 
 export const handleAddCrew = async (
   crewData: {
@@ -66,10 +71,18 @@ export const handleAddCrew = async (
   return response.data;
 };
 
-export const handleGetCrewWorkers = async (team_id: number, token: string) => {
-  await fetcher(`${apiUrl}/api/workers/${team_id}`, {
-    method: "GET",
-    token
-  })
-  console.log("Всі воркери бригади були отримані")
+export async function handleGetCrewWorkers(
+  team_id: number,
+  token: string
+): Promise<Worker[]> {
+  const response = await fetcher<{ status: string; data: Worker[] }>(
+    `${apiUrl}/api/workers/`,
+    {
+      method: "GET",
+      token,
+      params: { team_id },
+    }
+  );
+
+  return response.data;
 }

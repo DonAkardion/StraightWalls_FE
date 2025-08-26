@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./AddProjectConfirm.module.css";
 import { MaterialsEditor } from "@/components/addProject/MaterialsEditor/MaterialsEditor";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
-// import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
+import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
 import { useUser } from "@/context/UserContextProvider";
 import { createProject } from "@/api/projects";
@@ -34,7 +34,7 @@ function mapMaterials(materials: MaterialWithCalc[]) {
       name: m.name,
       purchase_price: String(m.purchase_price),
       selling_price: String(m.selling_price),
-      quantity: String(m.quantity),
+      remaining_stock: String(m.quantity),
       delivery: m.delivery ? String(m.delivery) : "0",
       unit: m.unit,
     }));
@@ -44,7 +44,8 @@ export function AddProjectConfirm() {
   const params = useParams();
   const role = params.role as string;
 
-  const { name, clientId, crewId, services, materials } = useProjectCreation();
+  const { name, clientId, crewId, services, materials, materialsIncomeTotal } =
+    useProjectCreation();
 
   const { token } = useUser();
 
@@ -70,6 +71,7 @@ export function AddProjectConfirm() {
       console.error("Помилка створення проєкту", error);
     }
   };
+
   return (
     <section
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
@@ -88,16 +90,23 @@ export function AddProjectConfirm() {
       <div className={`${styles.Separator} md:h-[80px]`}></div>
 
       {/* Бригада */}
-      {/* <AddProjectCrew team_id={crewId} /> */}
+      <AddProjectCrew team_id={crewId} />
 
       {/* Платіжні деталі */}
       <div className={`${styles.PaymentDetailsWrap} mb-[60px] mt-[60px]`}>
         <PaymentDetails
           items={[
-            { label: "Вартість усіх виконаних робіт", value: "41 057,5 грн" },
+            {
+              label: "Вартість усіх виконаних робіт",
+              value: `${materialsIncomeTotal}`,
+            },
             {
               label: "Вартість усіх використаних матеріалів",
-              value: "31 454 грн",
+              value: `${materialsIncomeTotal}`,
+            },
+            {
+              label: "Заробіток на матеріалах",
+              value: `${materialsIncomeTotal}`,
             },
             { label: "Аванс при заїзді бригади", value: "2 000 грн" },
           ]}

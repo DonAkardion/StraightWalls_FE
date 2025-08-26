@@ -4,7 +4,7 @@ import React from "react";
 import { useParams } from "next/navigation";
 import styles from "./AddProjectCrewPage.module.css";
 import { CrewSelector } from "@/components/addProject/CrewSelector/CrewSelector";
-// import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
+import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
 import { useProjectCreation } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 
 export function AddProjectCrewPage() {
@@ -25,7 +25,7 @@ export function AddProjectCrewPage() {
         <CrewSelector value={crewId} onChange={setCrewId} />
       </div>
 
-      {/* <AddProjectCrew crewId={crewId} /> */}
+      <AddProjectCrew team_id={crewId} />
 
       <Link
         href={`/${role}/addProject/addProjectConfirm`}
