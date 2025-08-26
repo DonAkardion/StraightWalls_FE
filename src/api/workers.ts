@@ -8,7 +8,7 @@ export const handleAddWorker = async (
     full_name: string;
     phone_number: string;
     position: string;
-    team_id: number | null;
+    team_id?: number | null;
   },
   token: string
 ): Promise<{ worker: Worker }> => {

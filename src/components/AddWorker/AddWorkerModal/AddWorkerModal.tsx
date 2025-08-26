@@ -6,6 +6,7 @@ import { handleAddWorker } from "@/api/workers";
 import { useUser } from "@/context/UserContextProvider";
 import { Worker } from "@/types/worker";
 import { Crew } from "@/types/crew";
+import { getCrews } from "@/api/crews";
 
 interface AddWorkerModalProps {
   onClose: () => void;
@@ -15,6 +16,7 @@ interface AddWorkerModalProps {
 export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
   const { user } = useUser();
   const [token, setToken] = useState<string | null>(null);
+  const [crews, setCrews] = useState<Crew[]>([]);
   const [formData, setFormData] = useState<{
     full_name: string;
     position: string;
@@ -24,8 +26,20 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
     full_name: "",
     position: "",
     phone_number: "",
-    team_id: 1,
+    team_id: null,
   });
+
+  useEffect(() => {
+    const fetchCrews = async () => {
+      try {
+        const data = await getCrews(token!);
+        setCrews(data)
+      } catch (error) {
+        console.log("Crew isn't gotten:", error);
+      }
+    }
+    fetchCrews();
+  }, [token])
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -109,6 +123,22 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
               onChange={handleChange}
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />
+          </label>
+          <label>
+            <div className={styles.addCrewInputTitle}>Бригада</div>
+            <select
+              name="team_id"
+              value={formData.team_id ?? ""}
+              onChange={handleChange}
+              className="border-b p-2 pb-1 outline-none w-full"
+            >
+              <option value="">Оберіть бригаду</option>
+              {crews.map((crew) => (
+                <option key={crew.id} value={crew.id}>
+                  {crew.name}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
 

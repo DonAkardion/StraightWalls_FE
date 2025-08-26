@@ -29,10 +29,15 @@ export function WorkersCrewTable({
 
   const crews =
     initialCrews.concat(
-      ctx?.crews.filter((c) => !initialCrews.find((ic) => ic.id === c.id)) ||
-        []
+      ctx?.crews.filter((c) => !initialCrews.find((ic) => ic.id === c.id)) || []
     ) || [];
-  const workers = initialWorkers;
+
+  const workers =
+    initialWorkers.concat(
+      ctx?.workers.filter(
+        (filt) => !initialWorkers.find((work) => work.id === filt.id)
+      ) || []
+    ) || [];
 
   return (
     <div className="mb-[60px]">
