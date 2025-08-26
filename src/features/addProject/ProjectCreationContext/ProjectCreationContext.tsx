@@ -32,6 +32,9 @@ interface ProjectCreationData {
   materials: MaterialWithCalc[];
   setMaterials: (materials: MaterialWithCalc[]) => void;
 
+  materialsIncomeTotal: number;
+  setMaterialsIncomeTotal: (income: number) => void;
+
   resetProject: () => void;
 }
 
@@ -51,6 +54,7 @@ export const ProjectCreationProvider = ({
     crewId: null,
     services: [] as ServiceWithQuantity[],
     materials: [] as MaterialWithCalc[],
+    materialsIncomeTotal: 0,
   };
 
   const [name, setName] = useState(initialState.name);
@@ -65,6 +69,9 @@ export const ProjectCreationProvider = ({
   const [materials, setMaterials] = useState<MaterialWithCalc[]>(
     initialState.materials
   );
+  const [materialsIncomeTotal, setMaterialsIncomeTotal] = useState<number>(
+    initialState.materialsIncomeTotal
+  );
 
   const resetProject = () => {
     setName(initialState.name);
@@ -73,6 +80,7 @@ export const ProjectCreationProvider = ({
     setCrewId(initialState.crewId);
     setServices(initialState.services);
     setMaterials(initialState.materials);
+    setMaterialsIncomeTotal(initialState.materialsIncomeTotal);
   };
 
   return (
@@ -90,6 +98,8 @@ export const ProjectCreationProvider = ({
         setServices,
         materials,
         setMaterials,
+        materialsIncomeTotal,
+        setMaterialsIncomeTotal,
         resetProject,
       }}
     >

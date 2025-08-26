@@ -23,3 +23,13 @@ export interface ProjectMaterial {
   created_at: string;
   updated_at: string;
 }
+
+export interface MaterialIncomeRow {
+  id: number;
+  name: string;
+  description?: string;
+  unit?: string;
+  quantity: number;
+  sum: number; // продажна сума з доставкою
+  income: number; // заробіток
+}
