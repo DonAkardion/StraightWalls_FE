@@ -6,14 +6,14 @@ import { Worker } from "@/types/worker";
 import { ProjectCrewWorkersTable } from "@/components/Project/ProjectsDetailed/ProjectCrewWorkersTable/ProjectCrewWorkersTable";
 
 interface Props {
-  crewId: number | null;
+  team_id: number | null;
   crews: Crew[];
   workers: Worker[];
 }
-export const AddProjectCrew = ({ crewId, crews, workers }: Props) => {
-  const crew = crews.find((c) => c.id === crewId);
-  if (!crewId || !crew) return null;
-  const crewWorkers = workers.filter((w) => w.crewId === crewId);
+export const AddProjectCrew = ({ team_id, crews, workers }: Props) => {
+  const crew = crews.find((c) => c.id === team_id);
+  if (!team_id || !crew) return null;
+  const crewWorkers = workers.filter((w) => w.team_id === team_id);
   return (
     <section>
       <h2 className={`${styles.sectionTytle} mb-[10px] md:mb-[16px]`}>
@@ -22,7 +22,7 @@ export const AddProjectCrew = ({ crewId, crews, workers }: Props) => {
       {crewWorkers.length > 0 ? (
         <ProjectCrewWorkersTable
           workers={workers}
-          crewId={crewId}
+          crewId={team_id}
           crews={crews}
         />
       ) : (

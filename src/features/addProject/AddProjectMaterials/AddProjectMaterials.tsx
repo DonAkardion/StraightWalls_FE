@@ -5,7 +5,7 @@ import styles from "./AddProjectMaterials.module.css";
 import { useParams } from "next/navigation";
 import { MaterialsEditor } from "@/components/addProject/MaterialsEditor/MaterialsEditor";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
-// import { MaterialIncomeEditor } from "@/components/addProject/MaterialIncomeEditor/MaterialIncomeEditor";
+import { MaterialIncomeEditor } from "@/components/addProject/MaterialIncomeEditor/MaterialIncomeEditor";
 import { useProjectCreation } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 import { ProjectMaterial } from "@/types/projectComponents";
 
@@ -48,13 +48,11 @@ export function AddProjectMaterials() {
         </span>
       </div>
 
-      {/* <MaterialIncomeEditor
-        materialsIncome={mockMaterialsIncome}
-        editable={false}
-        onMaterialsIncomeChange={() => {}}
+      <MaterialIncomeEditor
+        materials={materials}
         tableClassName="projectMaterialsIncomeEditorWrap"
         tablesTytle="Заробіток на матеріалах"
-      /> */}
+      />
 
       <div className={`${styles.materialPayment} my-[40px] md:my-[100px] `}>
         <PaymentDetails

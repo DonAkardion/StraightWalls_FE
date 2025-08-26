@@ -228,21 +228,20 @@
 :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(8) {
   width: 120px;
 }
+:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(10) {
+  width: 120px;
+}
 :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
   background: #ffb32666;
 }
-/* :global(.projectMaterialsEditorWrap) .indentCellLast {
-  display: none;
-} */
+
 :global(.projectMaterialsEditorWrap) .indentCellSmall {
   display: none;
 }
-:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(9) {
+
+/* :global(.projectMaterialsEditorWrap) .TableCell:nth-child(7) {
   display: none;
-}
-:global(.projectMaterialsEditorWrap) .TableCell:nth-child(7) {
-  display: none;
-}
+} */
 :global(.projectMaterialsEditorWrap) .TableCellInspect {
   display: none;
 }

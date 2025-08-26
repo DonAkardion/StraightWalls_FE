@@ -1,55 +1,54 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useEffect } from "react";
 import styles from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate.module.css";
 import lockalStyles from "./MaterialIncomeEditor.module.css";
-import { MaterialIncome } from "@/types/materialIncome";
 import { MaterialIncomeTable } from "./MaterialIncomeTable/MaterialIncomeTable";
+import { ProjectMaterial, MaterialIncomeRow } from "@/types/projectComponents";
+import { useProjectCreation } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 
 interface Props {
-  materialsIncome: MaterialIncome[];
-  editable?: boolean;
-  onMaterialsIncomeChange?: (materials: MaterialIncome[]) => void;
+  materials: ProjectMaterial[];
   tableClassName?: string;
   tablesTytle?: string;
 }
 
 export const MaterialIncomeEditor = ({
-  materialsIncome,
-  editable = false,
-  onMaterialsIncomeChange,
+  materials,
   tableClassName,
   tablesTytle,
 }: Props) => {
-  const [localMaterialsIncome, setLocalMaterialsIncome] =
-    useState<MaterialIncome[]>(materialsIncome);
+  const { setMaterialsIncomeTotal } = useProjectCreation();
 
-  // синхронізація зі змінами зовнішніх даних
+  // формуємо дані для таблиці з урахуванням прибутку та суми
+  const materialRows: MaterialIncomeRow[] = useMemo(
+    () =>
+      materials.map((m) => {
+        const total = m.selling_price * m.quantity + m.delivery;
+        const income = total - m.purchase_price * m.quantity;
+        return {
+          id: m.id,
+          name: m.name,
+          description: m.description,
+          unit: m.unit,
+          quantity: m.quantity,
+          sum: total,
+          income,
+        };
+      }),
+    [materials]
+  );
+
+  // загальний заробіток
+  const totalIncome = useMemo(
+    () => materialRows.reduce((sum, m) => sum + m.income, 0),
+    [materialRows]
+  );
+
+  // зберігаємо у контексті для подальшого використання
   useEffect(() => {
-    setLocalMaterialsIncome(materialsIncome);
-  }, [materialsIncome]);
-
-  const handleAmountChange = (id: number, newAmount: number) => {
-    setLocalMaterialsIncome((prev) => {
-      const updated = prev.map((m) =>
-        m.id === id ? { ...m, amount: newAmount } : m
-      );
-      if (onMaterialsIncomeChange) onMaterialsIncomeChange(updated);
-      return updated;
-    });
-  };
-
-  const mainMaterialsIncome = useMemo(
-    () =>
-      localMaterialsIncome.filter((m) => m.serviceType === "Основні послуги"),
-    [localMaterialsIncome]
-  );
-
-  const additionalMaterialsIncome = useMemo(
-    () =>
-      localMaterialsIncome.filter((m) => m.serviceType === "Додаткові роботи"),
-    [localMaterialsIncome]
-  );
+    setMaterialsIncomeTotal(totalIncome);
+  }, [totalIncome, setMaterialsIncomeTotal]);
 
   return (
     <section className={`${styles.sectionMaterials} mb-[40px]  md:mt-[126px]`}>
@@ -58,63 +57,43 @@ export const MaterialIncomeEditor = ({
       >
         {tablesTytle}
       </h2>
-      <div>
-        <MaterialIncomeTable
-          materials={mainMaterialsIncome}
-          editable={editable}
-          onAmountChange={handleAmountChange}
-          className={tableClassName}
-        />
+      {materials.length > 0 && (
+        <div>
+          <MaterialIncomeTable
+            materials={materialRows}
+            className={tableClassName}
+          />
 
-        <div
-          className={`${styles.tableBetweenWrap} relative h-[126px] md:h-[48px] w-full z-[10]`}
-        >
           <div
-            className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-14%] md:h-[142px] w-full z-[10] rounded-[5px]`}
+            className={`${styles.tableBetweenWrap} relative h-[126px] md:h-[48px] w-full z-[10]`}
           >
             <div
-              className={`${styles.totatCostMain} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full z-[11] rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
+              className={`${styles.totatCostSeparate} absolute top-[16%] md:top-[-14%] md:h-[142px] w-full z-[10] rounded-[5px]`}
             >
-              <div className={`${styles.totatCostMainTytle} `}>
-                Загальний заробіток на матеріалах
+              <div
+                className={`${styles.totatCostMain} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full z-[11] rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]`}
+              >
+                <div className={`${styles.totatCostMainTytle}`}>
+                  Загальний заробіток на матеріалах
+                </div>
+                <div className={`${styles.totatCostMainSum} shrink-0`}>
+                  {totalIncome} грн
+                </div>
               </div>
-              <div className={`${styles.totatCostMainSum} shrink-0 `}>
-                39 317,5 грн
-              </div>
-            </div>
-            <h3
+              {/* <h3
               className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[26px] pt-[10px]`}
             >
               Додаткові роботи
-            </h3>
-          </div>
-        </div>
-
-        <MaterialIncomeTable
-          materials={additionalMaterialsIncome}
-          editable={editable}
-          onAmountChange={handleAmountChange}
-          className={tableClassName}
-        />
-        <div
-          className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
-        >
-          <div
-            className={`${styles.totatCostSeparate} md:absolute md:bottom-[-20px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px] `}
-          >
-            <div
-              className={`${styles.totatCostMain} ${styles.totatCostMainSwadow}  flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]  `}
-            >
-              <div className={`${styles.totatCostMainTytle} `}>
-                Загальний заробіток на матеріалах з додаткових робіт
-              </div>
-              <div className={`${styles.totatCostMainSum} shrink-0 `}>
-                1 750 грн
-              </div>
+            </h3> */}
             </div>
           </div>
         </div>
-      </div>
+      )}
+      {materials.length == 0 && (
+        <div className={`${lockalStyles.messageText} ml-[20px]`}>
+          Матеріали відсутні
+        </div>
+      )}
     </section>
   );
 };

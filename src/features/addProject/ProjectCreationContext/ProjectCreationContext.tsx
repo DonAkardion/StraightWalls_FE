@@ -1,10 +1,16 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { ProjectMaterial } from "@/types/projectComponents";
 import { Service } from "@/types/service";
+import { ProjectMaterial } from "@/types/projectComponents";
 
 export interface ServiceWithQuantity extends Service {
   quantity: number;
+}
+
+export interface MaterialWithCalc extends ProjectMaterial {
+  quantity: number;
+  delivery: number;
+  total: number;
 }
 
 interface ProjectCreationData {
@@ -23,8 +29,11 @@ interface ProjectCreationData {
   services: ServiceWithQuantity[];
   setServices: (services: ServiceWithQuantity[]) => void;
 
-  materials: ProjectMaterial[];
-  setMaterials: (materials: ProjectMaterial[]) => void;
+  materials: MaterialWithCalc[];
+  setMaterials: (materials: MaterialWithCalc[]) => void;
+
+  materialsIncomeTotal: number;
+  setMaterialsIncomeTotal: (income: number) => void;
 
   resetProject: () => void;
 }
@@ -44,7 +53,8 @@ export const ProjectCreationProvider = ({
     clientId: null,
     crewId: null,
     services: [] as ServiceWithQuantity[],
-    materials: [] as ProjectMaterial[],
+    materials: [] as MaterialWithCalc[],
+    materialsIncomeTotal: 0,
   };
 
   const [name, setName] = useState(initialState.name);
@@ -56,8 +66,11 @@ export const ProjectCreationProvider = ({
   const [services, setServices] = useState<ServiceWithQuantity[]>(
     initialState.services
   );
-  const [materials, setMaterials] = useState<ProjectMaterial[]>(
+  const [materials, setMaterials] = useState<MaterialWithCalc[]>(
     initialState.materials
+  );
+  const [materialsIncomeTotal, setMaterialsIncomeTotal] = useState<number>(
+    initialState.materialsIncomeTotal
   );
 
   const resetProject = () => {
@@ -67,6 +80,7 @@ export const ProjectCreationProvider = ({
     setCrewId(initialState.crewId);
     setServices(initialState.services);
     setMaterials(initialState.materials);
+    setMaterialsIncomeTotal(initialState.materialsIncomeTotal);
   };
 
   return (
@@ -84,6 +98,8 @@ export const ProjectCreationProvider = ({
         setServices,
         materials,
         setMaterials,
+        materialsIncomeTotal,
+        setMaterialsIncomeTotal,
         resetProject,
       }}
     >
