@@ -18,3 +18,13 @@ export enum ProjectStatus {
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
 }
+
+export interface ProjectResponse {
+  id: number;
+  name: string;
+  client_id: number;
+  team_id: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
