@@ -27,17 +27,8 @@ export function WorkersCrewTable({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const ctx = useCrew();
 
-  const crews =
-    initialCrews.concat(
-      ctx?.crews.filter((c) => !initialCrews.find((ic) => ic.id === c.id)) || []
-    ) || [];
-
-  const workers =
-    initialWorkers.concat(
-      ctx?.workers.filter(
-        (filt) => !initialWorkers.find((work) => work.id === filt.id)
-      ) || []
-    ) || [];
+  const crews = initialCrews || [];
+  const workers = initialWorkers || [];
 
   return (
     <div className="mb-[60px]">

@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import styles from "./AddCrew.module.css";
 import { useRouter } from "next/navigation";
 import { Crew } from "@/types/crew";
+import { Worker } from "@/types/worker";
 import { useCrew } from "@/features/addWorker/addWorkerContext";
 import { handleAddCrew } from "@/api/crews";
+import { handleAddWorker } from "@/api/workers";
 import AddWorkerForm from "./AddWorkerForm/AddWorkerForm";
 
 export default function AddCrewForm() {
@@ -15,6 +17,7 @@ export default function AddCrewForm() {
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [crewWorkers, setCrewWorkers] = useState<Worker[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,16 +31,26 @@ export default function AddCrewForm() {
         return;
       }
 
+      // 1️⃣ Додаємо бригаду
       const newCrew: Crew = await handleAddCrew(
         { name, status: status || null },
         token
       );
 
-      addCrew(newCrew);  
-      router.back();
+      addCrew(newCrew);
+
+      // 2️⃣ Додаємо робітників з правильним team_id
+      for (const worker of crewWorkers) {
+        await handleAddWorker(
+          { ...worker, team_id: newCrew.id },
+          token
+        );
+      }
+
+      router.back(); // або редірект куди потрібно
     } catch (error) {
-      console.error("Помилка додавання бригади:", error);
-      alert("Не вдалося додати бригаду");
+      console.error("Помилка додавання бригади або робітників:", error);
+      alert("Не вдалося додати бригаду або робітників");
     } finally {
       setLoading(false);
     }
@@ -70,7 +83,10 @@ export default function AddCrewForm() {
             className={`${styles.addCrewInput} h-10 md:h-11 rounded border border-black px-5 text-[16px]`}
           />
         </div>
-        <AddWorkerForm />
+
+        {/* Робітники */}
+        <AddWorkerForm crewWorkers={crewWorkers} setCrewWorkers={setCrewWorkers} />
+
         <div className="mt-10">
           <button
             type="submit"

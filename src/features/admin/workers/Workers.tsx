@@ -91,16 +91,19 @@ export function Workers() {
       console.log("Error:", error)
     }
   } 
-  const handleSaveCrew = async (crew: Crew) => {
-    if(!token) return
-    try {
-      const updatedCrew = await handleEditCrew(crew.id, crew, token!);
-      setCrews((prev) => handleSave(prev, updatedCrew))
-      closeModal()
-    } catch (error) {
-      console.log("Error:", error)
-    }
+  const handleSaveCrew = async () => {
+  if (!token) return;
+  try {
+    const updatedCrew = await handleEditCrew(crewFormData.id, crewFormData, token);
+    setCrews(prev =>
+      prev.map(c => (c.id === updatedCrew.id ? updatedCrew : c))
+    );
+    closeModal();
+  } catch (error) {
+    console.log(error);
   }
+};
+
     const openEditModal = (crew: Crew) => {
     setCrewFormData(crew); 
     setModalData({ crew });
@@ -181,12 +184,12 @@ export function Workers() {
       />
       {modalData?.crew && (
         <FormModal
-          title={modalData.crew ? "Редагувати бригаду" : "Додати бригаду"}
+          title={crewFormData ? "Редагувати бригаду" : "Додати бригаду"}
           onClose={closeModal}
-          onSave={() => handleSaveCrew(crewFormData)}
+          onSave={() => handleSaveCrew()}
         >
           <CrewFormModal
-            initialData={modalData.crew}
+            initialData={crewFormData}
             onChange={(data) => setCrewFormData(data)}
             workers={workers}
           />
