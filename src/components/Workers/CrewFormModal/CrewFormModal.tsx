@@ -17,21 +17,17 @@ export function CrewFormModal({
   workers,
 }: CrewFormModalProps) {
   const [formData, setFormData] = useState<Crew>(
-    initialData ?? {
-      id: 0, 
-      name: "",
-      status: "",
-    }
+    initialData ?? { id: 0, name: "", status: "" }
   );
 
   useEffect(() => {
     if (initialData) setFormData(initialData);
   }, [initialData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updated = { ...formData, [e.target.name]: e.target.value };
     setFormData(updated);
-    onChange(updated);
+    onChange({ ...updated });
   };
 
   return (

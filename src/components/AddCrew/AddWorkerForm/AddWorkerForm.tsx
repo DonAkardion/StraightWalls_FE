@@ -1,50 +1,36 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./AddWorker.module.css";
+import { Worker } from "@/types/worker";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
 
-interface Worker {
-  full_name: string,
-  position: string,
-  phone_number: string
+interface AddWorkerFormProps {
+  crewWorkers: Worker[];
+  setCrewWorkers: React.Dispatch<React.SetStateAction<Worker[]>>;
 }
 
-export default function AddWorkerForm() {
-  const [token, setToken] = useState<string | null>(null);
-  const [workers, setWorkers] = useState<Worker[]>([
-    {
-      full_name: "Галушко Іван Степанович",
-      position: "Водій",
-      phone_number: "+380 95 61 56 123"
-    },
-  ]);
-
-  const [clearInputs, setClearInputs] = useState<Worker>({
+export default function AddWorkerForm({ crewWorkers, setCrewWorkers }: AddWorkerFormProps) {
+  const [inputs, setInputs] = useState<Worker>({
+    id: 0,
     full_name: "",
     position: "",
-    phone_number: ""
+    phone_number: "",
+    team_id: null,
   });
 
-  useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    setToken(savedToken)
-  }, [token])
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setClearInputs({ ...clearInputs, [e.target.name]: e.target.value })
-  }
-
-  const handleAdd = () => {
-    const allFilledUp = Object.values(clearInputs).every((v) => v.trim() !== "")
-    if(!allFilledUp) {
-      alert("Please, fill all the fields")
-      return
+  const handleAddWorker = () => {
+    if (!inputs.full_name.trim() || !inputs.position.trim() || !inputs.phone_number.trim()) {
+      return alert("Заповніть всі поля робітника");
     }
-    setWorkers([ ...workers, clearInputs ]);
-    setClearInputs({ full_name: "", position: "", phone_number: "" })
-  }
+
+    setCrewWorkers(prev => [...prev, { ...inputs, id: Date.now() }]);
+    setInputs({ id: 0, full_name: "", position: "", phone_number: "", team_id: null });
+  };
 
   const headerElements = [
     <div key="full_name" className="flex items-center gap-2 text-[18px] text-black">
@@ -70,16 +56,14 @@ export default function AddWorkerForm() {
       <p className="text-[20px] text-black mb-3">Робітники</p>
       <div className={`${styles.addWorkerForm} bg-white rounded-lg overflow-hidden`}>
         <div className={`${styles.addTopRow} grid grid-cols-3 px-8 py-5`}>
-          <ProjectsHeaders
-            headers={headerElements as any} 
-            className="text-[14px] tracking-tight"
-          />
+          <ProjectsHeaders headers={headerElements as any} className="text-[14px] tracking-tight" />
         </div>
-        {workers.map((w, i) => (
+
+        {crewWorkers.map((w, i) => (
           <React.Fragment key={i}>
             <div className={`${styles.borderBottom} grid grid-cols-3 px-6 py-3 transition`}>
               <div className="flex items-center gap-2 text-black">
-                <span className="text-black">{i + 1}</span>
+                <span>{i + 1}</span>
                 <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
                   {w.full_name}
                 </span>
@@ -101,13 +85,13 @@ export default function AddWorkerForm() {
 
         <div className="grid grid-cols-3 px-6 py-3">
           <div className="flex items-center gap-2">
-            <span className="text-[#0097c0]">{workers.length + 1}</span>
+            <span className="text-[#0097c0]">{crewWorkers.length + 1}</span>
             <input
               type="text"
               placeholder="Введіть ПІБ"
               name="full_name"
-              value={clearInputs.full_name}
-              onChange={handleSubmit}
+              value={inputs.full_name}
+              onChange={handleChange}
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 w-full rounded-md px-2`}
             />
           </div>
@@ -116,8 +100,8 @@ export default function AddWorkerForm() {
               type="text"
               name="position"
               placeholder="Ввести"
-              value={clearInputs.position}
-              onChange={handleSubmit}
+              value={inputs.position}
+              onChange={handleChange}
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 text-center rounded-md px-2`}
             />
           </div>
@@ -126,17 +110,19 @@ export default function AddWorkerForm() {
               type="text"
               name="phone_number"
               placeholder="Ввести"
-              value={clearInputs.phone_number}
-              onChange={handleSubmit}
+              value={inputs.phone_number}
+              onChange={handleChange}
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 text-center rounded-md px-2`}
             />
           </div>
         </div>
+
         <div className="border-b-2 mx-auto w-[95%]"></div>
+
         <div className="p-6">
           <button
             type="button"
-            onClick={handleAdd}
+            onClick={handleAddWorker}
             className={`${styles.addWorkerButton} cursor-pointer w-full h-12 md:h-[50px] rounded-md text-[16px] text-black transition`}
           >
             Додати робітника
