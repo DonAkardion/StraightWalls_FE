@@ -7,8 +7,8 @@ import { ChangePasswordModal } from "./ChangePasswordModal/ChangePasswordModal";
 import { AddCustomerModal } from "./AddCustomerForm/AddCustomerForm";
 import { fetcher } from "@/utils/fetcher";
 import { useUser } from "@/context/UserContextProvider";
-import { handleEdit } from "@/api/users";
-import { handleDelete } from "@/utils/dataHandlers";
+import { handleDeleteUser, handleEdit } from "@/api/users";
+
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -62,7 +62,7 @@ export const ManageCustomers = () => {
   const handleDeleteCustomer = async (id: number) => {
     if (!token) return;
     try {
-      await handleDelete(id, token);
+      await handleDeleteUser(id, token);
       setUsers((prev) => prev.filter((u) => u.id !== id));
     } catch (error) {
       console.error("Error deleting user:", error);
