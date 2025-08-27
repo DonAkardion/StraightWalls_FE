@@ -65,7 +65,9 @@ export function Projects() {
             setCurrentForm(null);
           }}
           isValid={
-            !!currentForm.name && !!currentForm.clientId && !!currentForm.crewId
+            !!currentForm.name &&
+            !!currentForm.client_id &&
+            !!currentForm.team_id
           }
         >
           <ProjectsFormModal

@@ -47,13 +47,13 @@ export const AllProjectsList = ({
 
   const getRowClassName = (project: Project) => {
     switch (project.status) {
-      case "Done":
+      case "NEW":
         return tableStyles.completedRow;
-      case "Waiting":
+      case "IN_PROGRESS":
         return tableStyles.waitingRow;
-      case "In progress":
+      case "COMPLETED":
         return tableStyles.inprogressRow;
-      case "Canceled":
+      case "CANCELED":
         return tableStyles.canceledRow;
       default:
         return "";
@@ -97,16 +97,16 @@ export const AllProjectsList = ({
           {
             key: "crewId",
             label: "Бригада",
-            render: (project) => getCrewName(project.crewId),
-            tooltip: (project) => `Бригада: ${getCrewName(project.crewId)}`,
+            render: (project) => getCrewName(project.team_id),
+            tooltip: (project) => `Бригада: ${getCrewName(project.team_id)}`,
           },
-          {
-            key: "dateRange",
-            label: "Термін",
-            render: (project) => `${project.startDate}/${project.endDate}`,
-            tooltip: (project) =>
-              `Термін: ${project.startDate} / ${project.endDate}`,
-          },
+          // {
+          //   key: "dateRange",
+          //   label: "Термін",
+          //   render: (project) => `${project.startDate}/${project.endDate}`,
+          //   tooltip: (project) =>
+          //     `Термін: ${project.startDate} / ${project.endDate}`,
+          // },
         ]}
         renderInspection={(project) => (
           <Inspect<Project>
@@ -121,16 +121,16 @@ export const AllProjectsList = ({
               // },
               {
                 label: "Бригада",
-                value: (item) => getCrewName(item.crewId),
+                value: (item) => getCrewName(item.team_id),
               },
-              {
-                label: "Початок",
-                value: (item) => item.startDate,
-              },
-              {
-                label: "Завершення",
-                value: (item) => item.endDate,
-              },
+              // {
+              //   label: "Початок",
+              //   value: (item) => item.startDate,
+              // },
+              // {
+              //   label: "Завершення",
+              //   value: (item) => item.endDate,
+              // },
               {
                 label: "Статус",
                 value: (item) => item.status ?? "—",
