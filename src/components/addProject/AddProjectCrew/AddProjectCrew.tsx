@@ -13,6 +13,7 @@ interface Props {
 export const AddProjectCrew = ({ team_id }: Props) => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(false);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!team_id) {
@@ -38,12 +39,20 @@ export const AddProjectCrew = ({ team_id }: Props) => {
 
   if (!team_id) return null;
 
+  const handleInspect = (item: Worker) => {
+    setExpandedId((prev) => (prev === item.id ? null : item.id));
+  };
+
   return (
     <section>
       {loading ? (
         <p>Завантаження працівників...</p>
       ) : workers.length > 0 ? (
-        <ProjectCrewWorkersTable workers={workers} />
+        <ProjectCrewWorkersTable
+          workers={workers}
+          expandedId={expandedId}
+          onInspect={handleInspect}
+        />
       ) : (
         <p className={`${styles.Warning} text-2xl py-[20px] px-[10px]`}>
           У цій бригаді поки немає робітників

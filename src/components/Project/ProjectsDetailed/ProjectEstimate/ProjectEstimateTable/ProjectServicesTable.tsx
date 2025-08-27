@@ -140,6 +140,10 @@ export const ProjectServicesTable = ({
               label: "Вартість, грн",
               value: (item) => item.price,
             },
+            {
+              label: "Сума, грн",
+              value: (item) => (item.price * getQuantity(s.id)).toFixed(2),
+            },
           ]}
         />
       )}
