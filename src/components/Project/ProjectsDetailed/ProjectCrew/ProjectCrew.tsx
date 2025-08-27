@@ -13,10 +13,10 @@ interface Props {
 }
 
 export const ProjectCrew = ({ project, crews, workers }: Props) => {
-  const crew = crews.find((c) => c.id === project.crewId);
-  if (!project.crewId || !crew) return null;
+  const crew = crews.find((c) => c.id === project.team_id);
+  if (!project.team_id || !crew) return null;
 
-  const crewWorkers = workers.filter((w) => w.crewId === project.crewId);
+  const crewWorkers = workers.filter((w) => w.team_id === project.team_id);
 
   return (
     <section>
@@ -24,11 +24,7 @@ export const ProjectCrew = ({ project, crews, workers }: Props) => {
         Бригада &quot;{crew.name}&quot;
       </h2>
       {crewWorkers.length > 0 ? (
-        <ProjectCrewWorkersTable
-          workers={workers}
-          crewId={project.crewId}
-          crews={crews}
-        />
+        <ProjectCrewWorkersTable workers={workers} />
       ) : (
         <p className={`${styles.Warning} py-[20px] px-[10px]`}>
           У цій бригаді поки немає робітників

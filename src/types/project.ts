@@ -17,6 +17,7 @@ export enum ProjectStatus {
   NEW = "NEW",
   IN_PROGRESS = "IN_PROGRESS",
   COMPLETED = "COMPLETED",
+  CANCELED = "CANCELED",
 }
 
 export interface ProjectResponse {

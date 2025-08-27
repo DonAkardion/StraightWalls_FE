@@ -47,7 +47,7 @@ export function ProjectsFormModal({
       <div className={`${styles.ModalInputTytle}`}>Оберіть клієнта</div>
       <select
         name="clientId"
-        value={formData.clientId}
+        value={formData.client_id}
         onChange={handleChange}
         className="appearance-none border-b-1 p-2 pb-1 outline-none"
       >
@@ -60,7 +60,7 @@ export function ProjectsFormModal({
       <div className={`${styles.ModalInputTytle}`}>Оберіть бригаду</div>
       <select
         name="crewId"
-        value={formData.crewId}
+        value={formData.team_id}
         onChange={handleChange}
         className="appearance-none border-b-1 p-2 pb-1 outline-none"
       >
@@ -71,23 +71,23 @@ export function ProjectsFormModal({
         ))}
       </select>
       <div className={`${styles.ModalInputTytle}`}>Дата початку терміну</div>
-      <input
+      {/* <input
         type="text"
         name="startDate"
         placeholder="Дата початку (напр. 01.09.2025)"
         value={formData.startDate}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
-      />
+      /> */}
       <div className={`${styles.ModalInputTytle}`}>Дата завершення терміну</div>
-      <input
+      {/* <input
         type="text"
         name="endDate"
         placeholder="Дата завершення (напр. 10.09.2025)"
         value={formData.endDate}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
-      />
+      /> */}
       <div className={`${styles.ModalInputTytle}`}>Статус проєкту</div>
       <input
         type="text"

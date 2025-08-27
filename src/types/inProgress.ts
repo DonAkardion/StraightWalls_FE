@@ -3,7 +3,7 @@ import { Project } from "./project";
 export interface InProgress {
   id: number;
   projectID: string;
-  projectCrew: Project["crewId"];
+  projectCrew: Project["team_id"];
   currentStage: Project["status"];
   nextStage: string;
   materialsIncome: number;

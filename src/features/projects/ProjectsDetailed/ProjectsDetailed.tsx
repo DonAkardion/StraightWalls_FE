@@ -21,7 +21,7 @@ export function ProjectsDetailed({ projectId }: Props) {
   if (!project) {
     return <div>ProjectsDetailed не знайдено</div>;
   }
-  const client = mockClients.find((cl) => cl.id === project.clientId);
+  const client = mockClients.find((cl) => cl.id === project.team_id);
 
   return (
     <div className="m-auto pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
@@ -31,7 +31,7 @@ export function ProjectsDetailed({ projectId }: Props) {
         <ProjectEstimate
           services={mockServices}
           tableClassName="projectDetailedEstimateTableWrap"
-          tablesTytle="Кошторис"
+          tablesTitle="Кошторис"
         />
         <ProjectMaterials />
         <ProjectPayment />

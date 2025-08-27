@@ -16,17 +16,17 @@ interface Props {
   project: Project;
 }
 const statusMap: Record<Project["status"], string> = {
-  Done: "Виконано",
-  "In progress": "В процесі",
-  Waiting: "Очікує",
-  Canceled: "Відхилено",
+  COMPLETED: "Виконано",
+  IN_PROGRESS: "В процесі",
+  NEW: "Очікує",
+  CANCELED: "Відхилено",
 };
 
 const statusColorMap: Record<Project["status"], string> = {
-  Done: styles.statusDone,
-  "In progress": styles.statusInProgress,
-  Waiting: styles.statusWaiting,
-  Canceled: styles.statusCanceled,
+  COMPLETED: styles.statusDone,
+  IN_PROGRESS: styles.statusInProgress,
+  NEW: styles.statusWaiting,
+  CANCELED: styles.statusCanceled,
 };
 
 export function ProjectInfo({ client, project }: Props) {
