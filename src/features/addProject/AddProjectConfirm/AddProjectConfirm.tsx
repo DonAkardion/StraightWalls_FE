@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./AddProjectConfirm.module.css";
@@ -72,6 +72,17 @@ export function AddProjectConfirm() {
     }
   };
 
+  const totalWorksCost = useMemo(() => {
+    return services.reduce((sum, s) => sum + s.price * s.quantity, 0);
+  }, [services]);
+
+  const totalMaterialCost = useMemo(() => {
+    return materials.reduce(
+      (sum, m) => sum + m.selling_price * m.quantity + m.delivery,
+      0
+    );
+  }, [materials]);
+
   return (
     <section
       className={`${styles.clients} max-w-[1126px] m-auto pt-[48px] pl-[20px] pb-[30px] md:pb-[250px] pr-[20px] md:pt-[66px] md:pl-[80px] md:pr-[60px]`}
@@ -98,15 +109,15 @@ export function AddProjectConfirm() {
           items={[
             {
               label: "Вартість усіх виконаних робіт",
-              value: `${materialsIncomeTotal}`,
+              value: `${totalWorksCost} грн`,
             },
             {
               label: "Вартість усіх використаних матеріалів",
-              value: `${materialsIncomeTotal}`,
+              value: `${totalMaterialCost} грн`,
             },
             {
               label: "Заробіток на матеріалах",
-              value: `${materialsIncomeTotal}`,
+              value: `${materialsIncomeTotal} грн`,
             },
             { label: "Аванс при заїзді бригади", value: "2 000 грн" },
           ]}

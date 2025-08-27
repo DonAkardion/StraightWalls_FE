@@ -45,12 +45,13 @@ export function ProjectMaterialsTable({
     {
       key: "unit_price",
       label: "Ціна за одиницю",
-      render: (m) => m.unit_price.toFixed(2).replace(".", ","),
+      render: (m) => m.purchase_price.toFixed(2).replace(".", ","),
     },
     {
       key: "total",
       label: "Сума",
-      render: (m) => (m.quantity * m.unit_price).toFixed(2).replace(".", ","),
+      render: (m) =>
+        (m.quantity * m.purchase_price).toFixed(2).replace(".", ","),
     },
   ];
 

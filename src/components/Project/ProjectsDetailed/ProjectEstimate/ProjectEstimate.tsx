@@ -152,22 +152,7 @@ export const ProjectEstimate = ({
                   {formatNumber(totalMain)} грн
                 </div>
               </div>
-              {pathname === `/${role}/addProject` && (
-                <div className="w-full flex justify-center">
-                  <div
-                    className={`${styles.confirmButton} ${
-                      isConfirmed ? styles.confirmed : ""
-                    } flex md:hidden rounded-[5px] mt-[20px] mb-[10px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
-                  >
-                    <button
-                      onClick={handleConfirm}
-                      className="w-full h-full flex items-center justify-center text-center"
-                    >
-                      {isConfirmed ? "Редагувати" : "Підтвердити"}
-                    </button>
-                  </div>
-                </div>
-              )}
+
               {(editable || additionalServices.length > 0) && (
                 <h3
                   className={`${styles.totatCostSeparateTytle} md:pl-[36px] md:pt-[26px] pt-[10px]`}
@@ -177,10 +162,6 @@ export const ProjectEstimate = ({
               )}
             </div>
           </div>
-
-          {pathname === `/${role}/addProject` && (
-            <div className="md:hidden h-[76px]"></div>
-          )}
         </>
       )}
       {(editable || additionalServices.length > 0) && (

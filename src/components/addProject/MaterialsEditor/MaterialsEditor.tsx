@@ -78,68 +78,68 @@ export function MaterialsEditor({
     {
       key: "purchase_price",
       label: "Купівля, грн",
-      render: (m: ProjectMaterial) =>
-        editable ? (
-          <input
-            type="number"
-            min={0}
-            value={m.purchase_price}
-            onChange={(e) =>
-              editable && onUpdate
-                ? onUpdate(m.id, {
-                    ...m,
-                    purchase_price: Number(e.target.value),
-                  })
-                : null
-            }
-            className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
-          />
-        ) : (
-          <span>{m.purchase_price}</span>
-        ),
+      // render: (m: ProjectMaterial) =>
+      //   editable ? (
+      //     <input
+      //       type="number"
+      //       min={0}
+      //       value={m.purchase_price}
+      //       onChange={(e) =>
+      //         editable && onUpdate
+      //           ? onUpdate(m.id, {
+      //               ...m,
+      //               purchase_price: Number(e.target.value),
+      //             })
+      //           : null
+      //       }
+      //       className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
+      //     />
+      //   ) : (
+      //     <span>{m.purchase_price}</span>
+      //   ),
     },
     {
       key: "selling_price",
       label: "Продаж, грн",
-      render: (m: ProjectMaterial) =>
-        editable ? (
-          <input
-            type="number"
-            min={0}
-            value={m.selling_price}
-            onChange={(e) =>
-              editable && onUpdate
-                ? onUpdate(m.id, {
-                    ...m,
-                    selling_price: Number(e.target.value),
-                  })
-                : null
-            }
-            className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
-          />
-        ) : (
-          <span>{m.selling_price}</span>
-        ),
+      // render: (m: ProjectMaterial) =>
+      //   editable ? (
+      //     <input
+      //       type="number"
+      //       min={0}
+      //       value={m.selling_price}
+      //       onChange={(e) =>
+      //         editable && onUpdate
+      //           ? onUpdate(m.id, {
+      //               ...m,
+      //               selling_price: Number(e.target.value),
+      //             })
+      //           : null
+      //       }
+      //       className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
+      //     />
+      //   ) : (
+      //     <span>{m.selling_price}</span>
+      //   ),
     },
     {
       key: "delivery",
       label: "Доставка, грн",
-      render: (m: ProjectMaterial) =>
-        editable ? (
-          <input
-            type="number"
-            min={0}
-            value={m.delivery}
-            onChange={(e) =>
-              editable && onUpdate
-                ? onUpdate(m.id, { ...m, delivery: Number(e.target.value) })
-                : null
-            }
-            className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
-          />
-        ) : (
-          <span>{m.delivery}</span>
-        ),
+      // render: (m: ProjectMaterial) =>
+      //   editable ? (
+      //     <input
+      //       type="number"
+      //       min={0}
+      //       value={m.delivery}
+      //       onChange={(e) =>
+      //         editable && onUpdate
+      //           ? onUpdate(m.id, { ...m, delivery: Number(e.target.value) })
+      //           : null
+      //       }
+      //       className={`${styles.editInput} w-[100px] text-center rounded px-1 py-0`}
+      //     />
+      //   ) : (
+      //     <span>{m.delivery}</span>
+      //   ),
     },
     {
       key: "total",
