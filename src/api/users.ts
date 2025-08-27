@@ -2,7 +2,7 @@ import { fetcher } from "@/utils/fetcher";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const handleDelete = async (id: number, token: string): Promise<void> => {
+export const handleDeleteUser = async (id: number, token: string): Promise<void> => {
     await fetcher(`${apiUrl}/api/platform/users/${id}`, {
         method: "DELETE",
         token
