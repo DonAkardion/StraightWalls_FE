@@ -4,6 +4,11 @@ import { Worker } from "@/types/worker";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
+interface CrewResponse {
+  status: string;
+  data: Crew;
+}
+
 export const getCrews = async (token: string): Promise<Crew[]> => {
   try {
     const response = await fetch("https://api.rivni-stiny.click/api/teams", {
@@ -32,6 +37,14 @@ export const getCrews = async (token: string): Promise<Crew[]> => {
     return [];
   }
 };
+
+// GET /api/teams/:id
+export async function getClientById(token: string, id: number): Promise<Crew> {
+  const res = await fetcher<CrewResponse>(`${apiUrl}/api/teams/${id}`, {
+    token,
+  });
+  return res.data;
+}
 
 export const handleDeleteCrew = async (id: number, token: string) => {
   await fetcher(`${apiUrl}/api/teams/${id}`, {

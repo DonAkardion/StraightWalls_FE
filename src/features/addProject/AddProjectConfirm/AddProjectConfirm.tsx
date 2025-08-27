@@ -57,7 +57,7 @@ export function AddProjectConfirm() {
         name: name,
         client_id: String(clientId),
         team_id: String(crewId),
-        status: "new",
+        status: "NEW",
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),

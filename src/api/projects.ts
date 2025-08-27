@@ -1,6 +1,6 @@
 import { fetcher } from "@/utils/fetcher";
 import type { CreateProjectPayload } from "@/types/сreateProjectPayload";
-import type { ProjectResponse } from "@/types/project";
+import type { ProjectResponse, ProjectReportResponse } from "@/types/project";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE}/api/projects`;
@@ -70,8 +70,8 @@ export async function deleteProject(
 export async function getProjectReport(
   id: number,
   token: string
-): Promise<ProjectResponse> {
-  return fetcher<ProjectResponse>(`${API_URL}/${id}/report`, {
+): Promise<ProjectReportResponse> {
+  return fetcher<ProjectReportResponse>(`${API_URL}/${id}/report`, {
     method: "GET",
     token,
   });

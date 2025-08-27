@@ -1,32 +1,62 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Projects.module.css";
 
 import { useParams } from "next/navigation";
 
-import { mockProjects } from "@/mock/Project/mockProjects";
-import { mockCrews } from "@/mock/Crew/crewMock";
-import { mockClients } from "@/mock/Clients/clientsMock";
-
-import { Project } from "@/types/project";
-import { Crew } from "@/types/crew";
-import { Client } from "@/types/client";
+import { Project, ProjectResponse, ProjectStatus } from "@/types/project";
 
 import { AllProjectsList } from "@/components/Project/AllProjectsList";
 import Calendar from "@/components/Calendar/Calendar";
 import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
+import { useUser } from "@/context/UserContextProvider";
+import { getProjects } from "@/api/projects";
+
+const mapProject = (p: ProjectResponse): Project => ({
+  ...p,
+  description: "",
+  works: [],
+  materials: [],
+  status: p.status as ProjectStatus,
+});
 
 export function Projects() {
   const { role } = useParams();
   const roleStr = Array.isArray(role) ? role[0] : role ?? "";
 
-  const [projects, setProjects] = useState<Project[]>(mockProjects);
-  const [crews] = useState<Crew[]>(mockCrews);
-  const [clients] = useState<Client[]>(mockClients);
+  const [projects, setProjects] = useState<Project[]>([]);
+
   const [modalData, setModalData] = useState<Project | null>(null);
   const [currentForm, setCurrentForm] = useState<Project | null>(null);
+
+  const [loading, setLoading] = useState(true);
+  const { token } = useUser();
+
+  useEffect(() => {
+    async function fetchData() {
+      if (!token) {
+        console.error("No token, cannot fetch projects");
+        setLoading(false);
+        return;
+      }
+      try {
+        const projectsResp = await getProjects(token);
+        setProjects(projectsResp.map(mapProject));
+      } catch (e) {
+        console.error("Failed to fetch data", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <div className="text-center py-10">Завантаження...</div>;
+  }
 
   return (
     <section
@@ -34,8 +64,6 @@ export function Projects() {
     >
       <AllProjectsList
         projects={projects}
-        crews={crews}
-        clients={clients}
         onDelete={(id) =>
           setProjects((prev) => prev.filter((p) => p.id !== id))
         }
@@ -72,8 +100,6 @@ export function Projects() {
         >
           <ProjectsFormModal
             project={modalData}
-            clients={clients}
-            crews={crews}
             onChange={(updated) => setCurrentForm(updated)}
           />
         </FormModal>

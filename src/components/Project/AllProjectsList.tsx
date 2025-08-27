@@ -1,18 +1,24 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./AllProjectsList.module.css";
+
+import { getClientById } from "@/api/clients";
+import { getClientById as getCrewById } from "@/api/crews";
+import { getProjectReport } from "@/api/projects";
+import { useUser } from "@/context/UserContextProvider";
+
+import { Crew } from "@/types/crew";
+import { Client } from "@/types/client";
+
 import { useRouter } from "next/navigation";
 import { Project } from "@/types/project";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
-import { Crew } from "@/types/crew";
-import { Client } from "@/types/client";
+
 import tableStyles from "@/components/Table/Table.module.css";
 
 interface Props {
   projects: Project[];
-  clients: Client[];
-  crews: Crew[];
   onDelete: (id: number) => void;
   onEdit: (updated: Project) => void;
   onAdd: () => void;
@@ -23,8 +29,6 @@ interface Props {
 
 export const AllProjectsList = ({
   projects,
-  // clients,
-  crews,
   onDelete,
   onEdit,
   role,
@@ -32,18 +36,57 @@ export const AllProjectsList = ({
   tablesTytle,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [clientsMap, setClientsMap] = useState<Record<number, string>>({});
+  const [crewsMap, setCrewsMap] = useState<Record<number, string>>({});
   const router = useRouter();
+  const { token } = useUser();
 
   const handleRowClick = (id: number) => {
     if (!role) return;
     router.push(`/${role}/projects/projectsDetailed/${id}`);
   };
 
-  // const getClientName = (clientId: number) =>
-  //   clients.find((c) => c.id === clientId)?.full_name ?? "Відсутній Клієнт";
+  useEffect(() => {
+    const fetchRelated = async () => {
+      const newClients: Record<number, string> = {};
+      const newCrews: Record<number, string> = {};
 
-  const getCrewName = (crewId: number) =>
-    crews.find((c) => c.id === crewId)?.name ?? "Відсутня бригада";
+      if (!token) return;
+
+      await Promise.all(
+        projects.map(async (p) => {
+          if (p.client_id && !clientsMap[p.client_id]) {
+            try {
+              const client = await getClientById(token, p.client_id);
+              newClients[p.client_id] = client.full_name ?? "Відсутній Клієнт";
+            } catch {
+              newClients[p.client_id] = "Помилка клієнта";
+            }
+          }
+          if (p.team_id && !crewsMap[p.team_id]) {
+            try {
+              const crew = await getCrewById(token, p.team_id);
+              newCrews[p.team_id] = crew.name ?? "Відсутня бригада";
+            } catch {
+              newCrews[p.team_id] = "Помилка бригади";
+            }
+          }
+        })
+      );
+
+      setClientsMap((prev) => ({ ...prev, ...newClients }));
+      setCrewsMap((prev) => ({ ...prev, ...newCrews }));
+    };
+
+    if (projects.length) {
+      fetchRelated();
+    }
+  }, [projects]);
+
+  const getClientName = (clientId: number) =>
+    clientsMap[clientId] ?? "Завантаження...";
+
+  const getCrewName = (crewId: number) => crewsMap[crewId] ?? "Завантаження...";
 
   const getRowClassName = (project: Project) => {
     switch (project.status) {
@@ -86,8 +129,8 @@ export const AllProjectsList = ({
           {
             key: "clientId",
             label: "Клієнт",
-            // render: (project) => getClientName(project.clientId),
-            // tooltip: (project) => `Клієнт: ${getClientName(project.clientId)}`,
+            render: (project) => getClientName(project.client_id),
+            tooltip: (project) => `Клієнт: ${getClientName(project.client_id)}`,
           },
           {
             key: "budget",
@@ -115,10 +158,10 @@ export const AllProjectsList = ({
             onEdit={role === "admin" ? onEdit : undefined}
             onDelete={role === "admin" ? onDelete : undefined}
             fields={[
-              // {
-              //   label: "Клієнт",
-              //   value: (item) => getClientName(item.clientId),
-              // },
+              {
+                label: "Клієнт",
+                value: (item) => getClientName(item.client_id),
+              },
               {
                 label: "Бригада",
                 value: (item) => getCrewName(item.team_id),

@@ -29,3 +29,23 @@ export interface ProjectResponse {
   created_at: string;
   updated_at: string;
 }
+
+export interface ProjectReportResponse {
+  project: {
+    id: number;
+    name: string;
+    description?: string | null;
+    client_id: number;
+    team_id: number;
+    status: string;
+    created_at: string;
+    updated_at: string;
+    works: ProjectWork[];
+    materials: ProjectMaterial[];
+  };
+  totalWorksCost: number;
+  totalMaterialsCost: number;
+  totalMaterialsProfit: number;
+  totalProjectCost: number;
+  validWorksCount: number;
+}

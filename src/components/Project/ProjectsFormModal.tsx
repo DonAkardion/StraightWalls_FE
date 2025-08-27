@@ -7,15 +7,12 @@ import React, { useEffect, useState } from "react";
 
 interface ProjectsFormModalProps {
   project: Project;
-  clients: Client[];
-  crews: Crew[];
+
   onChange: (updated: Project) => void;
 }
 
 export function ProjectsFormModal({
   project,
-  clients,
-  crews,
   onChange,
 }: ProjectsFormModalProps) {
   const [formData, setFormData] = useState<Project>(project);
@@ -51,11 +48,11 @@ export function ProjectsFormModal({
         onChange={handleChange}
         className="appearance-none border-b-1 p-2 pb-1 outline-none"
       >
-        {clients.map((client) => (
+        {/* {clients.map((client) => (
           <option key={client.id} value={client.id}>
             {client.full_name}
           </option>
-        ))}
+        ))} */}
       </select>
       <div className={`${styles.ModalInputTytle}`}>Оберіть бригаду</div>
       <select
@@ -64,11 +61,11 @@ export function ProjectsFormModal({
         onChange={handleChange}
         className="appearance-none border-b-1 p-2 pb-1 outline-none"
       >
-        {crews.map((crew) => (
+        {/* {crews.map((crew) => (
           <option key={crew.id} value={crew.id}>
             {crew.name}
           </option>
-        ))}
+        ))} */}
       </select>
       <div className={`${styles.ModalInputTytle}`}>Дата початку терміну</div>
       {/* <input
