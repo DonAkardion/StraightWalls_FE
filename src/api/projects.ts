@@ -206,3 +206,15 @@ export async function deleteMaterial(
     }
   );
 }
+
+
+// Get project by client_id
+export const getProjectByClientId = async (
+  client_id: number, 
+  token: string) => {
+  const response = await fetcher(`${API_URL}?client_id=${client_id}`, {
+    method: "GET",
+    token
+  })
+  return response;
+}

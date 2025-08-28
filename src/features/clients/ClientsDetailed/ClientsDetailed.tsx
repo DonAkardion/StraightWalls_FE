@@ -50,8 +50,8 @@ export function ClientsDetailed({ clientId }: Props) {
   return (
     <ClientsContainer>
       <ClientsInitials client={client} />
-      <ClientsProjectsTable />
-      <ClientsBenefit />
+      <ClientsProjectsTable clientId={clientId}/>
+      <ClientsBenefit clientId={clientId}/>
       <ClientsInteraction />
     </ClientsContainer>
   );
