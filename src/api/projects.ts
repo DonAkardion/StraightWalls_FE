@@ -69,6 +69,21 @@ export async function deleteProject(
   });
 }
 /**
+ * Change Project Status
+ */
+export async function changeProjectStatus(
+  id: number,
+  token: string,
+  data: { status: string }
+): Promise<ProjectResponse> {
+  return fetcher<ProjectResponse>(`${API_URL}/${id}/status`, {
+    method: "PATCH",
+    token,
+    data,
+  });
+}
+
+/**
  * Get Project Report
  */
 export async function getProjectReport(
@@ -211,14 +226,14 @@ export async function deleteMaterial(
   );
 }
 
-
 // Get project by client_id
 export const getProjectByClientId = async (
-  client_id: number, 
-  token: string) => {
+  client_id: number,
+  token: string
+) => {
   const response = await fetcher(`${API_URL}?client_id=${client_id}`, {
     method: "GET",
-    token
-  })
+    token,
+  });
   return response;
-}
+};

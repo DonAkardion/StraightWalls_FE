@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
-import { mockClients } from "@/mock/Clients/clientsMock";
-import { mockProjects } from "@/mock/Project/mockProjects";
-import { mockServices } from "@/mock/Service/servicesMock";
-import { mockWorkers } from "@/mock/Workers/workersMock";
-import { mockCrews } from "@/mock/Crew/crewMock";
+import React, { useEffect, useState } from "react";
+import { useUser } from "@/context/UserContextProvider";
+
+import { getProjectReport } from "@/api/projects";
+import { ProjectReportResponse } from "@/types/project";
+
 import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/ProjectInfo";
-import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
+import { ProjectEstimateComplete } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimateComplete";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
 import { ProjectPayment } from "@/components/Project/ProjectsDetailed/ProjectPayment/ProjectPayment";
 import { ProjectCrew } from "@/components/Project/ProjectsDetailed/ProjectCrew/ProjectCrew";
@@ -17,29 +17,51 @@ interface Props {
 }
 
 export function ProjectsDetailed({ projectId }: Props) {
-  const project = mockProjects.find((c) => c.id === projectId);
-  if (!project) {
-    return <div>ProjectsDetailed не знайдено</div>;
+  const { token } = useUser();
+  const [report, setReport] = useState<ProjectReportResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchProjectReport = async () => {
+      try {
+        const data = await getProjectReport(projectId, token);
+        setReport(data ?? null);
+      } catch (err) {
+        console.error("Не вдалося завантажити репорт проєкту:", err);
+        setReport(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjectReport();
+  }, [projectId, token]);
+
+  if (loading) {
+    return <div>Завантаження...</div>;
   }
-  const client = mockClients.find((cl) => cl.id === project.team_id);
+
+  if (!report) {
+    return <div>Проєкт з ID {projectId} не знайдено</div>;
+  }
+
+  const project = report.project;
 
   return (
     <div className="m-auto pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
-        {client && <ProjectInfo client={client} project={project} />}
+        {project.client && <ProjectInfo report={report} />}
 
-        <ProjectEstimate
-          services={mockServices}
-          tableClassName="projectDetailedEstimateTableWrap"
+        <ProjectEstimateComplete
+          report={report}
+          // tableClassName="projectDetailedEstimateTableWrap"
           tablesTitle="Кошторис"
         />
-        <ProjectMaterials />
-        <ProjectPayment />
-        <ProjectCrew
-          project={project}
-          crews={mockCrews}
-          workers={mockWorkers}
-        />
+        <ProjectMaterials report={report} />
+        {/* <ProjectPayment /> */}
+        {/* <ProjectCrew project={report.project} crews={project.team} /> */}
         <ProjectNotes
           subtitle="Також звертаємо Вашу увагу, що Замовник забезпечує:"
           notes={[

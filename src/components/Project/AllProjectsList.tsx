@@ -159,9 +159,14 @@ export const AllProjectsList = ({
           {
             key: "dateRange",
             label: "Термін",
-            render: (project) => `${project.start_date} / ${project.end_date}`,
+            render: (project) =>
+              `${project.start_date ? project.start_date : "Початок"} / ${
+                project.end_date ? project.end_date : "Кінець"
+              }`,
             tooltip: (project) =>
-              `Термін: ${project.start_date} / ${project.end_date}`,
+              `Термін: ${
+                project.start_date ? project.start_date : "Початок"
+              } / ${project.end_date ? project.end_date : "Кінець"}`,
           },
         ]}
         renderInspection={(project) => (

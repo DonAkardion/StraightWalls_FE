@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Project } from "@/types/project";
-import { Client } from "@/types/client";
+import { useUser } from "@/context/UserContextProvider";
+import { ProjectReportResponse } from "@/types/project";
+import { changeProjectStatus } from "@/api/projects";
 import styles from "./ProjectInfo.module.css";
 import {
   Person,
@@ -11,39 +12,52 @@ import {
   Mail,
   ArrowLeft,
 } from "../../../../../public/icons";
+
 interface Props {
-  client: Client;
-  project: Project;
+  report: ProjectReportResponse;
 }
-const statusMap: Record<Project["status"], string> = {
-  COMPLETED: "Виконано",
-  IN_PROGRESS: "В процесі",
-  NEW: "Очікує",
-  CANCELED: "Відхилено",
+
+const statusMap: Record<string, string> = {
+  completed: "Виконано",
+  in_progress: "В процесі",
+  new: "Очікує",
+  canсeled: "Відхилено",
 };
 
-const statusColorMap: Record<Project["status"], string> = {
-  COMPLETED: styles.statusDone,
-  IN_PROGRESS: styles.statusInProgress,
-  NEW: styles.statusWaiting,
-  CANCELED: styles.statusCanceled,
+const statusColorMap: Record<string, string> = {
+  completed: styles.statusDone,
+  in_progress: styles.statusInProgress,
+  new: styles.statusWaiting,
+  canсeled: styles.statusCanceled,
 };
 
-export function ProjectInfo({ client, project }: Props) {
+export function ProjectInfo({ report }: Props) {
   const router = useRouter();
+  const { token } = useUser();
+  const { project } = report;
+  const client = project.client;
+  const object = project.object;
+
   const [showDropdown, setShowDropdown] = useState(false);
-  const [mockStatus, setMockStatus] = useState<Project["status"]>(
-    project.status
-  );
+  const [mockStatus, setMockStatus] = useState(project.status);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const translatedStatus = statusMap[mockStatus] || mockStatus;
   const statusColorClass = statusColorMap[mockStatus] || "";
 
-  const handleStatusChange = (newStatus: Project["status"]) => {
-    setMockStatus(newStatus);
+  const handleStatusChange = async (newStatus: string) => {
     setShowDropdown(false);
+    if (!token) return;
+
+    try {
+      // Робимо PATCH запит на бекенд
+      await changeProjectStatus(project.id, token, { status: newStatus });
+      // Оновлюємо локальний стан
+      setMockStatus(newStatus as typeof mockStatus);
+    } catch (error) {
+      console.error("Не вдалося змінити статус проекту:", error);
+    }
   };
 
   useEffect(() => {
@@ -55,7 +69,6 @@ export function ProjectInfo({ client, project }: Props) {
         setShowDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -71,7 +84,7 @@ export function ProjectInfo({ client, project }: Props) {
           <h2
             className={`${styles.projectInfoNameTytle} text-nowrap flex gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
           >
-            <span>{project.name}</span> <span>№ 123</span>
+            <span>{project.name}</span> <span>№ {project.id}</span>
           </h2>
         </div>
         <div
@@ -101,13 +114,11 @@ export function ProjectInfo({ client, project }: Props) {
               {Object.entries(statusMap).map(([key, label]) => (
                 <div
                   key={key}
-                  onClick={() => handleStatusChange(key as Project["status"])}
+                  onClick={() => handleStatusChange(key)}
                   className={`${styles.statusChangeItem} px-2 py-2 flex rounded-[5px] hover:bg-gray-100 cursor-pointer`}
                 >
                   <div
-                    className={`${styles.editStatusIcon} ${
-                      statusColorMap[key as Project["status"]]
-                    } rounded-full w-[24px] h-[24px] mr-[6px]`}
+                    className={`${styles.editStatusIcon} ${statusColorMap[key]} rounded-full w-[24px] h-[24px] mr-[6px]`}
                   ></div>
                   {label}
                 </div>
@@ -156,16 +167,17 @@ export function ProjectInfo({ client, project }: Props) {
             src={Home.src}
             alt="Home "
           />
-          <span>{client.objects}</span>
+          <span>{object.name}</span>
+          <span>{object.address}</span>
         </div>
-        <div className={`${styles.clientInfoItem}`}>
+        {/* <div className={`${styles.clientInfoItem}`}>
           <img
             className={`${styles.infoItemImg} `}
             src={Mail.src}
             alt="Mail "
           />
           <span>{client.phone_number}</span>
-        </div>
+        </div> */}
       </div>
       <div className={`${styles.projectTotal} w-full rounded-[5px]`}>
         <button
@@ -177,7 +189,9 @@ export function ProjectInfo({ client, project }: Props) {
             <span className={`${styles.totalBtnTextTytle}`}>
               Орієнтована варість
             </span>
-            <span className={`${styles.totalBtnTextSum}`}>72 521,5</span>
+            <span className={`${styles.totalBtnTextSum}`}>
+              {report.totalProjectCost}
+            </span>
           </div>
         </button>
       </div>

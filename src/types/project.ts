@@ -37,6 +37,8 @@ export interface ProjectResponse {
   client_id: number;
   team_id: number;
   status: string;
+  start_date: string;
+  end_date: string;
   created_at: string;
   updated_at: string;
 }
