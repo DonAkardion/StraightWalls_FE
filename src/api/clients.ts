@@ -80,14 +80,14 @@ export async function createClient(
   };
 }
 
-// PUT /api/clients/:id
+// PATCH /api/clients/:id
 export async function updateClient(
   token: string,
   id: number,
   updates: Partial<Omit<Client, "id" | "created_at" | "updated_at">>
 ): Promise<Client> {
   const res = await fetcher<ClientResponse>(`${API_BASE}/api/clients/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     token,
     data: updates,
   });
