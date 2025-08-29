@@ -1,4 +1,8 @@
-import { ProjectWork, ProjectMaterial } from "@/types/projectComponents";
+import {
+  ProjectWork,
+  ProjectMaterial,
+  ProjectPayment,
+} from "@/types/projectComponents";
 
 export interface Project {
   id: number;
@@ -9,15 +13,16 @@ export interface Project {
   status: ProjectStatus;
   works: ProjectWork[];
   materials: ProjectMaterial[];
+  payments: ProjectPayment[];
   created_at: string;
   updated_at: string;
 }
 
 export enum ProjectStatus {
-  NEW = "NEW",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
-  CANCELED = "CANCELED",
+  NEW = "new",
+  IN_PROGRESS = "in_progress",
+  COMPLETED = "completed",
+  CANCELED = "canceled",
 }
 
 export interface ProjectResponse {
@@ -42,10 +47,77 @@ export interface ProjectReportResponse {
     updated_at: string;
     works: ProjectWork[];
     materials: ProjectMaterial[];
+    payments: ProjectPayment[];
   };
   totalWorksCost: number;
   totalMaterialsCost: number;
   totalMaterialsProfit: number;
   totalProjectCost: number;
   validWorksCount: number;
+}
+
+export interface ProjectDetailedResponse {
+  id: number;
+  name: string;
+  description: string | null;
+  client_id: number;
+  team_id: number;
+  status: ProjectStatus;
+  created_at: string;
+  updated_at: string;
+
+  client: {
+    id: number;
+    full_name: string;
+    phone_number: string;
+    objects: string[];
+    created_at: string;
+    updated_at: string;
+  };
+
+  team: {
+    id: number;
+    name: string;
+    status: "busy" | "available";
+    created_at: string;
+    updated_at: string;
+  };
+
+  works: {
+    id: number;
+    project_id: number;
+    name: string;
+    description: string;
+    cost: string;
+    quantity: string;
+    unit: string;
+    created_at: string;
+    updated_at: string;
+  }[];
+
+  materials: {
+    id: number;
+    project_id: number;
+    name: string;
+    description: string | null;
+    purchase_price: string;
+    selling_price: string;
+    margin: string;
+    remaining_stock: string;
+    delivery: string;
+    unit: string;
+    created_at: string;
+    updated_at: string;
+  }[];
+  payments: {
+    id: number;
+    project_id: number;
+    name: string;
+    description?: string;
+    amount: number;
+    status: "pending";
+    due_date?: Date;
+    created_at: Date;
+    updated_at: Date;
+  };
 }

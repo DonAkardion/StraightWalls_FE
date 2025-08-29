@@ -12,6 +12,13 @@ export interface MaterialWithCalc extends ProjectMaterial {
   delivery: number;
   total: number;
 }
+export interface ProjectPaymentDraft {
+  name: string;
+  description?: string;
+  amount: string;
+  status: "pending" | "paid" | "canceled";
+  due_date: string;
+}
 
 interface ProjectCreationData {
   name: string;
@@ -31,6 +38,12 @@ interface ProjectCreationData {
 
   materials: MaterialWithCalc[];
   setMaterials: (materials: MaterialWithCalc[]) => void;
+
+  initialPayment: ProjectPaymentDraft | null;
+  setInitialPayment: (payment: ProjectPaymentDraft | null) => void;
+
+  advanceAmount: number;
+  setAdvanceAmount: (amount: number) => void;
 
   materialsIncomeTotal: number;
   setMaterialsIncomeTotal: (income: number) => void;
@@ -54,7 +67,9 @@ export const ProjectCreationProvider = ({
     crewId: null,
     services: [] as ServiceWithQuantity[],
     materials: [] as MaterialWithCalc[],
+    initialPayment: null as ProjectPaymentDraft | null,
     materialsIncomeTotal: 0,
+    advanceAmount: 0,
   };
 
   const [name, setName] = useState(initialState.name);
@@ -69,6 +84,14 @@ export const ProjectCreationProvider = ({
   const [materials, setMaterials] = useState<MaterialWithCalc[]>(
     initialState.materials
   );
+
+  const [initialPayment, setInitialPayment] =
+    useState<ProjectPaymentDraft | null>(initialState.initialPayment);
+
+  const [advanceAmount, setAdvanceAmount] = useState<number>(
+    initialState.advanceAmount
+  );
+
   const [materialsIncomeTotal, setMaterialsIncomeTotal] = useState<number>(
     initialState.materialsIncomeTotal
   );
@@ -80,7 +103,9 @@ export const ProjectCreationProvider = ({
     setCrewId(initialState.crewId);
     setServices(initialState.services);
     setMaterials(initialState.materials);
+    setInitialPayment(initialState.initialPayment);
     setMaterialsIncomeTotal(initialState.materialsIncomeTotal);
+    setAdvanceAmount(initialState.advanceAmount);
   };
 
   return (
@@ -98,6 +123,10 @@ export const ProjectCreationProvider = ({
         setServices,
         materials,
         setMaterials,
+        initialPayment,
+        setInitialPayment,
+        advanceAmount,
+        setAdvanceAmount,
         materialsIncomeTotal,
         setMaterialsIncomeTotal,
         resetProject,

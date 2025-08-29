@@ -1,6 +1,10 @@
 import { fetcher } from "@/utils/fetcher";
 import type { CreateProjectPayload } from "@/types/сreateProjectPayload";
-import type { ProjectResponse, ProjectReportResponse } from "@/types/project";
+import type {
+  ProjectResponse,
+  ProjectReportResponse,
+  ProjectDetailedResponse,
+} from "@/types/project";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 const API_URL = `${API_BASE}/api/projects`;
@@ -32,8 +36,8 @@ export async function getProjects(token: string): Promise<ProjectResponse[]> {
 export async function getProjectById(
   id: number,
   token: string
-): Promise<ProjectResponse> {
-  return fetcher<ProjectResponse>(`${API_URL}/${id}`, {
+): Promise<ProjectDetailedResponse> {
+  return fetcher<ProjectDetailedResponse>(`${API_URL}/${id}`, {
     method: "GET",
     token,
   });

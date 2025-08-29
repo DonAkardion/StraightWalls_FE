@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./AddProjectConfirm.module.css";
@@ -13,6 +13,7 @@ import {
   useProjectCreation,
   ServiceWithQuantity,
   MaterialWithCalc,
+  ProjectPaymentDraft,
 } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 
 function mapWorks(services: ServiceWithQuantity[]) {
@@ -44,10 +45,21 @@ export function AddProjectConfirm() {
   const params = useParams();
   const role = params.role as string;
 
-  const { name, clientId, crewId, services, materials, materialsIncomeTotal } =
-    useProjectCreation();
+  const {
+    name,
+    clientId,
+    crewId,
+    services,
+    materials,
+    materialsIncomeTotal,
+    initialPayment,
+    advanceAmount,
+  } = useProjectCreation();
 
   const { token } = useUser();
+  const [startDate] = useState("2025-08-27");
+  const [endDate] = useState("2025-12-31");
+  const [object_id] = useState(null);
 
   const handleSubmit = async () => {
     if (!token) return;
@@ -56,9 +68,13 @@ export function AddProjectConfirm() {
       project: {
         name: name,
         client_id: String(clientId),
+        object_id: object_id,
         team_id: String(crewId),
-        status: "NEW",
+        status: "new",
+        start_date: startDate,
+        end_date: endDate,
       },
+      ...(initialPayment && { initial_payment: initialPayment }),
       works: mapWorks(services),
       materials: mapMaterials(materials),
     };
@@ -78,7 +94,7 @@ export function AddProjectConfirm() {
 
   const totalMaterialCost = useMemo(() => {
     return materials.reduce(
-      (sum, m) => sum + m.selling_price * m.quantity + m.delivery,
+      (sum, m) => sum + m.selling_price * m.quantity + m.delivery * m.quantity,
       0
     );
   }, [materials]);
@@ -119,7 +135,10 @@ export function AddProjectConfirm() {
               label: "Заробіток на матеріалах",
               value: `${materialsIncomeTotal} грн`,
             },
-            { label: "Аванс при заїзді бригади", value: "2 000 грн" },
+            {
+              label: "Аванс при заїзді бригади",
+              value: `${advanceAmount} грн`,
+            },
           ]}
         />
       </div>

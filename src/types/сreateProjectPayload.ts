@@ -3,8 +3,18 @@ export interface CreateProjectPayload {
     name: string;
     description?: string;
     client_id: string;
+    object_id: string | null;
     team_id: string;
     status: string;
+    start_date: string;
+    end_date: string;
+  };
+  initial_payment?: {
+    name: string;
+    description?: string;
+    amount: string;
+    status: "pending" | "paid" | "canceled";
+    due_date: string;
   };
   works: {
     name: string;

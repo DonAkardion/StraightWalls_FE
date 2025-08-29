@@ -38,6 +38,7 @@ export const AllProjectsList = ({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [clientsMap, setClientsMap] = useState<Record<number, string>>({});
   const [crewsMap, setCrewsMap] = useState<Record<number, string>>({});
+  const [costsMap, setCostsMap] = useState<Record<number, number>>({});
   const router = useRouter();
   const { token } = useUser();
 
@@ -50,6 +51,7 @@ export const AllProjectsList = ({
     const fetchRelated = async () => {
       const newClients: Record<number, string> = {};
       const newCrews: Record<number, string> = {};
+      const newCosts: Record<number, number> = {};
 
       if (!token) return;
 
@@ -71,11 +73,20 @@ export const AllProjectsList = ({
               newCrews[p.team_id] = "Помилка бригади";
             }
           }
+          if (!costsMap[p.id]) {
+            try {
+              const report = await getProjectReport(p.id, token);
+              newCosts[p.id] = report.totalProjectCost ?? 0;
+            } catch {
+              newCosts[p.id] = 0;
+            }
+          }
         })
       );
 
       setClientsMap((prev) => ({ ...prev, ...newClients }));
       setCrewsMap((prev) => ({ ...prev, ...newCrews }));
+      setCostsMap((prev) => ({ ...prev, ...newCosts }));
     };
 
     if (projects.length) {
@@ -88,15 +99,18 @@ export const AllProjectsList = ({
 
   const getCrewName = (crewId: number) => crewsMap[crewId] ?? "Завантаження...";
 
+  const getCost = (projectId: number) =>
+    costsMap[projectId] !== undefined ? costsMap[projectId] : "Завантаження...";
+
   const getRowClassName = (project: Project) => {
     switch (project.status) {
-      case "NEW":
+      case "new":
         return tableStyles.completedRow;
-      case "IN_PROGRESS":
+      case "in_progress":
         return tableStyles.waitingRow;
-      case "COMPLETED":
+      case "completed":
         return tableStyles.inprogressRow;
-      case "CANCELED":
+      case "canceled":
         return tableStyles.canceledRow;
       default:
         return "";
@@ -135,7 +149,8 @@ export const AllProjectsList = ({
           {
             key: "budget",
             label: "Вартість",
-            render: () => "12000", //замінити на реальну ціну
+            render: (project) => getCost(project.id),
+            tooltip: (project) => `Вартість: ${getCost(project.id)}`,
           },
           {
             key: "crewId",
