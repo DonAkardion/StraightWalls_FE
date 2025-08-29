@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import styles from "./AddProject.module.css";
 import { ClientSelector } from "@/components/addProject/ClientSelector/ClientSelector";
+import { ObjectSelector } from "@/components/addProject/ClientSelector/ObjectSelector";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import {
   useProjectCreation,
@@ -11,18 +12,27 @@ import {
 } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 import { getClients } from "@/api/clients";
 import { getServices } from "@/api/services";
-import { Client } from "@/types/client";
+import { Client, ClientObject } from "@/types/client";
 import { useUser } from "@/context/UserContextProvider";
 import { ProjectNameInput } from "@/components/addProject/ProjectNameInput/ProjectNameInput";
 
 export function AddProject() {
-  const { clientId, setClientId, services, setServices, resetProject } =
-    useProjectCreation();
+  const {
+    clientId,
+    setClientId,
+    objectId,
+    setObjectId,
+    services,
+    setServices,
+    resetProject,
+  } = useProjectCreation();
   const { token } = useUser();
   const params = useParams();
   const role = params.role as string;
 
   const [clients, setClients] = useState<Client[]>([]);
+  const [objects, setObjects] = useState<ClientObject[]>([]);
+  const selectedClient = clients.find((c) => c.id === clientId);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [localSelection, setLocalSelection] =
@@ -71,6 +81,25 @@ export function AddProject() {
     setServices(localSelection);
   }, [localSelection, setServices]);
 
+  useEffect(() => {
+    if (!clientId) return;
+
+    const selectedClient = clients.find((c) => c.id === clientId);
+    if (selectedClient) {
+      setObjects(selectedClient.objects || []);
+
+      // Автоматично вибираємо перший об'єкт, якщо він є
+      if (selectedClient.objects && selectedClient.objects.length > 0) {
+        setObjectId(selectedClient.objects[0].id);
+      } else {
+        setObjectId(null);
+      }
+    } else {
+      setObjects([]);
+      setObjectId(null);
+    }
+  }, [clientId, clients, setObjectId]);
+
   // Обробка змін кількості послуг
   const handleSelectionChange = (
     updated: { serviceId: number; quantity: number }[]
@@ -117,6 +146,20 @@ export function AddProject() {
           />
         )}
       </div>
+      {clientId && objects.length > 0 && (
+        <div
+          className={`${styles.selector} flex flex-col md:flex-row items-center justify-between gap-[15px] md:gap-[22px] mb-[30px]`}
+        >
+          <span className={`${styles.selectorTytle} whitespace-nowrap`}>
+            Об’єкт
+          </span>
+          <ObjectSelector
+            objects={objects}
+            value={objectId}
+            onChange={setObjectId}
+          />
+        </div>
+      )}
 
       <div className="relative">
         <ProjectEstimate

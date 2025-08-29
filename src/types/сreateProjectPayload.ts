@@ -6,8 +6,6 @@ export interface CreateProjectPayload {
     object_id: string | null;
     team_id: string;
     status: string;
-    start_date: string;
-    end_date: string;
   };
   initial_payment?: {
     name: string;

@@ -104,11 +104,11 @@ export const AllProjectsList = ({
 
   const getRowClassName = (project: Project) => {
     switch (project.status) {
-      case "new":
-        return tableStyles.completedRow;
-      case "in_progress":
-        return tableStyles.waitingRow;
       case "completed":
+        return tableStyles.completedRow;
+      case "new":
+        return tableStyles.waitingRow;
+      case "in_progress":
         return tableStyles.inprogressRow;
       case "canceled":
         return tableStyles.canceledRow;

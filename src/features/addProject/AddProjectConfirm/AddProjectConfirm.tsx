@@ -48,6 +48,7 @@ export function AddProjectConfirm() {
   const {
     name,
     clientId,
+    objectId,
     crewId,
     services,
     materials,
@@ -57,9 +58,6 @@ export function AddProjectConfirm() {
   } = useProjectCreation();
 
   const { token } = useUser();
-  const [startDate] = useState("2025-08-27");
-  const [endDate] = useState("2025-12-31");
-  const [object_id] = useState(null);
 
   const handleSubmit = async () => {
     if (!token) return;
@@ -68,13 +66,16 @@ export function AddProjectConfirm() {
       project: {
         name: name,
         client_id: String(clientId),
-        object_id: object_id,
+        object_id: String(objectId),
         team_id: String(crewId),
         status: "new",
-        start_date: startDate,
-        end_date: endDate,
       },
-      ...(initialPayment && { initial_payment: initialPayment }),
+      ...(initialPayment && {
+        initial_payment: {
+          ...initialPayment,
+          amount: String(initialPayment.amount),
+        },
+      }),
       works: mapWorks(services),
       materials: mapMaterials(materials),
     };
