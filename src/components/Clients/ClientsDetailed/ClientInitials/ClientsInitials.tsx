@@ -16,6 +16,9 @@ type Props = {
 export const ClientsInitials = ({ client }: Props) => {
   const router = useRouter();
 
+  const formatObjects = (client: Client) =>
+  client.objects.map((o) => `${o.name}: ${o.address}`).join(", ");
+
   return (
     <div className={`${styles.clientsInitialsDiv} w-full relative`}>
       <div className="flex items-center justify-between">
@@ -45,7 +48,7 @@ export const ClientsInitials = ({ client }: Props) => {
             <ClientInfoItem
               key={column}
               icon={iconMap[column]}
-              label={Array.isArray(value) ? value.join(", ") : String(value)}
+              label={formatObjects(client)}
             />
           );
         })}

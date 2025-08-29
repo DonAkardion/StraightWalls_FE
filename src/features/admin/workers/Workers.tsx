@@ -166,7 +166,7 @@ export function Workers() {
     <section
       className={`${styles.workers} max-w-[1126px] m-auto pt-[40px] pl-[20px] pb-[36px] pr-[20px] md:pt-[60px] md:pl-[60px] md:pr-[84px] md:pb-[68px]`}
     >
-      <WorkersInfo />
+      <WorkersInfo crews={crews} workers={workers} />
       <WorkersCrewTable
         crews={crews}
         workers={workers}

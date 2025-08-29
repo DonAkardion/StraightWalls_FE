@@ -71,8 +71,7 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
     }
 
     try {
-      const addedWorker = await handleAddWorker(formData, token);
-      onAdd(addedWorker.worker);
+      onAdd(formData as Worker);
       onClose();
     } catch (error) {
       if (error instanceof Error) {
