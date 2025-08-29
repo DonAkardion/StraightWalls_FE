@@ -31,6 +31,10 @@ export const ClientsList = ({
     router.push(`/${role}/clients/clientsDetailed/${id}`);
   };
 
+  // format Client Objects
+  const formatObjects = (client: Client) =>
+    client.objects.map((o) => `${o.name}: ${o.address}`).join(", ");
+
   return (
     <div className="">
       <Table<Client>
@@ -60,8 +64,8 @@ export const ClientsList = ({
           {
             key: "objects",
             label: "Об’єкти",
-            tooltip: (client) => client.objects.join(", "),
-            render: (client) => client.objects.join(", "),
+            tooltip: formatObjects,
+            render: formatObjects,
           },
         ]}
         renderInspection={(client) => (

@@ -102,35 +102,55 @@ export async function deleteClient(token: string, id: number): Promise<void> {
   });
 }
 
-// POST /api/clients/:id/objects
+// --- Об’єкти клієнтів ---
+
+// POST /api/client-objects
 export async function addClientObject(
   token: string,
-  id: number,
-  object: string
-): Promise<string[]> {
+  clientId: number,
+  object: Pick<ClientObject, "name" | "address" | "description">
+): Promise<ClientObject> {
   const res = await fetcher<ClientObjectResponse>(
-    `${API_BASE}/api/clients/${id}/objects`,
+    `${API_BASE}/api/client-objects`,
     {
       method: "POST",
       token,
-      data: { object },
+      data: {
+        client_id: clientId,
+        ...object,
+      },
     }
   );
   return res.data;
 }
 
-// DELETE /api/clients/:id/objects/:object
+// PUT /api/client-objects/:id (оновлення об’єкта)
+export async function updateClientObject(
+  token: string,
+  objectId: number,
+  updates: Partial<Omit<ClientObject, "id" | "client_id">>
+): Promise<ClientObject> {
+  const res = await fetcher<ClientObjectResponse>(
+    `${API_BASE}/api/client-objects/${objectId}`,
+    {
+      method: "PUT",
+      token,
+      data: updates,
+    }
+  );
+  return res.data;
+}
+
+// DELETE /api/client-objects/:id
 export async function deleteClientObject(
   token: string,
-  id: number,
-  object: string
-): Promise<string[]> {
-  const res = await fetcher<ClientObjectResponse>(
-    `${API_BASE}/api/clients/${id}/objects/${encodeURIComponent(object)}`,
+  objectId: number
+): Promise<void> {
+  await fetcher<{ status: string }>(
+    `${API_BASE}/api/client-objects/${objectId}`,
     {
       method: "DELETE",
       token,
     }
   );
-  return res.data;
 }
