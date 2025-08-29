@@ -156,13 +156,13 @@ export const AllProjectsList = ({
             render: (project) => getCrewName(project.id),
             tooltip: (project) => `Бригада: ${getCrewName(project.id)}`,
           },
-          // {
-          //   key: "dateRange",
-          //   label: "Термін",
-          //   render: (project) => `${project.startDate}/${project.endDate}`,
-          //   tooltip: (project) =>
-          //     `Термін: ${project.startDate} / ${project.endDate}`,
-          // },
+          {
+            key: "dateRange",
+            label: "Термін",
+            render: (project) => `${project.start_date} / ${project.end_date}`,
+            tooltip: (project) =>
+              `Термін: ${project.start_date} / ${project.end_date}`,
+          },
         ]}
         renderInspection={(project) => (
           <Inspect<Project>

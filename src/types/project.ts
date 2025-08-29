@@ -18,6 +18,8 @@ export interface Project {
   works: ProjectWork[];
   materials: ProjectMaterial[];
   payments: ProjectPayment[];
+  start_date: string;
+  end_date: string;
   created_at: string;
   updated_at: string;
 }

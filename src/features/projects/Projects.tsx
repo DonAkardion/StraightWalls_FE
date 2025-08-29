@@ -21,6 +21,8 @@ const mapProject = (p: ProjectResponse): Project => ({
   materials: [],
   payments: [],
   status: p.status as ProjectStatus,
+  start_date: "початок",
+  end_date: "кінець",
 });
 
 export function Projects() {
