@@ -1,21 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./AllProjectsList.module.css";
+import tableStyles from "@/components/Table/Table.module.css";
 
-import { getClientById } from "@/api/clients";
-import { getClientById as getCrewById } from "@/api/crews";
-import { getProjectReport } from "@/api/projects";
 import { useUser } from "@/context/UserContextProvider";
-
-import { Crew } from "@/types/crew";
-import { Client } from "@/types/client";
-
 import { useRouter } from "next/navigation";
-import { Project } from "@/types/project";
+
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 
-import tableStyles from "@/components/Table/Table.module.css";
+import { Project } from "@/types/project";
+import { getProjectReport } from "@/api/projects";
+import { ProjectReportResponse } from "@/types/project";
 
 interface Props {
   projects: Project[];
@@ -36,9 +32,9 @@ export const AllProjectsList = ({
   tablesTytle,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [clientsMap, setClientsMap] = useState<Record<number, string>>({});
-  const [crewsMap, setCrewsMap] = useState<Record<number, string>>({});
-  const [costsMap, setCostsMap] = useState<Record<number, number>>({});
+  const [reportsMap, setReportsMap] = useState<
+    Record<number, ProjectReportResponse | undefined>
+  >({});
   const router = useRouter();
   const { token } = useUser();
 
@@ -48,59 +44,61 @@ export const AllProjectsList = ({
   };
 
   useEffect(() => {
-    const fetchRelated = async () => {
-      const newClients: Record<number, string> = {};
-      const newCrews: Record<number, string> = {};
-      const newCosts: Record<number, number> = {};
+    if (!token || !projects.length) return;
 
-      if (!token) return;
+    const idsToFetch = projects
+      .map((p) => p.id)
+      .filter((id) => reportsMap[id] === undefined);
 
-      await Promise.all(
-        projects.map(async (p) => {
-          if (p.client_id && !clientsMap[p.client_id]) {
+    if (!idsToFetch.length) return;
+
+    (async () => {
+      try {
+        const results = await Promise.all(
+          idsToFetch.map(async (id) => {
             try {
-              const client = await getClientById(token, p.client_id);
-              newClients[p.client_id] = client.full_name ?? "Відсутній Клієнт";
-            } catch {
-              newClients[p.client_id] = "Помилка клієнта";
+              const rep = await getProjectReport(id, token);
+              return [id, rep] as const;
+            } catch (e) {
+              console.error("Не вдалося завантажити репорт проєкту", id, e);
+              return [id, undefined] as const;
             }
-          }
-          if (p.team_id && !crewsMap[p.team_id]) {
-            try {
-              const crew = await getCrewById(token, p.team_id);
-              newCrews[p.team_id] = crew.name ?? "Відсутня бригада";
-            } catch {
-              newCrews[p.team_id] = "Помилка бригади";
-            }
-          }
-          if (!costsMap[p.id]) {
-            try {
-              const report = await getProjectReport(p.id, token);
-              newCosts[p.id] = report.totalProjectCost ?? 0;
-            } catch {
-              newCosts[p.id] = 0;
-            }
-          }
-        })
-      );
+          })
+        );
 
-      setClientsMap((prev) => ({ ...prev, ...newClients }));
-      setCrewsMap((prev) => ({ ...prev, ...newCrews }));
-      setCostsMap((prev) => ({ ...prev, ...newCosts }));
-    };
+        setReportsMap((prev) => {
+          const merged = { ...prev };
+          for (const [id, rep] of results) merged[id] = rep;
+          return merged;
+        });
+      } catch (e) {
+        console.error("Помилка батч-завантаження репортів", e);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects, token]);
 
-    if (projects.length) {
-      fetchRelated();
-    }
-  }, [projects]);
+  const getClientName = (projectId: number) => {
+    const rep = reportsMap[projectId];
+    return rep ? rep.project.client.full_name : "Завантаження...";
+  };
 
-  const getClientName = (clientId: number) =>
-    clientsMap[clientId] ?? "Завантаження...";
+  const getCrewName = (projectId: number) => {
+    const rep = reportsMap[projectId];
+    return rep ? rep.project.team?.name ?? "—" : "Завантаження...";
+  };
 
-  const getCrewName = (crewId: number) => crewsMap[crewId] ?? "Завантаження...";
+  const getObjectNameAddr = (projectId: number) => {
+    const rep = reportsMap[projectId];
+    if (!rep) return "Завантаження...";
+    const obj = rep.project.object;
+    return obj ? `${obj.name}: ${obj.address}` : "—";
+  };
 
-  const getCost = (projectId: number) =>
-    costsMap[projectId] !== undefined ? costsMap[projectId] : "Завантаження...";
+  const getCost = (projectId: number) => {
+    const rep = reportsMap[projectId];
+    return rep ? rep.totalProjectCost : "Завантаження...";
+  };
 
   const getRowClassName = (project: Project) => {
     switch (project.status) {
@@ -143,8 +141,8 @@ export const AllProjectsList = ({
           {
             key: "clientId",
             label: "Клієнт",
-            render: (project) => getClientName(project.client_id),
-            tooltip: (project) => `Клієнт: ${getClientName(project.client_id)}`,
+            render: (project) => getClientName(project.id),
+            tooltip: (project) => `Клієнт: ${getClientName(project.id)}`,
           },
           {
             key: "budget",
@@ -155,16 +153,16 @@ export const AllProjectsList = ({
           {
             key: "crewId",
             label: "Бригада",
-            render: (project) => getCrewName(project.team_id),
-            tooltip: (project) => `Бригада: ${getCrewName(project.team_id)}`,
+            render: (project) => getCrewName(project.id),
+            tooltip: (project) => `Бригада: ${getCrewName(project.id)}`,
           },
-          // {
-          //   key: "dateRange",
-          //   label: "Термін",
-          //   render: (project) => `${project.startDate}/${project.endDate}`,
-          //   tooltip: (project) =>
-          //     `Термін: ${project.startDate} / ${project.endDate}`,
-          // },
+          {
+            key: "dateRange",
+            label: "Термін",
+            render: (project) => `${project.start_date} / ${project.end_date}`,
+            tooltip: (project) =>
+              `Термін: ${project.start_date} / ${project.end_date}`,
+          },
         ]}
         renderInspection={(project) => (
           <Inspect<Project>
