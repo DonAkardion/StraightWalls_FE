@@ -4,6 +4,10 @@ import {
   ProjectPayment,
 } from "@/types/projectComponents";
 
+import { Client, ClientObject } from "@/types/client";
+
+import { Crew } from "@/types/crew";
+
 export interface Project {
   id: number;
   name: string;
@@ -43,8 +47,13 @@ export interface ProjectReportResponse {
     client_id: number;
     team_id: number;
     status: string;
+    start_date: string;
+    end_date: string;
     created_at: string;
     updated_at: string;
+    client: Client;
+    object: ClientObject;
+    team: Crew;
     works: ProjectWork[];
     materials: ProjectMaterial[];
     payments: ProjectPayment[];
