@@ -1,5 +1,5 @@
 import { fetcher } from "@/utils/fetcher";
-import { Client } from "@/types/client";
+import { Client, ClientObject } from "@/types/client";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
@@ -15,8 +15,7 @@ interface ClientResponse {
 }
 
 interface ClientObjectResponse {
-  status: string;
-  data: string[]; // Client`s Objects list
+  data: ClientObject;
 }
 
 // --- API calls ---
@@ -47,14 +46,38 @@ export async function getClientById(
 // POST /api/clients
 export async function createClient(
   token: string,
-  client: Omit<Client, "id" | "created_at" | "updated_at">
+  client: Pick<Client, "full_name" | "phone_number">,
+  object: Pick<ClientObject, "name" | "address" | "description">
 ): Promise<Client> {
+  // 1. створюємо клієнта
   const res = await fetcher<ClientResponse>(`${API_BASE}/api/clients`, {
     method: "POST",
     token,
     data: client,
   });
-  return res.data;
+
+  const createdClient = res.data;
+
+  // 2. створюємо перший об'єкт клієнта
+  const objRes = await fetcher<ClientObjectResponse>(
+    `${API_BASE}/api/client-objects`,
+    {
+      method: "POST",
+      token,
+      data: {
+        client_id: createdClient.id,
+        ...object,
+      },
+    }
+  );
+
+  const createdObject = objRes.data;
+
+  // 3. повертаємо клієнта з об'єктом у масиві
+  return {
+    ...createdClient,
+    objects: [createdObject],
+  };
 }
 
 // PUT /api/clients/:id

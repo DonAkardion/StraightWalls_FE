@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Clients.module.css";
 import { useParams } from "next/navigation";
-import { Client } from "@/types/client";
+import { Client, ClientObject } from "@/types/client";
 import { ClientsList } from "@/components/Clients/ClientsList";
 import { ClientFormModal } from "@/components/Clients/ClientsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
@@ -14,6 +14,12 @@ import {
 } from "@/api/clients";
 import { useUser } from "@/context/UserContextProvider";
 
+type NewClientForm = {
+  full_name: string;
+  phone_number: string;
+  object: Pick<ClientObject, "name" | "address" | "description">;
+};
+
 export function Clients() {
   const { role } = useParams();
   const roleStr = Array.isArray(role) ? role[0] : role;
@@ -23,9 +29,9 @@ export function Clients() {
   const [loading, setLoading] = useState(true);
 
   const [modalData, setModalData] = useState<{ client?: Client } | null>(null);
-  const [currentForm, setCurrentForm] = useState<
-    Omit<Client, "id" | "created_at" | "updated_at"> | Client | null
-  >(null);
+  const [currentForm, setCurrentForm] = useState<Client | NewClientForm | null>(
+    null
+  );
 
   // Завантаження клієнтів
   useEffect(() => {
@@ -59,31 +65,42 @@ export function Clients() {
   };
 
   const openAddModal = () => {
-    const newClient: Omit<Client, "id" | "created_at" | "updated_at"> = {
+    const newClient: NewClientForm = {
       full_name: "",
       phone_number: "+380",
-      objects: [],
+      object: {
+        name: "",
+        address: "",
+        description: "",
+      },
     };
     setModalData({});
     setCurrentForm(newClient);
   };
 
-  const saveClient = async (
-    client: Client | Omit<Client, "id" | "created_at" | "updated_at">
-  ) => {
+  const saveClient = async (client: Client | NewClientForm) => {
     if (!token) return;
     try {
       let saved: Client;
+
       if ("id" in client && client.id) {
+        // update
         saved = await updateClient(token, client.id, client);
         setClients((prev) => prev.map((c) => (c.id === client.id ? saved : c)));
       } else {
+        // create
+        const newClient = client as NewClientForm;
         saved = await createClient(
           token,
-          client as Omit<Client, "id" | "created_at" | "updated_at">
+          {
+            full_name: newClient.full_name,
+            phone_number: newClient.phone_number,
+          },
+          newClient.object
         );
         setClients((prev) => [...prev, saved]);
       }
+
       setModalData(null);
       setCurrentForm(null);
     } catch (err) {
@@ -131,7 +148,9 @@ export function Clients() {
         >
           <ClientFormModal
             client={"id" in currentForm ? (currentForm as Client) : undefined}
-            onChange={(updated) => setCurrentForm(updated)}
+            onChange={(updated: Client | NewClientForm) =>
+              setCurrentForm(updated)
+            }
           />
         </FormModal>
       )}
