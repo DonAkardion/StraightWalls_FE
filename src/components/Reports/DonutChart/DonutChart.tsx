@@ -1,12 +1,17 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Plugin } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { mockProjects } from "@/mock/Project/mockProjects";
 import styles from "./DonutChart.module.css";
 import { TooltipItem } from "chart.js";
+import { getProjects } from "@/api/projects";
+import { ProjectStatus } from "@/types/project";
 
 ChartJS.register(ArcElement, Tooltip);
+
+interface DonutProps {
+  status: string
+}
 
 const centerTextPlugin: Plugin = {
   id: "centerText",
@@ -18,45 +23,73 @@ const centerTextPlugin: Plugin = {
     ctx.save();
 
     const dataset = chart.data.datasets[0];
-    const total = (dataset.data as number[]).reduce((acc, val) => acc + val, 0);
-    const doneIndex = chart.data.labels?.indexOf("Done") ?? -1;
-    const doneValue = doneIndex >= 0 ? Number(dataset.data[doneIndex]) : 0;
-    const percent = total > 0 ? Math.round((doneValue / total) * 100) : 0;
+    const data = dataset.data as number[];
+    const total = data.reduce((acc, val) => acc + val, 0);
+
+    if (total === 0) return;
+
+    const maxValue = Math.max(...data);
+    const percent = Math.round((maxValue / total) * 100);
 
     ctx.font = "bold 28px 'Jura'";
     ctx.fillStyle = "#000";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(`${percent}%`, left + width / 2, top + height / 2);
+
     ctx.restore();
   },
 };
 
-export const DoughnutChart = () => {
-  const tasksStatus: Record<string, number> = {};
 
-  mockProjects.forEach((project) => {
-    const status = project.status;
+export const DoughnutChart = () => {
+  const [donutChartData, setDonutChartData] = useState<DonutProps[]>([]);
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken!)
+  }, [token])
+
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchDonutData = async () => {
+      try {
+        const data = await getProjects(token);
+        setDonutChartData(data)
+      } catch (error) {
+        console.log("Error:", error)
+      }
+    }
+    fetchDonutData();
+  }, [token])
+
+  console.log(donutChartData)
+  const tasksStatus: Record<ProjectStatus, number> = {} as Record<ProjectStatus, number>;
+
+  donutChartData.forEach((project) => {
+    const status = project.status as ProjectStatus;
     tasksStatus[status] = (tasksStatus[status] || 0) + 1;
   });
 
-  const orderedStatuses = ["Done", "In progress", "Waiting", "Canceled"];
+  const orderedStatuses = [ProjectStatus.COMPLETED, ProjectStatus.IN_PROGRESS, ProjectStatus.NEW, ProjectStatus.CANCELED];
   const filteredSortedLabels = orderedStatuses.filter((s) => s in tasksStatus);
   const dataValues = filteredSortedLabels.map((label) => tasksStatus[label]);
   const total = dataValues.reduce((acc, val) => acc + val, 0);
 
-  const colors: Record<string, string> = {
-    Done: "#15ae08",
-    "In progress": "#0097c0",
-    Waiting: "#ffb32680",
-    Canceled: "#b70000",
+  const colors: Record<ProjectStatus, string> = {
+    [ProjectStatus.COMPLETED]: "#15ae08",
+    [ProjectStatus.IN_PROGRESS]: "#0097c0",
+    [ProjectStatus.NEW]: "#ffb32680",
+    [ProjectStatus.CANCELED]: "#b70000",
   };
 
-  const ukrLabels: Record<string, string> = {
-    Done: "Виконано",
-    "In progress": "В процесі",
-    Waiting: "Очікує",
-    Canceled: "Відхилено",
+  const ukrLabels: Record<ProjectStatus, string> = {
+    [ProjectStatus.COMPLETED]: "Виконано",
+    [ProjectStatus.IN_PROGRESS]: "В процесі",
+    [ProjectStatus.NEW]: "Очікує",
+    [ProjectStatus.CANCELED]: "Відхилено",
   };
 
   const data = {
@@ -90,24 +123,26 @@ export const DoughnutChart = () => {
     },
   };
 
-  const leftColumn = ["Done", "In progress"];
-  const rightColumn = ["Waiting", "Canceled"];
+  const leftColumn = [ProjectStatus.COMPLETED, ProjectStatus.IN_PROGRESS];
+  const rightColumn = [ProjectStatus.NEW, ProjectStatus.CANCELED];
 
-  const renderLegendItem = (label: string) => {
-    const value = tasksStatus[label];
-    const percentage = total ? ((value / total) * 100).toFixed(0) : "0";
-    return (
-      <div key={label} className="flex gap-3 items-center mb-4">
-        <div
-          className="w-13 h-13 rounded-full text-white flex items-center justify-center font-bold shadow-xl"
-          style={{ backgroundColor: colors[label] }}
-        >
-          {percentage}%
-        </div>
-        <span className={`${styles.ukrLabel}`}>{ukrLabels[label]}</span>
+
+  const renderLegendItem = (status: ProjectStatus) => {
+  const value = tasksStatus[status] || 0;
+  const percentage = total ? ((value / total) * 100).toFixed(0) : "0";
+  return (
+    <div key={status} className="flex gap-3 items-center mb-4">
+      <div
+        className="w-13 h-13 rounded-full text-white flex items-center justify-center font-bold shadow-xl"
+        style={{ backgroundColor: colors[status] }}
+      >
+        {percentage}%
       </div>
-    );
-  };
+      <span className={`${styles.ukrLabel}`}>{ukrLabels[status]}</span>
+    </div>
+  );
+};
+
 
   return (
     <div

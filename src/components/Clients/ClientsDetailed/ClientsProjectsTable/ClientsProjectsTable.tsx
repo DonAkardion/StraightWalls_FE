@@ -29,8 +29,10 @@ export const ClientsProjectsTable = ({ clientId }: Props) => {
     if (storedToken) setToken(storedToken);
   }, []);
 
-  const fetchProjects = async () => {
-  try {
+  useEffect(() => {
+    if (!token) return;
+    const fetchProjects = async () => {
+    try {
     const data = await getProjectByClientId(clientId, token);
 
     const mapped = Array.isArray(data)
@@ -59,6 +61,7 @@ export const ClientsProjectsTable = ({ clientId }: Props) => {
 };
 
   fetchProjects()
+}, [token, clientId])
 
 
   const projectColumns = [
