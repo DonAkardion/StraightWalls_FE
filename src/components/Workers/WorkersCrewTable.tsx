@@ -64,15 +64,15 @@ export function WorkersCrewTable({
             key: "status",
             label: "Статус",
             render: (crew: Crew) => {
-              if (!crew.status) {
-                return (
-                  <div className="flex justify-center items-center gap-2">
-                    <div className="h-4 w-4 rounded-full bg-green-600"></div>
-                    <span>Вільні</span>
-                  </div>
-                );
+              if (crew.projects && crew.projects.length > 0) {
+                return <span>{crew.projects[0].name}</span>;
               }
-              return <span>{crew.status}</span>;
+              return (
+                <div className="flex justify-center items-center gap-2">
+                  <div className="h-4 w-4 rounded-full bg-green-600"></div>
+                  <span>Вільні</span>
+                </div>
+              );
             },
           },
         ]}
@@ -87,17 +87,23 @@ export function WorkersCrewTable({
                   workers.filter((worker) => worker.team_id === crew.id).length,
               },
               {
-                label: "Статус",
+                label: "Проєкти",
                 value: (crew: Crew) => {
-                  if (!crew.status) {
+                  if (crew.projects && crew.projects.length > 0) {
                     return (
-                      <div className="flex justify-center items-center gap-2">
-                        <div className="h-4 w-4 rounded-full bg-green-600"></div>
-                        <span>Вільні</span>
-                      </div>
+                      <ul className="list-disc pl-4">
+                        {crew.projects.map((p) => (
+                          <li key={p.id}>{p.name}</li>
+                        ))}
+                      </ul>
                     );
                   }
-                  return <span>{crew.status}</span>;
+                  return (
+                    <div className="flex justify-center items-center gap-2">
+                      <div className="h-4 w-4 rounded-full bg-green-600"></div>
+                      <span>Вільні</span>
+                    </div>
+                  );
                 },
               },
             ]}
