@@ -59,6 +59,7 @@ export function AddProjectMaterials() {
           items={[
             { label: "Аванс за матеріали", value: `${advanceAmount} грн` },
           ]}
+          editable
         />
       </div>
 

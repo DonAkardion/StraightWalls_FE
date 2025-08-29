@@ -26,7 +26,7 @@ interface PaymentDetailsProps {
 export function PaymentDetails({
   title = "Оплата:",
   items,
-  editable = true,
+  editable,
   onChange,
 }: PaymentDetailsProps) {
   const [name, setName] = useState("Аванс");
@@ -47,10 +47,7 @@ export function PaymentDetails({
 
   const handleConfirm = () => {
     const data = buildPayment();
-    setInitialPayment({
-      ...data,
-      amount: String(data.amount),
-    });
+    setInitialPayment(data);
     setAdvanceAmount(data.amount);
     onChange?.(data);
   };

@@ -15,7 +15,7 @@ export interface MaterialWithCalc extends ProjectMaterial {
 export interface ProjectPaymentDraft {
   name: string;
   description?: string;
-  amount: string;
+  amount: number;
   status: "pending" | "paid" | "canceled";
   due_date: string;
 }
@@ -29,6 +29,9 @@ interface ProjectCreationData {
 
   clientId: number | null;
   setClientId: (id: number | null) => void;
+
+  objectId: number | null;
+  setObjectId: (id: number | null) => void;
 
   crewId: number | null;
   setCrewId: (id: number | null) => void;
@@ -64,6 +67,7 @@ export const ProjectCreationProvider = ({
     name: "",
     description: "",
     clientId: null,
+    objectId: null,
     crewId: null,
     services: [] as ServiceWithQuantity[],
     materials: [] as MaterialWithCalc[],
@@ -77,6 +81,7 @@ export const ProjectCreationProvider = ({
   const [clientId, setClientId] = useState<number | null>(
     initialState.clientId
   );
+  const [objectId, setObjectId] = useState<number | null>(null);
   const [crewId, setCrewId] = useState<number | null>(initialState.crewId);
   const [services, setServices] = useState<ServiceWithQuantity[]>(
     initialState.services
@@ -100,6 +105,7 @@ export const ProjectCreationProvider = ({
     setName(initialState.name);
     setDescription(initialState.description);
     setClientId(initialState.clientId);
+    setObjectId(initialState.objectId);
     setCrewId(initialState.crewId);
     setServices(initialState.services);
     setMaterials(initialState.materials);
@@ -117,6 +123,8 @@ export const ProjectCreationProvider = ({
         setDescription,
         clientId,
         setClientId,
+        objectId,
+        setObjectId,
         crewId,
         setCrewId,
         services,
