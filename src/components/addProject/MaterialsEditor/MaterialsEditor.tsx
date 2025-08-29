@@ -46,7 +46,8 @@ export function MaterialsEditor({
   const total = useMemo(
     () =>
       materials.reduce(
-        (acc, m) => acc + m.selling_price * m.quantity + m.delivery,
+        (acc, m) =>
+          acc + m.selling_price * m.quantity + m.delivery * m.quantity,
         0
       ),
     [materials]
@@ -145,7 +146,7 @@ export function MaterialsEditor({
       key: "total",
       label: "Сума",
       render: (m: ProjectMaterial) =>
-        formatNumber(m.selling_price * m.quantity + m.delivery),
+        formatNumber(m.selling_price * m.quantity + m.delivery * m.quantity),
     },
   ];
 

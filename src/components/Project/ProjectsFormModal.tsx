@@ -67,7 +67,7 @@ export function ProjectsFormModal({
           </option>
         ))} */}
       </select>
-      <div className={`${styles.ModalInputTytle}`}>Дата початку терміну</div>
+      {/* <div className={`${styles.ModalInputTytle}`}>Дата початку терміну</div> */}
       {/* <input
         type="text"
         name="startDate"
@@ -76,7 +76,7 @@ export function ProjectsFormModal({
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
       /> */}
-      <div className={`${styles.ModalInputTytle}`}>Дата завершення терміну</div>
+      {/* <div className={`${styles.ModalInputTytle}`}>Дата завершення терміну</div> */}
       {/* <input
         type="text"
         name="endDate"

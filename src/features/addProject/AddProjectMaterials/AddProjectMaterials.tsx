@@ -14,7 +14,7 @@ export function AddProjectMaterials() {
   const role = params.role as string;
 
   // беремо матеріали з контексту
-  const { materials, setMaterials } = useProjectCreation();
+  const { materials, setMaterials, advanceAmount } = useProjectCreation();
 
   const handleAddMaterial = (material: ProjectMaterial) => {
     setMaterials([...materials, { ...material, id: Date.now() }]);
@@ -56,7 +56,9 @@ export function AddProjectMaterials() {
 
       <div className={`${styles.materialPayment} my-[40px] md:my-[100px] `}>
         <PaymentDetails
-          items={[{ label: "Аванс за матеріали", value: "20 057,5 грн" }]}
+          items={[
+            { label: "Аванс за матеріали", value: `${advanceAmount} грн` },
+          ]}
         />
       </div>
 

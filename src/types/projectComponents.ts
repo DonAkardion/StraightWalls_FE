@@ -33,3 +33,15 @@ export interface MaterialIncomeRow {
   sum: number; // продажна сума з доставкою
   income: number; // заробіток
 }
+
+export interface ProjectPayment {
+  id: number;
+  project_id: number;
+  name: string;
+  description?: string;
+  amount: number;
+  status: "pending";
+  due_date?: Date;
+  created_at: Date;
+  updated_at: Date;
+}

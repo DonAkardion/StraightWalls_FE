@@ -41,6 +41,45 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+.paymentForm {
+  background: var(--background);
+  box-shadow: 1px 3px 15px 2px #00000040;
+}
+.paymentFormTitle {
+  background: var(--yellow-gradient);
+}
+.editInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+.editInput::-webkit-outer-spin-button,
+.editInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.editInput {
+  -moz-appearance: textfield;
+  border-bottom: 1px solid black;
+  padding: 4px 8px;
+  width: 100%;
+}
+.editInput::placeholder {
+  color: var(--blue);
+}
+.editInputSelect:hover,
+.editInputSelect:focus-visible,
+.editInputSelect:active {
+  box-shadow: none;
+  outline: none;
+}
+
+.paymentFormConfirmBtn {
+  box-shadow: inset 0 0 0 2px var(--green);
+}
+.paymentFormConfirmBtn:hover {
+  box-shadow: inset 0 0 2px 2px var(--green);
+}
 @media (width >= 48rem /* 768px */) {
   .totalItem {
     width: 100%;

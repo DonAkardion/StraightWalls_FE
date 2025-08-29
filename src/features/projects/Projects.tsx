@@ -12,13 +12,14 @@ import Calendar from "@/components/Calendar/Calendar";
 import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
 import { useUser } from "@/context/UserContextProvider";
-import { getProjects } from "@/api/projects";
+import { getProjects, deleteProject } from "@/api/projects";
 
 const mapProject = (p: ProjectResponse): Project => ({
   ...p,
   description: "",
   works: [],
   materials: [],
+  payments: [],
   status: p.status as ProjectStatus,
 });
 
@@ -54,6 +55,17 @@ export function Projects() {
     fetchData();
   }, []);
 
+  const handleDelete = async (id: number) => {
+    if (!token) return;
+
+    try {
+      await deleteProject(id, token);
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    } catch (e) {
+      console.error("Failed to delete project", e);
+      alert("Не вдалося видалити проєкт");
+    }
+  };
   if (loading) {
     return <div className="text-center py-10">Завантаження...</div>;
   }
@@ -64,9 +76,7 @@ export function Projects() {
     >
       <AllProjectsList
         projects={projects}
-        onDelete={(id) =>
-          setProjects((prev) => prev.filter((p) => p.id !== id))
-        }
+        onDelete={handleDelete}
         onEdit={(updated) => {
           setModalData(updated);
           setCurrentForm(updated);
