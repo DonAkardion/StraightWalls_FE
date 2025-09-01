@@ -9,11 +9,11 @@ interface StageCardProps {
   status: string;
 }
 const statusMap: Record<string, string> = {
-  completed: "Виконано",
+  paid: "Виконано",
   pending: "Очікує",
 };
 const statusColorMap: Record<string, string> = {
-  completed: styles.statusDone,
+  paid: styles.statusDone,
   pending: styles.statusInProgress,
 };
 
