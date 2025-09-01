@@ -196,11 +196,11 @@
 }
 
 /* правила для AddProject  Estimate*/
-:global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+:global(.projectEstimateTableWrap) .TableRowCell:nth-child(6) {
   background: #ffb32666;
   width: 120px;
 }
-:global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+:global(.projectEstimateTableWrap) .TableCell:nth-child(4) {
   background: #ffb32666;
   width: 120px;
 }
@@ -272,11 +272,17 @@
   width: 20px;
 }
 /* правила для ProjectDetailed  Estimate*/
-:global(.projectDetailedEstimateTableWrap) .indentCellLast {
+:global(.projectDetailedEstimateCompleteTableWrap) .indentCellLast {
   display: none;
 }
-:global(.projectDetailedEstimateTableWrap) .indentCellSmallSecond {
+:global(.projectDetailedEstimateCompleteTableWrap) .indentCellSmallSecond {
   width: 20px;
+}
+:global(.projectDetailedEstimateCompleteTableWrap) .TableCell:nth-child(7) {
+  display: none;
+}
+:global(.projectDetailedEstimateCompleteTableWrap) .TableRowCell:nth-child(9) {
+  display: none;
 }
 /* правила для ProjectDetailed  Materials*/
 :global(.projectDetailedMaterialsWrap) .indentCellLast {

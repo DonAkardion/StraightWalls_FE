@@ -40,12 +40,23 @@ export function ProjectMaterialsTable({
       label: "Назва матеріалу",
       tooltip: (m) => `Матеріал: ${m.name}`,
     },
-    { key: "unit", label: "Одиниця" },
-    { key: "quantity", label: "Кількість" },
+
     {
-      key: "unit_price",
-      label: "Ціна за одиницю",
-      render: (m) => m.purchase_price.toFixed(2).replace(".", ","),
+      key: "quantity",
+      label: "Кількість",
+      render: (m) => `${m.quantity} ${m.unit}`,
+    },
+    {
+      key: "price",
+      label: "Ціна закупки / продажу",
+      render: (m) =>
+        `${m.purchase_price.toFixed(2).replace(".", ",")} / ${m.selling_price
+          .toFixed(2)
+          .replace(".", ",")}`,
+    },
+    {
+      key: "delivery",
+      label: "Доставка",
     },
     {
       key: "total",

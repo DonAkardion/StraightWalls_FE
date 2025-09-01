@@ -53,15 +53,18 @@ export function ProjectsDetailed({ projectId }: Props) {
     <div className="m-auto pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
         {project.client && <ProjectInfo report={report} />}
-
+        <ProjectMaterials report={report} />
         <ProjectEstimateComplete
           report={report}
-          // tableClassName="projectDetailedEstimateTableWrap"
+          tableClassName="projectDetailedEstimateCompleteTableWrap"
           tablesTitle="Кошторис"
         />
-        <ProjectMaterials report={report} />
-        {/* <ProjectPayment /> */}
-        {/* <ProjectCrew project={report.project} crews={project.team} /> */}
+
+        <ProjectPayment report={report} />
+        <ProjectCrew
+          crewId={report.project.team_id}
+          crewName={report.project.team.name}
+        />
         <ProjectNotes
           subtitle="Також звертаємо Вашу увагу, що Замовник забезпечує:"
           notes={[

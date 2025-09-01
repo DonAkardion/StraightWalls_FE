@@ -37,13 +37,21 @@ export function PaymentDetails({
 
   const { setInitialPayment, setAdvanceAmount } = useProjectCreation();
 
-  const buildPayment = (): PaymentData => ({
-    name,
-    description,
-    amount: amount === "" ? 0 : amount,
-    status,
-    due_date: dueDate,
-  });
+  const buildPayment = (): PaymentData => {
+    let formattedDate = dueDate;
+    if (dueDate) {
+      const d = new Date(dueDate);
+      formattedDate = d.toISOString().split("T")[0];
+    }
+
+    return {
+      name,
+      description,
+      amount: amount === "" ? 0 : amount,
+      status,
+      due_date: formattedDate,
+    };
+  };
 
   const handleConfirm = () => {
     const data = buildPayment();

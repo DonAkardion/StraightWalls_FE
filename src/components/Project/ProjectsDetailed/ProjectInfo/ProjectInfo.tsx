@@ -21,14 +21,14 @@ const statusMap: Record<string, string> = {
   completed: "Виконано",
   in_progress: "В процесі",
   new: "Очікує",
-  canсeled: "Відхилено",
+  canceled: "Відхилено",
 };
 
 const statusColorMap: Record<string, string> = {
   completed: styles.statusDone,
   in_progress: styles.statusInProgress,
   new: styles.statusWaiting,
-  canсeled: styles.statusCanceled,
+  canceled: styles.statusCanceled,
 };
 
 export function ProjectInfo({ report }: Props) {

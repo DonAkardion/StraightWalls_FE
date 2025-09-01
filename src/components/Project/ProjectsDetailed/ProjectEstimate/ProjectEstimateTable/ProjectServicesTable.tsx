@@ -77,7 +77,7 @@ export const ProjectServicesTable = ({
       }
       columns={[
         { key: "name", label: "Найменування послуги" },
-        { key: "unit_of_measurement", label: "Од. вимір." },
+
         {
           key: "quantity",
           label: "Кількість",
@@ -120,6 +120,7 @@ export const ProjectServicesTable = ({
               </span>
             ),
         },
+        { key: "unit_of_measurement", label: "Од. вимір." },
         { key: "price", label: "Вартість, грн" },
         {
           key: "sum",

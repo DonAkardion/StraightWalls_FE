@@ -24,7 +24,7 @@ export const MaterialIncomeEditor = ({
   const materialRows: MaterialIncomeRow[] = useMemo(
     () =>
       materials.map((m) => {
-        const total = m.selling_price * m.quantity + m.delivery * m.quantity;
+        const total = m.selling_price * m.quantity + m.delivery;
         const income = total - m.purchase_price * m.quantity;
         return {
           id: m.id,

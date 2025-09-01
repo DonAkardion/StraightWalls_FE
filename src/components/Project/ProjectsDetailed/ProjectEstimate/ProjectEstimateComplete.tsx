@@ -8,6 +8,7 @@ import { ProjectWork } from "@/types/projectComponents";
 interface Props {
   report: ProjectReportResponse;
   tablesTitle?: string;
+  tableClassName?: string;
 }
 
 interface WorkForTable {
@@ -19,15 +20,19 @@ interface WorkForTable {
   quantity: number;
 }
 
-export const ProjectEstimateComplete = ({ report, tablesTitle }: Props) => {
+export const ProjectEstimateComplete = ({
+  report,
+  tablesTitle,
+  tableClassName,
+}: Props) => {
   const { project } = report;
   const services = project.works;
 
   const servicesForTable: WorkForTable[] = project.works.map((w) => ({
     id: w.id,
     name: w.name,
-    unit_of_measurement: w.unit ?? "-",
     price: Number(w.cost),
+    unit_of_measurement: w.unit ?? "-",
     is_active: true,
     quantity: w.quantity,
   }));
@@ -35,20 +40,9 @@ export const ProjectEstimateComplete = ({ report, tablesTitle }: Props) => {
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   const totalCost = useMemo(
-    () => services.reduce((sum, s) => sum + Number(s.cost) * s.quantity, 0),
+    () => services.reduce((sum, s) => sum + Number(s.cost), 0),
     [services]
   );
-
-  const columns = [
-    { key: "name", label: "Найменування послуги" },
-    { key: "quantity", label: "Кількість" },
-    { key: "cost", label: "Вартість, грн" },
-    {
-      key: "sum",
-      label: "Сума, грн",
-      render: (s: ProjectWork) => (Number(s.cost) * s.quantity).toFixed(2),
-    },
-  ];
 
   return (
     <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[156px]`}>
@@ -57,13 +51,13 @@ export const ProjectEstimateComplete = ({ report, tablesTitle }: Props) => {
       </h2>
 
       <ProjectServicesTable
-        services={servicesForTable as any} // привід TypeScript
+        services={servicesForTable as any}
         selection={servicesForTable.map((s) => ({
           serviceId: s.id,
           quantity: s.quantity,
         }))}
         editable={false}
-        className="..."
+        className={tableClassName}
       />
       <div
         className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
