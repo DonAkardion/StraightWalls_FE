@@ -11,7 +11,7 @@ interface CrewResponse {
 
 export const getCrews = async (token: string): Promise<Crew[]> => {
   try {
-    const response = await fetch("https://api.rivni-stiny.click/api/teams", {
+    const response = await fetch(`${apiUrl}/api/teams`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
