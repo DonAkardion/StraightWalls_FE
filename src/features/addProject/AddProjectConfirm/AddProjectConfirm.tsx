@@ -70,14 +70,14 @@ export function AddProjectConfirm() {
         team_id: String(crewId),
         status: "new",
       },
+      works: mapWorks(services),
+      materials: mapMaterials(materials),
       ...(initialPayment && {
         initial_payment: {
           ...initialPayment,
           amount: String(initialPayment.amount),
         },
       }),
-      works: mapWorks(services),
-      materials: mapMaterials(materials),
     };
 
     try {
