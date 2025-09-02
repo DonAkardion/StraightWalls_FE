@@ -128,7 +128,7 @@ export interface ProjectDetailedResponse {
     name: string;
     description?: string;
     amount: number;
-    status: "pending";
+    status: "pending" | "paid" | "canceled";
     due_date?: Date;
     created_at: Date;
     updated_at: Date;

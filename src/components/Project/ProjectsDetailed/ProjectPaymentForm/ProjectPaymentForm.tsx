@@ -64,7 +64,7 @@ export function ProjectPaymentForm({
       <div
         className={`${styles.paymentFormContent} flex flex-col items-center gap-6 p-4`}
       >
-        <div className="flex flex-row gap-[40px] w-full">
+        <div className="flex flex-col md:flex-row md:gap-[40px] gap-[20px] w-full">
           <div className="flex flex-row w-full gap-[20px]">
             <h5 className={`${styles.paymentFormItemTitle} pt-2 min-w-[60px]`}>
               Назва
@@ -107,43 +107,44 @@ export function ProjectPaymentForm({
           />
         </div>
 
-        <div className="flex flex-row justify-between gap-4 w-full">
-          <h5 className={`${styles.paymentFormItemTitle} pt-2 min-w-[64px]`}>
-            Статус
-          </h5>
-          <select
-            value={status}
-            onChange={(e) =>
-              setStatus(e.target.value as "pending" | "paid" | "canceled")
-            }
-            className={`${styles.editInputSelect} w-[40%] rounded-[5px] border-1`}
-          >
-            <option value="pending">Очікує</option>
-            <option value="paid">Сплачено</option>
-          </select>
-
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className={styles.editInput}
-          />
-
-          <button
-            onClick={handleSave}
-            className={`${styles.paymentFormConfirmBtn} px-4 py-1 w-[40%] h-[40px] rounded-[5px]`}
-          >
-            Зберегти
-          </button>
-
-          {onCancel && (
+        <div className="flex flex-col md:flex-row justify-between gap-4 w-full">
+          <div className="flex flex-row  gap-4 w-full">
+            <div className=" flex flex-row gap-4 max-w-1/2 min-w-[170px] ">
+              <h5
+                className={`${styles.paymentFormItemTitle} pt-2 min-w-[64px] `}
+              >
+                Статус
+              </h5>
+              <select
+                value={status}
+                onChange={(e) =>
+                  setStatus(e.target.value as "pending" | "paid" | "canceled")
+                }
+                className={`${styles.editInputSelect}  rounded-[5px] border-1 cursor-pointer`}
+              >
+                <option className="cursor-pointer" value="pending">
+                  Очікує
+                </option>
+                <option className="cursor-pointer" value="paid">
+                  Сплачено
+                </option>
+              </select>
+            </div>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className={`${styles.editInput} max-w-1/3 min-w-[100px] cursor-pointer `}
+            />
+          </div>
+          <div className=" flex justify-center md:justify-end w-full">
             <button
-              onClick={onCancel}
-              className="px-4 py-1 w-[40%] h-[40px] rounded-[5px] bg-gray-300"
+              onClick={handleSave}
+              className={`${styles.paymentFormConfirmBtn} px-4 py-1 w-1/2  h-[40px] rounded-[5px] cursor-pointer`}
             >
-              Скасувати
+              Зберегти
             </button>
-          )}
+          </div>
         </div>
       </div>
     </div>
