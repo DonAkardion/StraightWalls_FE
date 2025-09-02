@@ -4,9 +4,12 @@ import styles from "./ProjectPayment.module.css";
 import { StageCard } from "./stageCard/stageCard";
 import { ProjectReportResponse } from "@/types/project";
 import { PaymentProjectDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentProjectDetails";
+import { deletePayment, updatePaymentStatus } from "@/api/payments";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Props {
   report: ProjectReportResponse;
+  refreshProject: () => Promise<void>;
 }
 
 function parseAmount(value: unknown): number {
@@ -16,12 +19,19 @@ function parseAmount(value: unknown): number {
   const n = parseFloat(s);
   return Number.isFinite(n) ? n : 0;
 }
+function formatCurrency(value: number): string {
+  return `${value.toLocaleString("uk-UA", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })} грн`;
+}
 
-export function ProjectPayment({ report }: Props) {
-  const totalPaid = report.project.payments.reduce(
-    (sum, p) => sum + parseAmount(p.amount),
-    0
-  );
+export function ProjectPayment({ report, refreshProject }: Props) {
+  const { token } = useUser();
+  const totalPaid = report.project.payments
+    .filter((p) => p.status === "paid")
+    .reduce((sum, p) => sum + parseAmount(p.amount), 0);
+
   const totalProjectCostNum = parseAmount(report.totalProjectCost);
   const totalLeftToPay = totalProjectCostNum - totalPaid;
   const advancePayment = report.project.payments.find(
@@ -38,18 +48,22 @@ export function ProjectPayment({ report }: Props) {
           <div className={`${styles.totalItem} `}>
             <span className={`${styles.totalItemText} `}>Загальна сума</span>
             <span className={`${styles.totalItemSum} `}>
-              {report.totalProjectCost}
+              {formatCurrency(totalProjectCostNum)}
             </span>
           </div>
           <div className={`${styles.totalItem}`}>
             <span className={`${styles.totalItemText} `}>Оплачені кошти</span>
-            <span className={`${styles.totalItemSum} `}>{totalPaid}</span>
+            <span className={`${styles.totalItemSum} `}>
+              {formatCurrency(totalPaid)}
+            </span>
           </div>
           <div className={`${styles.totalItem}`}>
             <span className={`${styles.totalItemText} `}>
               Залишок до оплати
             </span>
-            <span className={`${styles.totalItemSum} `}>{totalLeftToPay}</span>
+            <span className={`${styles.totalItemSum} `}>
+              {formatCurrency(totalLeftToPay)}
+            </span>
           </div>
         </div>
         <PaymentProjectDetails
@@ -57,17 +71,17 @@ export function ProjectPayment({ report }: Props) {
           items={[
             {
               label: "Вартість усіх використанних матеріалів",
-              value: `${report.totalMaterialsCost} грн`,
+              value: formatCurrency(parseAmount(report.totalMaterialsCost)),
             },
             {
               label: "Вартість усіх виконаних робіт",
-              value: `${report.totalWorksCost} грн`,
+              value: formatCurrency(parseAmount(report.totalWorksCost)),
             },
             {
               label: "Аванс при заїзді бригади",
-              value: `${
-                advancePayment ? parseAmount(advancePayment.amount) : "-"
-              } грн`,
+              value: advancePayment
+                ? formatCurrency(parseAmount(advancePayment.amount))
+                : "-",
             },
           ]}
         />
@@ -76,10 +90,21 @@ export function ProjectPayment({ report }: Props) {
         {report.project.payments.map((payment, idx) => (
           <StageCard
             key={payment.id}
+            id={payment.id}
             title={`${payment.name}`}
             sum={`${parseAmount(payment.amount)} грн`}
             description={payment.description ?? ""}
             status={payment.status}
+            onDelete={async (id) => {
+              if (!token) return;
+              await deletePayment(id, token);
+              await refreshProject();
+            }}
+            onStatusChange={async (id, newStatus) => {
+              if (!token) return;
+              await updatePaymentStatus(id, newStatus, token);
+              await refreshProject();
+            }}
           />
         ))}
       </div>
