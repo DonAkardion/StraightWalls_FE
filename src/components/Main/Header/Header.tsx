@@ -80,19 +80,25 @@ export const Header = () => {
           </div>
         </div>
         <nav
-          className={`${styles.headerContainerLinks} hidden md:flex gap-[30px] w-[430px] items-center`}
+          className={`${styles.headerContainerLinks} hidden md:flex justify-end gap-[30px] w-[430px] items-center`}
         >
-          <Link
-            href={`/${role}/addProject`}
-            className={styles.navigation}
-            prefetch={false}
-          >
-            <div
-              className={`${styles.navigationAddProjectBtn} flex max-w-[204px] min-w-[180px] items-center justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
-            >
-              Додати проєкт
-            </div>
-          </Link>
+          <>
+            {role === "admin" || role === "accountant" ? (
+              <Link
+                href={`/${role}/addProject`}
+                className={styles.navigation}
+                prefetch={false}
+              >
+                <div
+                  className={`${styles.navigationAddProjectBtn} flex max-w-[204px] min-w-[180px] items-center justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
+                >
+                  Додати проєкт
+                </div>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </>
           <Link
             href={`/${role}/notifications`}
             className={`${styles.headerLink} relative shrink-0`}

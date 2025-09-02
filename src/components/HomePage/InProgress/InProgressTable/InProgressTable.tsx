@@ -1,60 +1,94 @@
 "use client";
 import styles from "./InProgressTable.module.css";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Table } from "@/components/Table/Table";
-import { InProgress } from "@/types/inProgress";
-import { mockCrews } from "@/mock/Crew/crewMock";
+import { ProjectReportResponse } from "@/types/project";
 
 interface InProgressTableProps {
-  data: InProgress[];
+  reports: ProjectReportResponse[];
   className?: string;
 }
 
 export const InProgressTable: React.FC<InProgressTableProps> = ({
-  data,
+  reports,
   className,
 }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const orders = [
-    {
-      label: "Минуле замовлення",
-      status: "Готово",
-      action: "Здати",
-    },
-    {
-      label: "Поточне замовлення",
-      status: "Готово",
-      action: "Здати",
-    },
-    {
-      label: "Майбутнє замовлення",
-      status: "Очікує",
-      action: "Здати",
-    },
-  ];
+  // групуємо проєкти по бригадах
+  const crewsWithProjects = useMemo(() => {
+    const map = reports.reduce<Record<number, ProjectReportResponse[]>>(
+      (acc, report) => {
+        const crewId = report.project.team_id;
+        if (!acc[crewId]) acc[crewId] = [];
+        acc[crewId].push(report);
+        return acc;
+      },
+      {}
+    );
+
+    return Object.values(map).map((crewReports) => {
+      // сортуємо проєкти по created_at
+      crewReports.sort(
+        (a, b) =>
+          new Date(a.project.created_at).getTime() -
+          new Date(b.project.created_at).getTime()
+      );
+
+      const crew = crewReports[0].project.team;
+
+      return {
+        id: crew.id,
+        name: crew.name,
+        projects: crewReports,
+      };
+    });
+  }, [reports]);
+
+  const statusMap: Record<string, string> = {
+    completed: "Виконано",
+    in_progress: "В процесі",
+    new: "Очікує",
+    canceled: "Відхилено",
+  };
+
+  const getRowClassName = (status: string) => {
+    switch (status) {
+      case "completed":
+        return styles.pastOrder;
+      case "new":
+        return styles.futureOrder;
+      case "in_progress":
+        return styles.currentOrder;
+      case "canceled":
+        return styles.canceledOrder;
+      default:
+        return "";
+    }
+  };
 
   const columns = [
     {
       key: "projectCrew",
       label: "Бригада",
-      render: (row: InProgress) => (
+      render: (row: (typeof crewsWithProjects)[0]) => (
         <div className="flex flex-col gap-[10px]">
-          <div>
-            {mockCrews.find((crew) => crew.id === row.projectCrew)?.name || ""}
-          </div>
-          {orders.map((order, idx) => (
+          <div>{row.name}</div>
+          {row.projects.map((p, idx) => (
             <div
-              key={idx}
-              className={`${
-                idx === 0
-                  ? styles.pastOrder
-                  : idx === 1
-                  ? styles.currentOrder
-                  : styles.futureOrder
-              } ${styles.hideOnMobile}`}
+              key={p.project.id}
+              className={`${getRowClassName(p.project.status)} ${
+                styles.hideOnMobile
+              }`}
+              // className={`${
+              //   idx === 0
+              //     ? styles.pastOrder
+              //     : idx === 1
+              //     ? styles.currentOrder
+              //     : styles.futureOrder
+              // } ${styles.hideOnMobile}`}
             >
-              {order.label}
+              {p.project.name}
             </div>
           ))}
         </div>
@@ -63,20 +97,21 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     {
       key: "currentStage",
       label: "Етап",
-      render: () => (
+      render: (row: (typeof crewsWithProjects)[0]) => (
         <div className="flex flex-col gap-[10px]">
-          {orders.map((order, idx) => (
+          {row.projects.map((p, idx) => (
             <div
-              key={idx}
-              className={
-                idx === 0
-                  ? styles.pastOrder
-                  : idx === 1
-                  ? styles.currentOrder
-                  : styles.futureOrder
-              }
+              key={p.project.id}
+              className={getRowClassName(p.project.status)}
+              // className={
+              //   idx === 0
+              //     ? styles.pastOrder
+              //     : idx === 1
+              //     ? styles.currentOrder
+              //     : styles.futureOrder
+              // }
             >
-              {order.status}
+              {statusMap[p.project.status] || p.project.status}
             </div>
           ))}
         </div>
@@ -85,18 +120,19 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     {
       key: "nextStage",
       label: "Наступний етап",
-      render: () => (
+      render: (row: (typeof crewsWithProjects)[0]) => (
         <div className="flex flex-col gap-[10px]">
-          {orders.map((order, idx) => (
+          {row.projects.map((p, idx) => (
             <div
-              key={idx}
-              className={
-                idx === 0
-                  ? styles.pastOrder
-                  : idx === 1
-                  ? styles.currentOrder
-                  : styles.futureOrder
-              }
+              key={p.project.id}
+              className={getRowClassName(p.project.status)}
+              // className={
+              //   idx === 0
+              //     ? styles.pastOrder
+              //     : idx === 1
+              //     ? styles.currentOrder
+              //     : styles.futureOrder
+              // }
             >
               Здати
             </div>
@@ -107,20 +143,21 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     {
       key: "materialsIncome",
       label: "Зар. матеріали",
-      render: (row: InProgress) => (
+      render: (row: (typeof crewsWithProjects)[0]) => (
         <div className="flex flex-col gap-[10px]">
-          {orders.map((_, idx) => (
+          {row.projects.map((p, idx) => (
             <div
-              key={idx}
-              className={
-                idx === 0
-                  ? styles.pastOrder
-                  : idx === 1
-                  ? styles.currentOrder
-                  : styles.futureOrder
-              }
+              key={p.project.id}
+              className={getRowClassName(p.project.status)}
+              // className={
+              //   idx === 0
+              //     ? styles.pastOrder
+              //     : idx === 1
+              //     ? styles.currentOrder
+              //     : styles.futureOrder
+              // }
             >
-              {row.materialsIncome}
+              {p.totalMaterialsProfit}
             </div>
           ))}
         </div>
@@ -129,20 +166,21 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     {
       key: "crewSalary",
       label: "Зарплати",
-      render: (row: InProgress) => (
+      render: (row: (typeof crewsWithProjects)[0]) => (
         <div className="flex flex-col gap-[10px]">
-          {orders.map((_, idx) => (
+          {row.projects.map((p, idx) => (
             <div
-              key={idx}
-              className={
-                idx === 0
-                  ? styles.pastOrder
-                  : idx === 1
-                  ? styles.currentOrder
-                  : styles.futureOrder
-              }
+              key={p.project.id}
+              className={getRowClassName(p.project.status)}
+              // className={
+              //   idx === 0
+              //     ? styles.pastOrder
+              //     : idx === 1
+              //     ? styles.currentOrder
+              //     : styles.futureOrder
+              // }
             >
-              {row.crewSalary}
+              {p.totalMaterialsProfit}
             </div>
           ))}
         </div>
@@ -152,7 +190,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
 
   return (
     <Table
-      data={data}
+      data={crewsWithProjects}
       columns={columns}
       showIndex={true}
       onInspect={(item) =>
@@ -160,23 +198,22 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
       }
       expandedId={expandedId}
       className={className}
-      renderInspection={() => (
+      renderInspection={(row) => (
         <div className="p-2 pl-3 md:hidden flex flex-col gap-1">
-          {orders.map((order, idx) => (
+          {row.projects.map((p) => (
             <div
-              key={idx}
-              className={`${
-                idx === 0
-                  ? styles.pastOrder
-                  : idx === 1
-                  ? styles.currentOrder
-                  : styles.futureOrder
-              } ${styles.inspectText}`}
+              key={p.project.id}
+              className={`${getRowClassName(p.project.status)} ${
+                styles.inspectText
+              }`}
             >
               <div className="flex justify-between gap-2 text-nowrap">
-                <span className="w-1/2 truncate">{order.label}</span>
-                <span className="w-1/4 truncate">{order.status}</span>
-                <span className="w-1/4 truncate">{order.action}</span>
+                <span className="w-1/2 truncate">{p.project.name}</span>
+                <span className="w-1/4 truncate">
+                  {statusMap[p.project.status] || p.project.status}
+                </span>
+                <span className="w-1/4 truncate">Здати</span>
+                <span className="w-1/4 truncate">{`${p.totalMaterialsProfit} грн`}</span>
               </div>
             </div>
           ))}

@@ -103,3 +103,16 @@ export async function getProjectPaymentsSum(
     }
   );
 }
+
+// 8. Get Project Overdue Payments
+export async function getProjectPaymentsOverdue(
+  projectId: number,
+  token: string
+): Promise<Payment> {
+  return fetcher<Payment>(
+    `${API_BASE}/api/payments/project/${projectId}/overdue`,
+    {
+      token,
+    }
+  );
+}
