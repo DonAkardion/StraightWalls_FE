@@ -7,6 +7,9 @@
 .futureOrder {
   color: var(--blue);
 }
+.canceledOrder {
+  color: var(--red);
+}
 .hideOnMobile {
   display: none;
 }

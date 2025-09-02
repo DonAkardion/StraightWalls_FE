@@ -23,7 +23,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
   const pathname = usePathname();
   return (
     <div className={`${styles.navigationMenu} `} style={{}}>
-      {role === "admin" ? (
+      {role === "admin" || role === "accountant" ? (
         <nav
           className={`${styles.navigationMenuList} flex-col mt-[102px] lg:mt-[52px]`}
         >
