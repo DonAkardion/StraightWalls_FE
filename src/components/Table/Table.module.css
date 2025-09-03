@@ -178,6 +178,7 @@
 }
 :global(.projectsTableWrap) .indentCellSmall {
   position: relative;
+  width: 100px;
 }
 :global(.projectsTableWrap) .indentCellSmall::before,
 :global(.projectsTableWrap) .indentCellSmall::after {
@@ -190,7 +191,7 @@
   border-radius: 50%;
 }
 :global(.projectsTableWrap) .indentCellSmall::before {
-  left: 36%;
+  left: 18%;
   background: var(--green);
   box-shadow: 25px 0 0 var(--yellow), 51px 0 0 var(--blue);
 }

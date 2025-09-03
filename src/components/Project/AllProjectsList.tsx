@@ -184,14 +184,18 @@ export const AllProjectsList = ({
                 label: "Бригада",
                 value: (item) => getCrewName(item.team_id),
               },
-              // {
-              //   label: "Початок",
-              //   value: (item) => item.startDate,
-              // },
-              // {
-              //   label: "Завершення",
-              //   value: (item) => item.endDate,
-              // },
+              {
+                label: "Початок",
+                value: (item) => {
+                  item.start_date ? item.start_date : "Початок";
+                },
+              },
+              {
+                label: "Завершення",
+                value: (item) => {
+                  item.end_date ? item.end_date : "Кінець";
+                },
+              },
               {
                 label: "Статус",
                 value: (item) => item.status ?? "—",

@@ -34,7 +34,7 @@ export const ClientsList = ({
 
   // format Client Objects
   const formatObjects = (client: Client) =>
-    client.objects.map((o) => `${o.name}: ${o.address}`).join(", ");
+    client.objects.map((o) => `${o.name}: ${o.address}`).join(", \n");
 
   return (
     <div className="">
