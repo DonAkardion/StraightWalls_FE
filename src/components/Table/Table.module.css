@@ -402,11 +402,11 @@
     display: none;
   }
   /* правила для AddProject  Estimate*/
-  :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+  :global(.projectEstimateTableWrap) .TableRowCell:nth-child(6) {
     display: table-cell;
     background: none;
   }
-  :global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+  :global(.projectEstimateTableWrap) .TableCell:nth-child(4) {
     display: table-cell;
     background: none;
   }
