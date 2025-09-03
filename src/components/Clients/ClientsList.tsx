@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Client } from "@/types/client";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Props {
   clients: Client[];
