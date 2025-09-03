@@ -58,6 +58,17 @@
   margin: 0;
 }
 
+.editInputSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: none;
+  padding: 4px 8px;
+  width: 100%;
+}
+.editInputSelect::placeholder {
+  width: 100%;
+}
 .editInput {
   -moz-appearance: textfield;
   border-bottom: 1px solid black;

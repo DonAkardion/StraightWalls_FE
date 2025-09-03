@@ -122,10 +122,13 @@ export function ProjectPaymentForm({
                 }
                 className={`${styles.editInputSelect}  rounded-[5px] border-1 cursor-pointer`}
               >
-                <option className="cursor-pointer" value="pending">
+                <option
+                  className="cursor-pointer text-blue-400"
+                  value="pending"
+                >
                   Очікує
                 </option>
-                <option className="cursor-pointer" value="paid">
+                <option className="cursor-pointer text-green-400" value="paid">
                   Сплачено
                 </option>
               </select>
@@ -137,10 +140,10 @@ export function ProjectPaymentForm({
               className={`${styles.editInput} max-w-1/3 min-w-[100px] cursor-pointer `}
             />
           </div>
-          <div className=" flex justify-center md:justify-end w-full">
+          <div className=" flex justify-center md:justify-end md:mt-0 mt-[16px] w-full">
             <button
               onClick={handleSave}
-              className={`${styles.paymentFormConfirmBtn} px-4 py-1 w-1/2  h-[40px] rounded-[5px] cursor-pointer`}
+              className={`${styles.paymentFormConfirmBtn} px-4 py-1 md:w-[60%] w-[40%] h-[40px] rounded-[5px] cursor-pointer`}
             >
               Зберегти
             </button>
