@@ -3,4 +3,5 @@ export interface Crew {
   name: string;
   status: string | null;
   projects?: { name: string; id: number }[];
+  selected?: boolean;
 }

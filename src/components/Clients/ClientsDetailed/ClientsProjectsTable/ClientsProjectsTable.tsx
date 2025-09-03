@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./ClientsProjectsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
-import { getProjectByClientId } from "@/api/projects";
+import { getProjectByClientId, getProjectReport } from "@/api/projects";
 
 interface Project {
   id: number;
@@ -31,41 +31,42 @@ export const ClientsProjectsTable = ({ clientId }: Props) => {
 
   useEffect(() => {
     if (!token) return;
+
     const fetchProjects = async () => {
-    try {
-    const data = await getProjectByClientId(clientId, token);
+      try {
+        const data = await getProjectByClientId(clientId, token);
+        const mapped = await Promise.all(
+          (Array.isArray(data) ? data : []).map(async (p: any) => {
+            const report = await getProjectReport(p.id, token);
 
-    const mapped = Array.isArray(data)
-      ? data.map((p: any) => {
-          const totalCost = p.works?.reduce(
-            (sum: number, w: any) => sum + Number(w.cost ?? 0),
-            0
-          ) ?? 0;
+            return {
+              id: p.id,
+              projectNumber: report.project?.name ?? `Project-${p.id}`,
+              cost: report.totalProjectCost
+                ? `${report.totalProjectCost} грн`
+                : "—",
+              team: p.team?.name ?? "—",
+              period: `${p.start_date?.slice(0, 10)} / ${p.end_date?.slice(
+                0,
+                10
+              )}`,
+              status: p.status,
+            };
+          })
+        );
 
-          return {
-            id: p.id,
-            projectNumber: `Project-${p.id}`,
-            cost: totalCost ? `${totalCost} грн` : "—",
-            team: p.team?.name ?? "—",
-            period: `${p.created_at?.slice(0, 10)} / ${p.updated_at?.slice(0, 10)}`,
-            status: p.status, 
-          };
-        })
-      : [];
+        setTableData(mapped);
+        console.log("Mapped projects with reports:", mapped);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
 
-    setTableData(mapped);
-    console.log("Mapped projects:", mapped);
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-  }
-};
-
-  fetchProjects()
-}, [token, clientId])
-
+    fetchProjects();
+  }, [token, clientId]);
 
   const projectColumns = [
-    { key: "projectNumber", label: "Номер проєкту" },
+    { key: "projectNumber", label: "Назва проєкту" },
     { key: "cost", label: "Вартість" },
     { key: "team", label: "Бригада" },
     { key: "period", label: "Початок / кінець" },

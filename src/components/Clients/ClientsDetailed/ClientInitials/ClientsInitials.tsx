@@ -17,7 +17,7 @@ export const ClientsInitials = ({ client }: Props) => {
   const router = useRouter();
 
   const formatObjects = (client: Client) =>
-  client.objects.map((o) => `${o.name}: ${o.address}`).join(", ");
+    client.objects.map((o) => `${o.name}: ${o.address}`).join(", ");
 
   return (
     <div className={`${styles.clientsInitialsDiv} w-full relative`}>
@@ -36,23 +36,24 @@ export const ClientsInitials = ({ client }: Props) => {
         </div>
       </div>
 
-      <div
-        className={`${styles.infoItemsWrapper} flex flex-wrap items-center gap-10`}
-      >
+      <div className={`${styles.infoItemsWrapper} flex flex-wrap items-center gap-10`}>
         {columns.map((column) => {
           const value = client[column];
-          if (!value || (Array.isArray(value) && value.length === 0))
-            return null;
+          if (!value || (Array.isArray(value) && value.length === 0)) return null;
+
+          let label = "";
+          if (column === "phone_number") label = value as string;
+          else if (column === "objects") label = formatObjects(client);
 
           return (
             <ClientInfoItem
               key={column}
               icon={iconMap[column]}
-              label={formatObjects(client)}
+              label={label}
             />
           );
         })}
-      </div>
+      </div> 
     </div>
   );
 };

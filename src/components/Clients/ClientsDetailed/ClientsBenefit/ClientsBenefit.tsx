@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ClientsBenefit.module.css";
-import { getProjectByClientId } from "@/api/projects";
+import { getProjectByClientId, getProjectReport } from "@/api/projects";
 
 interface Props {
   clientId: number;
 }
 
-interface BenefitProps {
-  worksSum: number;
-  materialsSum: number;
-  benefit: number;
+interface ProjectReport {
+  totalWorksCost: number;
+  totalMaterialsCost: number;
+  totalProjectCost: number;
+  projectName?: string;
 }
 
+
 export const ClientsBenefit = ({ clientId }: Props) => {
-  const [benefitData, setBenefitData] = useState<BenefitProps[]>([]);
-  const [token, setToken] = useState("");
+  const [benefitData, setBenefitData] = useState<ProjectReport | null>(null);
+  const [token, setToken] = useState<string>("");
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    setToken(storedToken || "");
+    if (storedToken) setToken(storedToken);
   }, []);
 
   useEffect(() => {
@@ -26,47 +28,46 @@ export const ClientsBenefit = ({ clientId }: Props) => {
 
     const fetchBenefitData = async () => {
       try {
-        const data = await getProjectByClientId(clientId, token);
+        const projects = await getProjectByClientId(clientId, token);
+        const reports: ProjectReport[] = await Promise.all(
+          projects.map((p: any) => getProjectReport(p.id, token))
+        )
 
-        const mappedBenefitData: BenefitProps[] = Array.isArray(data)
-          ? data.map((p: any) => {
-              const worksSum = p.works?.reduce(
-                (sum: number, w: any) => sum + Number(w.cost ?? 0),
-                0
-              ) ?? 0;
+        const totalWorksCost = reports.reduce(
+          (sum, r) => sum + r.totalWorksCost,
+          0
+        );
+        const totalMaterialsCost = reports.reduce(
+          (sum, r) => sum + r.totalMaterialsCost,
+          0
+        );
+        const totalProjectCost = reports.reduce(
+          (sum, r) => sum + r.totalProjectCost,
+          0
+        );
 
-              const materialsSum = p.materials?.reduce(
-                (sum: number, m: any) => sum + Number(m.selling_price ?? 0),
-                0
-              ) ?? 0;
-
-              return {
-                worksSum,
-                materialsSum,
-                benefit: worksSum + materialsSum,
-              };
-            })
-          : [];
-
-        setBenefitData(mappedBenefitData);
+        setBenefitData({ totalWorksCost, totalMaterialsCost, totalProjectCost });
       } catch (error) {
-        console.log("Error:", error);
+        console.error("Error fetching benefit data:", error);
       }
     };
 
     fetchBenefitData();
   }, [token, clientId]);
 
-  const totalWorks = benefitData.reduce((sum, b) => sum + b.worksSum, 0);
-  const totalMaterials = benefitData.reduce((sum, b) => sum + b.materialsSum, 0);
-  const totalBenefit = benefitData.reduce((sum, b) => sum + b.benefit, 0);
+  if (!benefitData) {
+    return <p>Завантаження...</p>;
+  }
 
   return (
     <section className="w-full text-center mt-15">
       <div className={`${styles.clientsProfit} mt-5 rounded py-10`}>
         <p className={styles.clientsLabel}>Дохід від клієнта</p>
         <h1 className={styles.clientsPrice}>
-          {totalBenefit.toLocaleString("uk-UA", { style: "currency", currency: "UAH" })}
+          {benefitData.totalProjectCost.toLocaleString("uk-UA", {
+            style: "currency",
+            currency: "UAH",
+          })}
         </h1>
       </div>
 
@@ -74,16 +75,24 @@ export const ClientsBenefit = ({ clientId }: Props) => {
         <div className="flex justify-between items-center">
           <p className={styles.clientsLabel}>Вартість усіх виконаних робіт</p>
           <h2 className={styles.clientsPrice}>
-            {totalWorks.toLocaleString("uk-UA", { style: "currency", currency: "UAH" })}
+            {benefitData.totalWorksCost.toLocaleString("uk-UA", {
+              style: "currency",
+              currency: "UAH",
+            })}
           </h2>
         </div>
       </div>
 
       <div className={`${styles.clientsProfit} mt-5 rounded`}>
         <div className="flex justify-between items-center">
-          <p className={styles.clientsLabel}>Вартість усіх використаних матеріалів</p>
+          <p className={styles.clientsLabel}>
+            Вартість усіх використаних матеріалів
+          </p>
           <h2 className={styles.clientsPrice}>
-            {totalMaterials.toLocaleString("uk-UA", { style: "currency", currency: "UAH" })}
+            {benefitData.totalMaterialsCost.toLocaleString("uk-UA", {
+              style: "currency",
+              currency: "UAH",
+            })}
           </h2>
         </div>
       </div>
