@@ -1,14 +1,12 @@
-import React from "react";
-import styles from "./Calendar.module.css";
+"use client";
 
-const info = [
-  "Ств Горкуша",
-  "Ств Горкуша",
-  "Ств Горкуша",
-  "Ств Горкуша",
-  "Ств Горкуша",
-  "Липень",
-];
+import React, { useEffect, useState } from "react";
+import styles from "./Calendar.module.css";
+import { Crew } from "@/types/crew";
+import { getCrews } from "@/api/crews";
+import { getProjectReport } from "@/api/projects";
+import { ProjectStatus } from "@/types/project";
+
 
 const daysOfWeek = [
   "Понеділок",
@@ -28,28 +26,93 @@ const dates = [
   [29, 30, 31],
 ];
 
-const getColorClass = (date: number) => {
-  if ([2, 3, 4, 5].includes(date)) return "bg-[#0097C0] text-white";
-  if ([8, 9, 10, 11, 12, 15, 16, 17, 18, 19].includes(date)) return "bg-[#FFB326]";
-  if ([30, 31].includes(date)) return "bg-[#BD0F0F] text-white";
-  return "bg-[#FFFFFF] text-black";
+const colors: Record<ProjectStatus, string> = {
+  [ProjectStatus.COMPLETED]: "#15ae08",
+  [ProjectStatus.IN_PROGRESS]: "#0097c0",
+  [ProjectStatus.NEW]: "#ffb32680",
+  [ProjectStatus.CANCELED]: "#b70000",
 };
 
 const Calendar = () => {
+  const [calendar, setCalendar] = useState<Crew[]>([]);
+  const [token, setToken] = useState<string>("");
+  const [selectedCrew, setSelectedCrew] = useState<Crew | null>(null);
+  const [dayColors, setDayColors] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) setToken(storedToken);
+  }, []);
+
+  useEffect(() => {
+    if (!token) return;
+    const fetchCalendarData = async () => {
+      try {
+        const calendarData = await getCrews(token);
+        setCalendar(calendarData);
+      } catch (error) {
+        console.error("Error fetching calendar data:", error);
+      }
+    };
+    fetchCalendarData();
+  }, [token]);
+
+  const handleCrewSelect = async (idx: number) => {
+    const crew = calendar[idx];
+    const updated = calendar.map((c, i) => ({ ...c, selected: i === idx }));
+    setCalendar(updated);
+    setSelectedCrew(crew);
+
+    if (!crew || !crew.projects?.length || !token) {
+      setDayColors({});
+      return;
+    }
+
+    const colorsMap: Record<number, string> = {};
+
+    for (const proj of crew.projects) {
+      try {
+        const report = await getProjectReport(proj.id, token);
+        const start = new Date(report.project.start_date).getDate();
+        const end = new Date(report.project.end_date).getDate();
+        const status = report.project.status as ProjectStatus;
+        const color = colors[status];
+
+        for (let d = start; d <= end; d++) {
+          colorsMap[d] = color;
+        }
+      } catch (error) {
+        console.error(`Error fetching report for project ${proj.id}:`, error);
+      }
+    }
+
+    setDayColors(colorsMap);
+  };
+
+  const getDateColor = (date: number) => {
+    return dayColors[date] || "bg-white text-black";
+  };
+
   return (
-    <div className="bg-white w-full max-w-[980px] rounded p-4 sm:p-6 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] font-inter mx-auto mb-10 mt-10">
+    <div className="bg-white w-full max-w-[1126px] rounded p-4 sm:p-6 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] font-inter mx-auto mb-10 mt-10">
+      
       <div className={styles.calendarDiv}>
-        {info.map((text, idx) => (
+        {calendar.map((crew, idx) => (
           <button
             key={idx}
-            className={`${styles.calendarButton} flex-1 px-6 py-2 rounded text-black text-[12px] bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)] hover:[background-image:none] hover:border hover:border-[#FFB326] hover:cursor-pointer`}
+            onClick={() => handleCrewSelect(idx)}
+            className={`${styles.calendarButton} flex-1 px-4 py-2 rounded text-black text-[12px] 
+              ${crew.selected 
+                ? "font-semibold bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)]" 
+                : "bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)] hover:border hover:border-[#FFB326]"
+              } hover:cursor-pointer`}
           >
-            {text}
+            {crew.name}
           </button>
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[12px] sm:text-[14px]">
+      <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[12px] sm:text-[14px] mt-4">
         {daysOfWeek.map((day) => (
           <div
             key={day}
@@ -60,16 +123,20 @@ const Calendar = () => {
           </div>
         ))}
 
-        {dates.flat().map((date, i) => (
-          <button
-            key={i}
-            className={`rounded-md shadow-md py-1 sm:py-2 ${getColorClass(
-              date
-            )} text-[12px] sm:text-[13px] mt-2 hover:cursor-pointer`}
-          >
-            {date}
-          </button>
-        ))}
+        {dates.flat().map((date, i) => {
+          const bgColor = dayColors[date] ? dayColors[date] : "white";
+          const textColor = dayColors[date] ? "text-white" : "text-black";
+
+          return (
+            <button
+              key={i}
+              className={`rounded-md shadow-md py-1 sm:py-2 mt-2 ${textColor}`}
+              style={{ backgroundColor: bgColor }}
+            >
+              {date}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
