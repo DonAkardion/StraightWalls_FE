@@ -54,7 +54,7 @@ export function WorkersTable({
           {
             key: "phone_number",
             label: "Контакти",
-            tooltip: (worker) => `Контакти: ${worker.phone_number ?? "—"}`,
+            tooltip: (worker) => `Контакти: ${worker.phone_number.replace(/\s+/g, "") ?? "—"}`,
           },
         ]}
         renderInspection={(worker) => (
