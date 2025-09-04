@@ -7,6 +7,8 @@ import React, { useEffect, useState } from "react";
 import { getClients } from "@/api/clients";
 import { getCrews } from "@/api/crews";
 import { useUser } from "@/context/UserContextProvider";
+import { CrewSelector } from "@/components/Project/EditComponents/CrewSelector";
+import { ClientSelector } from "@/components/Project/EditComponents/ClientSelector";
 
 interface ProjectsFormModalProps {
   project: Project;
@@ -43,11 +45,23 @@ export function ProjectsFormModal({
     fetchData();
   }, [token]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const updated = { ...formData, [name]: value };
+    setFormData(updated);
+    onChange(updated);
+  };
+
+  const handleClientChange = (clientId: number | null) => {
+    if (clientId === null) return;
+    const updated = { ...formData, client_id: clientId };
+    setFormData(updated);
+    onChange(updated);
+  };
+
+  const handleCrewChange = (crewId: number | null) => {
+    if (crewId === null) return;
+    const updated = { ...formData, team_id: crewId };
     setFormData(updated);
     onChange(updated);
   };
@@ -60,39 +74,23 @@ export function ProjectsFormModal({
         name="name"
         placeholder="Назва проєкту"
         value={formData.name}
-        onChange={handleChange}
+        onChange={handleInputChange}
         className="border-b-1 p-2 pb-1 outline-none"
       />
 
       <div className={styles.ModalInputTytle}>Оберіть клієнта</div>
-      <select
-        name="client_id"
-        value={formData.client_id || ""}
-        onChange={handleChange}
-        className="appearance-none border-b-1 p-2 pb-1 outline-none"
-      >
-        <option value="">— Виберіть клієнта —</option>
-        {clients.map((client) => (
-          <option key={client.id} value={client.id}>
-            {client.full_name}
-          </option>
-        ))}
-      </select>
+      <ClientSelector
+        clients={clients}
+        value={formData.client_id ?? null}
+        onChange={handleClientChange}
+      />
 
       <div className={styles.ModalInputTytle}>Оберіть бригаду</div>
-      <select
-        name="team_id"
-        value={formData.team_id || ""}
-        onChange={handleChange}
-        className="appearance-none border-b-1 p-2 pb-1 outline-none"
-      >
-        <option value="">— Виберіть бригаду —</option>
-        {crews.map((crew) => (
-          <option key={crew.id} value={crew.id}>
-            {crew.name}
-          </option>
-        ))}
-      </select>
+      <CrewSelector
+        crews={crews}
+        value={formData.team_id ?? null}
+        onChange={handleCrewChange}
+      />
 
       <div className={styles.ModalInputTytle}>Дата початку терміну</div>
       <input
@@ -100,7 +98,7 @@ export function ProjectsFormModal({
         name="start_date"
         placeholder="01.09.2025"
         value={formData.start_date || ""}
-        onChange={handleChange}
+        onChange={handleInputChange}
         className="border-b-1 p-2 pb-1 outline-none"
       />
 
@@ -110,7 +108,7 @@ export function ProjectsFormModal({
         name="end_date"
         placeholder="10.09.2025"
         value={formData.end_date || ""}
-        onChange={handleChange}
+        onChange={handleInputChange}
         className="border-b-1 p-2 pb-1 outline-none"
       />
     </div>

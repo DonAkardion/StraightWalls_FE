@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import styles from "./AddWorker.module.css";
 import { Worker } from "@/types/worker";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
+import { Trash } from "../../../../public/icons";
 
 interface AddWorkerFormProps {
   crewWorkers: Worker[];
@@ -46,12 +47,8 @@ export default function AddWorkerForm({
   };
 
   const headerElements = [
-    <div
-      key="full_name"
-      className="flex items-center gap-2 text-[18px] text-black"
-    >
-      <span className="w-7"></span>
-      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+    <div key="full_name" className="flex  gap-2 text-[18px] text-black">
+      <span className="min-w-0 ml-[16px] overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
         ПІБ виконавця
       </span>
     </div>,
@@ -67,7 +64,7 @@ export default function AddWorkerForm({
       key="phone_number"
       className="flex justify-center items-center text-[18px] text-black"
     >
-      <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+      <span className="min-w-0 overflow-hidden mr-[40px] text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
         Контакти
       </span>
     </div>,
@@ -89,31 +86,48 @@ export default function AddWorkerForm({
         {crewWorkers.map((w, i) => (
           <React.Fragment key={i}>
             <div
-              className={`${styles.borderBottom} grid grid-cols-3 px-6 py-3 transition`}
+              className={`${styles.borderBottom} grid grid-cols-20 px-6 py-3 transition`}
             >
-              <div className="flex items-center gap-2 text-black">
+              <div className="flex items-center gap-2 text-black col-span-7">
                 <span>{i + 1}</span>
-                <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
+                <span className="min-w-0 ml-[12px] overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
                   {w.full_name}
                 </span>
               </div>
-              <div className="flex justify-center items-center text-black">
+              <div className="flex justify-center items-center text-black col-span-6">
                 <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
                   {w.position}
                 </span>
               </div>
-              <div className="flex justify-center items-center text-black">
+              <div className="flex justify-center items-center text-black col-span-6">
                 <span className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap md:whitespace-normal md:overflow-visible md:text-clip">
                   {w.phone_number}
                 </span>
+              </div>
+              <div className="flex justify-center items-center col-span-1">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCrewWorkers((prev) =>
+                      prev.filter((worker) => worker.id !== w.id)
+                    )
+                  }
+                  className=""
+                >
+                  <img
+                    src={Trash.src}
+                    alt="Delete"
+                    className={`${styles.TableItemIcon} w-[21px] h-[21px] cursor-pointer`}
+                  />
+                </button>
               </div>
             </div>
             <div className="border-b-2 mx-auto w-[95%]"></div>
           </React.Fragment>
         ))}
 
-        <div className="grid grid-cols-3 px-6 py-3">
-          <div className="flex items-center gap-2">
+        <div className="grid grid-cols-20 px-6 py-3">
+          <div className="flex items-center gap-2 col-span-7">
             <span className="text-[#0097c0]">{crewWorkers.length + 1}</span>
             <input
               type="text"
@@ -124,7 +138,7 @@ export default function AddWorkerForm({
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 w-full rounded-md px-2`}
             />
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center col-span-6">
             <input
               type="text"
               name="position"
@@ -134,13 +148,14 @@ export default function AddWorkerForm({
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 w-full text-center rounded-md px-2`}
             />
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center col-span-6">
             <input
               type="text"
               name="phone_number"
               placeholder="Ввести"
               value={inputs.phone_number}
               onChange={handleChange}
+              maxLength={25}
               className={`${styles.addWorkerInput} outline-none text-[15px] w-full py-2 text-center rounded-md px-2`}
             />
           </div>
