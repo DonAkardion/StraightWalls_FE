@@ -33,8 +33,15 @@ export const ClientsList = ({
   };
 
   // format Client Objects
-  const formatObjects = (client: Client) =>
-    client.objects.map((o) => `${o.name}: ${o.address}`).join(", \n");
+  const formatObjects = (client: Client) => (
+    <div>
+      {client.objects.map((o, i) => (
+        <div key={i}>
+          {o.name}: {o.address}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="">
@@ -65,7 +72,7 @@ export const ClientsList = ({
           {
             key: "objects",
             label: "Об’єкти",
-            tooltip: formatObjects,
+            tooltip: (client) => formatObjects(client),
             render: formatObjects,
           },
         ]}

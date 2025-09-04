@@ -5,13 +5,7 @@ import { useUser } from "@/context/UserContextProvider";
 import { ProjectReportResponse } from "@/types/project";
 import { changeProjectStatus } from "@/api/projects";
 import styles from "./ProjectInfo.module.css";
-import {
-  Person,
-  Phone,
-  Home,
-  Mail,
-  ArrowLeft,
-} from "../../../../../public/icons";
+import { Person, Phone, Home, ArrowLeft } from "../../../../../public/icons";
 
 interface Props {
   report: ProjectReportResponse;

@@ -30,7 +30,7 @@ export const getCrews = async (token: string): Promise<Crew[]> => {
     }
 
     const data = await response.json();
-    console.log("Бригади успішно отримані:", data);
+
     return data?.data || [];
   } catch (error) {
     console.error("Помилка getCrews:", error);
@@ -51,7 +51,6 @@ export const handleDeleteCrew = async (id: number, token: string) => {
     method: "DELETE",
     token,
   });
-  console.log("Бригада була успішно видалена");
 };
 
 export const handleEditCrew = async (
@@ -64,7 +63,7 @@ export const handleEditCrew = async (
     token,
     data: crewsData,
   });
-  console.log("Бригада була успішно оновлена");
+
   return response.data;
 };
 

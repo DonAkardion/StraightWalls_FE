@@ -41,10 +41,7 @@ export default function AddCrewForm() {
 
       // 2️⃣ Додаємо робітників з правильним team_id
       for (const worker of crewWorkers) {
-        await handleAddWorker(
-          { ...worker, team_id: newCrew.id },
-          token
-        );
+        await handleAddWorker({ ...worker, team_id: newCrew.id }, token);
       }
 
       router.back(); // або редірект куди потрібно
@@ -73,19 +70,12 @@ export default function AddCrewForm() {
             className={`${styles.addCrewInput} h-10 md:h-11 rounded border border-black px-5 text-[16px]`}
           />
         </div>
-        <div className="grid md:grid-cols-[180px_1fr] items-center gap-2 md:gap-4 mt-4">
-          <label className="text-[20px] text-black">Поточний об&apos;єкт</label>
-          <input
-            type="text"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            placeholder="Введіть статус"
-            className={`${styles.addCrewInput} h-10 md:h-11 rounded border border-black px-5 text-[16px]`}
-          />
-        </div>
 
         {/* Робітники */}
-        <AddWorkerForm crewWorkers={crewWorkers} setCrewWorkers={setCrewWorkers} />
+        <AddWorkerForm
+          crewWorkers={crewWorkers}
+          setCrewWorkers={setCrewWorkers}
+        />
 
         <div className="mt-10">
           <button

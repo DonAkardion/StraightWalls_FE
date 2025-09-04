@@ -11,7 +11,7 @@ interface TableColumn<T> {
   label: string | React.ReactNode;
   icon?: string | React.ReactNode;
   render?: (item: T) => React.ReactNode;
-  tooltip?: (item: T) => string;
+  tooltip?: (item: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
