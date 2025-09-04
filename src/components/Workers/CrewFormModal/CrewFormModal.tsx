@@ -41,15 +41,6 @@ export function CrewFormModal({
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none"
       />
-      <div className={`${styles.ModalInputTytle}`}>Статус</div>
-      <input
-        type="text"
-        name="status"
-        placeholder="Статус"
-        value={formData.status ?? ""}
-        onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none"
-      />
     </div>
   );
 }

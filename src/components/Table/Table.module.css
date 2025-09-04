@@ -180,6 +180,7 @@
   position: relative;
   width: 100px;
 }
+
 :global(.projectsTableWrap) .indentCellSmall::before,
 :global(.projectsTableWrap) .indentCellSmall::after {
   content: "";

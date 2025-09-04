@@ -41,11 +41,13 @@ export function AddProjectMaterials() {
           onUpdate={handleUpdateMaterial}
           onDelete={handleDeleteMaterial}
         />
-        <span
-          className={`${styles.clientsDownloadPDF} absolute top-[10px] right-[5px] md:top-[26px] md:right-[5px] cursor-pointer`}
-        >
-          Завантажити PDF
-        </span>
+        {materials.length > 0 && (
+          <span
+            className={`${styles.clientsDownloadPDF} absolute top-[10px] right-[5px] md:top-[26px] md:right-[5px] cursor-pointer`}
+          >
+            Завантажити PDF
+          </span>
+        )}
       </div>
 
       <MaterialIncomeEditor
