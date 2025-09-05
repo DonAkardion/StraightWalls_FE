@@ -1,20 +1,23 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Service } from "@/types/service";
+import { Material } from "@/types/material";
 import styles from "./MaterialFormModal.module.css";
 
 interface Props {
-  service: Service;
-  onChange: (data: Service) => void;
+  material: Material;
+  onChange: (data: Material) => void;
 }
 
-export const MaterialFormModal = ({ service, onChange }: Props) => {
-  const [form, setForm] = useState<Service>(service);
+export const MaterialFormModal = ({ material, onChange }: Props) => {
+  const [form, setForm] = useState<Material>(material);
 
   const [errors, setErrors] = useState<{
     name?: string;
-    unit_of_measurement?: string;
-    price?: string;
+    base_purchase_price?: string;
+    base_selling_price?: string;
+    unit?: string;
+    stock?: string;
+    base_delivery?: string;
   }>({});
 
   useEffect(() => {
@@ -26,15 +29,11 @@ export const MaterialFormModal = ({ service, onChange }: Props) => {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
   ) => {
-    const { name, type, value } = e.target;
-    // const checked =
-    //   type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
-
-    // const updatedValue = type === "checkbox" ? checked : value;
+    const { name, value } = e.target;
 
     setForm((prev) => ({
       ...prev,
-      //   [name]: updatedValue,
+      [name]: value,
     }));
 
     // простенька валідація
@@ -44,19 +43,25 @@ export const MaterialFormModal = ({ service, onChange }: Props) => {
       setErrors((prev) => ({ ...prev, name: undefined }));
     }
 
-    if (name === "unit_of_measurement" && !value.trim()) {
+    if (name === "unit" && !value.trim()) {
       setErrors((prev) => ({
         ...prev,
-        unit_of_measurement: "Одиниця вимірювання обов’язкова",
+        unit: "Одиниця вимірювання обов’язкова",
       }));
-    } else if (name === "unit_of_measurement") {
-      setErrors((prev) => ({ ...prev, unit_of_measurement: undefined }));
+    } else if (name === "unit") {
+      setErrors((prev) => ({ ...prev, unit: undefined }));
     }
 
-    if (name === "price" && (!value || Number(value) <= 0)) {
-      setErrors((prev) => ({ ...prev, price: "Вкажіть коректну ціну" }));
-    } else if (name === "price") {
-      setErrors((prev) => ({ ...prev, price: undefined }));
+    if (
+      (name === "base_purchase_price" || name === "base_selling_price") &&
+      (!value || Number(value) <= 0)
+    ) {
+      setErrors((prev) => ({ ...prev, [name]: "Вкажіть коректну ціну" }));
+    } else if (
+      name === "base_purchase_price" ||
+      name === "base_selling_price"
+    ) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
@@ -82,84 +87,83 @@ export const MaterialFormModal = ({ service, onChange }: Props) => {
       <div className={styles.ServiceModalInputTytle}>Ціна Купівлі</div>
       <input
         type="number"
-        name="price"
-        value={form.price ?? ""}
+        name="base_purchase_price"
+        value={form.base_purchase_price ?? ""}
         onChange={handleChange}
         className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.price ? "border-red-500" : "border-black"
+          errors.base_purchase_price ? "border-red-500" : "border-black"
         }`}
         min={0}
       />
-      {errors.price && (
-        <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+      {errors.base_purchase_price && (
+        <p className="text-red-500 text-sm mt-1">
+          {errors.base_purchase_price}
+        </p>
       )}
 
       {/* Ціна Продажу */}
       <div className={styles.ServiceModalInputTytle}>Ціна Продажу</div>
       <input
         type="number"
-        name="price"
-        value={form.price ?? ""}
+        name="base_selling_price"
+        value={form.base_selling_price ?? ""}
         onChange={handleChange}
         className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.price ? "border-red-500" : "border-black"
+          errors.base_selling_price ? "border-red-500" : "border-black"
         }`}
         min={0}
       />
-      {errors.price && (
-        <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+      {errors.base_selling_price && (
+        <p className="text-red-500 text-sm mt-1">{errors.base_selling_price}</p>
       )}
 
       {/* Одиниця вимірювання */}
       <div className={styles.ServiceModalInputTytle}>Одиниця вимірювання</div>
       <input
         type="text"
-        name="unit_of_measurement"
+        name="unit"
         placeholder="Напр. м², год, шт"
-        value={form.unit_of_measurement}
+        value={form.unit}
         onChange={handleChange}
         className={`border-b-1 p-2 pb-1 outline-none ${
-          errors.unit_of_measurement ? "border-red-500" : "border-black"
+          errors.unit ? "border-red-500" : "border-black"
         }`}
       />
-      {errors.unit_of_measurement && (
-        <p className="text-red-500 text-sm mt-1">
-          {errors.unit_of_measurement}
-        </p>
+      {errors.unit && (
+        <p className="text-red-500 text-sm mt-1">{errors.unit}</p>
       )}
 
-      {/* Тип послуги */}
-      {/* <div className={styles.ServiceModalInputTytle}>Тип послуги</div>
-      <select
-        name="service_type"
-        value={form.service_type}
+      {/* Доставка */}
+      <div className={styles.ServiceModalInputTytle}>Ціна Доставки</div>
+      <input
+        type="number"
+        name="base_delivery"
+        value={form.base_delivery ?? ""}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none bg-transparent appearance-none"
-      >
-        <option value="main">Основна</option>
-        <option value="additional">Додаткова</option>
-      </select> */}
+        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+          errors.base_delivery ? "border-red-500" : "border-black"
+        }`}
+        min={0}
+      />
+      {errors.base_delivery && (
+        <p className="text-red-500 text-sm mt-1">{errors.base_delivery}</p>
+      )}
 
-      {/* Опис */}
-      {/* <div className={styles.ServiceModalInputTytle}>Опис</div>
-      <textarea
-        name="description"
-        placeholder="Додатковий опис"
-        value={form.description ?? ""}
+      {/* Залишок */}
+      <div className={styles.ServiceModalInputTytle}>Залишок</div>
+      <input
+        type="number"
+        name="stock"
+        value={form.stock ?? ""}
         onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none resize-none"
-      /> */}
-
-      {/* Чи активна */}
-      {/* <label className="flex items-center gap-2 mt-2">
-        <input
-          type="checkbox"
-          name="is_active"
-          checked={form.is_active}
-          onChange={handleChange}
-        />
-        Активна
-      </label> */}
+        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+          errors.stock ? "border-red-500" : "border-black"
+        }`}
+        min={0}
+      />
+      {errors.stock && (
+        <p className="text-red-500 text-sm mt-1">{errors.stock}</p>
+      )}
     </div>
   );
 };

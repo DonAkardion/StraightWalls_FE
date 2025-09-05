@@ -1,33 +1,33 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useUser } from "@/context/UserContextProvider";
-import { Service } from "@/types/service";
+import { Material } from "@/types/material";
 import { MaterialsList } from "@/components/Settings/MaterialSettings/MaterialList";
 import { FormModal } from "@/components/Table/Form/FormModal";
 import { MaterialFormModal } from "@/components/Settings/MaterialSettings/MaterialFormModal";
 import {
-  getServices,
-  createService,
-  updateService,
-  deleteService as apiDeleteService,
-} from "@/api/services";
+  getMaterials,
+  createMaterial,
+  updateMaterial,
+  deleteMaterial,
+} from "@/api/material";
 
 export function MaterialSettings() {
   const { token } = useUser();
 
-  const [services, setServices] = useState<Service[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const [currentForm, setCurrentForm] = useState<Service | null>(null);
+  const [currentForm, setCurrentForm] = useState<Material | null>(null);
 
-  // Завантаження всіх послуг
+  // Завантаження всіх матеріалів
   useEffect(() => {
     if (!token) return;
     (async () => {
       try {
         setLoading(true);
-        const data = await getServices(token);
-        setServices(data);
+        const data = await getMaterials(token);
+        setMaterials(data);
       } catch (err) {
         console.error("Помилка при завантаженні матеріалу:", err);
       } finally {
@@ -36,49 +36,55 @@ export function MaterialSettings() {
     })();
   }, [token]);
 
-  const openAddModal = (type: "main" | "additional") => {
-    const draft: Omit<Service, "id" | "created_at" | "updated_at"> = {
+  const openAddModal = () => {
+    const draft: Omit<
+      Material,
+      "id" | "created_at" | "updated_at" | "base_margin"
+    > = {
       name: "",
-      unit_of_measurement: "",
-      price: 0,
-      service_type: type,
-      description: "",
-      is_active: true,
+      base_purchase_price: "",
+      base_selling_price: "",
+      unit: "",
+      stock: "",
+      base_delivery: "",
     };
-    setCurrentForm(draft as Service);
+    setCurrentForm(draft as Material);
   };
 
-  const openEditModal = (service: Service) => {
-    setCurrentForm(service);
+  const openEditModal = (material: Material) => {
+    setCurrentForm(material);
   };
 
-  const deleteService = async (id: number) => {
+  const handledeleteMaterial = async (id: number) => {
     if (!token) return;
     try {
-      await apiDeleteService(token, id);
-      setServices((prev) => prev.filter((s) => s.id !== id));
+      await deleteMaterial(token, id);
+      setMaterials((prev) => prev.filter((s) => s.id !== id));
     } catch (err) {
       console.error("Помилка при видаленні матеріалу:", err);
     }
   };
 
-  const saveService = async (service: Service) => {
+  const saveMaterial = async (material: Material) => {
     if (!token) return;
 
     try {
-      let saved: Service;
+      let saved: Material;
 
-      if (service.id) {
-        const { id, ...updates } = service;
-        saved = await updateService(token, id, updates);
-        setServices((prev) => prev.map((s) => (s.id === id ? saved : s)));
+      if (material.id) {
+        const { id, ...updates } = material;
+        saved = await updateMaterial(token, id, updates);
+        setMaterials((prev) => prev.map((s) => (s.id === id ? saved : s)));
       } else {
-        const { ...payload } = service;
-        saved = await createService(
+        const { ...payload } = material;
+        saved = await createMaterial(
           token,
-          payload as Omit<Service, "id" | "created_at" | "updated_at">
+          payload as Omit<
+            Material,
+            "id" | "created_at" | "updated_at" | "base_margin"
+          >
         );
-        setServices((prev) => [...prev, saved]);
+        setMaterials((prev) => [...prev, saved]);
       }
 
       setCurrentForm(null);
@@ -89,16 +95,16 @@ export function MaterialSettings() {
 
   const isValid =
     !!currentForm?.name &&
-    !!currentForm?.unit_of_measurement &&
-    !!currentForm?.service_type &&
-    (currentForm?.price ?? 0) > 0;
+    !!currentForm?.base_purchase_price &&
+    !!currentForm?.base_selling_price &&
+    !!currentForm?.unit &&
+    !!currentForm?.stock &&
+    Number(currentForm.base_purchase_price) > 0 &&
+    Number(currentForm.base_selling_price) > 0;
 
   if (loading) {
     return <div className="p-4 text-center">Завантаження...</div>;
   }
-
-  // Розділення по типу
-  const mainServices = services.filter((s) => s.service_type === "main");
 
   return (
     <section
@@ -106,11 +112,10 @@ export function MaterialSettings() {
     >
       <div className="mb-[40px] md:mb-[60px]">
         <MaterialsList
-          type="main"
-          services={mainServices}
-          onAdd={() => openAddModal("main")}
+          materials={materials}
+          onAdd={() => openAddModal()}
           onEdit={openEditModal}
-          onDelete={(id) => deleteService(id)}
+          onDelete={(id) => handledeleteMaterial(id)}
         />
       </div>
       {currentForm && (
@@ -118,12 +123,12 @@ export function MaterialSettings() {
           title={currentForm.id ? "Редагувати Матеріал" : "Новий Матеріал"}
           onClose={() => setCurrentForm(null)}
           onSave={() => {
-            if (isValid) saveService(currentForm);
+            if (isValid) saveMaterial(currentForm);
           }}
           isValid={isValid}
         >
           <MaterialFormModal
-            service={currentForm}
+            material={currentForm}
             onChange={(updated) => setCurrentForm(updated)}
           />
         </FormModal>

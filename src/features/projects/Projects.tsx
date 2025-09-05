@@ -12,7 +12,7 @@ import Calendar from "@/components/Calendar/Calendar";
 import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
 import { useUser } from "@/context/UserContextProvider";
-import { getProjects, deleteProject } from "@/api/projects";
+import { getProjects, deleteProject, patchProject } from "@/api/projects";
 
 const mapProject = (p: ProjectResponse): Project => ({
   ...p,
@@ -55,6 +55,28 @@ export function Projects() {
     fetchData();
   }, []);
 
+  const handleSaveProject = async () => {
+    if (!token || !currentForm) return;
+    try {
+      const updatedResp = await patchProject(
+        currentForm.id,
+        currentForm,
+        token
+      );
+      const updated = mapProject(updatedResp);
+
+      setProjects((prev) =>
+        prev.map((p) => (p.id === updated.id ? { ...p, ...updated } : p))
+      );
+
+      setModalData(null);
+      setCurrentForm(null);
+    } catch (e) {
+      console.error("Не вдалося оновити проєкт:", e);
+      alert("Помилка при збереженні змін");
+    }
+  };
+
   const handleDelete = async (id: number) => {
     if (!token) return;
 
@@ -84,6 +106,7 @@ export function Projects() {
         onAdd={() => {}}
         role={roleStr}
         tablesTytle="Всі проєкти"
+        onRefreshReport={(id) => {}}
       />
 
       <Calendar />
@@ -95,13 +118,7 @@ export function Projects() {
             setModalData(null);
             setCurrentForm(null);
           }}
-          onSave={() => {
-            setProjects((prev) =>
-              prev.map((p) => (p.id === currentForm.id ? currentForm : p))
-            );
-            setModalData(null);
-            setCurrentForm(null);
-          }}
+          onSave={handleSaveProject}
           isValid={
             !!currentForm.name &&
             !!currentForm.client_id &&

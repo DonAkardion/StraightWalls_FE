@@ -1,23 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Service } from "@/types/service";
+import { Material } from "@/types/material";
 import { Table } from "@/components/Table/Table";
 import { Pen, Trash } from "../../../../public/icons";
 import styles from "./MaterialList.module.css";
 
 interface Props {
-  services: Service[];
-  type: "main" | "additional";
+  materials: Material[];
   onDelete: (id: number) => void;
-  onEdit: (updated: Service) => void;
+  onEdit: (updated: Material) => void;
   onAdd: () => void;
   enableTooltips?: boolean;
 }
 
 export const MaterialsList = ({
-  services,
-  type,
+  materials,
   onDelete,
   onEdit,
   onAdd,
@@ -25,8 +23,6 @@ export const MaterialsList = ({
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-
-  const filtered = services.filter((service) => service.service_type === type);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -36,10 +32,10 @@ export const MaterialsList = ({
   }, []);
 
   return (
-    <Table<Service>
+    <Table<Material>
       title={"Список Матеріалів"}
       showIndex={true}
-      data={filtered}
+      data={materials}
       expandedId={expandedId}
       onAdd={onAdd}
       onEdit={onEdit}
@@ -55,69 +51,50 @@ export const MaterialsList = ({
           label: "Назва",
         },
         {
-          key: "purchase_price",
+          key: "base_purchase_price",
           label: "Купівля",
-          render: (service) => `${service.price} грн`,
+          render: (material) => `${material.base_purchase_price} грн`,
         },
         {
-          key: "selling_price",
+          key: "base_selling_price",
           label: "Продаж",
-          render: (service) => `${service.price} грн`,
+          render: (material) => `${material.base_selling_price} грн`,
         },
-        { key: "unit_of_measurement", label: "Од. вимір." },
-        { key: "distributor", label: "Постачальник" },
-        // {
-        //   key: "is_active",
-        //   label: "Статус",
-        //   render: (service: Service) => {
-        //     if (service.is_active) {
-        //       return (
-        //         <div className="flex justify-center items-center gap-2">
-        //           <div className="h-4 w-4 rounded-full bg-green-600"></div>
-        //           <span>Активна</span>
-        //         </div>
-        //       );
-        //     }
-        //     return (
-        //       <div className="flex justify-center items-center gap-2">
-        //         <div className="h-4 w-4 rounded-full bg-red-600"></div>
-        //         <span>Неактивна</span>
-        //       </div>
-        //     );
-        //   },
-        // },
+        { key: "unit", label: "Од. вимір." },
+        { key: "stock", label: "Залишок" },
+        { key: "base_delivery", label: "Доставка" },
       ]}
-      renderInspection={(s) => (
+      renderInspection={(m) => (
         <div className="pb-1 bg-white border-b relative">
           <div className="pl-[20px] pr-[10px] flex flex-col gap-2">
             <div className={`${styles.inspectRow} flex justify-between`}>
-              <p>
-                <span>Постачальник: </span>
-                <span className="text-sm">{s.description || "немає"}</span>
-              </p>
+              {/* <p>
+                <span>Опис: </span>
+                <span className="text-sm">{m.description || "немає"}</span>
+              </p> */}
               <img
                 src={Trash.src}
                 alt="Delete"
                 className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
-                onClick={() => onDelete(s.id)}
+                onClick={() => onDelete(m.id)}
               />
             </div>
             <div className="flex justify-between">
               <p>
                 <span>Купівля: </span>
-                <span className="text-sm">{s.price} грн</span>
+                <span className="text-sm">{m.base_purchase_price} грн</span>
               </p>
               <img
                 src={Pen.src}
                 alt="Edit"
                 className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
-                onClick={() => onEdit(s)}
+                onClick={() => onEdit(m)}
               />
             </div>
             <div className="flex justify-between">
               <p>
                 <span>Продаж: </span>
-                <span className="text-sm">{s.price} грн</span>
+                <span className="text-sm">{m.base_selling_price} грн</span>
               </p>
             </div>
           </div>

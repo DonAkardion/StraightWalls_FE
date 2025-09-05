@@ -23,6 +23,7 @@ interface Props {
   role?: string;
   enableTooltips?: boolean;
   tablesTytle?: string;
+  onRefreshReport?: (id: number) => void;
 }
 
 const statusMap: Record<string, string> = {
@@ -39,6 +40,7 @@ export const AllProjectsList = ({
   role,
   enableTooltips = true,
   tablesTytle,
+  onRefreshReport,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [reportsMap, setReportsMap] = useState<
@@ -122,6 +124,16 @@ export const AllProjectsList = ({
         return tableStyles.canceledRow;
       default:
         return "";
+    }
+  };
+
+  const refreshReport = async (id: number) => {
+    if (!token) return;
+    try {
+      const rep = await getProjectReport(id, token);
+      setReportsMap((prev) => ({ ...prev, [id]: rep }));
+    } catch (e) {
+      console.error("Не вдалося оновити репорт", e);
     }
   };
 
