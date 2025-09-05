@@ -119,7 +119,9 @@ export const ProjectEstimate = ({
 
   return (
     <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[156px]`}>
-      <h2 className={`${styles.estimateTytle} mb-[10px] md:mb-[16px]`}>
+      <h2
+        className={`${styles.estimateTytle} mb-[26px] sm:mb-[10px] md:mb-[16px]`}
+      >
         {tablesTitle}
       </h2>
       {(editable || mainServices.length > 0) && (

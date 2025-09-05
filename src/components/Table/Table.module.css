@@ -178,7 +178,9 @@
 }
 :global(.projectsTableWrap) .indentCellSmall {
   position: relative;
+  width: 100px;
 }
+
 :global(.projectsTableWrap) .indentCellSmall::before,
 :global(.projectsTableWrap) .indentCellSmall::after {
   content: "";
@@ -190,9 +192,13 @@
   border-radius: 50%;
 }
 :global(.projectsTableWrap) .indentCellSmall::before {
-  left: 36%;
+  left: 18%;
   background: var(--green);
   box-shadow: 25px 0 0 var(--yellow), 51px 0 0 var(--blue);
+}
+:global(.projectsTableWrap) .TableCell:nth-child(6) {
+  padding: 0;
+  overflow: visible;
 }
 
 /* правила для AddProject  Estimate*/
@@ -402,11 +408,11 @@
     display: none;
   }
   /* правила для AddProject  Estimate*/
-  :global(.projectEstimateTableWrap) .TableRowCell:nth-child(7) {
+  :global(.projectEstimateTableWrap) .TableRowCell:nth-child(6) {
     display: table-cell;
     background: none;
   }
-  :global(.projectEstimateTableWrap) .TableCell:nth-child(5) {
+  :global(.projectEstimateTableWrap) .TableCell:nth-child(4) {
     display: table-cell;
     background: none;
   }

@@ -2,6 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { Client, ClientObject } from "@/types/client";
+import { FormModal } from "@/components/Table/Form/FormModal";
+import { ClientObjectFormModal } from "@/components/Clients/ClientObject/ClientObjectFormModal";
+import { ClientObjectsList } from "@/components/Clients/ClientObject/ClientObjectsList";
+import { deleteClientObject, addClientObject } from "@/api/clients";
+import { useUser } from "@/context/UserContextProvider";
 
 type NewClientForm = {
   full_name: string;
@@ -12,10 +17,12 @@ type NewClientForm = {
 interface Props {
   client?: Client;
   onChange: (data: Client | NewClientForm) => void;
+  refreshClient?: (clientId?: number) => Promise<Client | undefined>;
 }
 
-export const ClientFormModal = ({ client, onChange }: Props) => {
+export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
   const isEdit = Boolean(client);
+  const { token } = useUser();
 
   // create-mode form
   const [createForm, setCreateForm] = useState<NewClientForm>({
@@ -31,23 +38,29 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
   // edit-mode form (full Client object)
   const [editForm, setEditForm] = useState<Client | null>(client ?? null);
 
-  // keep editForm in sync when client prop changes (opening edit modal)
+  // local UI state for adding object inline
+  const [showObjectModal, setShowObjectModal] = useState(false);
+  const [newObject, setNewObject] = useState<
+    Pick<ClientObject, "name" | "address" | "description">
+  >({
+    name: "",
+    address: "",
+    description: "",
+  });
+
   useEffect(() => {
     if (client) {
       setEditForm(client);
     } else {
       setEditForm(null);
-      // optionally keep createForm values if desired
-      setCreateForm((prev) => ({
-        ...prev,
+      setCreateForm({
         full_name: "",
         phone_number: "+380",
         object: { name: "", address: "", description: "" },
-      }));
+      });
     }
   }, [client]);
 
-  // notify parent on changes
   useEffect(() => {
     if (isEdit) {
       if (editForm) onChange(editForm);
@@ -59,11 +72,9 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
 
   const [errors, setErrors] = useState<{ full_name?: string }>({});
 
-  // input handler for full_name and phone_number
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (isEdit) {
-      // update editForm (Client) — we only expect name to be 'full_name' or 'phone_number'
       setEditForm((prev) =>
         prev
           ? {
@@ -81,7 +92,6 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
       );
     }
 
-    // простенька валідація
     if (name === "full_name" && !value.trim()) {
       setErrors((prev) => ({ ...prev, full_name: "Ім’я є обов’язковим" }));
     } else if (name === "full_name") {
@@ -89,7 +99,6 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
     }
   };
 
-  // handlers for object fields (only for create mode)
   const handleObjectChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -99,13 +108,22 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
         ...prev,
         object: {
           ...prev.object,
-          // name is "name" | "address" | "description"
           ...(name === "name" ? { name: value } : {}),
           ...(name === "address" ? { address: value } : {}),
           ...(name === "description" ? { description: value } : {}),
         },
       }));
     }
+  };
+
+  const handleSaveObject = async () => {
+    if (!token || !client) return;
+    await addClientObject(token, client.id, newObject);
+    if (refreshClient) {
+      const updated = await refreshClient(client.id);
+      if (updated) setEditForm(updated);
+    }
+    setShowObjectModal(false);
   };
 
   return (
@@ -140,10 +158,11 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
           className="border-b-1 p-2 pb-1 outline-none w-full"
         />
       </label>
+
       {!isEdit && (
         <>
           <label className="block mb-3">
-            <div>Назва Об`єкту</div>
+            <div>Назва Об’єкту</div>
             <input
               type="text"
               name="name"
@@ -176,6 +195,37 @@ export const ClientFormModal = ({ client, onChange }: Props) => {
             />
           </label>
         </>
+      )}
+
+      {isEdit && editForm && (
+        <div className="mt-3">
+          <h6 className=" mb-2">Об’єкти клієнта</h6>
+          <ClientObjectsList
+            objects={editForm.objects}
+            onAdd={() => setShowObjectModal(true)}
+            onDelete={async (id) => {
+              if (!token || !client) return;
+              await deleteClientObject(token, id);
+              if (refreshClient) {
+                const updated = await refreshClient(client.id);
+                if (updated) setEditForm(updated);
+              }
+            }}
+          />
+        </div>
+      )}
+      {showObjectModal && (
+        <FormModal
+          title="Додати об’єкт"
+          onClose={() => setShowObjectModal(false)}
+          onSave={handleSaveObject}
+          isValid={Boolean(newObject.name && newObject.address)}
+        >
+          <ClientObjectFormModal
+            object={undefined}
+            onChange={(data) => setNewObject(data)}
+          />
+        </FormModal>
       )}
     </>
   );

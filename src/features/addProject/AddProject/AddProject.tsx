@@ -170,7 +170,7 @@ export function AddProject() {
           tablesTitle="Складання кошторису"
         />
         <span
-          className={`${styles.clientsSendToViber} absolute top-[6px] right-[5px] md:top-[24px] md:right-[5px] cursor-pointer`}
+          className={`${styles.clientsSendToViber} absolute top-[26px] right-[5px] sm:top-[6px] md:top-[24px] md:right-[5px] cursor-pointer`}
         >
           Відправити на Viber
         </span>

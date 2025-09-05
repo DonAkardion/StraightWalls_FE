@@ -37,10 +37,7 @@ export default function AddCrewForm() {
 
       addCrew(newCrew);
       for (const worker of crewWorkers) {
-        await handleAddWorker(
-          { ...worker, team_id: newCrew.id },
-          token
-        );
+        await handleAddWorker({ ...worker, team_id: newCrew.id }, token);
       }
 
       router.back();
@@ -69,7 +66,12 @@ export default function AddCrewForm() {
             className={`${styles.addCrewInput} h-10 md:h-11 rounded border border-black px-5 text-[16px]`}
           />
         </div>
-        <AddWorkerForm crewWorkers={crewWorkers} setCrewWorkers={setCrewWorkers} />
+
+        {/* Робітники */}
+        <AddWorkerForm
+          crewWorkers={crewWorkers}
+          setCrewWorkers={setCrewWorkers}
+        />
 
         <div className="mt-10">
           <button

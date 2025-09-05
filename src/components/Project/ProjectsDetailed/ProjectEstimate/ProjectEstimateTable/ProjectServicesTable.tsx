@@ -18,6 +18,7 @@ interface Props {
   confirmed?: boolean;
   onQuantityChange?: (serviceId: number, quantity: number) => void;
   className?: string;
+  enableTooltips?: boolean;
 }
 
 export const ProjectServicesTable = ({
@@ -25,6 +26,7 @@ export const ProjectServicesTable = ({
   selection,
   editable = false,
   confirmed = false,
+  enableTooltips = true,
   onQuantityChange,
   className,
 }: Props) => {
@@ -72,11 +74,16 @@ export const ProjectServicesTable = ({
       className={className}
       showIndex
       expandedId={expandedId}
+      enableTooltips={enableTooltips}
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
       columns={[
-        { key: "name", label: "Найменування послуги" },
+        {
+          key: "name",
+          label: "Найменування послуги",
+          tooltip: (service) => `Проєкт: ${service.name}`,
+        },
 
         {
           key: "quantity",

@@ -33,6 +33,27 @@ export function Clients() {
     null
   );
 
+  const refreshClients = async (
+    clientId?: number
+  ): Promise<Client | undefined> => {
+    if (!token) return undefined;
+    try {
+      const data = await getClients(token);
+      setClients(data);
+      if (typeof clientId === "number") {
+        return data.find((c) => c.id === clientId);
+      }
+      return undefined;
+    } catch (err) {
+      console.error("Помилка при оновленні клієнтів:", err);
+      return undefined;
+    }
+  };
+
+  useEffect(() => {
+    refreshClients();
+  }, [token]);
+
   // Завантаження клієнтів
   useEffect(() => {
     if (!token) return;
@@ -151,6 +172,7 @@ export function Clients() {
             onChange={(updated: Client | NewClientForm) =>
               setCurrentForm(updated)
             }
+            refreshClient={refreshClients}
           />
         </FormModal>
       )}

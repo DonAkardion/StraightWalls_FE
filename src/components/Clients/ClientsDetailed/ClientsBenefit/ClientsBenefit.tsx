@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ClientsBenefit.module.css";
 import { getProjectByClientId, getProjectReport } from "@/api/projects";
+import { ProjectResponse, Project } from "@/types/project";
 
 interface Props {
   clientId: number;
@@ -12,7 +13,6 @@ interface ProjectReport {
   totalProjectCost: number;
   projectName?: string;
 }
-
 
 export const ClientsBenefit = ({ clientId }: Props) => {
   const [benefitData, setBenefitData] = useState<ProjectReport | null>(null);
@@ -28,10 +28,14 @@ export const ClientsBenefit = ({ clientId }: Props) => {
 
     const fetchBenefitData = async () => {
       try {
-        const projects = await getProjectByClientId(clientId, token);
+        const projects: ProjectResponse[] = (await getProjectByClientId(
+          clientId,
+          token
+        )) as Project[];
+        // const projects = await getProjectByClientId(clientId, token);
         const reports: ProjectReport[] = await Promise.all(
           projects.map((p: any) => getProjectReport(p.id, token))
-        )
+        );
 
         const totalWorksCost = reports.reduce(
           (sum, r) => sum + r.totalWorksCost,
@@ -46,7 +50,11 @@ export const ClientsBenefit = ({ clientId }: Props) => {
           0
         );
 
-        setBenefitData({ totalWorksCost, totalMaterialsCost, totalProjectCost });
+        setBenefitData({
+          totalWorksCost,
+          totalMaterialsCost,
+          totalProjectCost,
+        });
       } catch (error) {
         console.error("Error fetching benefit data:", error);
       }

@@ -15,6 +15,7 @@ interface MaterialsEditorProps {
   onAdd?: (material: ProjectMaterial) => void;
   onUpdate?: (id: number, updated: ProjectMaterial) => void;
   onDelete?: (id: number) => void;
+  enableTooltips?: boolean;
 }
 
 export function MaterialsEditor({
@@ -24,6 +25,7 @@ export function MaterialsEditor({
   onAdd,
   onUpdate,
   onDelete,
+  enableTooltips = true,
 }: MaterialsEditorProps) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
@@ -54,7 +56,11 @@ export function MaterialsEditor({
   );
 
   const columns = [
-    { key: "name", label: "Найменування матеріалів" },
+    {
+      key: "name",
+      label: "Найменування матеріалів",
+      tooltip: (material: ProjectMaterial) => `Назва: ${material.name}`,
+    },
     {
       key: "quantity",
       label: "Кількість",

@@ -12,18 +12,24 @@ export function Settings() {
     <section
       className={`${styles.settings} max-w-[1126px] m-auto pt-[50px] pl-[20px] pr-[20px] lg:pt-[130px] lg:pl-[76px] lg:pr-[58px] md:pt-[58px] md:pl-[60px] md:pr-[40px]`}
     >
-      {role === "admin" ? (
+      {role === "admin" || role === "accountant" ? (
         <nav
           className={`${styles.settingsLinksList} grid grid-cols-1 justify-items-center md:grid-cols-2 gap-x-[40px] gap-y-[40px] md:gap-y-[30px]`}
         >
-          <Link
-            href="/admin/manageCustomers/"
-            className={`${styles.settingsLinksListLink} 
+          <>
+            {role === "admin" ? (
+              <Link
+                href="/admin/manageCustomers/"
+                className={`${styles.settingsLinksListLink} 
           `}
-            prefetch={false}
-          >
-            <div>Управління користувачами</div>
-          </Link>
+                prefetch={false}
+              >
+                <div>Управління користувачами</div>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </>
           <Link
             href="/"
             className={`${styles.settingsLinksListLink} 

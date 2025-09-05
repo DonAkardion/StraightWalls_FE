@@ -6,12 +6,14 @@ import tableStyles from "@/components/Table/Table.module.css";
 import { useUser } from "@/context/UserContextProvider";
 import { useRouter } from "next/navigation";
 
+import { StatusSelector } from "@/components/Project/EditComponents/StatusSelector";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 
 import { Project } from "@/types/project";
 import { getProjectReport } from "@/api/projects";
 import { ProjectReportResponse } from "@/types/project";
+import { changeProjectStatus } from "@/api/projects";
 
 interface Props {
   projects: Project[];
@@ -22,6 +24,13 @@ interface Props {
   enableTooltips?: boolean;
   tablesTytle?: string;
 }
+
+const statusMap: Record<string, string> = {
+  completed: "Виконано",
+  in_progress: "В процесі",
+  new: "Очікує",
+  canceled: "Відхилено",
+};
 
 export const AllProjectsList = ({
   projects,
@@ -38,9 +47,21 @@ export const AllProjectsList = ({
   const router = useRouter();
   const { token } = useUser();
 
+  const [statusState, setStatusState] = useState<Record<number, string>>({});
+
   const handleRowClick = (id: number) => {
     if (!role) return;
     router.push(`/${role}/projects/projectsDetailed/${id}`);
+  };
+
+  const handleStatusChange = async (projectId: number, newStatus: string) => {
+    if (!token) return;
+    try {
+      await changeProjectStatus(projectId, token, { status: newStatus });
+      setStatusState((prev) => ({ ...prev, [projectId]: newStatus }));
+    } catch (e) {
+      console.error("Не вдалося змінити статус проєкту:", e);
+    }
   };
 
   useEffect(() => {
@@ -88,20 +109,9 @@ export const AllProjectsList = ({
     return rep ? rep.project.team?.name ?? "—" : "Завантаження...";
   };
 
-  const getObjectNameAddr = (projectId: number) => {
-    const rep = reportsMap[projectId];
-    if (!rep) return "Завантаження...";
-    const obj = rep.project.object;
-    return obj ? `${obj.name}: ${obj.address}` : "—";
-  };
-
-  const getCost = (projectId: number) => {
-    const rep = reportsMap[projectId];
-    return rep ? rep.totalProjectCost : "Завантаження...";
-  };
-
   const getRowClassName = (project: Project) => {
-    switch (project.status) {
+    const status = statusState[project.id] || project.status;
+    switch (status) {
       case "completed":
         return tableStyles.completedRow;
       case "new":
@@ -145,12 +155,6 @@ export const AllProjectsList = ({
             tooltip: (project) => `Клієнт: ${getClientName(project.id)}`,
           },
           {
-            key: "budget",
-            label: "Вартість",
-            render: (project) => getCost(project.id),
-            tooltip: (project) => `Вартість: ${getCost(project.id)}`,
-          },
-          {
             key: "crewId",
             label: "Бригада",
             render: (project) => getCrewName(project.id),
@@ -168,6 +172,22 @@ export const AllProjectsList = ({
                 project.start_date ? project.start_date : "Початок"
               } / ${project.end_date ? project.end_date : "Кінець"}`,
           },
+          {
+            key: "status",
+            label: "Статус",
+            render: (project) => {
+              const currentStatus = statusState[project.id] || project.status;
+              return (
+                <StatusSelector
+                  value={currentStatus}
+                  options={statusMap}
+                  onChange={(newStatus) =>
+                    handleStatusChange(project.id, newStatus)
+                  }
+                />
+              );
+            },
+          },
         ]}
         renderInspection={(project) => (
           <Inspect<Project>
@@ -184,14 +204,18 @@ export const AllProjectsList = ({
                 label: "Бригада",
                 value: (item) => getCrewName(item.team_id),
               },
-              // {
-              //   label: "Початок",
-              //   value: (item) => item.startDate,
-              // },
-              // {
-              //   label: "Завершення",
-              //   value: (item) => item.endDate,
-              // },
+              {
+                label: "Початок",
+                value: (item) => {
+                  item.start_date ? item.start_date : "Початок";
+                },
+              },
+              {
+                label: "Завершення",
+                value: (item) => {
+                  item.end_date ? item.end_date : "Кінець";
+                },
+              },
               {
                 label: "Статус",
                 value: (item) => item.status ?? "—",

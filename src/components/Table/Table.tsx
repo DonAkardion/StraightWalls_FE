@@ -11,7 +11,7 @@ interface TableColumn<T> {
   label: string | React.ReactNode;
   icon?: string | React.ReactNode;
   render?: (item: T) => React.ReactNode;
-  tooltip?: (item: T) => string;
+  tooltip?: (item: T) => React.ReactNode;
 }
 
 interface TableProps<T> {
@@ -94,9 +94,6 @@ export function Table<T extends { id: number }>({
                 <th className={`${styles.indentCellBig}`}></th>
                 <th className={`${styles.indentCellSmall}`}></th>
                 <th className={`${styles.indentCellLast}`}></th>
-                {/* {(onEdit || onDelete || onInspect) && (
-                <th className={`${styles.TableRowCell}`}></th>
-              )} */}
               </tr>
             </thead>
           )}

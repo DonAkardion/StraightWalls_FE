@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useUser } from "@/context/UserContextProvider";
 
 import { getProjectReport } from "@/api/projects";
@@ -25,32 +25,29 @@ export function ProjectsDetailed({ projectId }: Props) {
   const { token } = useUser();
   const [report, setReport] = useState<ProjectReportResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [payments, setPayments] = useState<Payment[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
-  useEffect(() => {
+  const refreshProject = useCallback(async () => {
     if (!token) return;
-
-    const fetchProjectReport = async () => {
-      try {
-        const data = await getProjectReport(projectId, token);
-        setReport(data ?? null);
-      } catch (err) {
-        console.error("Не вдалося завантажити репорт проєкту:", err);
-        setReport(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjectReport();
+    try {
+      const data = await getProjectReport(projectId, token);
+      setReport(data ?? null);
+    } catch (err) {
+      console.error("Не вдалося завантажити репорт проєкту:", err);
+      setReport(null);
+    }
   }, [projectId, token]);
+
+  useEffect(() => {
+    setLoading(true);
+    refreshProject().finally(() => setLoading(false));
+  }, [refreshProject]);
 
   const handleCreatePayment = async (payment: ProjectPaymentData) => {
     if (!token || !report) return;
     setSubmitting(true);
     try {
-      const newPayment = await createPayment(
+      await createPayment(
         {
           project_id: report.project.id,
           name: payment.name,
@@ -61,7 +58,7 @@ export function ProjectsDetailed({ projectId }: Props) {
         token
       );
 
-      setPayments((prev) => [...prev, newPayment]); // додаємо в список
+      await refreshProject();
     } catch (err) {
       console.error("Помилка створення платежу:", err);
       alert("Не вдалося створити платіж");
@@ -90,7 +87,7 @@ export function ProjectsDetailed({ projectId }: Props) {
           tablesTitle="Кошторис"
         />
 
-        <ProjectPayment report={report} />
+        <ProjectPayment report={report} refreshProject={refreshProject} />
         <ProjectCrew
           crewId={report.project.team_id}
           crewName={report.project.team.name}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Client } from "@/types/client";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Props {
   clients: Client[];
@@ -31,8 +32,15 @@ export const ClientsList = ({
     router.push(`/${role}/clients/clientsDetailed/${id}`);
   };
 
-  const formatObjects = (client: Client) =>
-    client.objects.map((o) => `${o.name}: ${o.address}`).join(", ");
+  const formatObjects = (client: Client) => (
+    <div>
+      {client.objects.map((o, i) => (
+        <div key={i}>
+          {o.name}: {o.address}
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <div className="">
@@ -63,7 +71,7 @@ export const ClientsList = ({
           {
             key: "objects",
             label: "Об’єкти",
-            tooltip: formatObjects,
+            tooltip: (client) => formatObjects(client),
             render: formatObjects,
           },
         ]}

@@ -1,22 +1,24 @@
 .addWorkerButton {
-    background: var(--yellow-gradient);
-    font-family: var(--font-inter)
+  background: var(--yellow-gradient);
+  font-family: var(--font-inter);
 }
-
+.addWorkerButton:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
 .addWorkerForm {
-    font-family: var(--font-inter);
-    box-shadow: 1px 3px 15px 2px #00000040;
+  font-family: var(--font-inter);
+  box-shadow: 1px 3px 15px 2px #00000040;
 }
 
 .addTopRow {
-    background: var(--yellow-gradient)
+  background: var(--yellow-gradient);
 }
 
 .addWorkerInput {
-    color: var(--blue)
+  color: var(--blue);
 }
 
 .addWorkerInput::placeholder {
-    color: var(--blue);
-    opacity: 1; 
+  color: var(--blue);
+  opacity: 1;
 }
