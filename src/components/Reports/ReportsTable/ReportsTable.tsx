@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import burgerTable from "../../../../public/icons/BurgerTable.svg";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
+import { getProjects } from "@/api/projects";
+import { ProjectDetailedResponse } from "@/types/project";
 
 interface Material {
   id: number;
@@ -12,48 +14,49 @@ interface Material {
   icon: string;
 }
 
-const data: Material[] = [
-  {
-    id: 1,
-    name: "Гіпс",
-    quantity: "4 т",
-    unitPrice: "500 грн",
-    supplier: "ТОВ компанія",
-    icon: "",
-  },
-  {
-    id: 2,
-    name: "Гіпс",
-    quantity: "4 т",
-    unitPrice: "500 грн",
-    supplier: "ТОВ компанія",
-    icon: "",
-  },
-  {
-    id: 3,
-    name: "Гіпс",
-    quantity: "4 т",
-    unitPrice: "500 грн",
-    supplier: "ТОВ компанія",
-    icon: "",
-  },
-  {
-    id: 4,
-    name: "Гіпс",
-    quantity: "4 т",
-    unitPrice: "500 грн",
-    supplier: "ТОВ компанія",
-    icon: "",
-  },
-  {
-    id: 5,
-    name: "Гіпс",
-    quantity: "4 т",
-    unitPrice: "500 грн",
-    supplier: "ТОВ компанія",
-    icon: "",
-  },
-];
+
+// const data: Material[] = [
+//   {
+//     id: 1,
+//     name: "Гіпс",
+//     quantity: "4 т",
+//     unitPrice: "500 грн",
+//     supplier: "ТОВ компанія",
+//     icon: "",
+//   },
+//   {
+//     id: 2,
+//     name: "Гіпс",
+//     quantity: "4 т",
+//     unitPrice: "500 грн",
+//     supplier: "ТОВ компанія",
+//     icon: "",
+//   },
+//   {
+//     id: 3,
+//     name: "Гіпс",
+//     quantity: "4 т",
+//     unitPrice: "500 грн",
+//     supplier: "ТОВ компанія",
+//     icon: "",
+//   },
+//   {
+//     id: 4,
+//     name: "Гіпс",
+//     quantity: "4 т",
+//     unitPrice: "500 грн",
+//     supplier: "ТОВ компанія",
+//     icon: "",
+//   },
+//   {
+//     id: 5,
+//     name: "Гіпс",
+//     quantity: "4 т",
+//     unitPrice: "500 грн",
+//     supplier: "ТОВ компанія",
+//     icon: "",
+//   },
+// ];
 
 const columns = [
   { key: "name", label: "Назва" },
@@ -69,12 +72,50 @@ const columns = [
 ];
 
 export function MaterialsTable() {
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [token, setToken] = useState<string>("");
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, [token])
+
+  useEffect(() => {
+  if (!token) return;
+
+  const fetchMaterials = async () => {
+    try {
+      const response = await getProjects(token);
+
+      const formattedData: Material[] = response.flatMap(project =>
+        project.materials.map(mat => ({
+          id: mat.id,
+          name: mat.name,
+          quantity: mat.quantity,
+          unitPrice: mat.selling_price,
+          supplier: "ТОВ компанія",
+          icon: "",
+        }))
+      );
+
+      setMaterials(formattedData);
+    } catch (error) {
+      console.error("Помилка при завантаженні матеріалів:", error);
+    }
+  };
+
+  fetchMaterials();
+}, [token]);
+
+
   return (
     <div className="mt-15">
       <Table<Material>
         title="Кількість матеріалів"
-        data={data}
+        data={materials}
         expandedId={expandedId}
         columns={columns}
         showIndex={true}
