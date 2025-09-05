@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import { Reports } from "@/features/reports/Reports";
 
 export default function ReportsPage() {

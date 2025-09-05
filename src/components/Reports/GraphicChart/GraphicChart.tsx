@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ChartOptions,
   Chart as ChartJS,
@@ -12,8 +12,10 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useState } from "react";
 import styles from "./GraphicChart.module.css";
+import { getProjectPayments } from "@/api/payments";
+import { useUser } from "@/context/UserContextProvider";
+import { getProjectReport } from "@/api/projects";
 
 ChartJS.register(
   CategoryScale,
@@ -25,104 +27,147 @@ ChartJS.register(
   Legend
 );
 
-type ChartType = "Продажі" | "Прибуток" | "Витрати";
-
 const months = [
-  "Січень",
-  "Лютий",
-  "Березень",
-  "Квітень",
-  "Травень",
-  "Червень",
-  "Липень",
-  "Серпень",
-  "Вересень",
-  "Жовтень",
-  "Листопад",
-  "Грудень",
+  "Січень","Лютий","Березень","Квітень","Травень","Червень",
+  "Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"
 ];
 
-const dataSets: Record<ChartType, number[]> = {
-  Продажі: [
-    12000, 8000, 11000, 14000, 12000, 16000, 15000, 18000, 19000, 17000, 15500,
-    16500,
-  ].map((x) => x * 10),
-  Прибуток: [
-    4000, 5500, 6000, 2500, 2900, 3000, 2800, 3500, 4000, 4100, 4300, 5000,
-  ].map((x) => x * 10),
-  Витрати: [
-    10000, 9000, 9500, 11500, 9800, 13000, 12200, 14500, 17000, 13700, 12400,
-    12900,
-  ].map((x) => x * 10),
-};
+type ChartType = "Продажі" | "Прибуток" | "Витрати";
 
-export const GraphicChart = () => {
+interface Project {
+  id: number;
+}
+
+interface Props {
+  projects: Project[];
+}
+
+export const GraphicChart = ({ projects }: Props) => {
   const buttonsTitle: ChartType[] = ["Продажі", "Прибуток", "Витрати"];
   const [active, setActive] = useState<ChartType>("Продажі");
+
+  const [salesData, setSalesData] = useState<number[]>(new Array(12).fill(0));
+  const [profitData, setProfitData] = useState<number[]>(new Array(12).fill(0));
+  const [expensesData, setExpensesData] = useState<number[]>(new Array(12).fill(0));
+
+  const { token } = useUser();
+
+  useEffect(() => {
+    if (!token || !projects.length) return;
+
+    const fetchAllPayments = async () => {
+      try {
+        const monthlySales = new Array(12).fill(0);
+        for (const project of projects) {
+          const payments = await getProjectPayments(project.id, token);
+          const paidPayments = payments.filter((p) => p.status === "paid");
+          paidPayments.forEach((payment) => {
+            const date = new Date(payment.updated_at);
+            const monthIndex = date.getMonth();
+            const amount = Number(payment.amount);
+            if (!isNaN(monthIndex) && !isNaN(amount)) {
+              monthlySales[monthIndex] += amount;
+            }
+          });
+        }
+
+        setSalesData(monthlySales);
+      } catch (error) {
+        console.error("Помилка завантаження платежів:", error);
+      }
+    };
+
+    fetchAllPayments();
+  }, [projects, token]);
+
+  useEffect(() => {
+    if (!token || !projects.length) return;
+
+    const fetchExpenses = async () => {
+      try {
+        const monthlyExpenses = new Array(12).fill(0);
+
+        for (const project of projects) {
+          const report = await getProjectReport(project.id, token);
+          const updatedMonth = new Date(report.project.updated_at).getMonth();
+          const expense = Number(report.totalMaterialsCost);
+          if (!isNaN(updatedMonth) && !isNaN(expense)) {
+            monthlyExpenses[updatedMonth] += expense;
+          }
+        }
+
+        setExpensesData(monthlyExpenses);
+      } catch (error) {
+        console.error("Помилка завантаження витрат:", error);
+      }
+    };
+
+    fetchExpenses();
+  }, [projects, token]);
+
+
+    useEffect(() => {
+      if (!salesData.length || !expensesData.length) return;
+
+      const monthlyProfits = salesData.map((sale, index) => {
+        const expense = expensesData[index] || 0;
+        return sale - expense;
+      });
+
+      setProfitData(monthlyProfits);
+    }, [salesData, expensesData]);
+
 
   const chartData = {
     labels: months,
     datasets: [
       {
         label: active,
-        data: dataSets[active],
+        data:
+          active === "Продажі"
+            ? salesData
+            : active === "Прибуток"
+            ? profitData
+            : expensesData,
         fill: true,
         backgroundColor: "rgba(255, 165, 0, 0.3)",
-        tension: 0.4,
+        tension: 0.6,
         pointRadius: 0,
       },
     ],
   };
 
   const options: ChartOptions<"line"> = {
-  responsive: true,
-  layout: {
-    padding: {
-      right: 30,
-    },
-  },
-  plugins: {
-    legend: { display: false },
-  },
-  scales: {
-    y: {
-      position: "right",
-      min: 10000,
-      max: 200000,
-      ticks: {
-        stepSize: 10000,
-        padding: 10,
-        callback: (value) => {
-          const allowed = [10000, 50000, 100000, 150000, 200000];
-          if (typeof value === "number" && allowed.includes(value)) {
-            return value.toLocaleString("uk-UA");
-          }
-          return "";
+    responsive: true,
+    layout: { padding: { right: 30 } },
+    plugins: { legend: { display: false } },
+    scales: {
+      y: {
+        position: "right",
+        beginAtZero: false,
+        min: 0,
+        max: 200000,
+        ticks: {
+          stepSize: 50000,
+          callback: (value) =>
+            typeof value === "number" ? value.toLocaleString("uk-UA") : "",
         },
       },
-      grid: {
-        drawTicks: false,
-        color: (ctx) => {
-          const val = ctx.tick?.value;
-          const allowed = [10000, 50000, 100000, 150000, 200000];
-          return allowed.includes(val ?? 0) ? "#000000" : "transparent";
+      x: {
+        grid: { display: false },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+          font: {
+            size:
+              typeof window !== "undefined" && window.innerWidth <= 780
+                ? 10
+                : 12,
+          },
         },
       },
     },
-    x: {
-      grid: { display: false },
-      ticks: {
-        maxRotation: 45,
-        minRotation: 45,
-        font: {
-          size: window.innerWidth <= 780 ? 10 : 12,
-        },
-      },
-    },
-  },
-};
-
-
+  };
 
   return (
     <div className={`mt-15 ${styles.graphicChart}`}>

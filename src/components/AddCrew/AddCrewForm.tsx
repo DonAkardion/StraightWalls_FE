@@ -30,21 +30,17 @@ export default function AddCrewForm() {
         alert("Немає токена авторизації");
         return;
       }
-
-      // 1️⃣ Додаємо бригаду
       const newCrew: Crew = await handleAddCrew(
         { name, status: status || null },
         token
       );
 
       addCrew(newCrew);
-
-      // 2️⃣ Додаємо робітників з правильним team_id
       for (const worker of crewWorkers) {
         await handleAddWorker({ ...worker, team_id: newCrew.id }, token);
       }
 
-      router.back(); // або редірект куди потрібно
+      router.back();
     } catch (error) {
       console.error("Помилка додавання бригади або робітників:", error);
       alert("Не вдалося додати бригаду або робітників");

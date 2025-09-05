@@ -32,7 +32,6 @@ export const ClientsList = ({
     router.push(`/${role}/clients/clientsDetailed/${id}`);
   };
 
-  // format Client Objects
   const formatObjects = (client: Client) => (
     <div>
       {client.objects.map((o, i) => (
@@ -89,7 +88,7 @@ export const ClientsList = ({
               },
               {
                 label: "Об’єкти",
-                value: (item) => item.objects.join(", "),
+                value: formatObjects,
               },
             ]}
           />

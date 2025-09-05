@@ -32,7 +32,7 @@ export async function getProjectPayments(
 ): Promise<Payment[]> {
   return fetcher<Payment[]>(`${API_BASE}/api/payments/project/${projectId}`, {
     token,
-  });
+  })
 }
 
 // 2. Get Payment by ID

@@ -41,6 +41,7 @@ export interface ProjectResponse {
   end_date: string;
   created_at: string;
   updated_at: string;
+  materials: ProjectMaterial[];
 }
 
 export interface ProjectReportResponse {
