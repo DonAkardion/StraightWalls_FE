@@ -23,6 +23,7 @@ export interface CreateProjectPayload {
   }[];
   materials: {
     name: string;
+    description?: string;
     purchase_price: string;
     selling_price: string;
     remaining_stock: string;

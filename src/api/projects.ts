@@ -4,6 +4,7 @@ import type {
   ProjectResponse,
   ProjectReportResponse,
   ProjectDetailedResponse,
+  UpdateProjectPayload,
 } from "@/types/project";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
@@ -43,15 +44,15 @@ export async function getProjectById(
   });
 }
 /**
- * Update Project by ID
+ * Patch Project by ID (partial update)
  */
-export async function updateProject(
+export async function patchProject(
   id: number,
-  data: Partial<CreateProjectPayload>,
+  data: UpdateProjectPayload,
   token: string
 ): Promise<ProjectResponse> {
   return fetcher<ProjectResponse>(`${API_URL}/${id}`, {
-    method: "PUT",
+    method: "PATCH",
     token,
     data,
   });
@@ -170,10 +171,10 @@ export async function addMaterialToProject(
   projectId: number,
   data: {
     name: string;
-    purchase_price: number;
-    selling_price: number;
-    quantity: number;
-    delivery: number;
+    purchase_price: string;
+    selling_price: string;
+    remaining_stock: string;
+    delivery: string;
     unit: string;
   },
   token: string

@@ -31,6 +31,17 @@ export enum ProjectStatus {
   CANCELED = "canceled",
 }
 
+export interface UpdateProjectPayload {
+  name?: string;
+  description?: string;
+  client_id?: number;
+  object_id?: number;
+  team_id?: number;
+  status?: ProjectStatus;
+  start_date?: string;
+  end_date?: string;
+}
+
 export interface ProjectResponse {
   id: number;
   name: string;
@@ -77,6 +88,8 @@ export interface ProjectDetailedResponse {
   client_id: number;
   team_id: number;
   status: ProjectStatus;
+  start_date: string;
+  end_date: string;
   created_at: string;
   updated_at: string;
 
