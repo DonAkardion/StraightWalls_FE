@@ -10,6 +10,7 @@ export interface Payment {
   amount: number;
   status: "pending" | "paid" | "canceled";
   created_at: string;
+  due_date: string | null;
   updated_at: string;
   project?: {
     id: number;

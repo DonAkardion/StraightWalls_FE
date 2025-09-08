@@ -50,7 +50,7 @@ export function MaterialsTable() {
         project.materials.map(mat => ({
           id: mat.id,
           name: mat.name,
-          quantity: String(mat.quantity),
+          quantity: String(Math.round(mat.remaining_stock)),
           unitPrice: String(mat.selling_price),
           supplier: "ТОВ компанія",
           icon: "",
