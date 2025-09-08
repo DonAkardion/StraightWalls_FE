@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import styles from "./AddWorkerModal.module.css";
-import { handleAddWorker } from "@/api/workers";
 import { useUser } from "@/context/UserContextProvider";
 import { Worker } from "@/types/worker";
 import { Crew } from "@/types/crew";
 import { getCrews } from "@/api/crews";
+import { CrewSelector } from "@/components/Project/EditComponents/CrewSelector";
 
 interface AddWorkerModalProps {
   onClose: () => void;
@@ -33,13 +33,13 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
     const fetchCrews = async () => {
       try {
         const data = await getCrews(token!);
-        setCrews(data)
+        setCrews(data);
       } catch (error) {
         console.log("Crew isn't gotten:", error);
       }
-    }
+    };
     fetchCrews();
-  }, [token])
+  }, [token]);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -49,7 +49,8 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const value = e.target.name === "team_id" ? Number(e.target.value) : e.target.value;
+    const value =
+      e.target.name === "team_id" ? Number(e.target.value) : e.target.value;
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: value,
@@ -99,6 +100,19 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />
           </label>
+          <label>
+            <div className={styles.addCrewInputTitle}>Бригада</div>
+            <CrewSelector
+              crews={crews}
+              value={formData.team_id}
+              onChange={(crewId) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  team_id: crewId,
+                }))
+              }
+            />
+          </label>
 
           <label>
             <div className={styles.addCrewInputTitle}>Посада</div>
@@ -122,22 +136,6 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
               onChange={handleChange}
               className="border-b-1 p-2 pb-1 outline-none w-full"
             />
-          </label>
-          <label>
-            <div className={styles.addCrewInputTitle}>Бригада</div>
-            <select
-              name="team_id"
-              value={formData.team_id ?? ""}
-              onChange={handleChange}
-              className="border-b p-2 pb-1 outline-none w-full"
-            >
-              <option value="">Оберіть бригаду</option>
-              {crews.map((crew) => (
-                <option key={crew.id} value={crew.id}>
-                  {crew.name}
-                </option>
-              ))}
-            </select>
           </label>
         </div>
 

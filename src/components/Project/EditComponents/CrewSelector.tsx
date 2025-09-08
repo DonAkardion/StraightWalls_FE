@@ -15,7 +15,7 @@ export const CrewSelector: React.FC<CrewSelectorProps> = ({
   crews,
   value,
   onChange,
-  placeholder = "Виберіть бригаду",
+  placeholder = "Оберіть бригаду",
 }) => {
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);

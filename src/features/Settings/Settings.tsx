@@ -39,12 +39,12 @@ export function Settings() {
             <div>Управління даними</div>
           </Link>
           <Link
-            href="/"
+            href={`/${role}/settings/materialSettings`}
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
           >
-            <div>Системні налаштування</div>
+            <div>Налаштування матеріалів</div>
           </Link>
           <Link
             href="/"

@@ -80,7 +80,7 @@ export function ProjectsDetailed({ projectId }: Props) {
     <div className="m-auto max-w-[1440px] pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
         {project.client && <ProjectInfo report={report} />}
-        <ProjectMaterials report={report} />
+        {/* <ProjectMaterials materials={report.project.materials} /> */}
         <ProjectEstimateComplete
           report={report}
           tableClassName="projectDetailedEstimateCompleteTableWrap"

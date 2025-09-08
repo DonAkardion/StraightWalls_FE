@@ -31,7 +31,6 @@ export function Notifications() {
       {/* <h1>{role}</h1> */}
       <div className={`${styles.notificationsList} flex flex-col gap-[20px]`}>
         <Notification notes={notification}/>
-        <Notification notes={notification}/>
       </div>
     </section>
   );

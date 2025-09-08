@@ -1,17 +1,15 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Service } from "@/types/service";
-import { ProjectMaterial } from "@/types/projectComponents";
+import { Material } from "@/types/material";
 
 export interface ServiceWithQuantity extends Service {
   quantity: number;
 }
-
-export interface MaterialWithCalc extends ProjectMaterial {
+export interface MaterialWithQuantity extends Material {
   quantity: number;
-  delivery: number;
-  total: number;
 }
+
 export interface ProjectPaymentDraft {
   name: string;
   description?: string;
@@ -39,8 +37,8 @@ interface ProjectCreationData {
   services: ServiceWithQuantity[];
   setServices: (services: ServiceWithQuantity[]) => void;
 
-  materials: MaterialWithCalc[];
-  setMaterials: (materials: MaterialWithCalc[]) => void;
+  materials: MaterialWithQuantity[];
+  setMaterials: (materials: MaterialWithQuantity[]) => void;
 
   initialPayment: ProjectPaymentDraft | null;
   setInitialPayment: (payment: ProjectPaymentDraft | null) => void;
@@ -70,7 +68,7 @@ export const ProjectCreationProvider = ({
     objectId: null,
     crewId: null,
     services: [] as ServiceWithQuantity[],
-    materials: [] as MaterialWithCalc[],
+    materials: [] as MaterialWithQuantity[],
     initialPayment: null as ProjectPaymentDraft | null,
     materialsIncomeTotal: 0,
     advanceAmount: 0,
@@ -86,7 +84,7 @@ export const ProjectCreationProvider = ({
   const [services, setServices] = useState<ServiceWithQuantity[]>(
     initialState.services
   );
-  const [materials, setMaterials] = useState<MaterialWithCalc[]>(
+  const [materials, setMaterials] = useState<MaterialWithQuantity[]>(
     initialState.materials
   );
 

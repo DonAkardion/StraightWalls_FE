@@ -26,24 +26,21 @@ export const ForNavigationMessage = ({ projectsMessage }: Interaction) => {
 
     const fetchData = async () => {
       try {
-        const results: PaymentWithProject[] = [];
-
-        for (const project of projectsMessage) {
-          const paymentResponse: any = await getProjectPaymentsOverdue(project.id, token);
-          const paymentsArray: Payment[] = paymentResponse.data ? paymentResponse.data : [paymentResponse];
-          const projectResponse = await getProjectById(project.id, token);
-
-          paymentsArray.forEach((payment) => {
-            results.push({ payment, project: projectResponse });
-          });
-        }
+        const allPromises = projectsMessage.map(project => (
+          Promise.all([
+            getProjectPaymentsOverdue(project.id, token),
+            getProjectById(project.id, token)]).then(([payments, project]) => 
+          payments.map((payment) => ({ payment, project }))
+        )))
+        
+        const results = (await Promise.all(allPromises)).flat();
 
         setCombinedData(results);
       } catch (error) {
         console.log("Error fetching navigation messages:", error);
       }
     };
-
+    console.log(combinedData)
     fetchData();
   }, [projectsMessage, token]);
 
@@ -67,7 +64,9 @@ export const ForNavigationMessage = ({ projectsMessage }: Interaction) => {
             </div>
           </div>
 
-          {index === 0 && <div className="border-b border-[#FFB326] mt-1" />}
+          {index !== combinedData.length - 1 && (
+            <div className="border-b border-[#FFB326] my-1" />
+          )}
         </div>
       ))}
     </div>

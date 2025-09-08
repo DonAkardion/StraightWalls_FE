@@ -27,7 +27,7 @@ export const NavigationMessage = () => {
     }, [token]);
 
   return (
-    <div className="relative w-[203px] h-[266px] bg-[#FFB32680] rounded p-2 mx-auto mt-30">
+    <div className="relative w-[203px] min-h-[266px] bg-[#FFB32680] rounded p-2 mx-auto mt-30">
       <button className="absolute top-3 right-3">
         <X className="w-6 h-6 text-black hover:cursor-pointer" />
       </button>

@@ -118,7 +118,7 @@ export const ProjectEstimate = ({
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   return (
-    <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[156px]`}>
+    <section className={`${styles.sectionEstimate} mb-[60px] md:mb-[66px]`}>
       <h2
         className={`${styles.estimateTytle} mb-[26px] sm:mb-[10px] md:mb-[16px]`}
       >
