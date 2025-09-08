@@ -4,11 +4,12 @@ import React, { useMemo, useEffect } from "react";
 import styles from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate.module.css";
 import lockalStyles from "./MaterialIncomeEditor.module.css";
 import { MaterialIncomeTable } from "./MaterialIncomeTable/MaterialIncomeTable";
-import { ProjectMaterial, MaterialIncomeRow } from "@/types/projectComponents";
+import { MaterialIncomeRow } from "@/types/projectComponents";
 import { useProjectCreation } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
+import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 
 interface Props {
-  materials: ProjectMaterial[];
+  materials: MaterialWithQuantity[];
   tableClassName?: string;
   tablesTytle?: string;
 }
@@ -20,23 +21,35 @@ export const MaterialIncomeEditor = ({
 }: Props) => {
   const { setMaterialsIncomeTotal } = useProjectCreation();
 
-  // формуємо дані для таблиці з урахуванням прибутку та суми
-  const materialRows: MaterialIncomeRow[] = useMemo(
-    () =>
-      materials.map((m) => {
-        const total = m.selling_price * m.quantity + m.delivery;
-        const income = total - m.purchase_price * m.quantity;
-        return {
-          id: m.id,
-          name: m.name,
-          description: m.description,
-          unit: m.unit,
-          quantity: m.quantity,
-          sum: total,
-          income,
-        };
-      }),
+  const filteredMaterials = useMemo(
+    () => materials.filter((m) => (Number(m.quantity) || 0) > 0),
     [materials]
+  );
+
+  // формуємо дані для таблиці з урахуванням прибутку та суми
+  const calculateMaterialRow = (m: MaterialWithQuantity): MaterialIncomeRow => {
+    const baseSelling = Number(m.base_selling_price) || 0;
+    const baseDelivery = Number(m.base_delivery) || 0;
+    const basePurchase = Number(m.base_purchase_price) || 0;
+    const qty = Number(m.quantity) || 0;
+
+    const total = (baseSelling + baseDelivery) * qty;
+    const income = total - basePurchase * qty;
+
+    return {
+      id: m.id,
+      name: m.name,
+      description: m.description,
+      unit: m.unit,
+      quantity: qty,
+      sum: total,
+      income,
+    };
+  };
+
+  const materialRows: MaterialIncomeRow[] = useMemo(
+    () => filteredMaterials.map(calculateMaterialRow),
+    [filteredMaterials]
   );
 
   // загальний заробіток
@@ -50,14 +63,16 @@ export const MaterialIncomeEditor = ({
     setMaterialsIncomeTotal(totalMaterilalsIncome);
   }, [totalMaterilalsIncome, setMaterialsIncomeTotal]);
 
+  const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
+
   return (
-    <section className={`${styles.sectionMaterials} mb-[40px]  md:mt-[126px]`}>
+    <section className={`${styles.sectionMaterials} mb-[40px] md:mt-[156px]`}>
       <h2
         className={`${lockalStyles.materialsIncomeTytle} mb-[10px] md:mb-[16px]`}
       >
         {tablesTytle}
       </h2>
-      {materials.length > 0 && (
+      {filteredMaterials.length > 0 && (
         <div>
           <MaterialIncomeTable
             materials={materialRows}
@@ -77,7 +92,7 @@ export const MaterialIncomeEditor = ({
                   Загальний заробіток на матеріалах
                 </div>
                 <div className={`${styles.totatCostMainSum} shrink-0`}>
-                  {totalMaterilalsIncome} грн
+                  {formatNumber(totalMaterilalsIncome)} грн
                 </div>
               </div>
               {/* <h3
@@ -89,7 +104,7 @@ export const MaterialIncomeEditor = ({
           </div>
         </div>
       )}
-      {materials.length == 0 && (
+      {filteredMaterials.length == 0 && (
         <div className={`${lockalStyles.messageText} ml-[20px]`}>
           Матеріали відсутні
         </div>

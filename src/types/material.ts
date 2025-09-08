@@ -2,12 +2,12 @@ export interface Material {
   id: number;
   name: string;
   description?: string;
-  base_purchase_price: string;
-  base_selling_price: string;
-  base_margin: string;
+  base_purchase_price: number;
+  base_selling_price: number;
+  base_margin: number;
   unit: string;
-  stock: string;
-  base_delivery: string;
+  stock: number;
+  base_delivery: number;
   created_at?: string;
   updated_at?: string;
 }

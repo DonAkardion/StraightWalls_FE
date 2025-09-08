@@ -11,13 +11,15 @@ export interface ProjectWork {
 export interface ProjectMaterial {
   id: number;
   project_id: number;
+  material_id: number;
   name: string;
   description?: string;
-  purchase_price: number;
-  selling_price: number;
+  purchase_price: string;
+  selling_price: string;
+  margin: string;
   quantity: number;
-  remaining_stock: number;
-  delivery: number;
+  remaining_stock: string;
+  delivery: string;
   unit: string;
   total: number;
   created_at: string;

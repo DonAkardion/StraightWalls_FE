@@ -221,27 +221,27 @@
   display: none;
 }
 /* правила для AddProject  Materials*/
-:global(.projectMaterialsEditorWrap) .indentCellSmallSecond {
+:global(.projectAddMaterialsTableWrap) .indentCellSmallSecond {
   width: 20px;
 }
-:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
   background: #ffb32666;
   width: 120px;
 }
-:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(7) {
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(7) {
   width: 120px;
 }
-:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(8) {
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
   width: 120px;
 }
-:global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(10) {
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(10) {
   width: 120px;
 }
-:global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(4) {
   background: #ffb32666;
 }
 
-:global(.projectMaterialsEditorWrap) .indentCellSmall {
+:global(.projectAddMaterialsTableWrap) .indentCellSmall {
   display: none;
 }
 
@@ -427,22 +427,22 @@
   }
   /* правила для AddProject  Materials*/
 
-  :global(.projectMaterialsEditorWrap) .indentCellLast {
+  :global(.projectAddMaterialsTableWrap) .indentCellLast {
     display: table-cell;
   }
-  :global(.projectMaterialsEditorWrap) .TableRowCell:nth-child(6) {
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
     display: table-cell;
     background: none;
     width: auto;
   }
-  :global(.projectMaterialsEditorWrap) .TableCell:nth-child(4) {
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(4) {
     display: table-cell;
     background: none;
   }
-  :global(.projectMaterialsEditorWrap) .indentCellSmall {
+  :global(.projectAddMaterialsTableWrap) .indentCellSmall {
     display: table-cell;
   }
-  :global(.projectMaterialsEditorWrap) .TableCellInspect {
+  :global(.projectAddMaterialsTableWrap) .TableCellInspect {
     display: table-cell;
   }
   /* правила для AddProject  MaterialsIncome*/
