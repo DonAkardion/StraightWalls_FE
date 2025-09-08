@@ -291,11 +291,14 @@
   display: none;
 }
 /* правила для ProjectDetailed  Materials*/
-:global(.projectDetailedMaterialsWrap) .indentCellLast {
+:global(.projectDetailedMaterialsCompleteTableWrap) .indentCellLast {
   display: none;
 }
-:global(.projectDetailedMaterialsWrap) .indentCellSmallSecond {
+:global(.projectDetailedMaterialsCompleteTableWrap) .indentCellSmallSecond {
   width: 20px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
+  padding: 0 6px;
 }
 /* правила для Reports Materials*/
 :global(.reportsMaterialsWrap) .indentCellLast {
@@ -469,12 +472,15 @@
     vertical-align: middle;
   }
   /* правила для ProjectDetailed  Estimate*/
-  :global(.projectDetailedEstimateTableWrap) .indentCellLast {
+  :global(.projectDetailedEstimateCompleteTableWrap) .indentCellLast {
     display: table-cell;
   }
   /* правила для ProjectDetailed  Materials*/
-  :global(.projectDetailedMaterialsWrap) .indentCellLast {
+  :global(.projectDetailedMaterialsCompleteTableWrap) .indentCellLast {
     display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
+    padding: 0;
   }
   /* правила для Reports Materials*/
   :global(.reportsMaterialsWrap) .indentCellLast {
