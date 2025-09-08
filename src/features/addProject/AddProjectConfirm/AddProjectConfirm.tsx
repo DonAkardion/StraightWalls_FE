@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import styles from "./AddProjectConfirm.module.css";
-import { MaterialsEditor } from "@/components/addProject/MaterialsEditor/MaterialsEditor";
+import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
@@ -12,7 +12,7 @@ import { createProject } from "@/api/projects";
 import {
   useProjectCreation,
   ServiceWithQuantity,
-  MaterialWithCalc,
+  MaterialWithQuantity,
   ProjectPaymentDraft,
 } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 
@@ -28,15 +28,15 @@ function mapWorks(services: ServiceWithQuantity[]) {
     }));
 }
 
-function mapMaterials(materials: MaterialWithCalc[]) {
+function mapMaterials(materials: MaterialWithQuantity[]) {
   return materials
     .filter((m) => m.quantity > 0)
     .map((m) => ({
       name: m.name,
-      purchase_price: String(m.purchase_price),
-      selling_price: String(m.selling_price),
+      purchase_price: String(m.base_purchase_price),
+      selling_price: String(m.base_selling_price),
       remaining_stock: String(m.quantity),
-      delivery: m.delivery ? String(m.delivery) : "0",
+      delivery: m.base_delivery ? String(m.base_delivery) : "0",
       unit: m.unit,
     }));
 }
@@ -95,10 +95,13 @@ export function AddProjectConfirm() {
 
   const totalMaterialCost = useMemo(() => {
     return materials.reduce(
-      (sum, m) => sum + m.selling_price * m.quantity + m.delivery * m.quantity,
+      (sum, m) =>
+        sum + m.base_selling_price * m.quantity + m.base_delivery * m.quantity,
       0
     );
   }, [materials]);
+
+  const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   return (
     <section
@@ -113,12 +116,10 @@ export function AddProjectConfirm() {
       />
 
       {/* Матеріали */}
-      <MaterialsEditor materials={materials} tablesTytle="Матеріали" />
-
-      <div className={`${styles.Separator} md:h-[80px]`}></div>
+      <ProjectMaterials materials={materials} tablesTitle="Матеріали" />
 
       {/* Бригада */}
-      <AddProjectCrew team_id={crewId} />
+      <AddProjectCrew team_id={crewId} tablesTitle="Бригада" />
 
       {/* Платіжні деталі */}
       <div className={`${styles.PaymentDetailsWrap} mb-[60px] mt-[60px]`}>
@@ -126,19 +127,19 @@ export function AddProjectConfirm() {
           items={[
             {
               label: "Вартість усіх виконаних робіт",
-              value: `${totalWorksCost} грн`,
+              value: `${formatNumber(totalWorksCost)} грн`,
             },
             {
               label: "Вартість усіх використаних матеріалів",
-              value: `${totalMaterialCost} грн`,
+              value: `${formatNumber(totalMaterialCost)} грн`,
             },
             {
               label: "Заробіток на матеріалах",
-              value: `${materialsIncomeTotal} грн`,
+              value: `${formatNumber(materialsIncomeTotal)} грн`,
             },
             {
               label: "Аванс при заїзді бригади",
-              value: `${advanceAmount} грн`,
+              value: `${formatNumber(advanceAmount)} грн`,
             },
           ]}
         />

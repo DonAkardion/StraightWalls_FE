@@ -68,10 +68,10 @@ export const MaterialsList = ({
         <div className="pb-1 bg-white border-b relative">
           <div className="pl-[20px] pr-[10px] flex flex-col gap-2">
             <div className={`${styles.inspectRow} flex justify-between`}>
-              {/* <p>
-                <span>Опис: </span>
-                <span className="text-sm">{m.description || "немає"}</span>
-              </p> */}
+              <p>
+                <span>Залишок: </span>
+                <span className="text-sm">{m.stock}</span>
+              </p>
               <img
                 src={Trash.src}
                 alt="Delete"
@@ -82,7 +82,9 @@ export const MaterialsList = ({
             <div className="flex justify-between">
               <p>
                 <span>Купівля: </span>
-                <span className="text-sm">{m.base_purchase_price} грн</span>
+                <span className="text-sm">
+                  {m.base_purchase_price} грн / {m.unit}
+                </span>
               </p>
               <img
                 src={Pen.src}
@@ -94,7 +96,15 @@ export const MaterialsList = ({
             <div className="flex justify-between">
               <p>
                 <span>Продаж: </span>
-                <span className="text-sm">{m.base_selling_price} грн</span>
+                <span className="text-sm">
+                  {m.base_selling_price} грн / {m.unit}
+                </span>
+              </p>
+            </div>
+            <div className="flex justify-between">
+              <p>
+                <span>Доставка: </span>
+                <span className="text-sm">{m.base_delivery} грн</span>
               </p>
             </div>
           </div>

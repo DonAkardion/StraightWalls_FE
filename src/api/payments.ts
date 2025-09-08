@@ -32,7 +32,7 @@ export async function getProjectPayments(
 ): Promise<Payment[]> {
   return fetcher<Payment[]>(`${API_BASE}/api/payments/project/${projectId}`, {
     token,
-  })
+  });
 }
 
 // 2. Get Payment by ID
@@ -108,11 +108,10 @@ export async function getProjectPaymentsSum(
 export async function getProjectPaymentsOverdue(
   projectId: number,
   token: string
-): Promise<Payment> {
-  return fetcher<Payment>(
+): Promise<Payment[]> {
+  const response = await fetcher<{ status: string; data: Payment[] }>(
     `${API_BASE}/api/payments/project/${projectId}/overdue`,
-    {
-      token,
-    }
+    { token }
   );
+  return response.data || [];
 }

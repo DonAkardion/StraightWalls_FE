@@ -8,9 +8,10 @@ import { handleGetCrewWorkers } from "@/api/crews";
 
 interface Props {
   team_id: number | null;
+  tablesTitle?: string;
 }
 
-export const AddProjectCrew = ({ team_id }: Props) => {
+export const AddProjectCrew = ({ team_id, tablesTitle }: Props) => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -45,6 +46,11 @@ export const AddProjectCrew = ({ team_id }: Props) => {
 
   return (
     <section>
+      <h2
+        className={`${styles.sectionTytle} mb-[26px] sm:mb-[10px] md:mb-[16px]`}
+      >
+        {tablesTitle}
+      </h2>
       {loading ? (
         <p>Завантаження працівників...</p>
       ) : workers.length > 0 ? (

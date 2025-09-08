@@ -175,13 +175,14 @@ export function AddProject() {
           Відправити на Viber
         </span>
       </div>
-
-      <Link
-        href={`/${role}/addProject/addProjectMaterials`}
-        className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
-      >
-        Відправити
-      </Link>
+      <div className="mt-[152px]">
+        <Link
+          href={`/${role}/addProject/addProjectMaterials`}
+          className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
+        >
+          Відправити
+        </Link>
+      </div>
     </section>
   );
 }
