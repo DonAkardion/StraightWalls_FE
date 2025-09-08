@@ -28,7 +28,7 @@ export function CrewWorkersList({ workers, onAdd, onDelete }: Props) {
       {workers.length === 0 ? (
         <p className="text-gray-500 p-3 pl-5 pb-5 mt-3">Робітників ще немає</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="space-y-2 max-h-[290px] overflow-y-scroll">
           {workers.map((w) => (
             <li
               key={w.id}

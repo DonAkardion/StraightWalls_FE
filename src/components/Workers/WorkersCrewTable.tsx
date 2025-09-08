@@ -91,7 +91,7 @@ export function WorkersCrewTable({
                 value: (crew: Crew) => {
                   if (crew.projects && crew.projects.length > 0) {
                     return (
-                      <ul className="list-disc pl-4">
+                      <ul className=" pl-4">
                         {crew.projects.map((p) => (
                           <li key={p.id}>{p.name}</li>
                         ))}
