@@ -42,11 +42,11 @@ export function MaterialSettings() {
       "id" | "created_at" | "updated_at" | "base_margin"
     > = {
       name: "",
-      base_purchase_price: "",
-      base_selling_price: "",
+      base_purchase_price: 0,
+      base_selling_price: 0,
       unit: "",
-      stock: "",
-      base_delivery: "",
+      stock: 0,
+      base_delivery: 0,
     };
     setCurrentForm(draft as Material);
   };
