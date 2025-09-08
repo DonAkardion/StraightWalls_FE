@@ -29,6 +29,7 @@ export default function AdminHomePage() {
       try {
         const projects = await getProjects(token);
 
+        // Отримуємо звіти по всіх проєктах
         const reports = await Promise.all(
           projects.map((p) => getProjectReport(p.id, token))
         );
@@ -46,7 +47,7 @@ export default function AdminHomePage() {
         setMaterialsProfit(totalMaterials);
         setReports(reports);
 
-        /// Debtors
+        // Отримуємо просрочені платежі по всіх проєктах
         const overduePayments = await Promise.all(
           projects.map(async (p) => {
             const overdue = await getProjectPaymentsOverdue(p.id, token);
@@ -54,19 +55,33 @@ export default function AdminHomePage() {
           })
         );
 
+        // Список боржників (ті, де є сума > 0)
         const debtorsList: DebtorItem[] = overduePayments
-          .filter(({ overdue }) => overdue.amount && overdue.amount > 0)
-          .map(({ project, overdue }) => ({
-            label: project.name,
-            value: overdue.amount.toLocaleString(),
-          }));
+          .filter(({ overdue }) => overdue.length > 0)
+          .map(({ project, overdue }) => {
+            const totalAmount = overdue.reduce(
+              (sum, pay) => sum + Number(pay.amount || 0),
+              0
+            );
+            return {
+              label: project.name,
+              value: totalAmount.toLocaleString(),
+            };
+          });
 
         setDebtors(debtorsList);
 
+        // Загальний борг
         const totalDebtValue = overduePayments.reduce(
-          (sum, { overdue }) => sum + (overdue.amount || 0),
+          (sum, { overdue }) =>
+            sum +
+            overdue.reduce(
+              (subSum, pay) => subSum + Number(pay.amount || 0),
+              0
+            ),
           0
         );
+
         setTotalDebt(totalDebtValue);
       } catch (error) {
         console.error("Помилка при отриманні даних:", error);
