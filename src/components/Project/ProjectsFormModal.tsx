@@ -96,7 +96,7 @@ export function ProjectsFormModal({
       <input
         type="text"
         name="start_date"
-        placeholder="01.09.2025"
+        placeholder="01.21.2026"
         value={formData.start_date || ""}
         onChange={handleInputChange}
         className="border-b-1 p-2 pb-1 outline-none"
@@ -106,7 +106,7 @@ export function ProjectsFormModal({
       <input
         type="text"
         name="end_date"
-        placeholder="10.09.2025"
+        placeholder="09.28.2026"
         value={formData.end_date || ""}
         onChange={handleInputChange}
         className="border-b-1 p-2 pb-1 outline-none"
