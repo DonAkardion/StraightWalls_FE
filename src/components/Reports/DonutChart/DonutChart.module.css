@@ -31,14 +31,15 @@
 }
 
 @media (max-width: 525px) {
-  .leftLegendBlock .rightLegendBlock {
+  .leftLegendBlock .rightLegendBlock .centerLegendBlock {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
   .leftLegendBlock > div,
-  .rightLegendBlock > div {
+  .rightLegendBlock > div,
+  .centerLegendBlock > div {
     flex-direction: column;
     align-items: center;
   }
