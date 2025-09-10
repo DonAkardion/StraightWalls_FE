@@ -28,7 +28,7 @@ export function ClientObjectsList({ objects, onAdd, onDelete }: Props) {
       {objects.length === 0 ? (
         <p className="text-gray-500 p-3 pl-5 pb-5 mt-3">Об’єктів ще немає</p>
       ) : (
-        <ul className="space-y-2">
+        <ul className="max-h-[200px] overflow-y-scroll space-y-2">
           {objects.map((obj) => (
             <li
               key={obj.id}

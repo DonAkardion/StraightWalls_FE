@@ -31,7 +31,7 @@ export default function AddCrewForm() {
         return;
       }
       const newCrew: Crew = await handleAddCrew(
-        { name, status: status || null },
+        { name, status: "available" },
         token
       );
 

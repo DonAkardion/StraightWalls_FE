@@ -8,7 +8,7 @@ import { createPayment, Payment } from "@/api/payments";
 
 import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/ProjectInfo";
 import { ProjectEstimateComplete } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimateComplete";
-import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
+import { ProjectMaterialsComplete } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsComplete";
 import { ProjectPayment } from "@/components/Project/ProjectsDetailed/ProjectPayment/ProjectPayment";
 import {
   ProjectPaymentForm,
@@ -80,7 +80,11 @@ export function ProjectsDetailed({ projectId }: Props) {
     <div className="m-auto max-w-[1440px] pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
         {project.client && <ProjectInfo report={report} />}
-        {/* <ProjectMaterials materials={report.project.materials} /> */}
+        <ProjectMaterialsComplete
+          report={report}
+          tableClassName="projectDetailedMaterialsCompleteTableWrap"
+          tablesTitle="Матеріали"
+        />
         <ProjectEstimateComplete
           report={report}
           tableClassName="projectDetailedEstimateCompleteTableWrap"

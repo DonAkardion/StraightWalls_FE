@@ -8,6 +8,10 @@ export interface ServiceWithQuantity extends Service {
 }
 export interface MaterialWithQuantity extends Material {
   quantity: number;
+  previous_remaining?: number;
+  additional_delivery?: number;
+  current_remaining?: number;
+  delivery_quantity?: number;
 }
 
 export interface ProjectPaymentDraft {

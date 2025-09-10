@@ -46,7 +46,7 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
     if (name === "unit" && !value.trim()) {
       setErrors((prev) => ({
         ...prev,
-        unit: "Одиниця вимірювання обов’язкова",
+        unit: "Одиниці вимірювання обов’язкові",
       }));
     } else if (name === "unit") {
       setErrors((prev) => ({ ...prev, unit: undefined }));
