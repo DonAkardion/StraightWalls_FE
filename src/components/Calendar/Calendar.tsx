@@ -17,26 +17,51 @@ const daysOfWeek = [
   "Неділя",
 ];
 
-const dates = [
-  [1, 2, 3, 4, 5, 6, 7],
-  [8, 9, 10, 11, 12, 13, 14],
-  [15, 16, 17, 18, 19, 20, 21],
-  [22, 23, 24, 25, 26, 27, 28],
-  [29, 30, 31],
-];
-
-const colors: Record<ProjectStatus, string> = {
+const colors: Partial<Record<ProjectStatus, string>> = {
   [ProjectStatus.COMPLETED]: "#15ae08",
   [ProjectStatus.IN_PROGRESS]: "#0097c0",
-  [ProjectStatus.NEW]: "#ffb32680",
+  [ProjectStatus.NEW]: "#ffb326",
   [ProjectStatus.CANCELED]: "#b70000",
+  [ProjectStatus.CONFIRMED]: "#1b6a14",
+  [ProjectStatus.SCHEDULED]: "#0f5669",
 };
 
 const Calendar = () => {
   const [calendar, setCalendar] = useState<Crew[]>([]);
   const [token, setToken] = useState<string>("");
   const [selectedCrew, setSelectedCrew] = useState<Crew | null>(null);
-  const [dayColors, setDayColors] = useState<Record<number, string>>({});
+  const [dayColors, setDayColors] = useState<Record<number, string[]>>({});
+
+  const today = new Date();
+  const [currentMonth, setCurrentMonth] = useState(today.getMonth());
+  const [currentYear, setCurrentYear] = useState(today.getFullYear());
+
+  const generateDates = (month: number, year: number) => {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const weeks: number[][] = [];
+    let week: number[] = [];
+    const offset = (firstDay + 6) % 7;
+
+    for (let i = 0; i < offset; i++) week.push(0);
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      week.push(d);
+      if (week.length === 7) {
+        weeks.push(week);
+        week = [];
+      }
+    }
+
+    if (week.length) {
+      while (week.length < 7) week.push(0);
+      weeks.push(week);
+    }
+
+    return weeks;
+  };
+
+  const dates = generateDates(currentMonth, currentYear);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -67,14 +92,14 @@ const Calendar = () => {
       return;
     }
 
-    const colorsMap: Record<number, string> = {};
+    const colorsMap: Record<number, string[]> = {};
 
     for (const proj of crew.projects) {
       try {
         const report = await getProjectReport(proj.id, token);
 
-        const status = report.project.status as ProjectStatus;
-        const color = colors[status];
+        const color = colors[report.project.status as ProjectStatus];
+        if (!color) continue;
 
         let start: Date | null = report.project.start_date
           ? new Date(report.project.start_date)
@@ -88,11 +113,21 @@ const Calendar = () => {
           end = new Date(report.project.updated_at);
         }
 
-        const startDay = start.getDate();
-        const endDay = end.getDate();
+        const startDay =
+          start.getMonth() === currentMonth
+            ? start.getDate()
+            : 1;
+
+        const endDay =
+          end.getMonth() === currentMonth
+            ? end.getDate()
+            : new Date(currentYear, currentMonth + 1, 0).getDate();
 
         for (let d = startDay; d <= endDay; d++) {
-          colorsMap[d] = color;
+          if (!colorsMap[d]) colorsMap[d] = [];
+          if (!colorsMap[d].includes(color)) {
+            colorsMap[d].push(color);
+          }
         }
       } catch (error) {
         console.error(`Error fetching report for project ${proj.id}:`, error);
@@ -102,28 +137,69 @@ const Calendar = () => {
     setDayColors(colorsMap);
   };
 
-  return (
-    <div className="bg-white w-full max-w-[1126px] rounded p-4 sm:p-6 drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] font-inter mx-auto mb-10 mt-10">
-      <div className={styles.calendarDiv}>
-        {calendar.map((crew, idx) => (
-          <button
-            key={idx}
-            onClick={() => handleCrewSelect(idx)}
-            className={`${
-              styles.calendarButton
-            } flex-1 px-4 py-2 rounded text-black text-[12px] 
-              ${
-                crew.selected
-                  ? "font-semibold bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)]"
-                  : "bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)] outline outline-0 hover:outline-1 hover:outline-[#FFB326]"
-              }
+  const handlePrevMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentMonth(11);
+      setCurrentYear((y) => y - 1);
+    } else {
+      setCurrentMonth((m) => m - 1);
+    }
+    setDayColors({});
+  };
 
-                 hover:cursor-pointer`}
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentMonth(0);
+      setCurrentYear((y) => y + 1);
+    } else {
+      setCurrentMonth((m) => m + 1);
+    }
+    setDayColors({});
+  };
+
+  return (
+    <div className="bg-white w-full max-w-[1126px] rounded p-4 sm:p-6 drop-shadow-md font-inter mx-auto mb-10 mt-10">
+      <div className="flex justify-center items-center mb-4">
+        <div className="flex items-center gap-2">
+          <button
+            className="text-[23px] font-bold hover:cursor-pointer hover:text-red-500"
+            onClick={handlePrevMonth}
           >
-            {crew.name}
+            &laquo;
           </button>
-        ))}
+          <span className="p-2">
+            {new Date(currentYear, currentMonth).toLocaleString("uk-UA", {
+              month: "long",
+              year: "numeric",
+            })}
+          </span>
+          <button
+            className="text-[23px] font-bold hover:cursor-pointer hover:text-green-500"
+            onClick={handleNextMonth}
+          >
+            &raquo;
+          </button>
+        </div>
       </div>
+
+      {calendar.length > 0 && (
+        <div className={styles.calendarDiv}>
+          {calendar.map((crew, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleCrewSelect(idx)}
+              className={`${styles.calendarButton} flex-1 px-4 py-2 rounded text-black text-[12px] 
+                ${
+                  crew.selected
+                    ? "font-semibold bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)]"
+                    : "bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)] hover:outline hover:outline-[#FFB326]"
+                }`}
+            >
+              {crew.name}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-[12px] sm:text-[14px] mt-4">
         {daysOfWeek.map((day) => (
@@ -137,14 +213,30 @@ const Calendar = () => {
         ))}
 
         {dates.flat().map((date, i) => {
-          const bgColor = dayColors[date] ? dayColors[date] : "white";
-          const textColor = dayColors[date] ? "text-white" : "text-black";
+          if (date === 0) {
+            return <div key={i} />;
+          }
+
+          const dayColorsArray = dayColors[date] || [];
+          let bgStyle: React.CSSProperties = {
+            backgroundColor: "white",
+          };
+
+          if (dayColorsArray.length === 1) {
+            bgStyle.backgroundColor = dayColorsArray[0];
+            bgStyle.color = "white";
+          } else if (dayColorsArray.length > 1) {
+            bgStyle.background = `conic-gradient(${dayColorsArray.join(
+              ", "
+            )})`;
+            bgStyle.color = "white";
+          }
 
           return (
             <button
               key={i}
-              className={`rounded-md shadow-md py-1 sm:py-2 mt-2 ${textColor}`}
-              style={{ backgroundColor: bgColor }}
+              className={`rounded-md shadow-md py-1 sm:py-2 mt-2`}
+              style={bgStyle}
             >
               {date}
             </button>

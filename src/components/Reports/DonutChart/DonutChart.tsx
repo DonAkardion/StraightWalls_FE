@@ -73,23 +73,27 @@ export const DoughnutChart = () => {
     tasksStatus[status] = (tasksStatus[status] || 0) + 1;
   });
 
-  const orderedStatuses = [ProjectStatus.COMPLETED, ProjectStatus.IN_PROGRESS, ProjectStatus.NEW, ProjectStatus.CANCELED];
+  const orderedStatuses = [ProjectStatus.COMPLETED, ProjectStatus.IN_PROGRESS, ProjectStatus.NEW, ProjectStatus.CANCELED, ProjectStatus.CONFIRMED, ProjectStatus.SCHEDULED];
   const filteredSortedLabels = orderedStatuses.filter((s) => s in tasksStatus);
   const dataValues = filteredSortedLabels.map((label) => tasksStatus[label]);
   const total = dataValues.reduce((acc, val) => acc + val, 0);
 
-  const colors: Record<ProjectStatus, string> = {
+  const colors: Partial<Record<ProjectStatus, string>> = {
     [ProjectStatus.COMPLETED]: "#15ae08",
     [ProjectStatus.IN_PROGRESS]: "#0097c0",
     [ProjectStatus.NEW]: "#ffb32680",
     [ProjectStatus.CANCELED]: "#b70000",
+    [ProjectStatus.CONFIRMED]: "#1b6a14ff",
+    [ProjectStatus.SCHEDULED]: "#0f5669ff"
   };
 
-  const ukrLabels: Record<ProjectStatus, string> = {
+  const ukrLabels: Partial<Record<ProjectStatus, string>> = {
     [ProjectStatus.COMPLETED]: "Виконано",
     [ProjectStatus.IN_PROGRESS]: "В процесі",
     [ProjectStatus.NEW]: "Очікує",
     [ProjectStatus.CANCELED]: "Відхилено",
+    [ProjectStatus.CONFIRMED]: "Підтверджено",
+    [ProjectStatus.SCHEDULED]: "Заплановано"
   };
 
   const data = {
@@ -125,6 +129,7 @@ export const DoughnutChart = () => {
 
   const leftColumn = [ProjectStatus.COMPLETED, ProjectStatus.IN_PROGRESS];
   const rightColumn = [ProjectStatus.NEW, ProjectStatus.CANCELED];
+  const centerColumn = [ProjectStatus.CONFIRMED, ProjectStatus.SCHEDULED];
 
 
   const renderLegendItem = (status: ProjectStatus) => {
@@ -161,6 +166,9 @@ export const DoughnutChart = () => {
           </div>
           <div className={`${styles.rightLegendBlock}`}>
             {rightColumn.map(renderLegendItem)}
+          </div>
+          <div className={`${styles.centerLegendBlock}`}>
+            {centerColumn.map(renderLegendItem)}
           </div>
         </div>
       </div>
