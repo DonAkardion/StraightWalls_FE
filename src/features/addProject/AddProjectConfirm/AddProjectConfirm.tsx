@@ -25,6 +25,7 @@ function mapWorks(services: ServiceWithQuantity[]) {
       cost: String(s.price),
       quantity: String(s.quantity),
       unit: s.unit_of_measurement,
+      salary: s.salary,
     }));
 }
 
@@ -32,10 +33,14 @@ function mapMaterials(materials: MaterialWithQuantity[]) {
   return materials
     .filter((m) => m.quantity > 0)
     .map((m) => ({
+      material_id: m.id,
       name: m.name,
       purchase_price: String(m.base_purchase_price),
       selling_price: String(m.base_selling_price),
+      previous_remaining: String(m.previous_remaining),
       remaining_stock: String(m.quantity),
+      additional_delivery: String(m.additional_delivery),
+      current_remaining: String(m.current_remaining),
       delivery: m.base_delivery ? String(m.base_delivery) : "0",
       unit: m.unit,
     }));
@@ -68,7 +73,7 @@ export function AddProjectConfirm() {
         client_id: String(clientId),
         object_id: String(objectId),
         team_id: String(crewId),
-        status: "new",
+        status: "thinking",
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
@@ -82,7 +87,8 @@ export function AddProjectConfirm() {
 
     try {
       const response = await createProject(payload, token);
-      console.log("Проєкт створено ✅", response);
+      // console.log(payload.materials);
+      // console.log("Проєкт створено ✅", response);
       // router.push(`/projects/${response.projectId}`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);

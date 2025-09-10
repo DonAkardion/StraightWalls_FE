@@ -10,6 +10,7 @@ import { useProjectCreation } from "@/features/addProject/ProjectCreationContext
 import { getMaterials } from "@/api/material";
 import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 import { useUser } from "@/context/UserContextProvider";
+import { MaterialSelection } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
 
 export function AddProjectMaterials() {
   const { token } = useUser();
@@ -43,7 +44,14 @@ export function AddProjectMaterials() {
 
         // додаємо quantity
         const materialsWithQuantity: MaterialWithQuantity[] = materialsData.map(
-          (m) => ({ ...m, quantity: 0 })
+          (m) => ({
+            ...m,
+            quantity: 0,
+            previous_remaining: 0,
+            additional_delivery: 0,
+            current_remaining: 0,
+            delivery_quantity: undefined,
+          })
         );
 
         setMaterials(materialsWithQuantity);
@@ -63,15 +71,21 @@ export function AddProjectMaterials() {
     setMaterials(localSelection);
   }, [localSelection, setMaterials]);
 
-  const handleSelectionChange = (
-    updated: { materialId: number; quantity: number }[]
-  ) => {
+  const handleSelectionChange = (updated: MaterialSelection[]) => {
     const newMaterials: MaterialWithQuantity[] = materials.map((m) => {
       const found = updated.find((u) => u.materialId === m.id);
-
       if (!found) return m;
 
-      return { ...m, quantity: found.quantity };
+      return {
+        ...m,
+        quantity: found.quantity,
+        previous_remaining: found.previous_remaining ?? 0,
+        additional_delivery: found.additional_delivery ?? 0,
+        current_remaining: found.current_remaining ?? 0,
+        delivery_quantity:
+          found.delivery_quantity ??
+          Math.max(0, (found.quantity ?? 0) - (found.previous_remaining ?? 0)),
+      };
     });
 
     setMaterials(newMaterials);

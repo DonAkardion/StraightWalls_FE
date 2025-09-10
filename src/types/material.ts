@@ -11,3 +11,32 @@ export interface Material {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface MaterialFormData {
+  id: number;
+  name: string;
+  description?: string;
+  purchase_price: number;
+  selling_price: number;
+  delivery: number;
+  unit: string;
+  previous_remaining: number;
+  remaining_stock: number;
+  current_remaining: number;
+  additional_delivery: number;
+}
+
+export interface TableMaterial {
+  id: number;
+  name: string;
+  unit?: string;
+  base_purchase_price: number | string;
+  base_selling_price: number | string;
+  base_delivery: number | string;
+  remaining_stock?: number | string;
+  previous_remaining?: number | string;
+  current_remaining?: number | string;
+  additional_delivery?: number | string;
+  description?: string | null;
+  [key: string]: any;
+}

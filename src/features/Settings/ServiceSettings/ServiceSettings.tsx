@@ -41,6 +41,7 @@ export function ServiceSettings() {
       name: "",
       unit_of_measurement: "",
       price: 0,
+      salary: 0,
       service_type: type,
       description: "",
       is_active: true,
@@ -91,8 +92,8 @@ export function ServiceSettings() {
     !!currentForm?.name &&
     !!currentForm?.unit_of_measurement &&
     !!currentForm?.service_type &&
-    (currentForm?.price ?? 0) > 0;
-
+    (currentForm?.price ?? 0) > 0 &&
+    (currentForm?.salary ?? 0) > 0;
   if (loading) {
     return <div className="p-4 text-center">Завантаження...</div>;
   }

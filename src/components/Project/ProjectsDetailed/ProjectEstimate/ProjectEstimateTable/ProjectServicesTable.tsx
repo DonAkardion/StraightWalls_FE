@@ -82,7 +82,7 @@ export const ProjectServicesTable = ({
         {
           key: "name",
           label: "Найменування послуги",
-          tooltip: (service) => `Проєкт: ${service.name}`,
+          tooltip: (service) => `Назва: ${service.name}`,
         },
 
         {
@@ -129,6 +129,12 @@ export const ProjectServicesTable = ({
         },
         { key: "unit_of_measurement", label: "Од. вимір." },
         { key: "price", label: "Вартість, грн" },
+        {
+          key: "salary",
+          label: "Зарплата",
+          tooltip: (service) =>
+            `Опис: ${(service.salary ?? service.salary, "0")}`,
+        },
         {
           key: "sum",
           label: "Сума, грн",
