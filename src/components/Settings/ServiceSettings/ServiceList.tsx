@@ -53,18 +53,20 @@ export const ServiceList = ({
         {
           key: "name",
           label: isMobile ? "Назва" : "Найменування послуги",
+          tooltip: (service) => `Назва: ${service.name}`,
         },
-        { key: "unit_of_measurement", label: "Од. вимір." },
+        {
+          key: "unit_of_measurement",
+          label: "Од. вимір.",
+          tooltip: (service) => `Од. вимір.: ${service.unit_of_measurement}`,
+        },
         {
           key: "price",
           label: "Вартість, грн",
           render: (service) => `${service.price} грн`,
+          tooltip: (service) => `Вартість, грн: ${service.price}`,
         },
-        {
-          key: "description",
-          label: "Опис",
-          tooltip: (service) => `Опис: ${service.description}`,
-        },
+
         {
           key: "is_active",
           label: "Статус",
@@ -84,6 +86,11 @@ export const ServiceList = ({
               </div>
             );
           },
+        },
+        {
+          key: "salary",
+          label: "Зарплата",
+          tooltip: (service) => `Опис: ${service.salary}`,
         },
       ]}
       renderInspection={(s) => (

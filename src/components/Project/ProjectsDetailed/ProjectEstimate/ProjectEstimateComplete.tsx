@@ -3,7 +3,6 @@ import React, { useMemo } from "react";
 import styles from "./ProjectEstimate.module.css";
 import { ProjectReportResponse } from "@/types/project";
 import { ProjectServicesTable } from "./ProjectEstimateTable/ProjectServicesTable";
-import { ProjectWork } from "@/types/projectComponents";
 
 interface Props {
   report: ProjectReportResponse;
@@ -18,6 +17,7 @@ interface WorkForTable {
   price: number;
   is_active: boolean;
   quantity: number;
+  salary: number;
 }
 
 export const ProjectEstimateComplete = ({
@@ -28,13 +28,14 @@ export const ProjectEstimateComplete = ({
   const { project } = report;
   const services = project.works;
 
-  const servicesForTable: WorkForTable[] = project.works.map((w) => ({
+  const servicesForTable: WorkForTable[] = services.map((w) => ({
     id: w.id,
     name: w.name,
     price: Number(w.cost),
     unit_of_measurement: w.unit ?? "-",
     is_active: true,
     quantity: w.quantity,
+    salary: w.salary ?? "-",
   }));
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");

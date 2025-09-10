@@ -5,6 +5,7 @@ export interface Service {
   price: number;
   service_type: "main" | "additional";
   description?: string;
+  salary: number;
   is_active: boolean;
   created_at?: string;
   updated_at?: string;

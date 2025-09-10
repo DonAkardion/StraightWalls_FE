@@ -15,6 +15,7 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
     name?: string;
     unit_of_measurement?: string;
     price?: string;
+    salary?: string;
   }>({});
 
   useEffect(() => {
@@ -53,10 +54,16 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
       setErrors((prev) => ({ ...prev, unit_of_measurement: undefined }));
     }
 
-    if (name === "price" && (!value || Number(value) <= 0)) {
+    if (name === "price" && (!value || Number(value) < 0)) {
       setErrors((prev) => ({ ...prev, price: "Вкажіть коректну ціну" }));
     } else if (name === "price") {
       setErrors((prev) => ({ ...prev, price: undefined }));
+    }
+
+    if (name === "salary" && (!value || Number(value) < 0)) {
+      setErrors((prev) => ({ ...prev, salary: "Вкажіть коректну зарплату" }));
+    } else if (name === "salary") {
+      setErrors((prev) => ({ ...prev, salary: undefined }));
     }
   };
 
@@ -107,10 +114,24 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
           errors.price ? "border-red-500" : "border-black"
         }`}
-        min={0}
       />
       {errors.price && (
         <p className="text-red-500 text-sm mt-1">{errors.price}</p>
+      )}
+      {/* Запрлата */}
+      <div className={styles.ServiceModalInputTytle}>Зарплата працівника</div>
+      <input
+        type="number"
+        name="salary"
+        placeholder="Зарплата"
+        value={form.salary ?? ""}
+        onChange={handleChange}
+        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+          errors.salary ? "border-red-500" : "border-black"
+        }`}
+      />
+      {errors.salary && (
+        <p className="text-red-500 text-sm mt-1">{errors.salary}</p>
       )}
 
       {/* Тип послуги */}
@@ -126,14 +147,14 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
       </select>
 
       {/* Опис */}
-      <div className={styles.ServiceModalInputTytle}>Опис</div>
+      {/* <div className={styles.ServiceModalInputTytle}>Опис</div>
       <textarea
         name="description"
         placeholder="Додатковий опис"
         value={form.description ?? ""}
         onChange={handleChange}
         className="border-b-1 p-2 pb-1 outline-none resize-none"
-      />
+      /> */}
 
       {/* Чи активна */}
       <label className="flex items-center gap-2 mt-2">
