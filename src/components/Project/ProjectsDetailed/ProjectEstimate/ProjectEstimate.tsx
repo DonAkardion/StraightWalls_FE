@@ -56,12 +56,21 @@ export const ProjectEstimate = ({
     );
   }, [services]);
 
-  // На Confirm-сторінці показуємо тільки ті, де quantity > 0
+  // // На Confirm-сторінці показуємо тільки ті, де quantity > 0
+  // const effectiveServices = useMemo(() => {
+  //   if (editable) return services; // перша сторінка — показуємо весь список
+  //   // фінальна сторінка — тільки вибрані (quantity > 0)
+  //   return services.filter((s) => hasQuantity(s) && s.quantity > 0);
+  // }, [services, editable]);
+
   const effectiveServices = useMemo(() => {
-    if (editable) return services; // перша сторінка — показуємо весь список
-    // фінальна сторінка — тільки вибрані (quantity > 0)
+    if (editable && !isConfirmed) {
+      // режим редагування → всі
+      return services;
+    }
+    // підтверджено або фінальна сторінка → лише обрані
     return services.filter((s) => hasQuantity(s) && s.quantity > 0);
-  }, [services, editable]);
+  }, [services, editable, isConfirmed]);
 
   const handleQuantityChange = (serviceId: number, newQuantity: number) => {
     // рахуємо наступний масив selection

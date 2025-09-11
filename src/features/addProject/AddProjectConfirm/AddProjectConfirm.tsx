@@ -16,7 +16,7 @@ import {
   ProjectPaymentDraft,
 } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 
-function mapWorks(services: ServiceWithQuantity[]) {
+export function mapWorks(services: ServiceWithQuantity[]) {
   return services
     .filter((s) => s.quantity > 0)
     .map((s) => ({
@@ -29,7 +29,7 @@ function mapWorks(services: ServiceWithQuantity[]) {
     }));
 }
 
-function mapMaterials(materials: MaterialWithQuantity[]) {
+export function mapMaterials(materials: MaterialWithQuantity[]) {
   return materials
     .filter((m) => m.quantity > 0)
     .map((m) => ({

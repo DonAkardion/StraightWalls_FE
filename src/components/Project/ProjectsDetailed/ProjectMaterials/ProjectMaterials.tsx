@@ -69,13 +69,21 @@ export const ProjectMaterials = ({
     );
   }, [materials]);
 
-  // На Confirm-сторінці показуємо тільки ті, де quantity > 0
-  const effectiveMaterials = useMemo(() => {
-    if (editable) return materials; // перша сторінка — показуємо весь список
-    // фінальна сторінка — тільки вибрані (quantity > 0)
-    return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
-  }, [materials, editable]);
+  // // На Confirm-сторінці показуємо тільки ті, де quantity > 0
+  // const effectiveMaterials = useMemo(() => {
+  //   if (editable) return materials; // перша сторінка — показуємо весь список
+  //   // фінальна сторінка — тільки вибрані (quantity > 0)
+  //   return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
+  // }, [materials, editable]);
 
+  const effectiveMaterials = useMemo(() => {
+    if (editable && !isConfirmed) {
+      // режим редагування → показуємо всі
+      return materials;
+    }
+    // підтверджено або фінальна сторінка → тільки вибрані
+    return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
+  }, [materials, editable, isConfirmed]);
   const handleQuantityChange = (
     materialId: number,
     field: keyof MaterialWithQuantity,
@@ -162,7 +170,7 @@ export const ProjectMaterials = ({
             </div>
           </div>
 
-          {pathname === `/${role}/addProject/addProjectMaterials` && (
+          {pathname === `/${role}/addProject` && (
             <div className="w-full flex justify-center">
               <div
                 className={`${styles.confirmButton} ${
