@@ -6,9 +6,9 @@ import { ProjectMaterialsTable } from "./ProjectMaterialsTable/ProjectMaterialsT
 import { useUser } from "@/context/UserContextProvider";
 import { updateMaterial } from "@/api/projects";
 import { FormModal } from "@/components/Table/Form/FormModal";
+import { ProjectMaterialForm } from "./ProjectMaterialForm/ProjectMaterialForm";
 import { TableMaterial } from "@/types/material";
 import { UpdateMaterialRequest } from "@/types/project";
-import { ProjectMaterialForm } from "./ProjectMaterialForm/ProjectMaterialForm";
 
 interface Props {
   report: ProjectReportResponse;

@@ -160,3 +160,7 @@ export interface UpdateMaterialRequest {
   current_remaining: number;
   additional_delivery: number;
 }
+
+export interface UpdateWorkRequest {
+  quantity: number;
+}
