@@ -67,7 +67,7 @@ export const ClientSelector: React.FC<ClientSelectorProps> = ({
       </div>
       <div className={styles.dropdownPanel}>
         <div
-          className={` absolute top-0 left-0 right-0 bg-white border rounded-[5px] shadow-lg z-10 ${
+          className={` absolute top-0 left-0 right-0 bg-white border rounded-[5px] shadow-lg z-39 ${
             open ? styles.dropdownOpen : styles.dropdownClosed
           }`}
         >
