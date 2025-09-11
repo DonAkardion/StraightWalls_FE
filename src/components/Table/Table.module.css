@@ -302,11 +302,11 @@
   width: 20px;
 }
 /* правила для ProjectDetailed  Estimate*/
-:global(.projectDetailedEstimateCompleteTableWrap) .indentCellLast {
-  display: none;
-}
 :global(.projectDetailedEstimateCompleteTableWrap) .indentCellSmallSecond {
   width: 20px;
+}
+:global(.projectDetailedEstimateCompleteTableWrap) .TableRowCell {
+  padding: 0 6px;
 }
 /* правила для ProjectDetailed  Materials*/
 :global(.projectDetailedMaterialsCompleteTableWrap) .indentCellSmallSecond {

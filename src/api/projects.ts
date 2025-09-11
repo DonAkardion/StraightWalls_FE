@@ -140,7 +140,7 @@ export async function updateWork(
   return fetcher<{ success: boolean }>(
     `${API_URL}/${projectId}/works/${workId}`,
     {
-      method: "PUT",
+      method: "PATCH",
       token,
       data,
     }
