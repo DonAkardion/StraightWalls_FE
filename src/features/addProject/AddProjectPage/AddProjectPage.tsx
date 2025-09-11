@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useMemo, useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import styles from "./AddProjectPage.module.css";
 
@@ -36,6 +35,7 @@ import { MaterialSelection } from "@/components/Project/ProjectsDetailed/Project
 export function AddProjectPage() {
   const {
     name,
+    setName,
     clientId,
     setClientId,
     objectId,
@@ -50,6 +50,7 @@ export function AddProjectPage() {
     materialsIncomeTotal,
     initialPayment,
   } = useProjectCreation();
+
   const { token } = useUser();
   const router = useRouter();
   const params = useParams();
@@ -60,13 +61,11 @@ export function AddProjectPage() {
 
   const [objects, setObjects] = useState<ClientObject[]>([]);
 
-  const [showOnlySelectedServices, setShowOnlySelectedServices] =
-    useState(false);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const didInitRef = useRef(false);
+  const [isNameTouched, setIsNameTouched] = useState(false);
+
   useEffect(() => {
     if (!token) return;
 
@@ -109,7 +108,6 @@ export function AddProjectPage() {
     if (selectedClient) {
       setObjects(selectedClient.objects || []);
 
-      // Автоматично вибираємо перший об'єкт, якщо він є
       if (selectedClient.objects && selectedClient.objects.length > 0) {
         setObjectId(selectedClient.objects[0].id);
       } else {
@@ -121,22 +119,31 @@ export function AddProjectPage() {
     }
   }, [clientId, clients, setObjectId]);
 
-  // Обробка змін кількості послуг
+  useEffect(() => {
+    if (isNameTouched) return;
+
+    const client = clients.find((c) => c.id === clientId);
+    const object = objects.find((o) => o.id === objectId);
+
+    if (client && object) {
+      setName(`${client.full_name} / ${object.name}`);
+    } else if (client) {
+      setName(`${client.full_name}`);
+    }
+  }, [clientId, objectId, clients, objects, setName, isNameTouched]);
+
   const handleServiceSelectionChange = (
     updated: { serviceId: number; quantity: number }[]
   ) => {
     const newServices: ServiceWithQuantity[] = services.map((s) => {
       const found = updated.find((u) => u.serviceId === s.id);
-
       if (!found) return s;
-
       return { ...s, quantity: found.quantity };
     });
 
     setServices(newServices);
   };
 
-  // Обробка змін кількості матеріалів
   const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
     const newMaterials: MaterialWithQuantity[] = materials.map((m) => {
       const found = updated.find((u) => u.materialId === m.id);
@@ -156,13 +163,13 @@ export function AddProjectPage() {
 
     setMaterials(newMaterials);
   };
-  // Збереження матеріалів
+
   const handleSubmit = async () => {
     if (!token) return;
 
     const payload = {
       project: {
-        name: name,
+        name,
         client_id: String(clientId),
         object_id: String(objectId),
         team_id: String(crewId),
@@ -180,8 +187,6 @@ export function AddProjectPage() {
 
     try {
       const response = await createProject(payload, token);
-      //   console.log(payload.materials);
-      console.log("Проєкт створено ✅", response);
       router.push(`/${role}/projects`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);
@@ -206,7 +211,10 @@ export function AddProjectPage() {
     return (
       <div className="absolute top-[30%] left-[60%] ">Завантаження ...</div>
     );
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (error)
+    return (
+      <div className="text-red-500 absolute top-[30%] left-[60%] ">{error}</div>
+    );
 
   return (
     <section
@@ -220,17 +228,11 @@ export function AddProjectPage() {
           ПІБ клієнта
         </span>
 
-        {loading ? (
-          <div>Завантаження...</div>
-        ) : error ? (
-          <div className="text-red-500">{error}</div>
-        ) : (
-          <ClientSelector
-            clients={clients}
-            value={clientId}
-            onChange={setClientId}
-          />
-        )}
+        <ClientSelector
+          clients={clients}
+          value={clientId}
+          onChange={setClientId}
+        />
       </div>
       {clientId && objects.length > 0 && (
         <div
@@ -253,7 +255,7 @@ export function AddProjectPage() {
         <span className={`${styles.selectorTytle} whitespace-nowrap`}>
           Назва Проєкту
         </span>
-        <ProjectNameInput />
+        <ProjectNameInput onUserInput={() => setIsNameTouched(true)} />
       </div>
       {/* Кошторис по послугах */}
       <div className="relative">
