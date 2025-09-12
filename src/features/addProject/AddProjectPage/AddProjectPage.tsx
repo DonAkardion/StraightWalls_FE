@@ -173,7 +173,7 @@ export function AddProjectPage() {
         client_id: String(clientId),
         object_id: String(objectId),
         team_id: String(crewId),
-        status: "thinking",
+        status: "new",
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
