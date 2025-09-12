@@ -18,6 +18,13 @@ export default function AddCrewForm() {
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const [crewWorkers, setCrewWorkers] = useState<Worker[]>([]);
+  const [inputs, setInputs] = useState<Worker>({
+      id: 0,
+      full_name: "",
+      position: "",
+      phone_number: "",
+      team_id: null,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,10 +43,19 @@ export default function AddCrewForm() {
       );
 
       addCrew(newCrew);
-      for (const worker of crewWorkers) {
+      if (crewWorkers.length > 0) {
+        for (const worker of crewWorkers) {
         await handleAddWorker({ ...worker, team_id: newCrew.id }, token);
       }
-
+      } else {
+        if (
+          inputs.full_name.trim() &&
+          inputs.position.trim() &&
+          inputs.phone_number.trim()
+        ) {
+          await handleAddWorker({ ...inputs, team_id: newCrew.id }, token);
+        }
+      }
       router.back();
     } catch (error) {
       console.error("Помилка додавання бригади або робітників:", error);
@@ -67,8 +83,9 @@ export default function AddCrewForm() {
           />
         </div>
 
-        {/* Робітники */}
         <AddWorkerForm
+          inputForm={inputs}
+          setInputForm={setInputs}
           crewWorkers={crewWorkers}
           setCrewWorkers={setCrewWorkers}
         />
