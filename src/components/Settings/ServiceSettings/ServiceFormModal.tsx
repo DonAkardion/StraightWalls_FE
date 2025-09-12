@@ -5,10 +5,15 @@ import styles from "./ServiceFormModal.module.css";
 
 interface Props {
   service: Service;
-  onChange: (data: Service) => void;
+  onChange: (data: Service, isValid: boolean) => void;
+  submitted?: boolean;
 }
 
-export const ServiceFormModal = ({ service, onChange }: Props) => {
+export const ServiceFormModal = ({
+  service,
+  onChange,
+  submitted = false,
+}: Props) => {
   const [form, setForm] = useState<Service>(service);
 
   const [errors, setErrors] = useState<{
@@ -18,9 +23,36 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
     salary?: string;
   }>({});
 
+  const validate = (data: Service) => {
+    const newErrors: typeof errors = {};
+
+    if (!data.name?.trim()) newErrors.name = "Назва є обов’язковою";
+    if (!data.unit_of_measurement?.trim())
+      newErrors.unit_of_measurement = "Одиниці вимірювання обов’язкові";
+
+    if (data.price === undefined || Number(data.price) <= 0) {
+      newErrors.price = "Ціна має бути більше 0";
+    }
+
+    if (data.salary === undefined || Number(data.salary) < 0) {
+      newErrors.salary = "Зарплата не може бути меншою за 0";
+    }
+
+    return newErrors;
+  };
+
   useEffect(() => {
-    onChange(form);
+    const newErrors = validate(form);
+    setErrors(newErrors);
+    onChange(form, Object.keys(newErrors).length === 0);
   }, [form]);
+
+  useEffect(() => {
+    if (submitted) {
+      const newErrors = validate(form);
+      setErrors(newErrors);
+    }
+  }, [submitted]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -31,41 +63,20 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
     const checked =
       type === "checkbox" ? (e.target as HTMLInputElement).checked : undefined;
 
-    const updatedValue = type === "checkbox" ? checked : value;
-
     setForm((prev) => ({
       ...prev,
-      [name]: updatedValue,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : name === "name" || name === "unit_of_measurement"
+          ? value
+          : value === ""
+          ? ""
+          : Number(value),
     }));
-
-    // простенька валідація
-    if (name === "name" && !value.trim()) {
-      setErrors((prev) => ({ ...prev, name: "Назва є обов’язковою" }));
-    } else if (name === "name") {
-      setErrors((prev) => ({ ...prev, name: undefined }));
-    }
-
-    if (name === "unit_of_measurement" && !value.trim()) {
-      setErrors((prev) => ({
-        ...prev,
-        unit_of_measurement: "Одиниця вимірювання обов’язкова",
-      }));
-    } else if (name === "unit_of_measurement") {
-      setErrors((prev) => ({ ...prev, unit_of_measurement: undefined }));
-    }
-
-    if (name === "price" && (!value || Number(value) < 0)) {
-      setErrors((prev) => ({ ...prev, price: "Вкажіть коректну ціну" }));
-    } else if (name === "price") {
-      setErrors((prev) => ({ ...prev, price: undefined }));
-    }
-
-    if (name === "salary" && (!value || Number(value) < 0)) {
-      setErrors((prev) => ({ ...prev, salary: "Вкажіть коректну зарплату" }));
-    } else if (name === "salary") {
-      setErrors((prev) => ({ ...prev, salary: undefined }));
-    }
   };
+
+  const inputClass = "border-b-1 p-2 pb-1 outline-none";
 
   return (
     <div className="flex flex-col md:gap-3 gap-2 p-2">
@@ -77,11 +88,9 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         placeholder="Назва"
         value={form.name}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none ${
-          errors.name ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
       />
-      {errors.name && (
+      {submitted && errors.name && (
         <p className="text-red-500 text-sm mt-1">{errors.name}</p>
       )}
 
@@ -93,11 +102,9 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         placeholder="Напр. м², год, шт"
         value={form.unit_of_measurement}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none ${
-          errors.unit_of_measurement ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
       />
-      {errors.unit_of_measurement && (
+      {submitted && errors.unit_of_measurement && (
         <p className="text-red-500 text-sm mt-1">
           {errors.unit_of_measurement}
         </p>
@@ -111,14 +118,14 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         placeholder="Ціна"
         value={form.price ?? ""}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.price ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
+        min={0}
       />
-      {errors.price && (
+      {submitted && errors.price && (
         <p className="text-red-500 text-sm mt-1">{errors.price}</p>
       )}
-      {/* Запрлата */}
+
+      {/* Зарплата */}
       <div className={styles.ServiceModalInputTytle}>Зарплата працівника</div>
       <input
         type="number"
@@ -126,11 +133,10 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         placeholder="Зарплата"
         value={form.salary ?? ""}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.salary ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
+        min={0}
       />
-      {errors.salary && (
+      {submitted && errors.salary && (
         <p className="text-red-500 text-sm mt-1">{errors.salary}</p>
       )}
 
@@ -145,16 +151,6 @@ export const ServiceFormModal = ({ service, onChange }: Props) => {
         <option value="main">Основна</option>
         <option value="additional">Додаткова</option>
       </select>
-
-      {/* Опис */}
-      {/* <div className={styles.ServiceModalInputTytle}>Опис</div>
-      <textarea
-        name="description"
-        placeholder="Додатковий опис"
-        value={form.description ?? ""}
-        onChange={handleChange}
-        className="border-b-1 p-2 pb-1 outline-none resize-none"
-      /> */}
 
       {/* Чи активна */}
       <label className="flex items-center gap-2 mt-2">

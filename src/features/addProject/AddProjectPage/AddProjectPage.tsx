@@ -193,6 +193,14 @@ export function AddProjectPage() {
     }
   };
 
+  const errors: string[] = [];
+  if (!clientId) errors.push("Оберіть клієнта");
+  if (!!objects.length && !objectId) errors.push("У клієнта відсутній об’єкт");
+  if (!name?.trim()) errors.push("Відсутня назву проєкту");
+  if (!crewId) errors.push("Оберіть бригаду");
+
+  const isFormValid = errors.length === 0;
+
   const totalWorksCost = useMemo(() => {
     return services.reduce((sum, s) => sum + s.price * s.quantity, 0);
   }, [services]);
@@ -340,13 +348,31 @@ export function AddProjectPage() {
           ]}
         />
       </div>
-
-      <button
-        onClick={handleSubmit}
-        className={`${styles.nextPageBtn} flex items-center justify-center h-[80px] w-full cursor-pointer rounded-[5px]`}
-      >
-        Відправити
-      </button>
+      {/* Кнопка */}
+      <div className="relative group w-full">
+        <button
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+          className={`${
+            styles.nextPageBtn
+          } flex items-center justify-center h-[80px] w-full rounded-[5px] ${
+            !isFormValid ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          Відправити
+        </button>
+        {!isFormValid && errors.length > 0 && (
+          <div
+            className={`${styles.Tooltip} absolute bottom-full mb-2 left-1/2 -translate-x-1/2 max-w-[340px] px-3 py-2 rounded opacity-0 group-hover:opacity-70 transition whitespace-pre-line`}
+          >
+            <ul className="list-disc list-inside space-y-1">
+              {errors.map((err, idx) => (
+                <li key={idx}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
