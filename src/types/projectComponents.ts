@@ -5,6 +5,7 @@ export interface ProjectWork {
   description?: string;
   cost: number;
   quantity: number;
+  salary: number;
   unit: string;
 }
 
@@ -17,11 +18,13 @@ export interface ProjectMaterial {
   purchase_price: string;
   selling_price: string;
   margin: string;
-  quantity: number;
   remaining_stock: string;
   delivery: string;
   unit: string;
-  total: number;
+  previous_remaining: number;
+  delivery_quantity: number;
+  current_remaining: number;
+  additional_delivery: number;
   created_at: string;
   updated_at: string;
 }

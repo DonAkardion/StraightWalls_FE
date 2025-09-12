@@ -13,7 +13,6 @@ interface Material {
   icon: string;
 }
 
-
 const columns = [
   { key: "name", label: "Назва" },
   { key: "quantity", label: "Кількість" },
@@ -37,35 +36,34 @@ export function MaterialsTable() {
     if (storedToken) {
       setToken(storedToken);
     }
-  }, [token])
+  }, [token]);
 
   useEffect(() => {
-  if (!token) return;
+    if (!token) return;
 
-  const fetchMaterials = async () => {
-    try {
-      const response = await getProjects(token);
+    const fetchMaterials = async () => {
+      try {
+        const response = await getProjects(token);
 
-      const formattedData: Material[] = response.flatMap(project =>
-        project.materials.map(mat => ({
-          id: mat.id,
-          name: mat.name,
-          quantity: String(Math.round(mat.remaining_stock)),
-          unitPrice: String(mat.selling_price),
-          supplier: "ТОВ компанія",
-          icon: "",
-        }))
-      );
+        const formattedData: Material[] = response.flatMap((project) =>
+          project.materials.map((mat) => ({
+            id: mat.id,
+            name: mat.name,
+            quantity: String(Math.round(Number(mat.remaining_stock))),
+            unitPrice: String(mat.selling_price),
+            supplier: "ТОВ компанія",
+            icon: "",
+          }))
+        );
 
-      setMaterials(formattedData);
-    } catch (error) {
-      console.error("Помилка при завантаженні матеріалів:", error);
-    }
-  };
+        setMaterials(formattedData);
+      } catch (error) {
+        console.error("Помилка при завантаженні матеріалів:", error);
+      }
+    };
 
-  fetchMaterials();
-}, [token]);
-
+    fetchMaterials();
+  }, [token]);
 
   return (
     <div className="mt-15">

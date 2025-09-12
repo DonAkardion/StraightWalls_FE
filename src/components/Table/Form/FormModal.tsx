@@ -2,6 +2,7 @@
 
 import React from "react";
 import styles from "./FormModal.module.css";
+
 interface FormModalProps {
   title: string;
   children: React.ReactNode;
@@ -15,7 +16,6 @@ export const FormModal = ({
   children,
   onClose,
   onSave,
-  isValid = true,
 }: FormModalProps) => {
   return (
     <div
@@ -36,7 +36,6 @@ export const FormModal = ({
           <button
             onClick={onSave}
             className={`${styles.SaveBtn} px-4 py-2 rounded`}
-            disabled={!isValid}
           >
             Зберегти
           </button>

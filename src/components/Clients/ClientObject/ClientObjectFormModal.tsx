@@ -6,13 +6,12 @@ import { ClientObject } from "@/types/client";
 interface Props {
   object?: ClientObject;
   onChange: (
-    data: Pick<ClientObject, "name" | "address" | "description">
+    data: Pick<ClientObject, "name" | "address" | "description">,
+    isValid: boolean
   ) => void;
 }
 
 export const ClientObjectFormModal = ({ object, onChange }: Props) => {
-  const isEdit = Boolean(object);
-
   const [form, setForm] = useState<
     Pick<ClientObject, "name" | "address" | "description">
   >({
@@ -21,6 +20,12 @@ export const ClientObjectFormModal = ({ object, onChange }: Props) => {
     description: object?.description ?? "",
   });
 
+  const [touched, setTouched] = useState<{ name?: boolean; address?: boolean }>(
+    {}
+  );
+
+  const [errors, setErrors] = useState<{ name?: string; address?: string }>({});
+
   useEffect(() => {
     if (object) {
       setForm({
@@ -28,13 +33,21 @@ export const ClientObjectFormModal = ({ object, onChange }: Props) => {
         address: object.address ?? "",
         description: object.description ?? "",
       });
+      setTouched({});
     } else {
       setForm({ name: "", address: "", description: "" });
+      setTouched({});
     }
   }, [object]);
 
+  // валідація при зміні форми
   useEffect(() => {
-    onChange(form);
+    const newErrors: { name?: string; address?: string } = {};
+    if (!form.name.trim()) newErrors.name = "Поле назви обов'язкове";
+    if (!form.address.trim()) newErrors.address = "Поле адреси обов'язкове";
+
+    setErrors(newErrors);
+    onChange(form, Object.keys(newErrors).length === 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
@@ -48,6 +61,13 @@ export const ClientObjectFormModal = ({ object, onChange }: Props) => {
     }));
   };
 
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+  };
+
   return (
     <>
       <label className="block mb-3">
@@ -58,8 +78,12 @@ export const ClientObjectFormModal = ({ object, onChange }: Props) => {
           placeholder="Квартира, офіс..."
           value={form.name}
           onChange={handleChange}
+          onBlur={handleBlur}
           className="border-b-1 p-2 pb-1 outline-none w-full"
         />
+        {touched.name && errors.name && (
+          <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+        )}
       </label>
 
       <label className="block mb-3">
@@ -70,8 +94,12 @@ export const ClientObjectFormModal = ({ object, onChange }: Props) => {
           placeholder="вул. Шевченка, 10"
           value={form.address}
           onChange={handleChange}
+          onBlur={handleBlur}
           className="border-b-1 p-2 pb-1 outline-none w-full"
         />
+        {touched.address && errors.address && (
+          <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+        )}
       </label>
 
       <label className="block mb-3">
@@ -81,6 +109,7 @@ export const ClientObjectFormModal = ({ object, onChange }: Props) => {
           placeholder="Двокімнатна квартира..."
           value={form.description}
           onChange={handleChange}
+          onBlur={handleBlur}
           className="border-b-1 p-2 pb-1 outline-none w-full min-h-[60px]"
         />
       </label>

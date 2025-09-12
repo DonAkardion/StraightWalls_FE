@@ -16,7 +16,7 @@ type NewClientForm = {
 
 interface Props {
   client?: Client;
-  onChange: (data: Client | NewClientForm) => void;
+  onChange: (data: Client | NewClientForm, isValid: boolean) => void;
   refreshClient?: (clientId?: number) => Promise<Client | undefined>;
 }
 
@@ -28,11 +28,7 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
   const [createForm, setCreateForm] = useState<NewClientForm>({
     full_name: client?.full_name || "",
     phone_number: client?.phone_number || "+380",
-    object: {
-      name: "",
-      address: "",
-      description: "",
-    },
+    object: { name: "", address: "", description: "" },
   });
 
   // edit-mode form (full Client object)
@@ -42,11 +38,18 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
   const [showObjectModal, setShowObjectModal] = useState(false);
   const [newObject, setNewObject] = useState<
     Pick<ClientObject, "name" | "address" | "description">
-  >({
-    name: "",
-    address: "",
-    description: "",
-  });
+  >({ name: "", address: "", description: "" });
+
+  const [errors, setErrors] = useState<{
+    full_name?: string;
+    objectName?: string;
+    objectAddress?: string;
+  }>({});
+  const [touched, setTouched] = useState<{
+    full_name?: boolean;
+    objectName?: boolean;
+    objectAddress?: boolean;
+  }>({});
 
   useEffect(() => {
     if (client) {
@@ -59,43 +62,42 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
         object: { name: "", address: "", description: "" },
       });
     }
+    setErrors({});
+    setTouched({});
   }, [client]);
 
+  // валідація
   useEffect(() => {
-    if (isEdit) {
-      if (editForm) onChange(editForm);
-    } else {
-      onChange(createForm);
+    const newErrors: {
+      full_name?: string;
+      objectName?: string;
+      objectAddress?: string;
+    } = {};
+    if (!(isEdit ? editForm?.full_name : createForm.full_name)?.trim()) {
+      newErrors.full_name = "Поле імені обов'язкове";
     }
+
+    if (!isEdit) {
+      if (!createForm.object.name.trim())
+        newErrors.objectName = "Поле назви об’єкту обов'язкове";
+      if (!createForm.object.address.trim())
+        newErrors.objectAddress = "Поле адреси обов'язкове";
+    }
+
+    setErrors(newErrors);
+    onChange(
+      isEdit ? editForm! : createForm,
+      Object.keys(newErrors).length === 0
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createForm, editForm, isEdit]);
-
-  const [errors, setErrors] = useState<{ full_name?: string }>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (isEdit) {
-      setEditForm((prev) =>
-        prev
-          ? {
-              ...prev,
-              full_name: name === "full_name" ? value : prev.full_name,
-              phone_number: name === "phone_number" ? value : prev.phone_number,
-            }
-          : prev
-      );
+      setEditForm((prev) => (prev ? { ...prev, [name]: value } : prev));
     } else {
-      setCreateForm((prev) =>
-        name === "full_name"
-          ? { ...prev, full_name: value }
-          : { ...prev, phone_number: value }
-      );
-    }
-
-    if (name === "full_name" && !value.trim()) {
-      setErrors((prev) => ({ ...prev, full_name: "Ім’я є обов’язковим" }));
-    } else if (name === "full_name") {
-      setErrors((prev) => ({ ...prev, full_name: undefined }));
+      setCreateForm((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -106,14 +108,20 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
     if (!isEdit) {
       setCreateForm((prev) => ({
         ...prev,
-        object: {
-          ...prev.object,
-          ...(name === "name" ? { name: value } : {}),
-          ...(name === "address" ? { address: value } : {}),
-          ...(name === "description" ? { description: value } : {}),
-        },
+        object: { ...prev.object, [name]: value },
       }));
     }
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name } = e.target;
+    if (name === "full_name")
+      setTouched((prev) => ({ ...prev, full_name: true }));
+    if (name === "name") setTouched((prev) => ({ ...prev, objectName: true }));
+    if (name === "address")
+      setTouched((prev) => ({ ...prev, objectAddress: true }));
   };
 
   const handleSaveObject = async () => {
@@ -136,11 +144,14 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
           placeholder="Ім’я"
           value={isEdit ? editForm?.full_name ?? "" : createForm.full_name}
           onChange={handleChange}
+          onBlur={handleBlur}
           className={`border-b-1 p-2 pb-1 outline-none w-full ${
-            errors.full_name ? "border-red-500" : "border-black"
+            touched.full_name && errors.full_name
+              ? "border-red-500"
+              : "border-black"
           }`}
         />
-        {errors.full_name && (
+        {touched.full_name && errors.full_name && (
           <p className="text-red-500 text-sm mt-1">{errors.full_name}</p>
         )}
       </label>
@@ -169,8 +180,16 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
               placeholder="Квартира, Офіс..."
               value={createForm.object.name}
               onChange={handleObjectChange}
-              className="border-b-1 p-2 pb-1 outline-none w-full"
+              onBlur={handleBlur}
+              className={`border-b-1 p-2 pb-1 outline-none w-full ${
+                touched.objectName && errors.objectName
+                  ? "border-red-500"
+                  : "border-black"
+              }`}
             />
+            {touched.objectName && errors.objectName && (
+              <p className="text-red-500 text-sm mt-1">{errors.objectName}</p>
+            )}
           </label>
           <label className="block mb-3">
             <div>Адреса</div>
@@ -180,8 +199,18 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
               placeholder="вул. Шевченка, 10"
               value={createForm.object.address}
               onChange={handleObjectChange}
-              className="border-b-1 p-2 pb-1 outline-none w-full"
+              onBlur={handleBlur}
+              className={`border-b-1 p-2 pb-1 outline-none w-full ${
+                touched.objectAddress && errors.objectAddress
+                  ? "border-red-500"
+                  : "border-black"
+              }`}
             />
+            {touched.objectAddress && errors.objectAddress && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.objectAddress}
+              </p>
+            )}
           </label>
           <label className="block mb-3">
             <div>Опис</div>
@@ -214,6 +243,7 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
           />
         </div>
       )}
+
       {showObjectModal && (
         <FormModal
           title="Додати об’єкт"

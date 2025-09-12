@@ -1,6 +1,7 @@
 import React from "react";
-import { AddProject } from "@/features/addProject/AddProject/AddProject";
+// import { AddProject } from "@/features/addProject/AddProject/AddProject";
+import { AddProjectPage } from "@/features/addProject/AddProjectPage/AddProjectPage";
 
-export default function AddProjectPage() {
-  return <AddProject />;
+export default function AddProjectMain() {
+  return <AddProjectPage />;
 }

@@ -169,9 +169,7 @@
 :global(.projectsTableWrap) .indentCellSmallSecond {
   display: none;
 }
-:global(.projectsTableWrap) .indentCellBig {
-  width: 40px;
-}
+
 :global(.projectsTableWrap) .indentCellSmall,
 :global(.projectsTableWrap) .indentCellLast {
   background: #fdfff266;
@@ -224,23 +222,49 @@
 :global(.projectAddMaterialsTableWrap) .indentCellSmallSecond {
   width: 20px;
 }
-:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
   background: #ffb32666;
-  width: 120px;
+  width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(11) {
+  background: #ffb32666;
+  width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
+  background: #ffb32666;
+  width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(13) {
+  background: #ffb32666;
+  width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
+  width: 110px;
 }
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(7) {
-  width: 120px;
+  width: 110px;
 }
-:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
-  width: 120px;
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(9) {
+  width: 100px;
 }
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(10) {
+  width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(14) {
   width: 120px;
 }
-:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(4) {
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(6) {
   background: #ffb32666;
 }
-
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(9) {
+  background: #ffb32666;
+}
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(10) {
+  background: #ffb32666;
+}
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(11) {
+  background: #ffb32666;
+}
 :global(.projectAddMaterialsTableWrap) .indentCellSmall {
   display: none;
 }
@@ -278,24 +302,18 @@
   width: 20px;
 }
 /* правила для ProjectDetailed  Estimate*/
-:global(.projectDetailedEstimateCompleteTableWrap) .indentCellLast {
-  display: none;
-}
 :global(.projectDetailedEstimateCompleteTableWrap) .indentCellSmallSecond {
   width: 20px;
 }
-:global(.projectDetailedEstimateCompleteTableWrap) .TableCell:nth-child(7) {
-  display: none;
-}
-:global(.projectDetailedEstimateCompleteTableWrap) .TableRowCell:nth-child(9) {
-  display: none;
+:global(.projectDetailedEstimateCompleteTableWrap) .TableRowCell {
+  padding: 0 6px;
 }
 /* правила для ProjectDetailed  Materials*/
-:global(.projectDetailedMaterialsWrap) .indentCellLast {
-  display: none;
-}
-:global(.projectDetailedMaterialsWrap) .indentCellSmallSecond {
+:global(.projectDetailedMaterialsCompleteTableWrap) .indentCellSmallSecond {
   width: 20px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
+  padding: 0 6px;
 }
 /* правила для Reports Materials*/
 :global(.reportsMaterialsWrap) .indentCellLast {
@@ -430,12 +448,40 @@
   :global(.projectAddMaterialsTableWrap) .indentCellLast {
     display: table-cell;
   }
-  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
     display: table-cell;
     background: none;
     width: auto;
   }
-  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(4) {
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(11) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(13) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(6) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(9) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(10) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(11) {
     display: table-cell;
     background: none;
   }
@@ -469,12 +515,15 @@
     vertical-align: middle;
   }
   /* правила для ProjectDetailed  Estimate*/
-  :global(.projectDetailedEstimateTableWrap) .indentCellLast {
+  :global(.projectDetailedEstimateCompleteTableWrap) .indentCellLast {
     display: table-cell;
   }
   /* правила для ProjectDetailed  Materials*/
-  :global(.projectDetailedMaterialsWrap) .indentCellLast {
+  :global(.projectDetailedMaterialsCompleteTableWrap) .indentCellLast {
     display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
+    padding: 0;
   }
   /* правила для Reports Materials*/
   :global(.reportsMaterialsWrap) .indentCellLast {

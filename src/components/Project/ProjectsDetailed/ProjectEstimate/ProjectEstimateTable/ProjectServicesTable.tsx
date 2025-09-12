@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import styles from "./ProjectServicesTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { Service } from "@/types/service";
+import { WorkForTable } from "../ProjectEstimateComplete";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 
 interface ServiceSelection {
@@ -17,6 +18,7 @@ interface Props {
   editable?: boolean;
   confirmed?: boolean;
   onQuantityChange?: (serviceId: number, quantity: number) => void;
+  onEdit?: (updated: WorkForTable) => void;
   className?: string;
   enableTooltips?: boolean;
 }
@@ -28,6 +30,7 @@ export const ProjectServicesTable = ({
   confirmed = false,
   enableTooltips = true,
   onQuantityChange,
+  onEdit,
   className,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -78,11 +81,12 @@ export const ProjectServicesTable = ({
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
+      onEdit={onEdit ? (item) => onEdit(item) : undefined}
       columns={[
         {
           key: "name",
           label: "Найменування послуги",
-          tooltip: (service) => `Проєкт: ${service.name}`,
+          tooltip: (service) => `Назва: ${service.name}`,
         },
 
         {
@@ -130,6 +134,12 @@ export const ProjectServicesTable = ({
         { key: "unit_of_measurement", label: "Од. вимір." },
         { key: "price", label: "Вартість, грн" },
         {
+          key: "salary",
+          label: "Зарплата",
+          tooltip: (service) =>
+            `Опис: ${(service.salary ?? service.salary, "0")}`,
+        },
+        {
           key: "sum",
           label: "Сума, грн",
           render: (s) => (s.price * getQuantity(s.id)).toFixed(2),
@@ -139,7 +149,12 @@ export const ProjectServicesTable = ({
         <Inspect<Service>
           item={s}
           getId={(item) => item.id}
+          onEdit={onEdit}
           fields={[
+            // {
+            //   label: "Кількість",
+            //   value: (s) => s.quantity,
+            // },
             {
               label: "Од. вимір.",
               value: (item) => item.unit_of_measurement,

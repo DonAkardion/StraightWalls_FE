@@ -19,6 +19,8 @@ export function ServiceSettings() {
   const [loading, setLoading] = useState(true);
 
   const [currentForm, setCurrentForm] = useState<Service | null>(null);
+  const [formValid, setFormValid] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // Завантаження всіх послуг
   useEffect(() => {
@@ -41,15 +43,20 @@ export function ServiceSettings() {
       name: "",
       unit_of_measurement: "",
       price: 0,
+      salary: 0,
       service_type: type,
       description: "",
       is_active: true,
     };
     setCurrentForm(draft as Service);
+    setFormValid(false);
+    setSubmitted(false);
   };
 
   const openEditModal = (service: Service) => {
     setCurrentForm(service);
+    setFormValid(true);
+    setSubmitted(false);
   };
 
   const deleteService = async (id: number) => {
@@ -91,7 +98,8 @@ export function ServiceSettings() {
     !!currentForm?.name &&
     !!currentForm?.unit_of_measurement &&
     !!currentForm?.service_type &&
-    (currentForm?.price ?? 0) > 0;
+    (currentForm?.price ?? 0) > 0 &&
+    (currentForm?.salary ?? 0) >= 0;
 
   if (loading) {
     return <div className="p-4 text-center">Завантаження...</div>;
@@ -128,15 +136,23 @@ export function ServiceSettings() {
       {currentForm && (
         <FormModal
           title={currentForm.id ? "Редагувати послугу" : "Нова послуга"}
-          onClose={() => setCurrentForm(null)}
+          onClose={() => {
+            setSubmitted(false);
+            setCurrentForm(null);
+          }}
           onSave={() => {
-            if (isValid) saveService(currentForm);
+            setSubmitted(true);
+            if (formValid) saveService(currentForm);
           }}
           isValid={isValid}
         >
           <ServiceFormModal
             service={currentForm}
-            onChange={(updated) => setCurrentForm(updated)}
+            submitted={submitted}
+            onChange={(updated, valid) => {
+              setCurrentForm(updated);
+              setFormValid(valid);
+            }}
           />
         </FormModal>
       )}

@@ -9,8 +9,6 @@ import { getCrews } from "@/api/crews";
 import { useUser } from "@/context/UserContextProvider";
 import { CrewSelector } from "@/components/Project/EditComponents/CrewSelector";
 import { ClientSelector } from "@/components/Project/EditComponents/ClientSelector";
-import { format } from "date-fns";
-import { Calendar } from "lucide-react";
 
 interface PaymentCalendarProps {
   value: string;
@@ -19,6 +17,10 @@ interface PaymentCalendarProps {
 
 const PaymentCalendar: React.FC<PaymentCalendarProps> = ({ value, onChange }) => {
   const [selectedDate, setSelectedDate] = useState(value);
+
+  useEffect(() => {
+    setSelectedDate(value);
+  }, [value]);
 
   return (
     <input

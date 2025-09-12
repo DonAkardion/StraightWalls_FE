@@ -66,7 +66,7 @@ export const MaterialIncomeEditor = ({
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   return (
-    <section className={`${styles.sectionMaterials} mb-[40px] md:mt-[156px]`}>
+    <section className={`${styles.sectionMaterials} mb-[40px] md:mt-[176px]`}>
       <h2
         className={`${lockalStyles.materialsIncomeTytle} mb-[10px] md:mb-[16px]`}
       >

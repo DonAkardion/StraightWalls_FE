@@ -20,6 +20,9 @@ export function MaterialSettings() {
 
   const [currentForm, setCurrentForm] = useState<Material | null>(null);
 
+  const [formValid, setFormValid] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   // Завантаження всіх матеріалів
   useEffect(() => {
     if (!token) return;
@@ -42,17 +45,21 @@ export function MaterialSettings() {
       "id" | "created_at" | "updated_at" | "base_margin"
     > = {
       name: "",
-      base_purchase_price: "",
-      base_selling_price: "",
+      base_purchase_price: 0,
+      base_selling_price: 0,
       unit: "",
-      stock: "",
-      base_delivery: "",
+      stock: 0,
+      base_delivery: 0,
     };
     setCurrentForm(draft as Material);
+    setFormValid(false);
+    setSubmitted(false);
   };
 
   const openEditModal = (material: Material) => {
     setCurrentForm(material);
+    setFormValid(true);
+    setSubmitted(false);
   };
 
   const handledeleteMaterial = async (id: number) => {
@@ -121,15 +128,24 @@ export function MaterialSettings() {
       {currentForm && (
         <FormModal
           title={currentForm.id ? "Редагувати Матеріал" : "Новий Матеріал"}
-          onClose={() => setCurrentForm(null)}
-          onSave={() => {
-            if (isValid) saveMaterial(currentForm);
+          onClose={() => {
+            setSubmitted(false);
+            setCurrentForm(null);
           }}
-          isValid={isValid}
+          onSave={() => {
+            setSubmitted(true);
+            if (formValid) {
+              saveMaterial(currentForm);
+            }
+          }}
         >
           <MaterialFormModal
             material={currentForm}
-            onChange={(updated) => setCurrentForm(updated)}
+            onChange={(updated, valid) => {
+              setCurrentForm(updated);
+              setFormValid(valid);
+            }}
+            submitted={submitted}
           />
         </FormModal>
       )}

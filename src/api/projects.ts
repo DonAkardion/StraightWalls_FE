@@ -5,6 +5,7 @@ import type {
   ProjectReportResponse,
   ProjectDetailedResponse,
   UpdateProjectPayload,
+  UpdateMaterialRequest,
 } from "@/types/project";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL;
@@ -139,7 +140,7 @@ export async function updateWork(
   return fetcher<{ success: boolean }>(
     `${API_URL}/${projectId}/works/${workId}`,
     {
-      method: "PUT",
+      method: "PATCH",
       token,
       data,
     }
@@ -191,20 +192,13 @@ export async function addMaterialToProject(
 export async function updateMaterial(
   projectId: number,
   materialId: number,
-  data: Partial<{
-    name: string;
-    purchase_price: number;
-    selling_price: number;
-    quantity: number;
-    delivery: number;
-    unit: string;
-  }>,
+  data: UpdateMaterialRequest,
   token: string
 ) {
   return fetcher<{ success: boolean }>(
     `${API_URL}/${projectId}/materials/${materialId}`,
     {
-      method: "PUT",
+      method: "PATCH",
       token,
       data,
     }

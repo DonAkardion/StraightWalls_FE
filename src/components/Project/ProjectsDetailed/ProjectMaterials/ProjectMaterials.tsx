@@ -10,6 +10,10 @@ import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationConte
 export interface MaterialSelection {
   materialId: number;
   quantity: number;
+  previous_remaining?: number;
+  additional_delivery?: number;
+  current_remaining?: number;
+  delivery_quantity?: number;
 }
 export interface MaterialRow extends Material {
   quantity: number;
@@ -39,6 +43,10 @@ export const ProjectMaterials = ({
     materials.map((m) => ({
       materialId: m.id,
       quantity: hasQuantity(m) ? m.quantity : 0,
+      previous_remaining: hasQuantity(m) ? m.previous_remaining ?? 0 : 0,
+      additional_delivery: hasQuantity(m) ? m.additional_delivery ?? 0 : 0,
+      current_remaining: hasQuantity(m) ? m.current_remaining ?? 0 : 0,
+      delivery_quantity: hasQuantity(m) ? m.delivery_quantity ?? 0 : 0,
     }))
   );
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -53,39 +61,40 @@ export const ProjectMaterials = ({
       materials.map((m) => ({
         materialId: m.id,
         quantity: hasQuantity(m) ? m.quantity : 0,
+        previous_remaining: hasQuantity(m) ? m.previous_remaining ?? 0 : 0,
+        additional_delivery: hasQuantity(m) ? m.additional_delivery ?? 0 : 0,
+        current_remaining: hasQuantity(m) ? m.current_remaining ?? 0 : 0,
+        delivery_quantity: hasQuantity(m) ? m.delivery_quantity ?? 0 : 0,
       }))
     );
   }, [materials]);
 
-  // На Confirm-сторінці показуємо тільки ті, де quantity > 0
+  // // На Confirm-сторінці показуємо тільки ті, де quantity > 0
+  // const effectiveMaterials = useMemo(() => {
+  //   if (editable) return materials; // перша сторінка — показуємо весь список
+  //   // фінальна сторінка — тільки вибрані (quantity > 0)
+  //   return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
+  // }, [materials, editable]);
+
   const effectiveMaterials = useMemo(() => {
-    if (editable) return materials; // перша сторінка — показуємо весь список
-    // фінальна сторінка — тільки вибрані (quantity > 0)
+    if (editable && !isConfirmed) {
+      // режим редагування → показуємо всі
+      return materials;
+    }
+    // підтверджено або фінальна сторінка → тільки вибрані
     return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
-  }, [materials, editable]);
-
-  const materialRows: MaterialRow[] = useMemo(() => {
-    return effectiveMaterials.map((m) => {
-      const quantity =
-        selection.find((sel) => sel.materialId === m.id)?.quantity ?? 0;
-
-      const baseSelling = Number((m as any).base_selling_price) || 0;
-      const baseDelivery = Number((m as any).base_delivery) || 0;
-      const sum = (baseSelling + baseDelivery) * quantity;
-
-      return { ...(m as Material), quantity, sum };
-    });
-  }, [effectiveMaterials, selection]);
-
-  const handleQuantityChange = (materialId: number, newQuantity: number) => {
-    // рахуємо наступний масив selection
+  }, [materials, editable, isConfirmed]);
+  const handleQuantityChange = (
+    materialId: number,
+    field: keyof MaterialWithQuantity,
+    value: number
+  ) => {
     const next = selection.map((sel) =>
-      sel.materialId === materialId ? { ...sel, quantity: newQuantity } : sel
+      sel.materialId === materialId ? { ...sel, [field]: value } : sel
     );
     setSelection(next);
 
     if (onSelectionChange) {
-      // віддаємо тільки елементи з quantity > 0
       onSelectionChange(next);
     }
   };
@@ -137,10 +146,7 @@ export const ProjectMaterials = ({
 
       <ProjectMaterialsTable
         materials={effectiveMaterials}
-        selection={effectiveMaterials.map((m) => ({
-          materialId: m.id,
-          quantity: getQuantity(m),
-        }))}
+        selection={selection}
         editable={!isConfirmed && editable}
         onQuantityChange={handleQuantityChange}
         className={tableClassName}
@@ -151,7 +157,7 @@ export const ProjectMaterials = ({
         className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
       >
         <div
-          className={`${styles.totatCostSeparate} md:absolute md:top-[-6px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px]`}
+          className={`${styles.totatCostSeparate} md:absolute md:top-[20px] w-full mt-[15px] md:mt-0 z-[10] rounded-[5px]`}
         >
           <div
             className={`${styles.totatCostMain} ${styles.totatCostMainSwadow} flex justify-between items-center gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]`}
@@ -164,7 +170,7 @@ export const ProjectMaterials = ({
             </div>
           </div>
 
-          {pathname === `/${role}/addProject/addProjectMaterials` && (
+          {pathname === `/${role}/addProject` && (
             <div className="w-full flex justify-center">
               <div
                 className={`${styles.confirmButton} ${

@@ -5,10 +5,15 @@ import styles from "./MaterialFormModal.module.css";
 
 interface Props {
   material: Material;
-  onChange: (data: Material) => void;
+  onChange: (data: Material, isValid: boolean) => void;
+  submitted?: boolean;
 }
 
-export const MaterialFormModal = ({ material, onChange }: Props) => {
+export const MaterialFormModal = ({
+  material,
+  onChange,
+  submitted = false,
+}: Props) => {
   const [form, setForm] = useState<Material>(material);
 
   const [errors, setErrors] = useState<{
@@ -20,9 +25,48 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
     base_delivery?: string;
   }>({});
 
+  const validate = (data: Material) => {
+    const newErrors: typeof errors = {};
+
+    if (!data.name?.trim()) newErrors.name = "Назва є обов’язковою";
+    if (!data.unit?.trim()) newErrors.unit = "Одиниці вимірювання обов’язкові";
+
+    if (
+      data.base_purchase_price === undefined ||
+      Number(data.base_purchase_price) <= 0
+    ) {
+      newErrors.base_purchase_price = "Вкажіть коректну ціну";
+    }
+    if (
+      data.base_selling_price === undefined ||
+      Number(data.base_selling_price) <= 0
+    ) {
+      newErrors.base_selling_price = "Вкажіть коректну ціну";
+    }
+
+    if (data.stock === undefined || Number(data.stock) <= 0) {
+      newErrors.stock = "Залишок має бути більше 0";
+    }
+
+    if (data.base_delivery === undefined || Number(data.base_delivery) < 0) {
+      newErrors.base_delivery = "Ціна доставки не може бути від’ємною";
+    }
+
+    return newErrors;
+  };
+
   useEffect(() => {
-    onChange(form);
+    const newErrors = validate(form);
+    setErrors(newErrors);
+    onChange(form, Object.keys(newErrors).length === 0);
   }, [form]);
+
+  useEffect(() => {
+    if (submitted) {
+      const newErrors = validate(form);
+      setErrors(newErrors);
+    }
+  }, [submitted]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -30,40 +74,18 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
     >
   ) => {
     const { name, value } = e.target;
-
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]:
+        name === "name" || name === "unit"
+          ? value
+          : value === "" // 👈 дозволяємо порожнє
+          ? ""
+          : Number(value),
     }));
-
-    // простенька валідація
-    if (name === "name" && !value.trim()) {
-      setErrors((prev) => ({ ...prev, name: "Назва є обов’язковою" }));
-    } else if (name === "name") {
-      setErrors((prev) => ({ ...prev, name: undefined }));
-    }
-
-    if (name === "unit" && !value.trim()) {
-      setErrors((prev) => ({
-        ...prev,
-        unit: "Одиниця вимірювання обов’язкова",
-      }));
-    } else if (name === "unit") {
-      setErrors((prev) => ({ ...prev, unit: undefined }));
-    }
-
-    if (
-      (name === "base_purchase_price" || name === "base_selling_price") &&
-      (!value || Number(value) <= 0)
-    ) {
-      setErrors((prev) => ({ ...prev, [name]: "Вкажіть коректну ціну" }));
-    } else if (
-      name === "base_purchase_price" ||
-      name === "base_selling_price"
-    ) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
   };
+
+  const inputClass = "border-b-1 p-2 pb-1 outline-none";
 
   return (
     <div className="flex flex-col md:gap-3 gap-2 p-2">
@@ -75,11 +97,9 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
         placeholder="Назва"
         value={form.name}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none ${
-          errors.name ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
       />
-      {errors.name && (
+      {submitted && errors.name && (
         <p className="text-red-500 text-sm mt-1">{errors.name}</p>
       )}
 
@@ -90,12 +110,10 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
         name="base_purchase_price"
         value={form.base_purchase_price ?? ""}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.base_purchase_price ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
         min={0}
       />
-      {errors.base_purchase_price && (
+      {submitted && errors.base_purchase_price && (
         <p className="text-red-500 text-sm mt-1">
           {errors.base_purchase_price}
         </p>
@@ -108,12 +126,10 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
         name="base_selling_price"
         value={form.base_selling_price ?? ""}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.base_selling_price ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
         min={0}
       />
-      {errors.base_selling_price && (
+      {submitted && errors.base_selling_price && (
         <p className="text-red-500 text-sm mt-1">{errors.base_selling_price}</p>
       )}
 
@@ -125,11 +141,9 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
         placeholder="Напр. м², год, шт"
         value={form.unit}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none ${
-          errors.unit ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
       />
-      {errors.unit && (
+      {submitted && errors.unit && (
         <p className="text-red-500 text-sm mt-1">{errors.unit}</p>
       )}
 
@@ -140,12 +154,10 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
         name="base_delivery"
         value={form.base_delivery ?? ""}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.base_delivery ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
         min={0}
       />
-      {errors.base_delivery && (
+      {submitted && errors.base_delivery && (
         <p className="text-red-500 text-sm mt-1">{errors.base_delivery}</p>
       )}
 
@@ -156,12 +168,10 @@ export const MaterialFormModal = ({ material, onChange }: Props) => {
         name="stock"
         value={form.stock ?? ""}
         onChange={handleChange}
-        className={`border-b-1 p-2 pb-1 outline-none appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-          errors.stock ? "border-red-500" : "border-black"
-        }`}
+        className={inputClass}
         min={0}
       />
-      {errors.stock && (
+      {submitted && errors.stock && (
         <p className="text-red-500 text-sm mt-1">{errors.stock}</p>
       )}
     </div>
