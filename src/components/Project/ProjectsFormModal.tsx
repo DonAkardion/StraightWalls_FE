@@ -10,15 +10,37 @@ import { useUser } from "@/context/UserContextProvider";
 import { CrewSelector } from "@/components/Project/EditComponents/CrewSelector";
 import { ClientSelector } from "@/components/Project/EditComponents/ClientSelector";
 
+interface PaymentCalendarProps {
+  value: string;
+  onChange: (val: string) => void;
+}
+
+const PaymentCalendar: React.FC<PaymentCalendarProps> = ({ value, onChange }) => {
+  const [selectedDate, setSelectedDate] = useState(value);
+
+  useEffect(() => {
+    setSelectedDate(value);
+  }, [value]);
+
+  return (
+    <input
+      type="date"
+      value={selectedDate}
+      onChange={(e) => {
+        setSelectedDate(e.target.value);
+        onChange(e.target.value);
+      }}
+      className="border-b-1 p-2 pb-1 outline-none w-full cursor-pointer"
+    />
+  );
+};
+
 interface ProjectsFormModalProps {
   project: Project;
   onChange: (updated: Project) => void;
 }
 
-export function ProjectsFormModal({
-  project,
-  onChange,
-}: ProjectsFormModalProps) {
+export function ProjectsFormModal({ project, onChange }: ProjectsFormModalProps) {
   const { token } = useUser();
   const [formData, setFormData] = useState<Project>(project);
   const [clients, setClients] = useState<Client[]>([]);
@@ -32,10 +54,7 @@ export function ProjectsFormModal({
     if (!token) return;
     const fetchData = async () => {
       try {
-        const [clientsRes, crewsRes] = await Promise.all([
-          getClients(token),
-          getCrews(token),
-        ]);
+        const [clientsRes, crewsRes] = await Promise.all([getClients(token), getCrews(token)]);
         setClients(clientsRes);
         setCrews(crewsRes);
       } catch (e) {
@@ -79,37 +98,29 @@ export function ProjectsFormModal({
       />
 
       <div className={styles.ModalInputTytle}>Оберіть клієнта</div>
-      <ClientSelector
-        clients={clients}
-        value={formData.client_id ?? null}
-        onChange={handleClientChange}
-      />
+      <ClientSelector clients={clients} value={formData.client_id ?? null} onChange={handleClientChange} />
 
       <div className={styles.ModalInputTytle}>Оберіть бригаду</div>
-      <CrewSelector
-        crews={crews}
-        value={formData.team_id ?? null}
-        onChange={handleCrewChange}
-      />
+      <CrewSelector crews={crews} value={formData.team_id ?? null} onChange={handleCrewChange} />
 
       <div className={styles.ModalInputTytle}>Дата початку терміну</div>
-      <input
-        type="text"
-        name="start_date"
-        placeholder="01.21.2026"
+      <PaymentCalendar
         value={formData.start_date || ""}
-        onChange={handleInputChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        onChange={(val) => {
+          const updated = { ...formData, start_date: val };
+          setFormData(updated);
+          onChange(updated);
+        }}
       />
 
       <div className={styles.ModalInputTytle}>Дата завершення терміну</div>
-      <input
-        type="text"
-        name="end_date"
-        placeholder="09.28.2026"
+      <PaymentCalendar
         value={formData.end_date || ""}
-        onChange={handleInputChange}
-        className="border-b-1 p-2 pb-1 outline-none"
+        onChange={(val) => {
+          const updated = { ...formData, end_date: val };
+          setFormData(updated);
+          onChange(updated);
+        }}
       />
     </div>
   );

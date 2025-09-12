@@ -83,8 +83,7 @@ const Calendar = () => {
 
   const handleCrewSelect = async (idx: number) => {
     const crew = calendar[idx];
-    const updated = calendar.map((c, i) => ({ ...c, selected: i === idx }));
-    setCalendar(updated);
+    setCalendar(calendar.map((c, i) => ({ ...c, selected: i === idx })));
     setSelectedCrew(crew);
 
     if (!crew || !crew.projects?.length || !token) {
@@ -92,50 +91,44 @@ const Calendar = () => {
       return;
     }
 
+        const reports = await Promise.all(
+      crew.projects.map((proj) => getProjectReport(proj.id, token).catch(() => null))
+    );
+
     const colorsMap: Record<number, string[]> = {};
+    const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-    for (const proj of crew.projects) {
-      try {
-        const report = await getProjectReport(proj.id, token);
+    reports.forEach((report) => {
+      if (!report) return;
+      const color = colors[report.project.status as ProjectStatus];
+      if (!color) return;
 
-        const color = colors[report.project.status as ProjectStatus];
-        if (!color) continue;
+      const start = report.project.start_date
+        ? new Date(report.project.start_date)
+        : new Date(report.project.created_at);
+      const end = report.project.end_date
+        ? new Date(report.project.end_date)
+        : new Date(report.project.updated_at);
 
-        let start: Date | null = report.project.start_date
-          ? new Date(report.project.start_date)
-          : null;
-        let end: Date | null = report.project.end_date
-          ? new Date(report.project.end_date)
-          : null;
-
-        if (!start || !end) {
-          start = new Date(report.project.created_at);
-          end = new Date(report.project.updated_at);
-        }
-
-        const startDay =
-          start.getMonth() === currentMonth
-            ? start.getDate()
-            : 1;
-
-        const endDay =
-          end.getMonth() === currentMonth
-            ? end.getDate()
-            : new Date(currentYear, currentMonth + 1, 0).getDate();
-
-        for (let d = startDay; d <= endDay; d++) {
+      for (let d = 1; d <= daysInCurrentMonth; d++) {
+        const dayDate = new Date(currentYear, currentMonth, d);
+        if (dayDate >= start && dayDate <= end) {
           if (!colorsMap[d]) colorsMap[d] = [];
-          if (!colorsMap[d].includes(color)) {
-            colorsMap[d].push(color);
-          }
+          if (!colorsMap[d].includes(color)) colorsMap[d].push(color);
         }
-      } catch (error) {
-        console.error(`Error fetching report for project ${proj.id}:`, error);
       }
-    }
+    });
 
     setDayColors(colorsMap);
   };
+
+  useEffect(() => {
+    setDayColors({})
+    if (selectedCrew) {
+      const idx = calendar.findIndex((c) => c.id === selectedCrew.id);
+      if (idx !== -1) handleCrewSelect(idx);
+    }
+  }, [currentMonth, currentYear]);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -144,7 +137,6 @@ const Calendar = () => {
     } else {
       setCurrentMonth((m) => m - 1);
     }
-    setDayColors({});
   };
 
   const handleNextMonth = () => {
@@ -154,7 +146,6 @@ const Calendar = () => {
     } else {
       setCurrentMonth((m) => m + 1);
     }
-    setDayColors({});
   };
 
   return (
@@ -213,29 +204,23 @@ const Calendar = () => {
         ))}
 
         {dates.flat().map((date, i) => {
-          if (date === 0) {
-            return <div key={i} />;
-          }
+          if (date === 0) return <div key={i} />;
 
           const dayColorsArray = dayColors[date] || [];
-          let bgStyle: React.CSSProperties = {
-            backgroundColor: "white",
-          };
+          let bgStyle: React.CSSProperties = { backgroundColor: "white" };
 
           if (dayColorsArray.length === 1) {
             bgStyle.backgroundColor = dayColorsArray[0];
             bgStyle.color = "white";
           } else if (dayColorsArray.length > 1) {
-            bgStyle.background = `conic-gradient(${dayColorsArray.join(
-              ", "
-            )})`;
+            bgStyle.background = `conic-gradient(${dayColorsArray.join(", ")})`;
             bgStyle.color = "white";
           }
 
           return (
             <button
               key={i}
-              className={`rounded-md shadow-md py-1 sm:py-2 mt-2`}
+              className="rounded-md shadow-md py-1 sm:py-2 mt-2"
               style={bgStyle}
             >
               {date}

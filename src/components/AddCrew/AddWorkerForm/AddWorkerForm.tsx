@@ -9,35 +9,39 @@ import { Trash } from "../../../../public/icons";
 interface AddWorkerFormProps {
   crewWorkers: Worker[];
   setCrewWorkers: React.Dispatch<React.SetStateAction<Worker[]>>;
+  inputForm: Worker;
+  setInputForm: React.Dispatch<React.SetStateAction<Worker>>;
 }
 
 export default function AddWorkerForm({
   crewWorkers,
   setCrewWorkers,
+  inputForm,
+  setInputForm
 }: AddWorkerFormProps) {
-  const [inputs, setInputs] = useState<Worker>({
-    id: 0,
-    full_name: "",
-    position: "",
-    phone_number: "",
-    team_id: null,
-  });
+  // const [inputs, setInputs] = useState<Worker>({
+  //   id: 0,
+  //   full_name: "",
+  //   position: "",
+  //   phone_number: "",
+  //   team_id: null,
+  // });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setInputForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleAddWorker = () => {
     if (
-      !inputs.full_name.trim() ||
-      !inputs.position.trim() ||
-      !inputs.phone_number.trim()
+      !inputForm.full_name.trim() ||
+      !inputForm.position.trim() ||
+      !inputForm.phone_number.trim()
     ) {
       return alert("Заповніть всі поля робітника");
     }
 
-    setCrewWorkers((prev) => [...prev, { ...inputs, id: Date.now() }]);
-    setInputs({
+    setCrewWorkers((prev) => [...prev, { ...inputForm, id: Date.now() }]);
+    setInputForm({
       id: 0,
       full_name: "",
       position: "",
@@ -133,7 +137,7 @@ export default function AddWorkerForm({
               type="text"
               placeholder="Введіть ПІБ"
               name="full_name"
-              value={inputs.full_name}
+              value={inputForm.full_name}
               onChange={handleChange}
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 w-full rounded-md px-2`}
             />
@@ -143,7 +147,7 @@ export default function AddWorkerForm({
               type="text"
               name="position"
               placeholder="Ввести"
-              value={inputs.position}
+              value={inputForm.position}
               onChange={handleChange}
               className={`${styles.addWorkerInput} outline-none text-[15px] py-2 w-full text-center rounded-md px-2`}
             />
@@ -153,7 +157,7 @@ export default function AddWorkerForm({
               type="text"
               name="phone_number"
               placeholder="Ввести"
-              value={inputs.phone_number}
+              value={inputForm.phone_number}
               onChange={handleChange}
               maxLength={25}
               className={`${styles.addWorkerInput} outline-none text-[15px] w-full py-2 text-center rounded-md px-2`}
