@@ -51,3 +51,7 @@
     line-height: 30px;
   }
 }
+
+.Tooltip {
+  background: lightgrey;
+}
