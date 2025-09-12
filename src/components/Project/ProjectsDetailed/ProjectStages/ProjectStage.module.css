@@ -1,0 +1,20 @@
+.projectStages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+}
+
+.stageItem {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  font-weight: 500;
+}
+
+.stageItem:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

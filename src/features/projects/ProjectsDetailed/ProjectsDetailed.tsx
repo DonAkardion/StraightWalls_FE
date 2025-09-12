@@ -16,6 +16,7 @@ import {
 } from "@/components/Project/ProjectsDetailed/ProjectPaymentForm/ProjectPaymentForm";
 import { ProjectCrew } from "@/components/Project/ProjectsDetailed/ProjectCrew/ProjectCrew";
 import { ProjectNotes } from "@/components/Project/ProjectsDetailed/ProjectNotes/ProjectNotes";
+import { ProjectStages } from "@/components/Project/ProjectsDetailed/ProjectStages/ProjectStage";
 
 interface Props {
   projectId: number;
@@ -97,6 +98,7 @@ export function ProjectsDetailed({ projectId }: Props) {
           crewName={report.project.team.name}
         />
         <ProjectPaymentForm onSubmit={handleCreatePayment} />
+        <ProjectStages report={report} />
         <ProjectNotes
           subtitle="Також звертаємо Вашу увагу, що Замовник забезпечує:"
           notes={[
