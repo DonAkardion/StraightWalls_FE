@@ -53,6 +53,12 @@ interface ProjectCreationData {
   materialsIncomeTotal: number;
   setMaterialsIncomeTotal: (income: number) => void;
 
+  startDate: string;
+  setStartDate: (date: string) => void;
+
+  endDate: string;
+  setEndDate: (date: string) => void;
+
   resetProject: () => void;
 }
 
@@ -76,6 +82,8 @@ export const ProjectCreationProvider = ({
     initialPayment: null as ProjectPaymentDraft | null,
     materialsIncomeTotal: 0,
     advanceAmount: 0,
+    startDate: "",
+    endDate: "",
   };
 
   const [name, setName] = useState(initialState.name);
@@ -102,6 +110,8 @@ export const ProjectCreationProvider = ({
   const [materialsIncomeTotal, setMaterialsIncomeTotal] = useState<number>(
     initialState.materialsIncomeTotal
   );
+  const [startDate, setStartDate] = useState<string>(initialState.startDate);
+  const [endDate, setEndDate] = useState<string>(initialState.endDate);
 
   const resetProject = () => {
     setName(initialState.name);
@@ -114,6 +124,8 @@ export const ProjectCreationProvider = ({
     setInitialPayment(initialState.initialPayment);
     setMaterialsIncomeTotal(initialState.materialsIncomeTotal);
     setAdvanceAmount(initialState.advanceAmount);
+    setStartDate(initialState.startDate);
+    setEndDate(initialState.endDate);
   };
 
   return (
@@ -139,6 +151,10 @@ export const ProjectCreationProvider = ({
         setAdvanceAmount,
         materialsIncomeTotal,
         setMaterialsIncomeTotal,
+        startDate,
+        setStartDate,
+        endDate,
+        setEndDate,
         resetProject,
       }}
     >

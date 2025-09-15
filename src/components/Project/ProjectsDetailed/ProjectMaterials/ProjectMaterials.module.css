@@ -22,12 +22,20 @@
 .confirmButton {
   background: none;
   border: none;
+  border-radius: 5px;
   box-shadow: inset 0 0 0 2px var(--green);
   transition: all 0.2s ease;
+}
+.confirmButton:hover {
+  box-shadow: inset 0 0 4px 2px var(--green);
 }
 
 .confirmButton.confirmed {
   box-shadow: inset 0 0 0 2px var(--red);
+}
+
+.confirmButton.confirmed:hover {
+  box-shadow: inset 0 0 4px 2px var(--red);
 }
 .totatCostSeparateTytle {
   font-weight: 400;
