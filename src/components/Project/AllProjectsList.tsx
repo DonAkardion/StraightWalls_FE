@@ -50,6 +50,14 @@ export const AllProjectsList = ({
   const { token } = useUser();
 
   const [statusState, setStatusState] = useState<Record<number, string>>({});
+  const [filterStatus, setFilterStatus] = useState<string>("");
+
+  const filteredProjects = filterStatus
+    ? projects.filter((p) => {
+        const currentStatus = statusState[p.id] || p.status;
+        return currentStatus === filterStatus;
+      })
+    : projects;
 
   const handleRowClick = (id: number) => {
     if (!role) return;
@@ -139,11 +147,20 @@ export const AllProjectsList = ({
 
   return (
     <div className="mb-[60px] relative">
-      <h2 className={`${styles.projectsTytle} mb-[10px] md:mb-[16px]`}>
-        {tablesTytle}
-      </h2>
+      <div className="flex justify-between items-center mb-[10px] md:mb-[16px]">
+        <h2 className={`${styles.projectsTytle} `}>{tablesTytle}</h2>
+        {/* Фільтр по статусу */}
+        <div className="flex items-center gap-2">
+          <span className={`${styles.projectsState} mb-1`}>Статус:</span>
+          <StatusSelector
+            value={filterStatus || ""}
+            options={{ "": "Всі", ...statusMap }}
+            onChange={(val) => setFilterStatus(val)}
+          />
+        </div>
+      </div>
       <Table<Project>
-        data={projects}
+        data={filteredProjects}
         expandedId={expandedId}
         className="projectsTableWrap"
         onEdit={role === "admin" ? onEdit : undefined}
