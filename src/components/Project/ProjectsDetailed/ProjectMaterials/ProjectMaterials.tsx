@@ -26,6 +26,7 @@ interface Props {
   onSelectionChange?: (selection: MaterialSelection[]) => void;
   tableClassName?: string;
   tablesTitle?: string;
+  onConfirm?: () => void;
 }
 const hasQuantity = (
   s: Material | MaterialWithQuantity
@@ -38,6 +39,7 @@ export const ProjectMaterials = ({
   onSelectionChange,
   tableClassName,
   tablesTitle,
+  onConfirm,
 }: Props) => {
   const [selection, setSelection] = useState<MaterialSelection[]>(() =>
     materials.map((m) => ({
@@ -69,13 +71,6 @@ export const ProjectMaterials = ({
     );
   }, [materials]);
 
-  // // На Confirm-сторінці показуємо тільки ті, де quantity > 0
-  // const effectiveMaterials = useMemo(() => {
-  //   if (editable) return materials; // перша сторінка — показуємо весь список
-  //   // фінальна сторінка — тільки вибрані (quantity > 0)
-  //   return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
-  // }, [materials, editable]);
-
   const effectiveMaterials = useMemo(() => {
     if (editable && !isConfirmed) {
       // режим редагування → показуємо всі
@@ -102,9 +97,11 @@ export const ProjectMaterials = ({
   const handleConfirm = () => {
     const next = !isConfirmed;
     setIsConfirmed(next);
-    // дублюємо фільтрацію при підтвердженні
     if (next && onSelectionChange) {
       onSelectionChange(selection);
+    }
+    if (next && onConfirm) {
+      onConfirm();
     }
   };
 
@@ -179,7 +176,7 @@ export const ProjectMaterials = ({
               >
                 <button
                   onClick={handleConfirm}
-                  className="w-full h-full flex items-center justify-center text-center"
+                  className={`${styles.confirmBtn} w-full h-full flex items-center justify-center text-center`}
                 >
                   {isConfirmed ? "Редагувати" : "Підтвердити"}
                 </button>

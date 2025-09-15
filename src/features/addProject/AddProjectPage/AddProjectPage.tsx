@@ -7,6 +7,7 @@ import styles from "./AddProjectPage.module.css";
 
 import { ClientSelector } from "@/components/addProject/ClientSelector/ClientSelector";
 import { ObjectSelector } from "@/components/addProject/ClientSelector/ObjectSelector";
+import { ProjectDates } from "@/components/addProject/ProjectDates/ProjectDates";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
@@ -49,6 +50,10 @@ export function AddProjectPage() {
     setCrewId,
     materialsIncomeTotal,
     initialPayment,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
   } = useProjectCreation();
 
   const { token } = useUser();
@@ -144,6 +149,14 @@ export function AddProjectPage() {
     setServices(newServices);
   };
 
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }, 0);
+    }
+  }, [loading]);
+
   const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
     const newMaterials: MaterialWithQuantity[] = materials.map((m) => {
       const found = updated.find((u) => u.materialId === m.id);
@@ -174,6 +187,8 @@ export function AddProjectPage() {
         object_id: String(objectId),
         team_id: String(crewId),
         status: "new",
+        start_date: startDate || null,
+        end_date: endDate || null,
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
@@ -197,7 +212,7 @@ export function AddProjectPage() {
   if (!clientId) errors.push("Оберіть клієнта");
   if (!!objects.length && !objectId) errors.push("У клієнта відсутній об’єкт");
   if (!name?.trim()) errors.push("Відсутня назву проєкту");
-  if (!crewId) errors.push("Оберіть бригаду");
+  // if (!crewId) errors.push("Оберіть бригаду");
 
   const isFormValid = errors.length === 0;
 
@@ -214,6 +229,17 @@ export function AddProjectPage() {
   }, [materials]);
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
+
+  // Scroll fixes
+
+  const estimateRef = useRef<HTMLDivElement | null>(null);
+  const materialsRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   if (loading)
     return (
@@ -265,14 +291,24 @@ export function AddProjectPage() {
         </span>
         <ProjectNameInput onUserInput={() => setIsNameTouched(true)} />
       </div>
+      {/* Вибір дат */}
+      <ProjectDates
+        startDate={startDate}
+        endDate={endDate}
+        onStartDateChange={setStartDate}
+        onEndDateChange={setEndDate}
+      />
+
       {/* Кошторис по послугах */}
       <div className="relative">
+        <div ref={estimateRef} className="relative"></div>
         <ProjectEstimate
           services={services}
           editable={true}
           onSelectionChange={handleServiceSelectionChange}
           tableClassName="projectEstimateTableWrap"
           tablesTitle="Складання кошторису"
+          onConfirm={() => scrollToRef(estimateRef)}
         />
         <span
           className={`${styles.clientsSendToViber} absolute top-[26px] right-[5px] sm:top-[6px] md:top-[24px] md:right-[5px] cursor-pointer`}
@@ -282,12 +318,14 @@ export function AddProjectPage() {
       </div>
       {/* Матеріали */}
       <div className="relative mt-[150px]">
+        <div ref={materialsRef} className="relative"></div>
         <ProjectMaterials
           editable={true}
           tablesTitle="Матеріали"
           materials={materials}
           onSelectionChange={handleMaterialsSelectionChange}
           tableClassName="projectAddMaterialsTableWrap"
+          onConfirm={() => scrollToRef(materialsRef)}
         />
         {materials.length > 0 && (
           <span

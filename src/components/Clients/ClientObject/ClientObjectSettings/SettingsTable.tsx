@@ -1,21 +1,55 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./SettingsTable.module.css";
 
 interface Props {
   columns: string[];
+  initialValues?: (number | null)[];
+  onTotalsChange?: (totals: number[]) => void;
 }
 
-export function SettingsTable({ columns }: Props) {
-  const [rows, setRows] = useState<(number | null)[][]>(
-    Array.from({ length: 3 }, () => columns.map(() => null))
-  );
+export function SettingsTable({
+  columns,
+  initialValues = [],
+  onTotalsChange,
+}: Props) {
+  const [rows, setRows] = useState<(number | null)[][]>([]);
+
+  const normalizeInit = (): (number | null)[] =>
+    columns.map((_, i) => {
+      const v = initialValues[i];
+      return v == null ? null : Number(v);
+    });
+
+  const prevInitRef = useRef<(number | null)[] | null>(null);
+
+  const isEqual = (a: (number | null)[] | null, b: (number | null)[]) => {
+    if (!a) return false;
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  };
+
+  useEffect(() => {
+    const nextInit = normalizeInit();
+    if (!isEqual(prevInitRef.current, nextInit)) {
+      setRows([
+        nextInit,
+        ...Array.from({ length: 2 }, () => columns.map(() => null)),
+      ]);
+      prevInitRef.current = nextInit;
+    }
+  }, [initialValues, columns]);
 
   const handleChange = (rowIndex: number, colIndex: number, value: string) => {
     setRows((prev) => {
       const copy = prev.map((r) => [...r]);
-      copy[rowIndex][colIndex] = value === "" ? null : Number(value);
+      const parsed =
+        value.trim() === "" ? null : parseFloat(value.replace(",", "."));
+      copy[rowIndex][colIndex] = Number.isFinite(parsed) ? parsed : null;
       return copy;
     });
   };
@@ -23,16 +57,34 @@ export function SettingsTable({ columns }: Props) {
   const addRow = () => setRows((prev) => [...prev, columns.map(() => null)]);
 
   const totals = columns.map((_, colIndex) =>
-    rows.reduce((sum, row) => sum + (row[colIndex] ?? 0), 0)
+    rows.reduce((sum, row) => {
+      const v = row[colIndex];
+      return sum + (typeof v === "number" ? v : 0);
+    }, 0)
   );
 
+  const prevTotalsRef = useRef<number[] | null>(null);
+  useEffect(() => {
+    if (!onTotalsChange) return;
+    const prev = prevTotalsRef.current;
+    const same =
+      prev &&
+      prev.length === totals.length &&
+      prev.every((v, i) => v === totals[i]);
+
+    if (!same) {
+      onTotalsChange(totals);
+      prevTotalsRef.current = totals;
+    }
+  }, [totals, onTotalsChange]);
+
   const gridStyle: React.CSSProperties = {
-    gridTemplateColumns: `repeat(${columns.length}, minmax(86px,86px))`,
+    gridTemplateColumns: `repeat(${columns.length}, minmax(94px,86px))`,
   };
 
   return (
-    <div className="mb-[40px]">
-      <div className={`${styles.Table} overflow-x-auto`}>
+    <div className="mb-[40px] ">
+      <div className={`${styles.Table} overflow-x-auto rounded-[5px]`}>
         <div className="min-w-max">
           {/* Верхній рядок — заголовки */}
           <div
@@ -55,6 +107,7 @@ export function SettingsTable({ columns }: Props) {
                     <input
                       type="number"
                       value={val ?? ""}
+                      step="0.1"
                       placeholder="0"
                       onChange={(e) =>
                         handleChange(rowIndex, colIndex, e.target.value)
@@ -85,7 +138,7 @@ export function SettingsTable({ columns }: Props) {
           <div className="grid px-[20px] pb-[16px]" style={gridStyle}>
             {totals.map((total, i) => (
               <div key={i} className="p-2 font-bold text-center">
-                {total}
+                {`${total}`}
               </div>
             ))}
           </div>

@@ -18,6 +18,7 @@ interface Props {
   onSelectionChange?: (selection: ServiceSelection[]) => void;
   tableClassName?: string;
   tablesTitle?: string;
+  onConfirm?: () => void;
 }
 
 const hasQuantity = (
@@ -31,6 +32,7 @@ export const ProjectEstimate = ({
   onSelectionChange,
   tableClassName,
   tablesTitle,
+  onConfirm,
 }: Props) => {
   // Локальний стан кількостей (editable=true)
   const [selection, setSelection] = useState<ServiceSelection[]>(() =>
@@ -55,13 +57,6 @@ export const ProjectEstimate = ({
       }))
     );
   }, [services]);
-
-  // // На Confirm-сторінці показуємо тільки ті, де quantity > 0
-  // const effectiveServices = useMemo(() => {
-  //   if (editable) return services; // перша сторінка — показуємо весь список
-  //   // фінальна сторінка — тільки вибрані (quantity > 0)
-  //   return services.filter((s) => hasQuantity(s) && s.quantity > 0);
-  // }, [services, editable]);
 
   const effectiveServices = useMemo(() => {
     if (editable && !isConfirmed) {
@@ -92,6 +87,9 @@ export const ProjectEstimate = ({
     if (next && onSelectionChange) {
       onSelectionChange(selection);
     }
+    if (next && onConfirm) {
+      onConfirm();
+    }
   };
 
   const mainServices = useMemo(
@@ -114,7 +112,6 @@ export const ProjectEstimate = ({
 
   const totalMain = useMemo(
     () => mainServices.reduce((sum, s) => sum + s.price * getQuantity(s), 0),
-    // коли editable=true, кількості беруться з selection, тож додаємо його в залежності
     [mainServices, selection, editable]
   );
 
