@@ -1,3 +1,5 @@
+import { Project } from "next/dist/build/swc/types";
+
 export interface ClientObject {
   id: number;
   client_id: number;
@@ -13,4 +15,5 @@ export interface Client {
   objects: ClientObject[];
   created_at?: string;
   updated_at?: string;
+  projects?: Project[];
 }
