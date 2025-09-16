@@ -47,7 +47,11 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
     bathroom2: "Санвузол 2",
     ceiling: "Стелі",
   };
-
+  const formatValue = (value: number | string) => {
+    const num = Number(value);
+    if (isNaN(num)) return value;
+    return Number(num.toFixed(1));
+  };
   if (!objectId) return null;
   if (loading) return <div className={styles.infoBox}>Завантаження...</div>;
   if (error)
@@ -81,7 +85,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
               <div
                 className={`${styles.statsContainerItemValue} flex items-center justify-center p-3`}
               >
-                {object.roomStats.roomCount}
+                {formatValue(object.roomStats.roomCount)}
               </div>
             </div>
             <div
@@ -95,7 +99,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
               <div
                 className={`${styles.statsContainerItemValue} p-3 flex items-center justify-center`}
               >
-                {object.roomStats.totalArea}
+                {formatValue(object.roomStats.totalArea)}
               </div>
             </div>
             <div
@@ -109,7 +113,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
               <div
                 className={`${styles.statsContainerItemValue} p-3 flex items-center justify-center`}
               >
-                {object.roomStats.totalSlopesMeters}
+                {formatValue(object.roomStats.totalSlopesMeters)}
               </div>
             </div>
             <div
@@ -123,7 +127,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
               <div
                 className={`${styles.statsContainerItemValue} p-3 flex items-center justify-center`}
               >
-                {object.roomStats.totalElementsMeters}
+                {formatValue(object.roomStats.totalElementsMeters)}
               </div>
             </div>
           </div>
@@ -131,7 +135,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
       )}
 
       {/* Кімнати */}
-      {filteredRooms.length > 0 && (
+      {/* {filteredRooms.length > 0 && (
         <div>
           <div className={styles.statsTitle}>Кімнати</div>
           <div className="flex flex-col sm:p-6 p-2">
@@ -149,22 +153,22 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
                     </div>
                   </div>
                   <div className="flex items-center justify-between px-2 py-1">
-                    <div>Площа:</div> <div>{room.area}</div>
+                    <div>Площа:</div> <div>{formatValue(room.area)}</div>
                   </div>
                   <div className="flex items-center justify-between px-2 py-1">
                     <div>м.п. Відкосів:</div>
-                    <div>{room.slopes_linear_meters}</div>
+                    <div>{formatValue(room.slopes_linear_meters)}</div>
                   </div>
                   <div className="flex items-center justify-between px-2 py-1">
                     <div>м.п. Елементів:</div>
-                    <div>{room.elements_linear_meters}</div>
+                    <div>{formatValue(room.elements_linear_meters)}</div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
