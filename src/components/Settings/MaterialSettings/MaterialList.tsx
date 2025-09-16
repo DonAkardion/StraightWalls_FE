@@ -49,20 +49,29 @@ export const MaterialsList = ({
         {
           key: "name",
           label: "Назва",
+          tooltip: (material) => `Назва: ${material.name}`,
         },
         {
           key: "base_purchase_price",
-          label: "Купівля",
+          label: "Ціна",
           render: (material) => `${material.base_purchase_price} грн`,
         },
-        {
-          key: "base_selling_price",
-          label: "Продаж",
-          render: (material) => `${material.base_selling_price} грн`,
-        },
+        // {
+        //   key: "base_purchase_price",
+        //   label: "Ціна",
+        //   render: (material) =>
+        //     `${material.base_purchase_price} / ${material.base_selling_price} грн`,
+        //   tooltip: (material) =>
+        //     `Ціна: ${material.base_purchase_price} / ${material.base_selling_price} грн`,
+        // },
+        // {
+        //   key: "base_selling_price",
+        //   label: "Продаж",
+        //   render: (material) => `${material.base_selling_price} грн`,
+        // },
         { key: "unit", label: "Од. вимір." },
         { key: "stock", label: "Залишок" },
-        { key: "base_delivery", label: "Доставка" },
+        // { key: "base_delivery", label: "Доставка" },
       ]}
       renderInspection={(m) => (
         <div className="pb-1 bg-white border-b relative">

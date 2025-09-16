@@ -107,7 +107,7 @@ export const ProjectMaterialsTable = ({
         { key: "name", label: "Найменування матеріалу" },
 
         { key: "base_purchase_price", label: "Закупка, грн" },
-        { key: "base_selling_price", label: "Продаж, грн" },
+        // { key: "base_selling_price", label: "Продаж, грн" },
         {
           key: "quantity",
           label: "Кількість",
@@ -130,10 +130,10 @@ export const ProjectMaterialsTable = ({
             ),
         },
         { key: "unit", label: "Од. вимір." },
-        { key: "base_delivery", label: "Доставка" },
+        // { key: "base_delivery", label: "Доставка" },
         {
           key: "previous_remaining",
-          label: "Залишок",
+          label: "Залишок з поперед.",
           render: (m) =>
             editable ? (
               <NumericInputWithControls
@@ -152,7 +152,7 @@ export const ProjectMaterialsTable = ({
         },
         {
           key: "additional_delivery",
-          label: "Додатково",
+          label: "Доставка",
           render: (m) =>
             editable ? (
               <NumericInputWithControls
@@ -171,7 +171,7 @@ export const ProjectMaterialsTable = ({
         },
         {
           key: "current_remaining",
-          label: "Наявно",
+          label: "Залишок",
           render: (m) =>
             editable ? (
               <NumericInputWithControls

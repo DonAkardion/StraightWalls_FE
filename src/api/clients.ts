@@ -104,6 +104,20 @@ export async function deleteClient(token: string, id: number): Promise<void> {
 
 // --- Об’єкти клієнтів ---
 
+// GET /api/client-objects/:id
+export async function getClientsObjectById(
+  token: string,
+  id: number
+): Promise<ClientObject> {
+  const res = await fetcher<ClientObjectResponse>(
+    `${API_BASE}/api/client-objects/${id}`,
+    {
+      token,
+    }
+  );
+  return res.data;
+}
+
 // POST /api/client-objects
 export async function addClientObject(
   token: string,

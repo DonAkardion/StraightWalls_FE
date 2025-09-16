@@ -59,7 +59,9 @@ export const StatusSelector = ({
         setOpen((prev) => !prev);
       }}
     >
-      <div className={`${styles.selected} ${getStatusClass(value)}`}>
+      <div
+        className={`${styles.selected} ${getStatusClass(value)}  text-center`}
+      >
         {options[value] ?? "—"}
       </div>
       {open && (
@@ -69,7 +71,7 @@ export const StatusSelector = ({
               key={key}
               className={`${styles.option} ${getStatusClass(key)} ${
                 key === value ? styles.active : ""
-              }`}
+              } text-center`}
               onClick={(e) => handleSelect(key, e)}
             >
               {label}
