@@ -28,9 +28,9 @@ interface Props {
 
 const statusMap: Record<string, string> = {
   completed: "Виконано",
-  in_progress: "В процесі",
-  new: "Очікує",
-  canceled: "Відхилено",
+  in_progress: "В Роботі",
+  new: "В Черзі",
+  canceled: "Скасовано",
 };
 
 export const AllProjectsList = ({
@@ -154,7 +154,7 @@ export const AllProjectsList = ({
           <span className={`${styles.projectsState} mb-1`}>Статус:</span>
           <StatusSelector
             value={filterStatus || ""}
-            options={{ "": "Всі", ...statusMap }}
+            options={{ "": " Всі ", ...statusMap }}
             onChange={(val) => setFilterStatus(val)}
           />
         </div>

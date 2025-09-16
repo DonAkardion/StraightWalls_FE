@@ -1,9 +1,13 @@
+import { Room, RoomStats } from "@/types/rooms";
+
 export interface ClientObject {
   id: number;
   client_id: number;
   name: string;
   address: string;
   description?: string;
+  rooms: Room[];
+  roomStats: RoomStats;
 }
 
 export interface Client {

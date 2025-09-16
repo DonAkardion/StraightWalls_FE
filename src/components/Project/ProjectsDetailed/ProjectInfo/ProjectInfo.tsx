@@ -13,9 +13,9 @@ interface Props {
 
 const statusMap: Record<string, string> = {
   completed: "Виконано",
-  in_progress: "В процесі",
-  new: "Очікує",
-  canceled: "Відхилено",
+  in_progress: "В Роботі",
+  new: "В Черзі",
+  canceled: "Скасовано",
 };
 
 const statusColorMap: Record<string, string> = {
@@ -82,7 +82,7 @@ export function ProjectInfo({ report }: Props) {
           </h2>
         </div>
         <div
-          className={`${styles.projectInfoStatus} relative flex h-[44px] min-w-[288px] md:min-w-[292px] `}
+          className={`${styles.projectInfoStatus} relative flex h-[44px] min-w-[288px] md:min-w-[300px] `}
           ref={containerRef}
         >
           <div
@@ -103,7 +103,7 @@ export function ProjectInfo({ report }: Props) {
           </button>
           {showDropdown && (
             <div
-              className={`${styles.statusChangeContainer} absolute top-[-4px] left-0 mt-1 w-[136px] md:w-[130px] rounded-[5px] z-10`}
+              className={`${styles.statusChangeContainer} absolute top-[-4px] left-0 mt-1 w-[136px] md:w-[140px] rounded-[5px] z-10`}
             >
               {Object.entries(statusMap).map(([key, label]) => (
                 <div

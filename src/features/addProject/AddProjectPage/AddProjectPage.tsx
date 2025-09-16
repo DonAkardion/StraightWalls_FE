@@ -7,6 +7,7 @@ import styles from "./AddProjectPage.module.css";
 
 import { ClientSelector } from "@/components/addProject/ClientSelector/ClientSelector";
 import { ObjectSelector } from "@/components/addProject/ClientSelector/ObjectSelector";
+import { SelectedObjectInfo } from "@/components/addProject/SelectedObjectInfo/SelectedObjectInfo";
 import { ProjectDates } from "@/components/addProject/ProjectDates/ProjectDates";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
@@ -298,7 +299,11 @@ export function AddProjectPage() {
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
       />
-
+      {clientId && objectId && (
+        <div className="mb-[30px]">
+          <SelectedObjectInfo objectId={objectId} />
+        </div>
+      )}
       {/* Кошторис по послугах */}
       <div className="relative">
         <div ref={estimateRef} className="relative"></div>
