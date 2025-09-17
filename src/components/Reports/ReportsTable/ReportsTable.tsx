@@ -3,6 +3,7 @@ import burgerTable from "../../../../public/icons/BurgerTable.svg";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import { getProjects } from "@/api/projects";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Material {
   id: number;
@@ -29,15 +30,8 @@ const columns = [
 export function MaterialsTable() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [token, setToken] = useState<string>("");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, [token]);
-
+  const { token } = useUser();
+  
   useEffect(() => {
     if (!token) return;
 

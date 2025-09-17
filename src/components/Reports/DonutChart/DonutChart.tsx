@@ -6,6 +6,7 @@ import styles from "./DonutChart.module.css";
 import { TooltipItem } from "chart.js";
 import { getProjects } from "@/api/projects";
 import { ProjectStatus } from "@/types/project";
+import { useUser } from "@/context/UserContextProvider";
 
 ChartJS.register(ArcElement, Tooltip);
 
@@ -44,12 +45,7 @@ const centerTextPlugin: Plugin = {
 
 export const DoughnutChart = () => {
   const [donutChartData, setDonutChartData] = useState<DonutProps[]>([]);
-  const [token, setToken] = useState("");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    setToken(storedToken!)
-  }, [token])
+  const { token } = useUser();
 
   useEffect(() => {
     if (!token) return;

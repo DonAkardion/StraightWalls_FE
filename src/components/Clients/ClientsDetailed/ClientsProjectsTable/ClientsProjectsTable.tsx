@@ -5,6 +5,7 @@ import styles from "./ClientsProjectsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { ProjectsHeaders } from "@/features/projects/ProjectHeaders";
 import { getProjectByClientId, getProjectReport } from "@/api/projects";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Project {
   id: number;
@@ -22,12 +23,7 @@ interface Props {
 export const ClientsProjectsTable = ({ clientId }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [tableData, setTableData] = useState<Project[]>([]);
-  const [token, setToken] = useState<string>("");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) setToken(storedToken);
-  }, []);
+  const { token } = useUser();
 
   useEffect(() => {
     if (!token) return;
@@ -38,6 +34,9 @@ export const ClientsProjectsTable = ({ clientId }: Props) => {
         const mapped = await Promise.all(
           (Array.isArray(data) ? data : []).map(async (p: any) => {
             const report = await getProjectReport(p.id, token);
+
+            console.log("Project object:", report, p);
+
 
             return {
               id: p.id,
@@ -63,7 +62,8 @@ export const ClientsProjectsTable = ({ clientId }: Props) => {
     };
 
     fetchProjects();
-  }, [token, clientId]);
+  }, [token, clientId])
+
 
   const projectColumns = [
     { key: "projectNumber", label: "Назва проєкту" },

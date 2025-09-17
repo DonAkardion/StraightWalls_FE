@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./ClientsBenefit.module.css";
 import { getProjectByClientId, getProjectReport } from "@/api/projects";
 import { ProjectResponse, Project } from "@/types/project";
+import { useUser } from "@/context/UserContextProvider";
 
 interface Props {
   clientId: number;
@@ -16,12 +17,7 @@ interface ProjectReport {
 
 export const ClientsBenefit = ({ clientId }: Props) => {
   const [benefitData, setBenefitData] = useState<ProjectReport | null>(null);
-  const [token, setToken] = useState<string>("");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) setToken(storedToken);
-  }, []);
+  const { token } = useUser();
 
   useEffect(() => {
     if (!token) return;
