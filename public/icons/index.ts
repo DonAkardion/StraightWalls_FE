@@ -20,3 +20,4 @@ export { default as Pen } from "./Pen.svg";
 export { default as Trash } from "./Trash.svg";
 
 export { default as Logo } from "../header/header-icon.png";
+export { default as Calendar } from "./Calendar.svg"

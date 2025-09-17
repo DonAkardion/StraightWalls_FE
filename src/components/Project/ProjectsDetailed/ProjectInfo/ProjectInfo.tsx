@@ -5,7 +5,7 @@ import { useUser } from "@/context/UserContextProvider";
 import { ProjectReportResponse } from "@/types/project";
 import { changeProjectStatus } from "@/api/projects";
 import styles from "./ProjectInfo.module.css";
-import { Person, Phone, Home, ArrowLeft } from "../../../../../public/icons";
+import { Person, Phone, Home, ArrowLeft, Calendar } from "../../../../../public/icons";
 
 interface Props {
   report: ProjectReportResponse;
@@ -163,6 +163,15 @@ export function ProjectInfo({ report }: Props) {
           />
           <span>{object.name}</span>
           <span>{object.address}</span>
+        </div>
+        <div className={`${styles.clientInfoItem}`}>
+          <img
+            className={`${styles.infoItemImg} `}
+            src={Calendar.src}
+            alt="Calendar "
+          />
+          <span>{project.start_date} /</span>
+          <span>{project.end_date}</span>
         </div>
         {/* <div className={`${styles.clientInfoItem}`}>
           <img
