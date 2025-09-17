@@ -228,23 +228,19 @@ export const AllProjectsList = ({
             fields={[
               {
                 label: "Клієнт",
-                value: (item) => getClientName(item.client_id),
+                value: (item) => getClientName(item.id),
               },
               {
                 label: "Бригада",
-                value: (item) => getCrewName(item.team_id),
+                value: (item) => getCrewName(item.id),
               },
               {
                 label: "Початок",
-                value: (item) => {
-                  item.start_date ? item.start_date : "Початок";
-                },
+                value: (item) => item.start_date ? item.start_date : "Початок"
               },
               {
                 label: "Завершення",
-                value: (item) => {
-                  item.end_date ? item.end_date : "Кінець";
-                },
+                value: (item) => item.end_date ? item.end_date : "Кінець"
               },
               {
                 label: "Статус",

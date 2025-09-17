@@ -38,8 +38,7 @@
   }
 
   .leftLegendBlock > div,
-  .rightLegendBlock > div,
-  .centerLegendBlock > div {
+  .rightLegendBlock > div {
     flex-direction: column;
     align-items: center;
   }

@@ -5,7 +5,7 @@ import styles from "./Calendar.module.css";
 import { Crew } from "@/types/crew";
 import { getCrews } from "@/api/crews";
 import { getProjectReport } from "@/api/projects";
-import { ProjectStatus } from "@/types/project";
+import { Project } from "@/types/project";
 
 const daysOfWeek = [
   "Понеділок",
@@ -17,20 +17,21 @@ const daysOfWeek = [
   "Неділя",
 ];
 
-const colors: Partial<Record<ProjectStatus, string>> = {
-  [ProjectStatus.COMPLETED]: "#15ae08",
-  [ProjectStatus.IN_PROGRESS]: "#0097c0",
-  [ProjectStatus.NEW]: "#ffb326",
-  [ProjectStatus.CANCELED]: "#b70000",
-  [ProjectStatus.CONFIRMED]: "#1b6a14",
-  [ProjectStatus.SCHEDULED]: "#0f5669",
+const colors: Record<string, string> = {
+  new: "#ffb326",
+  in_progress: "#0097c0",
+  completed: "#15ae08",
+  canceled: "#b70000",
 };
+
+
+type DayColorsMap = Record<number, Record<number, Record<number, string[]>>>;
 
 const Calendar = () => {
   const [calendar, setCalendar] = useState<Crew[]>([]);
   const [token, setToken] = useState<string>("");
   const [selectedCrew, setSelectedCrew] = useState<Crew | null>(null);
-  const [dayColors, setDayColors] = useState<Record<number, string[]>>({});
+  const [dayColors, setDayColors] = useState<DayColorsMap>({});
 
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
@@ -81,53 +82,65 @@ const Calendar = () => {
     fetchCalendarData();
   }, [token]);
 
-  const handleCrewSelect = async (idx: number) => {
-    const crew = calendar[idx];
-    setCalendar(calendar.map((c, i) => ({ ...c, selected: i === idx })));
-    setSelectedCrew(crew);
+  const handleCrewSelect = async (crew: Crew) => {
+  setCalendar(calendar.map(c => ({ ...c, selected: c.id === crew.id })));
+  setSelectedCrew(crew);
 
-    if (!crew || !crew.projects?.length || !token) {
-      setDayColors({});
-      return;
+  const validProjects = crew.projects?.filter(
+    (proj): proj is Project => !!proj.start_date && !!proj.end_date
+  );
+
+  if (!validProjects?.length || !token) {
+    setDayColors({});
+    return;
+  }
+
+  const reports = await Promise.all(
+    validProjects.map((proj) =>
+      getProjectReport(proj.id, token).catch(() => null)
+    )
+  );
+
+  const colorsMap: DayColorsMap = {};
+
+  reports.forEach((report) => {
+    if (!report) return;
+
+    const { status, start_date, end_date, name, id } = report.project;
+    const color = colors[report.project.status];
+
+    console.log("🔍 Проєкт:", name, `(ID: ${id})`);
+    console.log("📅 Статус:", status);
+    console.log("🎨 Колір для статусу:", color);
+    console.log("🕒 Дати:", start_date, "→", end_date);
+
+    if (!color) return;
+
+    const start = new Date(start_date);
+    const end = new Date(end_date);
+
+    for (
+      let d = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      d <= end;
+      d.setDate(d.getDate() + 1)
+    ) {
+      const y = d.getFullYear();
+      const m = d.getMonth();
+      const day = d.getDate();
+
+      if (!colorsMap[y]) colorsMap[y] = {};
+      if (!colorsMap[y][m]) colorsMap[y][m] = {};
+      if (!colorsMap[y][m][day]) colorsMap[y][m][day] = [];
+      if (!colorsMap[y][m][day].includes(color)) colorsMap[y][m][day].push(color);
     }
+  });
 
-        const reports = await Promise.all(
-      crew.projects.map((proj) => getProjectReport(proj.id, token).catch(() => null))
-    );
-
-    const colorsMap: Record<number, string[]> = {};
-    const daysInCurrentMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    reports.forEach((report) => {
-      if (!report) return;
-      const color = colors[report.project.status as ProjectStatus];
-      if (!color) return;
-
-      const start = report.project.start_date
-        ? new Date(report.project.start_date)
-        : new Date(report.project.created_at);
-      const end = report.project.end_date
-        ? new Date(report.project.end_date)
-        : new Date(report.project.updated_at);
-
-      for (let d = 1; d <= daysInCurrentMonth; d++) {
-        const dayDate = new Date(currentYear, currentMonth, d);
-        if (dayDate >= start && dayDate <= end) {
-          if (!colorsMap[d]) colorsMap[d] = [];
-          if (!colorsMap[d].includes(color)) colorsMap[d].push(color);
-        }
-      }
-    });
-
-    setDayColors(colorsMap);
-  };
+  setDayColors(colorsMap);
+};
 
   useEffect(() => {
-    setDayColors({})
-    if (selectedCrew) {
-      const idx = calendar.findIndex((c) => c.id === selectedCrew.id);
-      if (idx !== -1) handleCrewSelect(idx);
-    }
+    setDayColors({});
+    if (selectedCrew) handleCrewSelect(selectedCrew);
   }, [currentMonth, currentYear]);
 
   const handlePrevMonth = () => {
@@ -147,6 +160,10 @@ const Calendar = () => {
       setCurrentMonth((m) => m + 1);
     }
   };
+
+  const filteredCalendar = calendar.filter(
+    (crew) => crew.projects?.some((proj) => proj.start_date && proj.end_date)
+  );
 
   return (
     <div className="bg-white w-full max-w-[1126px] rounded p-4 sm:p-6 drop-shadow-md font-inter mx-auto mb-10 mt-10">
@@ -175,10 +192,10 @@ const Calendar = () => {
 
       {calendar.length > 0 && (
         <div className={styles.calendarDiv}>
-          {calendar.map((crew, idx) => (
+          {filteredCalendar.map((crew) => (
             <button
-              key={idx}
-              onClick={() => handleCrewSelect(idx)}
+              key={crew.id}
+              onClick={() => handleCrewSelect(crew)}
               className={`${styles.calendarButton} flex-1 px-4 py-2 rounded text-black text-[12px] 
                 ${
                   crew.selected
@@ -206,14 +223,23 @@ const Calendar = () => {
         {dates.flat().map((date, i) => {
           if (date === 0) return <div key={i} />;
 
-          const dayColorsArray = dayColors[date] || [];
+          const dayColorsArray = dayColors[currentYear]?.[currentMonth]?.[date] || [];
           let bgStyle: React.CSSProperties = { backgroundColor: "white" };
 
           if (dayColorsArray.length === 1) {
             bgStyle.backgroundColor = dayColorsArray[0];
             bgStyle.color = "white";
           } else if (dayColorsArray.length > 1) {
-            bgStyle.background = `conic-gradient(${dayColorsArray.join(", ")})`;
+            const step = 100 / dayColorsArray.length;
+            const gradientStops = dayColorsArray
+              .map((color, idx) => {
+                const start = step * idx;
+                const end = step * (idx + 1);
+                return `${color} ${start}% ${end}%`;
+              })
+              .join(", ");
+
+            bgStyle.background = `linear-gradient(135deg, ${gradientStops})`;
             bgStyle.color = "white";
           }
 

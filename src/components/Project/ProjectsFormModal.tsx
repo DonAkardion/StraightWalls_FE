@@ -13,9 +13,11 @@ import { ClientSelector } from "@/components/Project/EditComponents/ClientSelect
 interface PaymentCalendarProps {
   value: string;
   onChange: (val: string) => void;
+  min?: string;
+  max?: string;
 }
 
-const PaymentCalendar: React.FC<PaymentCalendarProps> = ({ value, onChange }) => {
+const PaymentCalendar: React.FC<PaymentCalendarProps> = ({ value, onChange, min, max }) => {
   const [selectedDate, setSelectedDate] = useState(value);
 
   useEffect(() => {
@@ -26,6 +28,8 @@ const PaymentCalendar: React.FC<PaymentCalendarProps> = ({ value, onChange }) =>
     <input
       type="date"
       value={selectedDate}
+      min={min}
+      max={max}
       onChange={(e) => {
         setSelectedDate(e.target.value);
         onChange(e.target.value);
@@ -121,6 +125,7 @@ export function ProjectsFormModal({ project, onChange }: ProjectsFormModalProps)
           setFormData(updated);
           onChange(updated);
         }}
+        min={formData.start_date || ""}
       />
     </div>
   );

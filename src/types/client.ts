@@ -1,4 +1,6 @@
+
 import { Room, RoomStats } from "@/types/rooms";
+import { Project } from "./project";
 
 export interface ClientObject {
   id: number;
@@ -17,4 +19,5 @@ export interface Client {
   objects: ClientObject[];
   created_at?: string;
   updated_at?: string;
+  projects?: Project[];
 }

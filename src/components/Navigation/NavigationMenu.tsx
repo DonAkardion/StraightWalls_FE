@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./NavigationMenu.module.css";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -19,10 +19,28 @@ interface NavigationMenuProps {
   role: string;
 }
 
-export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role }) => {
+export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role, onClose, isOpen }) => {
   const pathname = usePathname();
+  const navigationMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navigationMenuRef.current && !navigationMenuRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [isOpen, onClose])
+
+   if (!isOpen) return null;
+
   return (
-    <div className={`${styles.navigationMenu} `} style={{}}>
+    <div ref={navigationMenuRef} className={`${styles.navigationMenu} `} style={{}}>
       {role === "admin" || role === "accountant" ? (
         <nav
           className={`${styles.navigationMenuList} flex-col mt-[102px] lg:mt-[52px]`}
