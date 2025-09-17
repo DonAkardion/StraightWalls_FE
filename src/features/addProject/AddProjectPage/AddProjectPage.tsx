@@ -234,8 +234,7 @@ export function AddProjectPage() {
 
   const totalMaterialCost = useMemo(() => {
     return materials.reduce(
-      (sum, m) =>
-        sum + m.base_selling_price * m.quantity + m.base_delivery * m.quantity,
+      (sum, m) => sum + m.base_purchase_price * m.quantity,
       0
     );
   }, [materials]);
@@ -333,7 +332,7 @@ export function AddProjectPage() {
         </span>
       </div>
       {/* Матеріали */}
-      <div className="relative mt-[150px]">
+      <div className="relative md:mt-[150px] mt-[80px]">
         <div ref={materialsRef} className="relative"></div>
         <ProjectMaterials
           editable={true}
@@ -352,13 +351,15 @@ export function AddProjectPage() {
         )}
       </div>
 
-      <MaterialIncomeEditor
+      {/* <MaterialIncomeEditor
         materials={materials}
         tableClassName="projectMaterialsIncomeEditorWrap"
         tablesTytle="Заробіток на матеріалах"
-      />
+      /> */}
 
-      <div className={`${styles.materialPayment} my-[40px] md:my-[100px] `}>
+      <div
+        className={`${styles.materialPayment} my-[40px] md:mt-[170px] md:mb-[100px]`}
+      >
         <PaymentDetails
           items={[
             { label: "Аванс за матеріали", value: `${advanceAmount} грн` },

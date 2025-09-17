@@ -118,9 +118,7 @@ export const ProjectMaterials = ({
     m: Material | MaterialWithQuantity,
     qty: number
   ): number => {
-    const baseSelling = Number((m as any).base_selling_price) || 0;
-    const baseDelivery = Number((m as any).base_delivery) || 0;
-    return (baseSelling + baseDelivery) * qty;
+    return m.base_purchase_price * qty;
   };
 
   const total = useMemo(
