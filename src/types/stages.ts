@@ -5,13 +5,16 @@ export interface ProjectStage {
 }
 
 export interface StageStatus {
-  is_thinking?: boolean;
-  is_confirmed?: boolean;
-  is_rejected?: boolean;
-  is_scheduled?: boolean;
-  is_keys_and_advance?: boolean;
-  is_order_materials?: boolean;
-  is_in_progress?: boolean;
-  is_completed?: boolean;
-  is_all_calculated?: boolean;
+  is_works_confirmed?: boolean;
+  is_start_date_agreed?: boolean;
+  is_team_assigned?: boolean;
+  is_keys_received?: boolean;
+  is_materials_prepaid?: boolean;
+  is_materials_ordered?: boolean;
+  is_team_started?: boolean;
+  is_details_clarified?: boolean;
+  is_work_accepted?: boolean;
+  is_work_delivered?: boolean;
+  is_final_payment_received?: boolean;
+  is_team_paid?: boolean;
 }
