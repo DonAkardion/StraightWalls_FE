@@ -102,20 +102,20 @@ export const MaterialsList = ({
                 onClick={() => onEdit(m)}
               />
             </div>
-            <div className="flex justify-between">
+            {/* <div className="flex justify-between">
               <p>
                 <span>Продаж: </span>
                 <span className="text-sm">
                   {m.base_selling_price} грн / {m.unit}
                 </span>
               </p>
-            </div>
-            <div className="flex justify-between">
+            </div> */}
+            {/* <div className="flex justify-between">
               <p>
                 <span>Доставка: </span>
                 <span className="text-sm">{m.base_delivery} грн</span>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

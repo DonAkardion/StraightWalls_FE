@@ -56,10 +56,8 @@ export const ProjectMaterialsComplete = ({
   const totalCost = useMemo(
     () =>
       materialsLocal.reduce((sum, m) => {
-        const selling = Number(m.base_selling_price) || 0;
-        const delivery = Number(m.base_delivery) || 0;
         const qty = Number(m.remaining_stock) || 0;
-        return sum + (selling + delivery) * qty;
+        return sum + Number(m.base_purchase_price) * qty;
       }, 0),
     [materialsLocal]
   );

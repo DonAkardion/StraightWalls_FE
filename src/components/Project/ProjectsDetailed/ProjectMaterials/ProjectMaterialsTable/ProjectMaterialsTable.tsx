@@ -106,7 +106,7 @@ export const ProjectMaterialsTable = ({
       columns={[
         { key: "name", label: "Найменування матеріалу" },
 
-        { key: "base_purchase_price", label: "Закупка, грн" },
+        { key: "base_purchase_price", label: "Ціна, грн" },
         // { key: "base_selling_price", label: "Продаж, грн" },
         {
           key: "quantity",
@@ -215,10 +215,8 @@ export const ProjectMaterialsTable = ({
           key: "sum",
           label: "Сума, грн",
           render: (m) => {
-            const baseSelling = num(m.base_selling_price);
-            const baseDelivery = num(m.base_delivery);
             const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
-            return ((baseSelling + baseDelivery) * qty).toFixed(2);
+            return (Number(m.base_purchase_price) * qty).toFixed(2);
           },
         },
       ]}

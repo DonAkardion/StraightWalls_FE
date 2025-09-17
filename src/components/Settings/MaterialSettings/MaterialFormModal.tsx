@@ -37,20 +37,20 @@ export const MaterialFormModal = ({
     ) {
       newErrors.base_purchase_price = "Вкажіть коректну ціну";
     }
-    if (
-      data.base_selling_price === undefined ||
-      Number(data.base_selling_price) <= 0
-    ) {
-      newErrors.base_selling_price = "Вкажіть коректну ціну";
-    }
+    // if (
+    //   data.base_selling_price === undefined ||
+    //   Number(data.base_selling_price) <= 0
+    // ) {
+    //   newErrors.base_selling_price = "Вкажіть коректну ціну";
+    // }
 
     if (data.stock === undefined || Number(data.stock) <= 0) {
       newErrors.stock = "Залишок має бути більше 0";
     }
 
-    if (data.base_delivery === undefined || Number(data.base_delivery) < 0) {
-      newErrors.base_delivery = "Ціна доставки не може бути від’ємною";
-    }
+    // if (data.base_delivery === undefined || Number(data.base_delivery) < 0) {
+    //   newErrors.base_delivery = "Ціна доставки не може бути від’ємною";
+    // }
 
     return newErrors;
   };
@@ -104,7 +104,7 @@ export const MaterialFormModal = ({
       )}
 
       {/* Ціна Купівлі */}
-      <div className={styles.ServiceModalInputTytle}>Ціна Купівлі</div>
+      <div className={styles.ServiceModalInputTytle}>Ціна</div>
       <input
         type="number"
         name="base_purchase_price"
@@ -120,7 +120,7 @@ export const MaterialFormModal = ({
       )}
 
       {/* Ціна Продажу */}
-      <div className={styles.ServiceModalInputTytle}>Ціна Продажу</div>
+      {/* <div className={styles.ServiceModalInputTytle}>Ціна Продажу</div>
       <input
         type="number"
         name="base_selling_price"
@@ -131,7 +131,7 @@ export const MaterialFormModal = ({
       />
       {submitted && errors.base_selling_price && (
         <p className="text-red-500 text-sm mt-1">{errors.base_selling_price}</p>
-      )}
+      )} */}
 
       {/* Одиниця вимірювання */}
       <div className={styles.ServiceModalInputTytle}>Одиниця вимірювання</div>
@@ -148,7 +148,7 @@ export const MaterialFormModal = ({
       )}
 
       {/* Доставка */}
-      <div className={styles.ServiceModalInputTytle}>Ціна Доставки</div>
+      {/* <div className={styles.ServiceModalInputTytle}>Ціна Доставки</div>
       <input
         type="number"
         name="base_delivery"
@@ -159,7 +159,7 @@ export const MaterialFormModal = ({
       />
       {submitted && errors.base_delivery && (
         <p className="text-red-500 text-sm mt-1">{errors.base_delivery}</p>
-      )}
+      )} */}
 
       {/* Залишок */}
       <div className={styles.ServiceModalInputTytle}>Залишок</div>
