@@ -37,58 +37,62 @@ export const ProjectStages = ({ report }: Props) => {
   const ProjectStagesData: ProjectStage[] = [
     {
       id: "works_confirmed",
-      label: "Узгодити роботи",
+      label: "Підтвердження робіт та отримання авансу (4 000 ₴)",
       field: "is_works_confirmed",
     },
     {
       id: "start_date_agreed",
-      label: "Узгодити дату початку робіт",
+      label: "Узгодження дати старту",
       field: "is_start_date_agreed",
     },
-    { id: "team_assigned", label: "Обрати Бригаду", field: "is_team_assigned" },
+    {
+      id: "team_assigned",
+      label: "Призначення бригади",
+      field: "is_team_assigned",
+    },
     {
       id: "keys_received",
-      label: "Отримати Ключі",
+      label: "Отримання ключів",
       field: "is_keys_received",
     },
     {
       id: "materials_prepaid",
-      label: "Отримати Аванс",
+      label: "Аванс на матеріали (4 000 ₴)",
       field: "is_materials_prepaid",
     },
     {
       id: "materials_ordered",
-      label: "Замовити Матеріали",
+      label: "Замовлення матеріалів",
       field: "is_materials_ordered",
     },
     {
       id: "team_started",
-      label: "Початок робіт Бригади",
+      label: "Виїзд та встановлення бригади",
       field: "is_team_started",
     },
     {
       id: "details_clarified",
-      label: "Узгодити деталі",
+      label: "Уточнення нюансів",
       field: "is_details_clarified",
     },
     {
       id: "work_accepted",
-      label: "Роботи прийняті",
+      label: "Приймання роботи",
       field: "is_work_accepted",
     },
     {
       id: "work_delivered",
-      label: "Роботи надані",
+      label: "Здача роботи замовнику",
       field: "is_work_delivered",
     },
     {
       id: "final_payment_received",
-      label: "Останній платіж",
+      label: "Отримання остаточного розрахунку",
       field: "is_final_payment_received",
     },
     {
       id: "team_paid",
-      label: "Оплата роботи бригади",
+      label: "Виплата зарплати бригаді",
       field: "is_team_paid",
     },
   ];
