@@ -6,6 +6,7 @@ import { Crew } from "@/types/crew";
 import { getCrews } from "@/api/crews";
 import { getProjectReport } from "@/api/projects";
 import { Project } from "@/types/project";
+import { useUser } from "@/context/UserContextProvider";
 
 const daysOfWeek = [
   "Понеділок",
@@ -29,7 +30,7 @@ type DayColorsMap = Record<number, Record<number, Record<number, string[]>>>;
 
 const Calendar = () => {
   const [calendar, setCalendar] = useState<Crew[]>([]);
-  const [token, setToken] = useState<string>("");
+  const { token } = useUser();
   const [selectedCrew, setSelectedCrew] = useState<Crew | null>(null);
   const [dayColors, setDayColors] = useState<DayColorsMap>({});
 
@@ -63,11 +64,6 @@ const Calendar = () => {
   };
 
   const dates = generateDates(currentMonth, currentYear);
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) setToken(storedToken);
-  }, []);
 
   useEffect(() => {
     if (!token) return;
@@ -108,12 +104,6 @@ const Calendar = () => {
 
     const { status, start_date, end_date, name, id } = report.project;
     const color = colors[report.project.status];
-
-    console.log("🔍 Проєкт:", name, `(ID: ${id})`);
-    console.log("📅 Статус:", status);
-    console.log("🎨 Колір для статусу:", color);
-    console.log("🕒 Дати:", start_date, "→", end_date);
-
     if (!color) return;
 
     const start = new Date(start_date);

@@ -14,8 +14,7 @@ interface AddWorkerModalProps {
 }
 
 export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
-  const { user } = useUser();
-  const [token, setToken] = useState<string | null>(null);
+  const { token } = useUser();
   const [crews, setCrews] = useState<Crew[]>([]);
   const [formData, setFormData] = useState<{
     full_name: string;
@@ -40,11 +39,6 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
     };
     fetchCrews();
   }, [token]);
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    setToken(savedToken);
-  }, [user]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

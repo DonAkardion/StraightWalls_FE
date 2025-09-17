@@ -58,7 +58,7 @@ export default function NavigationModul({
         <div className="">
           <NavigationMenu
             role={role}
-            isOpen={true}
+            isOpen={open}
             onClose={() => setOpen(false)}
           />
         </div>

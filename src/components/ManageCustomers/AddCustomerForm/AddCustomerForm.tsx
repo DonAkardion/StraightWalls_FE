@@ -20,15 +20,8 @@ export const AddCustomerModal = ({
     role: "driver",
     full_name: "",
   });
-  const { user } = useUser()
-  const [token, setToken] = useState<string | null>(null);
+  const { token } = useUser();
 
-  useEffect(() => {
-    if(user?.is_active) {
-      const storedToken = localStorage.getItem("token");
-      setToken(storedToken)
-    }
-  }, [user?.is_active])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

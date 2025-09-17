@@ -13,18 +13,12 @@ import { handleDeleteUser, handleEdit } from "@/api/users";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const ManageCustomers = () => {
-  const { user } = useUser();
-  const [token, setToken] = useState<string | null>(null);
+  const { token } = useUser();
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [users, setUsers] = useState<ManageCustomersProps[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isCustomerOpenModal, setIsCustomerOpenModal] = useState(false);
-
-  useEffect(() => {
-      const storedToken = localStorage.getItem("token");
-      setToken(storedToken);
-    }, [user]);
 
   // Fetch users
   const fetchUsers = async () => {

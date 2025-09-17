@@ -31,13 +31,15 @@ export const ClientsProjectsTable = ({
     const fetchProjects = async () => {
       try {
         const data = await getProjectByClientId(clientId, token);
+
         if (Array.isArray(data)) setProjects(data);
       } catch (error) {
         console.error("Error fetching projects:", error);
       }
     };
     fetchProjects();
-  }, [token, clientId]);
+  }, [token, clientId])
+
 
   useEffect(() => {
     if (!token || !projects.length) return;

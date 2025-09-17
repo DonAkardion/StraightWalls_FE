@@ -23,19 +23,24 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({ role, onClose, i
   const pathname = usePathname();
   const navigationMenuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!isOpen) return;
+    useEffect(() => {
+        if (!isOpen) return;
 
-    const handleClickOutside = (event: MouseEvent) => {
-      if (navigationMenuRef.current && !navigationMenuRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [isOpen, onClose])
+        const handleClickOutside = (event: MouseEvent) => {
+          if (
+            navigationMenuRef.current &&
+            !navigationMenuRef.current.contains(event.target as Node)
+          ) {
+            onClose();
+          }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+        return () => {
+          document.removeEventListener("click", handleClickOutside);
+        };
+  }, [isOpen, onClose]);
+
 
    if (!isOpen) return null;
 
