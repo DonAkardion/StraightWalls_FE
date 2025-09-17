@@ -72,64 +72,64 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
         <div className="mb-4">
           <div className={styles.statsTitle}>Загальна статистика об’єкта</div>
           <div
-            className={`${styles.statsContainer} sm:p-6 p-2 grid xl:grid-cols-4 sm:grid-cols-2 grid-cols-1 md:gap-6 gap-4 rounded-[5px]`}
+            className={`
+    ${styles.statsContainer}
+    sm:p-6 p-2
+    grid
+    gap-4
+    rounded-[5px]
+
+    xl:grid-cols-3
+    lg:grid-cols-2
+    grid-cols-1
+  `}
           >
-            <div
-              className={`${styles.statsContainerItem} rounded-[5px] grid grid-cols-3`}
-            >
+            {[
+              {
+                label: "Площа кімнат",
+                value: object.roomStats.regularRoomsArea,
+              },
+              {
+                label: "Відкоси",
+                value: object.roomStats.regularRoomsSlopesMeters,
+              },
+              {
+                label: "Елементи",
+                value: object.roomStats.regularRoomsElementsMeters,
+              },
+              { label: "Площа Санвузлів", value: object.roomStats.roomCount },
+              { label: "Відкоси Санвузлів", value: object.roomStats.totalArea },
+              {
+                label: "Елементи Санвузлів",
+                value: object.roomStats.totalSlopesMeters,
+              },
+            ].map((stat, idx) => (
               <div
-                className={`${styles.statsContainerItemTitle} p-3 flex items-center justify-center col-span-2`}
+                key={idx}
+                className={`${styles.statsContainerItem} rounded-[5px] grid grid-cols-3`}
+                style={{
+                  gridRow:
+                    window.innerWidth >= 1024 && window.innerWidth < 1280
+                      ? `${(idx % 3) + 1}`
+                      : "auto",
+                  gridColumn:
+                    window.innerWidth >= 1024 && window.innerWidth < 1280
+                      ? `${Math.floor(idx / 3) + 1}`
+                      : "auto",
+                }}
               >
-                Кількість кімнат
+                <div
+                  className={`${styles.statsContainerItemTitle} p-3 flex items-center justify-center text-center col-span-2 rounded-l-[5px]`}
+                >
+                  {stat.label}
+                </div>
+                <div
+                  className={`${styles.statsContainerItemValue} flex items-center justify-center p-3`}
+                >
+                  {formatValue(stat.value)}
+                </div>
               </div>
-              <div
-                className={`${styles.statsContainerItemValue} flex items-center justify-center p-3`}
-              >
-                {formatValue(object.roomStats.roomCount)}
-              </div>
-            </div>
-            <div
-              className={`${styles.statsContainerItem} rounded-[5px] grid grid-cols-3`}
-            >
-              <div
-                className={`${styles.statsContainerItemTitle} p-3 flex items-center justify-center col-span-2`}
-              >
-                Загальна площа
-              </div>
-              <div
-                className={`${styles.statsContainerItemValue} p-3 flex items-center justify-center`}
-              >
-                {formatValue(object.roomStats.totalArea)}
-              </div>
-            </div>
-            <div
-              className={`${styles.statsContainerItem} rounded-[5px] grid grid-cols-3`}
-            >
-              <div
-                className={`${styles.statsContainerItemTitle} p-3 flex items-center justify-center col-span-2`}
-              >
-                Відкоси
-              </div>
-              <div
-                className={`${styles.statsContainerItemValue} p-3 flex items-center justify-center`}
-              >
-                {formatValue(object.roomStats.totalSlopesMeters)}
-              </div>
-            </div>
-            <div
-              className={`${styles.statsContainerItem} rounded-[5px] grid grid-cols-3`}
-            >
-              <div
-                className={`${styles.statsContainerItemTitle} p-3 flex items-center justify-center col-span-2`}
-              >
-                Елементи
-              </div>
-              <div
-                className={`${styles.statsContainerItemValue} p-3 flex items-center justify-center`}
-              >
-                {formatValue(object.roomStats.totalElementsMeters)}
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       )}

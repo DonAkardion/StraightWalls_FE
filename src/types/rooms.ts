@@ -35,7 +35,13 @@ export enum RoomType {
 
 export interface RoomStats {
   totalArea: number;
+  regularRoomsArea: number;
+  bathroomArea: number;
   totalSlopesMeters: number;
+  regularRoomsSlopesMeters: number;
+  bathroomSlopesMeters: number;
   totalElementsMeters: number;
+  regularRoomsElementsMeters: number;
+  bathroomElementsMeters: number;
   roomCount: number;
 }
