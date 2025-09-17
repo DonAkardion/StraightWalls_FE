@@ -32,3 +32,16 @@ export enum RoomType {
   BATHROOM2 = "bathroom2", // Санвузол2
   CEILING = "ceiling", // Стелі
 }
+
+export interface RoomStats {
+  totalArea: number;
+  regularRoomsArea: number;
+  bathroomArea: number;
+  totalSlopesMeters: number;
+  regularRoomsSlopesMeters: number;
+  bathroomSlopesMeters: number;
+  totalElementsMeters: number;
+  regularRoomsElementsMeters: number;
+  bathroomElementsMeters: number;
+  roomCount: number;
+}

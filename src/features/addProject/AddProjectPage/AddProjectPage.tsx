@@ -7,6 +7,7 @@ import styles from "./AddProjectPage.module.css";
 
 import { ClientSelector } from "@/components/addProject/ClientSelector/ClientSelector";
 import { ObjectSelector } from "@/components/addProject/ClientSelector/ObjectSelector";
+import { SelectedObjectInfo } from "@/components/addProject/SelectedObjectInfo/SelectedObjectInfo";
 import { ProjectDates } from "@/components/addProject/ProjectDates/ProjectDates";
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
@@ -24,6 +25,7 @@ import { getClients } from "@/api/clients";
 import { getServices } from "@/api/services";
 import { getMaterials } from "@/api/material";
 import { createProject } from "@/api/projects";
+import { updateMaterialStock } from "@/api/material";
 import { Client, ClientObject } from "@/types/client";
 import { useUser } from "@/context/UserContextProvider";
 import { ProjectNameInput } from "@/components/addProject/ProjectNameInput/ProjectNameInput";
@@ -202,6 +204,16 @@ export function AddProjectPage() {
 
     try {
       const response = await createProject(payload, token);
+      // updateMaterials
+      await Promise.all(
+        materials.map(async (m) => {
+          if (m.quantity > 0) {
+            const newQuantity = Math.max(0, (m.stock ?? 0) - m.quantity);
+
+            await updateMaterialStock(token, m.id, newQuantity);
+          }
+        })
+      );
       router.push(`/${role}/projects`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);
@@ -298,7 +310,11 @@ export function AddProjectPage() {
         onStartDateChange={setStartDate}
         onEndDateChange={setEndDate}
       />
-
+      {clientId && objectId && (
+        <div className="mb-[30px]">
+          <SelectedObjectInfo objectId={objectId} />
+        </div>
+      )}
       {/* Кошторис по послугах */}
       <div className="relative">
         <div ref={estimateRef} className="relative"></div>

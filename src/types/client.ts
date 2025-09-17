@@ -1,4 +1,6 @@
-import { Project } from "next/dist/build/swc/types";
+
+import { Room, RoomStats } from "@/types/rooms";
+import { Project } from "./project";
 
 export interface ClientObject {
   id: number;
@@ -6,6 +8,8 @@ export interface ClientObject {
   name: string;
   address: string;
   description?: string;
+  rooms: Room[];
+  roomStats: RoomStats;
 }
 
 export interface Client {
