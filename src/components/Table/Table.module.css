@@ -226,15 +226,15 @@
   background: #ffb32666;
   width: 100px;
 }
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(9) {
+  background: #ffb32666;
+  width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(10) {
+  background: #ffb32666;
+  width: 100px;
+}
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(11) {
-  background: #ffb32666;
-  width: 100px;
-}
-:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
-  background: #ffb32666;
-  width: 100px;
-}
-:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(13) {
   background: #ffb32666;
   width: 100px;
 }

@@ -114,20 +114,22 @@ export function ClientObjectSettings({ objectId }: Props) {
             );
           } else {
             // 🔹 create
-            const type = Object.keys(ROOM_TYPE_LABELS).find(
-              (key) => ROOM_TYPE_LABELS[key as RoomType] === col
-            ) as RoomType;
+            if (area > 0 || slopesVal > 0 || elementsVal > 0) {
+              const type = Object.keys(ROOM_TYPE_LABELS).find(
+                (key) => ROOM_TYPE_LABELS[key as RoomType] === col
+              ) as RoomType;
 
-            await createRoom(
-              {
-                client_object_id: objectId,
-                type,
-                area,
-                slopes_linear_meters: slopesVal,
-                elements_linear_meters: elementsVal,
-              },
-              token
-            );
+              await createRoom(
+                {
+                  client_object_id: objectId,
+                  type,
+                  area,
+                  slopes_linear_meters: slopesVal,
+                  elements_linear_meters: elementsVal,
+                },
+                token
+              );
+            }
           }
         })
       );
