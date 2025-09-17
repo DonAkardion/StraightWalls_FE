@@ -25,6 +25,7 @@ import { getClients } from "@/api/clients";
 import { getServices } from "@/api/services";
 import { getMaterials } from "@/api/material";
 import { createProject } from "@/api/projects";
+import { updateMaterialStock } from "@/api/material";
 import { Client, ClientObject } from "@/types/client";
 import { useUser } from "@/context/UserContextProvider";
 import { ProjectNameInput } from "@/components/addProject/ProjectNameInput/ProjectNameInput";
@@ -203,6 +204,16 @@ export function AddProjectPage() {
 
     try {
       const response = await createProject(payload, token);
+      // updateMaterials
+      await Promise.all(
+        materials.map(async (m) => {
+          if (m.quantity > 0) {
+            const newQuantity = Math.max(0, (m.stock ?? 0) - m.quantity);
+
+            await updateMaterialStock(token, m.id, newQuantity);
+          }
+        })
+      );
       router.push(`/${role}/projects`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);
