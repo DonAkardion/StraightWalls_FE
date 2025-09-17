@@ -10,11 +10,13 @@ import { ProjectStage, StageStatus } from "@/types/stages";
 interface InProgressTableProps {
   reports: ProjectReportResponse[];
   className?: string;
+  enableTooltips?: boolean;
 }
 
 export const InProgressTable: React.FC<InProgressTableProps> = ({
   reports,
   className,
+  enableTooltips = true,
 }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const { role } = useParams();
@@ -72,19 +74,66 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     }
   };
   const ProjectStagesData: ProjectStage[] = [
-    { id: "thinking", label: "Думає", field: "is_thinking" },
-    { id: "confirmed", label: "Підтвердив", field: "is_confirmed" },
-    { id: "rejected", label: "Відмовив", field: "is_rejected" },
-    { id: "scheduled", label: "Поставити в графік", field: "is_scheduled" },
-    { id: "keys", label: "Ключі і аванс", field: "is_keys_and_advance" },
     {
-      id: "materials",
-      label: "Замовити матеріал",
-      field: "is_order_materials",
+      id: "works_confirmed",
+      label: "Підтвердження робіт та отримання авансу (4 000 ₴)",
+      field: "is_works_confirmed",
     },
-    { id: "in_progress", label: "В роботі", field: "is_in_progress" },
-    { id: "completed", label: "Здати", field: "is_completed" },
-    { id: "calculated", label: "Всі розраховані", field: "is_all_calculated" },
+    {
+      id: "start_date_agreed",
+      label: "Узгодження дати старту",
+      field: "is_start_date_agreed",
+    },
+    {
+      id: "team_assigned",
+      label: "Призначення бригади",
+      field: "is_team_assigned",
+    },
+    {
+      id: "keys_received",
+      label: "Отримання ключів",
+      field: "is_keys_received",
+    },
+    {
+      id: "materials_prepaid",
+      label: "Аванс на матеріали (4 000 ₴)",
+      field: "is_materials_prepaid",
+    },
+    {
+      id: "materials_ordered",
+      label: "Замовлення матеріалів",
+      field: "is_materials_ordered",
+    },
+    {
+      id: "team_started",
+      label: "Виїзд та встановлення бригади",
+      field: "is_team_started",
+    },
+    {
+      id: "details_clarified",
+      label: "Уточнення нюансів",
+      field: "is_details_clarified",
+    },
+    {
+      id: "work_accepted",
+      label: "Приймання роботи",
+      field: "is_work_accepted",
+    },
+    {
+      id: "work_delivered",
+      label: "Здача роботи замовнику",
+      field: "is_work_delivered",
+    },
+    {
+      id: "final_payment_received",
+      label: "Отримання остаточного розрахунку",
+      field: "is_final_payment_received",
+    },
+    {
+      id: "team_paid",
+      label: "Виплата зарплати бригаді",
+      field: "is_team_paid",
+    },
   ];
 
   function getProjectStages(project: any) {
@@ -131,14 +180,27 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
                 href={`/${role}/projects/projectsDetailed/${p.project.id}`}
                 onClick={(e) => e.stopPropagation()}
                 className="block w-full h-full cursor-pointer"
-
-                // className={`${
-                //   idx === 0
-                //     ? styles.pastOrder
-                //     : idx === 1
-                //     ? styles.currentOrder
-                //     : styles.futureOrder
-                // } ${styles.hideOnMobile}`}
+              >
+                {p.project.name}
+              </Link>
+            </div>
+          ))}
+        </div>
+      ),
+      tooltip: (row: (typeof crewsWithProjects)[0]) => (
+        <div className="flex flex-col gap-[10px]">
+          <div>{row.name}</div>
+          {row.projects.map((p, idx) => (
+            <div
+              key={p.project.id}
+              className={`${getRowClassName(p.project.status)} ${
+                styles.hideOnMobile
+              }`}
+            >
+              <Link
+                href={`/${role}/projects/projectsDetailed/${p.project.id}`}
+                onClick={(e) => e.stopPropagation()}
+                className="block w-full h-full cursor-pointer"
               >
                 {p.project.name}
               </Link>
@@ -158,15 +220,22 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
               <div
                 key={p.project.id}
                 className={getRowClassName(p.project.status)}
-                // className={
-                //   idx === 0
-                //     ? styles.pastOrder
-                //     : idx === 1
-                //     ? styles.currentOrder
-                //     : styles.futureOrder
-                // }
               >
-                {/* {statusMap[p.project.status] || p.project.status} */}
+                {current}
+              </div>
+            );
+          })}
+        </div>
+      ),
+      tooltip: (row: (typeof crewsWithProjects)[0]) => (
+        <div className="flex flex-col gap-[10px]">
+          {row.projects.map((p, idx) => {
+            const { current } = getProjectStages(p.project);
+            return (
+              <div
+                key={p.project.id}
+                className={getRowClassName(p.project.status)}
+              >
                 {current}
               </div>
             );
@@ -185,13 +254,21 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
               <div
                 key={p.project.id}
                 className={getRowClassName(p.project.status)}
-                // className={
-                //   idx === 0
-                //     ? styles.pastOrder
-                //     : idx === 1
-                //     ? styles.currentOrder
-                //     : styles.futureOrder
-                // }
+              >
+                {next || "-"}
+              </div>
+            );
+          })}
+        </div>
+      ),
+      tooltip: (row: (typeof crewsWithProjects)[0]) => (
+        <div className="flex flex-col gap-[10px]">
+          {row.projects.map((p, idx) => {
+            const { next } = getProjectStages(p.project);
+            return (
+              <div
+                key={p.project.id}
+                className={getRowClassName(p.project.status)}
               >
                 {next || "-"}
               </div>
@@ -209,13 +286,6 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
             <div
               key={p.project.id}
               className={getRowClassName(p.project.status)}
-              // className={
-              //   idx === 0
-              //     ? styles.pastOrder
-              //     : idx === 1
-              //     ? styles.currentOrder
-              //     : styles.futureOrder
-              // }
             >
               {p.totalMaterialsProfit}
             </div>
@@ -232,13 +302,6 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
             <div
               key={p.project.id}
               className={getRowClassName(p.project.status)}
-              // className={
-              //   idx === 0
-              //     ? styles.pastOrder
-              //     : idx === 1
-              //     ? styles.currentOrder
-              //     : styles.futureOrder
-              // }
             >
               {p.totalMaterialsProfit}
             </div>
@@ -252,6 +315,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     <Table
       data={crewsWithProjects}
       columns={columns}
+      enableTooltips={enableTooltips}
       showIndex={true}
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
@@ -279,10 +343,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
                       {p.project.name}
                     </Link>
                   </span>
-                  <span className="w-1/4 truncate">
-                    {/* {statusMap[p.project.status] || p.project.status} */}
-                    {current}
-                  </span>
+                  <span className="w-1/4 truncate">{current}</span>
                   <span className="w-1/4 truncate">{next || "-"}</span>
                   <span className="w-1/4 truncate">{`${p.totalMaterialsProfit} грн`}</span>
                 </div>

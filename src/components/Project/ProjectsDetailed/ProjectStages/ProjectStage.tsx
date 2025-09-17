@@ -20,31 +20,81 @@ export const ProjectStages = ({ report }: Props) => {
   const [loadingField, setLoadingField] = useState<string | null>(null);
 
   const [stageStatus, setStageStatus] = useState<StageStatus>({
-    is_thinking: report.project.is_thinking,
-    is_confirmed: report.project.is_confirmed,
-    is_rejected: report.project.is_rejected,
-    is_scheduled: report.project.is_scheduled,
-    is_keys_and_advance: report.project.is_keys_and_advance,
-    is_order_materials: report.project.is_order_materials,
-    is_in_progress: report.project.is_in_progress,
-    is_completed: report.project.is_completed,
-    is_all_calculated: report.project.is_all_calculated,
+    is_works_confirmed: report.project.is_works_confirmed,
+    is_start_date_agreed: report.project.is_start_date_agreed,
+    is_team_assigned: report.project.is_team_assigned,
+    is_keys_received: report.project.is_keys_received,
+    is_materials_prepaid: report.project.is_materials_prepaid,
+    is_materials_ordered: report.project.is_materials_ordered,
+    is_team_started: report.project.is_team_started,
+    is_details_clarified: report.project.is_details_clarified,
+    is_work_accepted: report.project.is_work_accepted,
+    is_work_delivered: report.project.is_work_delivered,
+    is_final_payment_received: report.project.is_final_payment_received,
+    is_team_paid: report.project.is_team_paid,
   });
 
   const ProjectStagesData: ProjectStage[] = [
-    { id: "thinking", label: "Думає", field: "is_thinking" },
-    { id: "confirmed", label: "Підтвердив", field: "is_confirmed" },
-    { id: "rejected", label: "Відмовив", field: "is_rejected" },
-    { id: "scheduled", label: "Поставити в графік", field: "is_scheduled" },
-    { id: "keys", label: "Ключі і аванс", field: "is_keys_and_advance" },
     {
-      id: "materials",
-      label: "Замовити матеріал",
-      field: "is_order_materials",
+      id: "works_confirmed",
+      label: "Підтвердження робіт та отримання авансу (4 000 ₴)",
+      field: "is_works_confirmed",
     },
-    { id: "in_progress", label: "В роботі", field: "is_in_progress" },
-    { id: "completed", label: "Здати", field: "is_completed" },
-    { id: "calculated", label: "Всі розраховані", field: "is_all_calculated" },
+    {
+      id: "start_date_agreed",
+      label: "Узгодження дати старту",
+      field: "is_start_date_agreed",
+    },
+    {
+      id: "team_assigned",
+      label: "Призначення бригади",
+      field: "is_team_assigned",
+    },
+    {
+      id: "keys_received",
+      label: "Отримання ключів",
+      field: "is_keys_received",
+    },
+    {
+      id: "materials_prepaid",
+      label: "Аванс на матеріали (4 000 ₴)",
+      field: "is_materials_prepaid",
+    },
+    {
+      id: "materials_ordered",
+      label: "Замовлення матеріалів",
+      field: "is_materials_ordered",
+    },
+    {
+      id: "team_started",
+      label: "Виїзд та встановлення бригади",
+      field: "is_team_started",
+    },
+    {
+      id: "details_clarified",
+      label: "Уточнення нюансів",
+      field: "is_details_clarified",
+    },
+    {
+      id: "work_accepted",
+      label: "Приймання роботи",
+      field: "is_work_accepted",
+    },
+    {
+      id: "work_delivered",
+      label: "Здача роботи замовнику",
+      field: "is_work_delivered",
+    },
+    {
+      id: "final_payment_received",
+      label: "Отримання остаточного розрахунку",
+      field: "is_final_payment_received",
+    },
+    {
+      id: "team_paid",
+      label: "Виплата зарплати бригаді",
+      field: "is_team_paid",
+    },
   ];
 
   const handleStageChange = async (

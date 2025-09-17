@@ -226,9 +226,13 @@
   background: #ffb32666;
   width: 100px;
 }
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
+  padding: 0 6px;
+}
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(9) {
   background: #ffb32666;
   width: 100px;
+  padding: 0 6px;
 }
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(10) {
   background: #ffb32666;
@@ -237,6 +241,9 @@
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(11) {
   background: #ffb32666;
   width: 100px;
+}
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
+  padding: 0 6px;
 }
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
   width: 110px;

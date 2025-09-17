@@ -5,7 +5,13 @@ import { useUser } from "@/context/UserContextProvider";
 import { ProjectReportResponse } from "@/types/project";
 import { changeProjectStatus } from "@/api/projects";
 import styles from "./ProjectInfo.module.css";
-import { Person, Phone, Home, ArrowLeft, Calendar } from "../../../../../public/icons";
+import {
+  Person,
+  Phone,
+  Home,
+  ArrowLeft,
+  Calendar,
+} from "../../../../../public/icons";
 
 interface Props {
   report: ProjectReportResponse;
@@ -72,11 +78,11 @@ export function ProjectInfo({ report }: Props) {
       className={`${styles.infoContainer} flex flex-col justify-center items-center md:items-start mb-[40px] md:mb-[60px]`}
     >
       <div
-        className={`${styles.projectInfo} flex flex-col md:flex-row xl:gap-[60px] lg:gap-[20px] md:gap-[20px] items-center md:w-full mb-[26px] `}
+        className={`${styles.projectInfo} flex flex-col md:flex-row xl:gap-[60px] lg:gap-[20px] md:gap-[20px] items-center w-full mb-[26px] `}
       >
-        <div className={`${styles.projectInfoName}`}>
+        <div className={`${styles.projectInfoName} `}>
           <h2
-            className={`${styles.projectInfoNameTytle} text-nowrap flex gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
+            className={`${styles.projectInfoNameTytle}  flex gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
           >
             <span>{project.name}</span> <span>№ {project.id}</span>
           </h2>
