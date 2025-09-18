@@ -173,18 +173,21 @@ export const Header = () => {
               Сповіщення
             </div>
           </Link>
-          <Link
-            href={`/${role}/addProject`}
-            onClick={closeMenu}
-            className={styles.mobileMenuNavigation}
-            prefetch={false}
-          >
-            <div
-              className={`${styles.mobileMenuAddProjectBtn} flex max-w-[450px] min-w-[351px] items-center justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
-            >
-              Додати проєкт
-            </div>
-          </Link>
+          {role === "admin" ||
+            (role === "accountant" && (
+              <Link
+                href={`/${role}/addProject`}
+                onClick={closeMenu}
+                className={styles.mobileMenuNavigation}
+                prefetch={false}
+              >
+                <div
+                  className={`${styles.mobileMenuAddProjectBtn} flex max-w-[450px] min-w-[351px] items-center justify-center rounded-[5px] h-[52px] pl-[30px] pr-[30px] pt-[8px] pb-[8px]`}
+                >
+                  Додати проєкт
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
     </header>

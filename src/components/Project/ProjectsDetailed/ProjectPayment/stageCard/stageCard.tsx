@@ -10,6 +10,7 @@ interface StageCardProps {
   sum: string;
   description: string;
   status: "paid" | "pending" | "canceled";
+  role?: string;
   onDelete: (id: number) => void;
   onStatusChange: (id: number, status: "paid" | "pending" | "canceled") => void;
 }
@@ -30,6 +31,7 @@ export function StageCard({
   sum,
   description,
   status,
+  role,
   onDelete,
   onStatusChange,
 }: StageCardProps) {
@@ -43,6 +45,7 @@ export function StageCard({
       onStatusChange(id, newStatus);
     }
   };
+  const canEdit = role === "admin" || role === "accountant";
 
   return (
     <div
@@ -71,44 +74,49 @@ export function StageCard({
           <div
             className={`${styles.statusIcon} rounded-full w-[24px] h-[24px] mr-[6px] ${statusClass}`}
           ></div>
-
-          <div className="relative flex items-center">
-            <button
-              className="flex items-center space-x-1"
-              onClick={() => setIsOpen((prev) => !prev)}
-            >
-              <span className={styles.statusText}>{translatedStatus}</span>
-              <ChevronDown size={16} className="ml-1" />
-            </button>
-            {isOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-md z-10">
-                {(["pending", "paid", "canceled"] as const).map((opt) => (
-                  <div
-                    key={opt}
-                    onClick={() => handleStatusChange(opt)}
-                    className="px-3 py-1 cursor-pointer hover:bg-gray-100"
-                  >
-                    {statusMap[opt]}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="flex absolute right-[10px] top-[2px]">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(id);
-              }}
-              title="Видалити"
-            >
-              <img
-                src={Trash.src}
-                alt="Delete"
-                className={`${styles.TableItemIcon} w-[21px] h-[21px] cursor-pointer`}
-              />
-            </button>
-          </div>
+          {canEdit ? (
+            <div className="relative flex items-center">
+              <button
+                className="flex items-center space-x-1"
+                onClick={() => setIsOpen((prev) => !prev)}
+              >
+                <span className={styles.statusText}>{translatedStatus}</span>
+                <ChevronDown size={16} className="ml-1" />
+              </button>
+              {isOpen && (
+                <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow-md z-10">
+                  {(["pending", "paid", "canceled"] as const).map((opt) => (
+                    <div
+                      key={opt}
+                      onClick={() => handleStatusChange(opt)}
+                      className="px-3 py-1 cursor-pointer hover:bg-gray-100"
+                    >
+                      {statusMap[opt]}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <span className={styles.statusText}>{translatedStatus}</span>
+          )}
+          {canEdit && (
+            <div className="flex absolute right-[10px] top-[2px]">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(id);
+                }}
+                title="Видалити"
+              >
+                <img
+                  src={Trash.src}
+                  alt="Delete"
+                  className={`${styles.TableItemIcon} w-[21px] h-[21px] cursor-pointer`}
+                />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

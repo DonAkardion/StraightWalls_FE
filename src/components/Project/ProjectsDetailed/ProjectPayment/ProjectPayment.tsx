@@ -10,6 +10,7 @@ import { useUser } from "@/context/UserContextProvider";
 interface Props {
   report: ProjectReportResponse;
   refreshProject: () => Promise<void>;
+  role?: string;
 }
 
 function parseAmount(value: unknown): number {
@@ -26,7 +27,7 @@ function formatCurrency(value: number): string {
   })} грн`;
 }
 
-export function ProjectPayment({ report, refreshProject }: Props) {
+export function ProjectPayment({ report, refreshProject, role }: Props) {
   const { token } = useUser();
   const totalPaid = report.project.payments
     .filter((p) => p.status === "paid")
@@ -95,6 +96,7 @@ export function ProjectPayment({ report, refreshProject }: Props) {
             sum={`${parseAmount(payment.amount)} грн`}
             description={payment.description ?? ""}
             status={payment.status}
+            role={role}
             onDelete={async (id) => {
               if (!token) return;
               await deletePayment(id, token);

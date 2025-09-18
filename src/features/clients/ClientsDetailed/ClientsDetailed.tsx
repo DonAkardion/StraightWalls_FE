@@ -8,6 +8,7 @@ import { ClientsContainer } from "@/components/Clients/ClientsDetailed/ClientsCo
 import { Client } from "@/types/client";
 import { getClientById } from "@/api/clients";
 import { useUser } from "@/context/UserContextProvider";
+import { useParams } from "next/navigation";
 
 interface Props {
   clientId: number;
@@ -15,6 +16,8 @@ interface Props {
 
 export function ClientsDetailed({ clientId }: Props) {
   const { token } = useUser();
+  const { role } = useParams();
+  const roleStr = Array.isArray(role) ? role[0] : role ?? "";
   const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +52,7 @@ export function ClientsDetailed({ clientId }: Props) {
 
   return (
     <ClientsContainer>
-      <ClientsInitials client={client} />
+      <ClientsInitials client={client} role={roleStr} />
       <ClientsProjectsTable clientId={clientId} />
       <ClientsBenefit clientId={clientId} />
       {/* <ClientsInteraction /> */}

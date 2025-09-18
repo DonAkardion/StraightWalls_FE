@@ -15,12 +15,14 @@ interface Props {
   report: ProjectReportResponse;
   tablesTitle?: string;
   tableClassName?: string;
+  role?: string;
 }
 
 export const ProjectMaterialsComplete = ({
   report,
   tablesTitle,
   tableClassName,
+  role,
 }: Props) => {
   const { project } = report;
   const { token } = useUser();
@@ -130,7 +132,11 @@ export const ProjectMaterialsComplete = ({
             selection={selection}
             editable={false}
             className={tableClassName}
-            onEdit={openEditModal}
+            onEdit={
+              role === "admin" || role === "accountant"
+                ? openEditModal
+                : undefined
+            }
           />
 
           {currentForm && (
