@@ -13,6 +13,7 @@ interface Props {
   report: ProjectReportResponse;
   tablesTitle?: string;
   tableClassName?: string;
+  role?: string;
 }
 
 export interface WorkForTable {
@@ -29,6 +30,7 @@ export const ProjectEstimateComplete = ({
   report,
   tablesTitle,
   tableClassName,
+  role,
 }: Props) => {
   const { project } = report;
   const { token } = useUser();
@@ -110,7 +112,11 @@ export const ProjectEstimateComplete = ({
             selection={selection}
             editable={false}
             className={tableClassName}
-            onEdit={openEditModal}
+            onEdit={
+              role === "admin" || role === "accountant"
+                ? openEditModal
+                : undefined
+            }
           />
           {currentForm && (
             <FormModal

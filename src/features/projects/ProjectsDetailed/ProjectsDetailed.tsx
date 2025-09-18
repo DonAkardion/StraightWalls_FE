@@ -5,7 +5,7 @@ import { useUser } from "@/context/UserContextProvider";
 import { getProjectReport } from "@/api/projects";
 import { ProjectReportResponse } from "@/types/project";
 import { createPayment, Payment } from "@/api/payments";
-
+import { useParams } from "next/navigation";
 import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/ProjectInfo";
 import { ProjectEstimateComplete } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimateComplete";
 import { ProjectMaterialsComplete } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsComplete";
@@ -23,6 +23,8 @@ interface Props {
 }
 
 export function ProjectsDetailed({ projectId }: Props) {
+  const { role } = useParams();
+  const roleStr = Array.isArray(role) ? role[0] : role ?? "";
   const { token } = useUser();
   const [report, setReport] = useState<ProjectReportResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -81,25 +83,38 @@ export function ProjectsDetailed({ projectId }: Props) {
   return (
     <div className="m-auto max-w-[1440px] pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
-        {project.client && <ProjectInfo report={report} />}
+        {project.client && <ProjectInfo report={report} role={roleStr} />}
         <ProjectMaterialsComplete
           report={report}
           tableClassName="projectDetailedMaterialsCompleteTableWrap"
           tablesTitle="Матеріали"
+          role={roleStr}
         />
         <ProjectEstimateComplete
           report={report}
           tableClassName="projectDetailedEstimateCompleteTableWrap"
           tablesTitle="Кошторис"
+          role={roleStr}
         />
 
-        <ProjectPayment report={report} refreshProject={refreshProject} />
+        <ProjectPayment
+          report={report}
+          refreshProject={refreshProject}
+          role={roleStr}
+        />
         <ProjectCrew
           crewId={report.project.team_id}
           crewName={report.project.team.name}
         />
-        <ProjectPaymentForm onSubmit={handleCreatePayment} />
-        <ProjectStages report={report} />
+        {role === "admin" || role === "accountant" ? (
+          <div>
+            <ProjectPaymentForm onSubmit={handleCreatePayment} />
+            <ProjectStages report={report} />
+          </div>
+        ) : (
+          <></>
+        )}
+
         <ProjectNotes
           subtitle="Також звертаємо Вашу увагу, що Замовник забезпечує:"
           notes={[

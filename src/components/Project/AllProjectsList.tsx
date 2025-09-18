@@ -163,8 +163,12 @@ export const AllProjectsList = ({
         data={filteredProjects}
         expandedId={expandedId}
         className="projectsTableWrap"
-        onEdit={role === "admin" ? onEdit : undefined}
-        onDelete={role === "admin" ? (item) => onDelete(item.id) : undefined}
+        onEdit={role === "admin" || role === "accountant" ? onEdit : undefined}
+        onDelete={
+          role === "admin" || role === "accountant"
+            ? (item) => onDelete(item.id)
+            : undefined
+        }
         onInspect={(item) =>
           setExpandedId((prev) => (prev === item.id ? null : item.id))
         }
@@ -207,14 +211,38 @@ export const AllProjectsList = ({
             label: "Статус",
             render: (project) => {
               const currentStatus = statusState[project.id] || project.status;
+
+              if (role === "admin" || role === "accountant") {
+                return (
+                  <StatusSelector
+                    value={currentStatus}
+                    options={statusMap}
+                    onChange={(newStatus) =>
+                      handleStatusChange(project.id, newStatus)
+                    }
+                  />
+                );
+              }
+
               return (
-                <StatusSelector
-                  value={currentStatus}
-                  options={statusMap}
-                  onChange={(newStatus) =>
-                    handleStatusChange(project.id, newStatus)
-                  }
-                />
+                <span
+                  className={`
+          px-2 py-1 rounded
+          ${
+            currentStatus === "completed"
+              ? tableStyles.completedRow
+              : currentStatus === "in_progress"
+              ? tableStyles.inprogressRow
+              : currentStatus === "new"
+              ? tableStyles.waitingRow
+              : currentStatus === "canceled"
+              ? tableStyles.canceledRow
+              : ""
+          }
+        `}
+                >
+                  {statusMap[currentStatus] || currentStatus}
+                </span>
               );
             },
           },
@@ -223,8 +251,12 @@ export const AllProjectsList = ({
           <Inspect<Project>
             item={project}
             getId={(item) => item.id}
-            onEdit={role === "admin" ? onEdit : undefined}
-            onDelete={role === "admin" ? onDelete : undefined}
+            onEdit={
+              role === "admin" || role === "accountant" ? onEdit : undefined
+            }
+            onDelete={
+              role === "admin" || role === "accountant" ? onDelete : undefined
+            }
             fields={[
               {
                 label: "Клієнт",
@@ -236,11 +268,12 @@ export const AllProjectsList = ({
               },
               {
                 label: "Початок",
-                value: (item) => item.start_date ? item.start_date : "Початок"
+                value: (item) =>
+                  item.start_date ? item.start_date : "Початок",
               },
               {
                 label: "Завершення",
-                value: (item) => item.end_date ? item.end_date : "Кінець"
+                value: (item) => (item.end_date ? item.end_date : "Кінець"),
               },
               {
                 label: "Статус",

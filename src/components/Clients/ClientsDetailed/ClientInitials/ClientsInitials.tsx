@@ -11,9 +11,10 @@ import { columns } from "@/features/clients/ClientsColumns/ClientsColumns";
 
 type Props = {
   client: Client;
+  role?: string;
 };
 
-export const ClientsInitials = ({ client }: Props) => {
+export const ClientsInitials = ({ client, role }: Props) => {
   const router = useRouter();
 
   const formatObjects = (client: Client) =>
@@ -44,24 +45,39 @@ export const ClientsInitials = ({ client }: Props) => {
           if (!value || (Array.isArray(value) && value.length === 0))
             return null;
 
-          let label = "";
-          if (column === "phone_number") label = value as string;
-          else if (column === "objects") {
+          if (column === "objects") {
             return (
               <div key={column} className="flex flex-col gap-2">
-                {client.objects.map((obj) => (
-                  <ClientInfoItem
-                    key={obj.id}
-                    icon={iconMap[column]}
-                    label={`${obj.name}: ${obj.address}`}
-                    onClick={() =>
-                      router.push(
-                        `/admin/clients/clientsDetailed/${client.id}/objectDetailed/${obj.id}`
-                      )
-                    }
-                  />
-                ))}
+                {client.objects.map((obj) => {
+                  const label = `${obj.name}: ${obj.address}`;
+                  const isEditable = role === "admin" || role === "accountant"; // 👈 дозволені ролі
+                  return (
+                    <ClientInfoItem
+                      key={obj.id}
+                      icon={iconMap[column]}
+                      label={label}
+                      onClick={
+                        isEditable
+                          ? () =>
+                              router.push(
+                                `/admin/clients/clientsDetailed/${client.id}/objectDetailed/${obj.id}`
+                              )
+                          : undefined
+                      }
+                    />
+                  );
+                })}
               </div>
+            );
+          }
+
+          if (column === "phone_number") {
+            return (
+              <ClientInfoItem
+                key={column}
+                icon={iconMap[column]}
+                label={value as string}
+              />
             );
           }
         })}
