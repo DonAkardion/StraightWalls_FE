@@ -79,7 +79,7 @@ export interface ProjectReportResponse {
     name: string;
     description?: string | null;
     client_id: number;
-    team_id: number;
+    team_id?: number;
     status: string;
     is_works_confirmed: boolean;
     is_start_date_agreed: boolean;
@@ -99,7 +99,7 @@ export interface ProjectReportResponse {
     updated_at: string;
     client: Client;
     object: ClientObject;
-    team: Crew;
+    team?: Crew;
     works: ProjectWork[];
     materials: ProjectMaterial[];
     payments: ProjectPayment[];

@@ -25,11 +25,11 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
 
   const router = useRouter();
 
-  // групуємо проєкти по бригадах
+  // групуємо проєкти по бригадах (або без бригади)
   const crewsWithProjects = useMemo(() => {
-    const map = reports.reduce<Record<number, ProjectReportResponse[]>>(
+    const map = reports.reduce<Record<string, ProjectReportResponse[]>>(
       (acc, report) => {
-        const crewId = report.project.team_id;
+        const crewId = report.project.team_id ?? "no_team";
         if (!acc[crewId]) acc[crewId] = [];
         acc[crewId].push(report);
         return acc;
@@ -38,7 +38,6 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
     );
 
     return Object.values(map).map((crewReports) => {
-      // сортуємо проєкти по created_at
       crewReports.sort(
         (a, b) =>
           new Date(a.project.created_at).getTime() -
@@ -48,8 +47,8 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
       const crew = crewReports[0].project.team;
 
       return {
-        id: crew.id,
-        name: crew.name,
+        id: crew?.id ?? -1,
+        name: crew?.name ?? "Без бригади",
         projects: crewReports,
       };
     });
