@@ -55,6 +55,7 @@ export function ProjectsDetailed({ projectId }: Props) {
           description: payment.description,
           amount: payment.amount,
           status: payment.status,
+          due_date: payment.due_date,
         },
         token
       );

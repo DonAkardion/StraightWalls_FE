@@ -23,6 +23,7 @@ export interface PaymentDraft {
   name: string;
   description?: string;
   amount: number;
+  due_date?: string;
   status?: "pending" | "paid" | "canceled";
 }
 

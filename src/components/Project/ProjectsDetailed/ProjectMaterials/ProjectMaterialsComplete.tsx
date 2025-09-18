@@ -5,6 +5,7 @@ import { ProjectReportResponse } from "@/types/project";
 import { ProjectMaterialsTable } from "./ProjectMaterialsTable/ProjectMaterialsTable";
 import { useUser } from "@/context/UserContextProvider";
 import { updateMaterial } from "@/api/projects";
+import { getMaterialById, updateMaterialStock } from "@/api/material";
 import { FormModal } from "@/components/Table/Form/FormModal";
 import { ProjectMaterialForm } from "./ProjectMaterialForm/ProjectMaterialForm";
 import { TableMaterial } from "@/types/material";
@@ -69,15 +70,30 @@ export const ProjectMaterialsComplete = ({
     setLoadingSave(true);
 
     try {
+      const oldMaterial = materialsLocal.find((m) => m.id === form.id);
+      const oldQty = Number(oldMaterial?.remaining_stock) || 0;
+      const newQty = Number(form.remaining_stock) || 0;
+      const diff = newQty - oldQty;
       // prepare payload for API
       const payload: UpdateMaterialRequest = {
         previous_remaining: Number(form.previous_remaining) || 0,
-        remaining_stock: Number(form.remaining_stock) || 0,
+        remaining_stock: newQty,
         current_remaining: Number(form.current_remaining) || 0,
         additional_delivery: Number(form.additional_delivery) || 0,
       };
 
       await updateMaterial(project.id, form.id, payload, token);
+
+      if (diff !== 0) {
+        const materialFromStock = await getMaterialById(
+          token,
+          form.material_id
+        );
+        const currentStock = Number(materialFromStock.stock) || 0;
+        const newStock = Math.max(0, currentStock - diff);
+
+        await updateMaterialStock(token, form.material_id, newStock);
+      }
 
       setMaterialsLocal((prev) =>
         prev.map((m) => (m.id === form.id ? form : m))
