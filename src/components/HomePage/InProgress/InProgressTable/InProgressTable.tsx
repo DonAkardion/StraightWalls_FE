@@ -3,9 +3,10 @@ import styles from "./InProgressTable.module.css";
 import React, { useState, useMemo } from "react";
 import { Table } from "@/components/Table/Table";
 import { ProjectReportResponse } from "@/types/project";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ProjectStage, StageStatus } from "@/types/stages";
+import { useUser } from "@/context/UserContextProvider";
 
 interface InProgressTableProps {
   reports: ProjectReportResponse[];
@@ -19,7 +20,9 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
   enableTooltips = true,
 }) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
-  const { role } = useParams();
+  const { user } = useUser();
+  const role = user!.role;
+
   const router = useRouter();
 
   // групуємо проєкти по бригадах

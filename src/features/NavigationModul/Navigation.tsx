@@ -32,17 +32,18 @@ export default function NavigationModul({
   }, [open]);
 
   return (
-    <div className="relative flex lg:flex-row-reverse h-[calc(100%-84px)] w-full">
+    <div className="relative flex lg:flex-row-reverse h-[calc(100%-96px)] w-full">
       {/* Desktop Sidebar */}
 
-      <aside
-        className="hidden lg:block absolute top-0 left-0 bottom-0 w-[311px] min-h-[calc(100%-84px)] bg-white z-[40]"
-        style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
-      >
-        <NavigationMenu role={role} isOpen onClose={() => {}} />
-        <NavigationMessage />
-      </aside>
-
+      <div className="min-h-[1200px]">
+        <aside
+          className="hidden lg:block absolute top-0 left-0 bottom-0 w-[311px]  bg-white z-[40]"
+          style={{ boxShadow: "1px 3px 15px 2px rgba(0, 0, 0, 0.25)" }}
+        >
+          <NavigationMenu role={role} isOpen onClose={() => {}} />
+          <NavigationMessage />
+        </aside>
+      </div>
       {/* Mobile Sidebar */}
 
       <aside

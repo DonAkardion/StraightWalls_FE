@@ -131,7 +131,11 @@ export const ProjectServicesTable = ({
               </span>
             ),
         },
-        { key: "unit_of_measurement", label: "Од. вимір." },
+        {
+          key: "unit_of_measurement",
+          label: "Од. вимір.",
+          tooltip: (service) => `Од. вимір.: ${service.unit_of_measurement}`,
+        },
         { key: "price", label: "Вартість, грн" },
         {
           key: "salary",

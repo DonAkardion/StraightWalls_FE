@@ -104,7 +104,11 @@ export const ProjectMaterialsTable = ({
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
       columns={[
-        { key: "name", label: "Найменування матеріалу" },
+        {
+          key: "name",
+          label: "Найменування матеріалу",
+          tooltip: (material) => `Назва: ${material.name}`,
+        },
 
         { key: "base_purchase_price", label: "Ціна, грн" },
         // { key: "base_selling_price", label: "Продаж, грн" },
@@ -129,7 +133,11 @@ export const ProjectMaterialsTable = ({
               </span>
             ),
         },
-        { key: "unit", label: "Од. вимір." },
+        {
+          key: "unit",
+          label: "Од. вимір.",
+          tooltip: (material) => `Од. вимір.: ${material.unit}`,
+        },
         // { key: "base_delivery", label: "Доставка" },
         {
           key: "previous_remaining",
