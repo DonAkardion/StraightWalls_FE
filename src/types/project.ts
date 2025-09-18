@@ -34,15 +34,10 @@ export interface Project {
 }
 
 export enum ProjectStatus {
-  NEW = "thinking", // думає
-  CONFIRMED = "confirmed", // Підтвердив
-  CANCELED = "rejected", // Відмовив
-  SCHEDULED = "scheduled", // Поставити в графік
-  KEYS_AND_ADVANCE = "keys_and_advance", // ключі і аванс
-  ORDER_MATERIALS = "order_materials", // замовити матеріал
-  IN_PROGRESS = "in_progress", // в роботі
-  SEND_TO_CLIENT = "completed", // Здати
-  COMPLETED = "all_calculated", // всі розраховані
+  COMPLETED = "completed",
+  IN_PROGRESS = "in_progress",
+  NEW = "new",
+  CANCELED = "canceled",
 }
 
 export interface UpdateProjectPayload {

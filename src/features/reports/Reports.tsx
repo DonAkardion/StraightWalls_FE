@@ -4,33 +4,50 @@ import React, { useEffect, useState } from "react";
 import { ReportsContainer } from "./ReportsContainer";
 import { DoughnutChart } from "@/components/Reports/DonutChart/DonutChart";
 import { GraphicChart } from "@/components/Reports/GraphicChart/GraphicChart";
-import { MaterialsTable } from "@/components/Reports/ReportsTable/ReportsTable";
+import { MaterialsList } from "@/components/Settings/MaterialSettings/MaterialList";
+import { Material } from "@/types/material";
 import { getProjects } from "@/api/projects";
+import { getMaterials } from "@/api/material";
 import { useUser } from "@/context/UserContextProvider";
 
 export function Reports() {
   const { token } = useUser();
   const [projects, setProjects] = useState<{ id: number }[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!token) return;
 
-    const fetchProjects = async () => {
+    const fetchData = async () => {
       try {
-        const allProjects = await getProjects(token);
-        setProjects(allProjects.map((p) => ({ id: p.id })));
+        setLoading(true);
+
+        const [allProjects, allMaterials] = await Promise.all([
+          getProjects(token),
+          getMaterials(token),
+        ]);
+
+        setProjects(allProjects || []);
+        setMaterials(allMaterials || []);
       } catch (error) {
-        console.error("Помилка завантаження проектів:", error);
+        console.error("Помилка завантаження даних:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchProjects();
+    fetchData();
   }, [token]);
+
+  if (loading) {
+    return <div className="text-center mt-10">Завантаження...</div>;
+  }
 
   return (
     <ReportsContainer>
       <DoughnutChart />
-      <MaterialsTable />
+      <MaterialsList materials={materials} />
       <GraphicChart projects={projects} />
     </ReportsContainer>
   );

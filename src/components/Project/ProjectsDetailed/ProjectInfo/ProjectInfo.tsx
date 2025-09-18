@@ -82,9 +82,10 @@ export function ProjectInfo({ report }: Props) {
       >
         <div className={`${styles.projectInfoName} `}>
           <h2
-            className={`${styles.projectInfoNameTytle}  flex gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
+            className={`${styles.projectInfoNameTytle}  flex items-center gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
           >
-            <span>{project.name}</span> <span>№ {project.id}</span>
+            <span>{project.name}</span>{" "}
+            <span className="whitespace-nowrap">№ {project.id}</span>
           </h2>
         </div>
         <div
@@ -176,8 +177,8 @@ export function ProjectInfo({ report }: Props) {
             src={Calendar.src}
             alt="Calendar "
           />
-          <span>{project.start_date} /</span>
-          <span>{project.end_date}</span>
+          <span>{project.start_date || "Невідомо"} /</span>
+          <span>{project.end_date || "Невідомо"}</span>
         </div>
         {/* <div className={`${styles.clientInfoItem}`}>
           <img
