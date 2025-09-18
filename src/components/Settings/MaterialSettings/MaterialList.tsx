@@ -8,9 +8,9 @@ import styles from "./MaterialList.module.css";
 
 interface Props {
   materials: Material[];
-  onDelete: (id: number) => void;
-  onEdit: (updated: Material) => void;
-  onAdd: () => void;
+  onDelete?: (id: number) => void;
+  onEdit?: (updated: Material) => void;
+  onAdd?: () => void;
   enableTooltips?: boolean;
 }
 
@@ -39,7 +39,7 @@ export const MaterialsList = ({
       expandedId={expandedId}
       onAdd={onAdd}
       onEdit={onEdit}
-      onDelete={(item) => onDelete(item.id)}
+      onDelete={onDelete ? (item) => onDelete(item.id) : undefined}
       enableTooltips={enableTooltips}
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
@@ -81,12 +81,14 @@ export const MaterialsList = ({
                 <span>Залишок: </span>
                 <span className="text-sm">{m.stock}</span>
               </p>
-              <img
-                src={Trash.src}
-                alt="Delete"
-                className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
-                onClick={() => onDelete(m.id)}
-              />
+              {onDelete && (
+                <img
+                  src={Trash.src}
+                  alt="Delete"
+                  className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
+                  onClick={() => onDelete(m.id)}
+                />
+              )}
             </div>
             <div className="flex justify-between">
               <p>
@@ -95,12 +97,14 @@ export const MaterialsList = ({
                   {m.base_purchase_price} грн / {m.unit}
                 </span>
               </p>
-              <img
-                src={Pen.src}
-                alt="Edit"
-                className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
-                onClick={() => onEdit(m)}
-              />
+              {onEdit && (
+                <img
+                  src={Pen.src}
+                  alt="Edit"
+                  className={`${styles.serviceTableItemIcon} w-[21px] h-[21px] cursor-pointer`}
+                  onClick={() => onEdit(m)}
+                />
+              )}
             </div>
             {/* <div className="flex justify-between">
               <p>

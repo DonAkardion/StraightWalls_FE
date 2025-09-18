@@ -1,5 +1,5 @@
 import { ClientsText } from "@/features/clients/ClientsText/ClientsText";
-import { clientsInteractions } from "@/mock/Clients/clientsInteraction";
+import { clientsInteractions } from "@/mock/clientsInteraction";
 import React from "react";
 
 export const InteractionsMessage = () => {
