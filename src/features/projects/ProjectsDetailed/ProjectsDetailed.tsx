@@ -102,10 +102,9 @@ export function ProjectsDetailed({ projectId }: Props) {
           refreshProject={refreshProject}
           role={roleStr}
         />
-        <ProjectCrew
-          crewId={report.project.team_id}
-          crewName={report.project.team.name}
-        />
+        {project?.team && project?.team_id && (
+          <ProjectCrew crewId={project.team_id} crewName={project.team.name} />
+        )}
         {role === "admin" || role === "accountant" ? (
           <div>
             <ProjectPaymentForm onSubmit={handleCreatePayment} />
