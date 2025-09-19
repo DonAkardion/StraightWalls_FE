@@ -30,14 +30,14 @@ export function Settings() {
               <></>
             )}
           </>
-          <Link
+          {/* <Link
             href="/"
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
           >
             <div>Управління даними</div>
-          </Link>
+          </Link> */}
           <Link
             href={`/${role}/settings/materialSettings`}
             className={`${styles.settingsLinksListLink} 
@@ -46,14 +46,14 @@ export function Settings() {
           >
             <div>Налаштування матеріалів</div>
           </Link>
-          <Link
+          {/* <Link
             href="/"
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
           >
             <div>Журнал аудиту/логів</div>
-          </Link>
+          </Link> */}
           <Link
             href={`/${role}/settings/serviceSettings`}
             className={`${styles.settingsLinksListLink} 
@@ -62,28 +62,28 @@ export function Settings() {
           >
             <div>Налаштування послуг</div>
           </Link>
-          <Link
+          {/* <Link
             href="/"
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
           >
             <div>Налаштування відсотку зарплати</div>
-          </Link>
+          </Link> */}
         </nav>
       ) : (
         <nav
           className={`${styles.headerContainerLinks} grid grid-cols-1 justify-items-center md:grid-cols-2 gap-x-[40px] gap-y-[40px] md:gap-y-[30px]`}
         >
-          <Link
+          {/* <Link
             href="/"
             className={`${styles.settingsLinksListLink} 
           `}
             prefetch={false}
           >
             <div>Системні налаштування</div>
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             href="/"
             className={`${styles.settingsLinksListLink} 
           `}
@@ -92,7 +92,7 @@ export function Settings() {
             <div>
               Журнал аудиту<span>/</span>логів
             </div>
-          </Link>
+          </Link> */}
         </nav>
       )}
     </section>

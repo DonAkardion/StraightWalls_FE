@@ -183,7 +183,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
                 onClick={(e) => e.stopPropagation()}
                 className="block w-full h-full cursor-pointer"
               >
-                {p.project.name}
+                №{p.project.id} {p.project.name}
               </Link>
             </div>
           ))}
@@ -204,7 +204,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
                 onClick={(e) => e.stopPropagation()}
                 className="block w-full h-full cursor-pointer"
               >
-                {p.project.name}
+                №{p.project.id} {p.project.name}
               </Link>
             </div>
           ))}
@@ -342,7 +342,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
                       onClick={(e) => e.stopPropagation()}
                       className="block w-full h-full cursor-pointer"
                     >
-                      {p.project.name}
+                      №{p.project.id} {p.project.name}
                     </Link>
                   </span>
                   <span className="w-1/4 truncate">{current}</span>
