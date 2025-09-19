@@ -97,11 +97,17 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
                 label: "Елементи",
                 value: object.roomStats.regularRoomsElementsMeters,
               },
-              { label: "Площа Санвузлів", value: object.roomStats.roomCount },
-              { label: "Відкоси Санвузлів", value: object.roomStats.totalArea },
+              {
+                label: "Площа Санвузлів",
+                value: object.roomStats.bathroomArea,
+              },
+              {
+                label: "Відкоси Санвузлів",
+                value: object.roomStats.bathroomSlopesMeters,
+              },
               {
                 label: "Елементи Санвузлів",
-                value: object.roomStats.totalSlopesMeters,
+                value: object.roomStats.bathroomElementsMeters,
               },
             ].map((stat, idx) => (
               <div

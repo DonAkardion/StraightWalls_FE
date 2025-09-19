@@ -179,8 +179,8 @@ export const AllProjectsList = ({
           {
             key: "name",
             label: "Назва",
-            render: (project) => `${project.name} №${project.id}`,
-            tooltip: (project) => `Проєкт: ${project.name} №${project.id}`,
+            render: (project) => `№${project.id} ${project.name}`,
+            tooltip: (project) => `№${project.id} ${project.name}`,
           },
           {
             key: "clientId",
