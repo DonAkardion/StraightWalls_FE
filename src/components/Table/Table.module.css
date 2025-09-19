@@ -455,7 +455,17 @@
   :global(.projectAddMaterialsTableWrap) .indentCellLast {
     display: table-cell;
   }
-  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(9) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(10) {
     display: table-cell;
     background: none;
     width: auto;
@@ -465,30 +475,20 @@
     background: none;
     width: auto;
   }
-  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
-    display: table-cell;
-    background: none;
-    width: auto;
-  }
-  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(13) {
-    display: table-cell;
-    background: none;
-    width: auto;
-  }
 
-  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(6) {
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(8) {
     display: table-cell;
     background: none;
   }
   :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(9) {
-    display: table-cell;
-    background: none;
-  }
-  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(10) {
-    display: table-cell;
-    background: none;
-  }
-  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(11) {
     display: table-cell;
     background: none;
   }

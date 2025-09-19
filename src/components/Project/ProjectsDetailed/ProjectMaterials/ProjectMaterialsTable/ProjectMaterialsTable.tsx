@@ -234,17 +234,43 @@ export const ProjectMaterialsTable = ({
           getId={(item) => item.id}
           onEdit={onEdit}
           fields={[
-            { label: "Од. вимір.", value: (item) => item.unit },
             {
-              label: "Закупка, грн",
+              label: "Ціна, грн",
               value: (item) => num(item.base_purchase_price),
             },
             {
-              label: "Продаж, грн",
-              value: (item) => num(item.base_selling_price),
+              label: "Кількість",
+              value: (item) =>
+                getValue(item.id, "quantity", getSelectionQty(item.id)),
             },
-            { label: "Доставка", value: (item) => num(item.base_delivery) },
-
+            { label: "Од. вимір.", value: (item) => item.unit },
+            {
+              label: "Залишок з поперед.",
+              value: (item) =>
+                getValue(
+                  item.id,
+                  "previous_remaining",
+                  Number(item.previous_remaining) ?? 0
+                ),
+            },
+            {
+              label: "Доставка",
+              value: (item) =>
+                getValue(
+                  item.id,
+                  "additional_delivery",
+                  Number(item.additional_delivery) ?? 0
+                ),
+            },
+            {
+              label: "Залишок",
+              value: (item) =>
+                getValue(
+                  item.id,
+                  "current_remaining",
+                  Number(item.current_remaining) ?? 0
+                ),
+            },
             {
               label: "Доставлено",
               value: (item) => {
@@ -261,18 +287,22 @@ export const ProjectMaterialsTable = ({
                     )
                   ) || 0;
 
-                return item.delivery_quantity !== null
+                return typeof item.delivery_quantity === "number" &&
+                  item.delivery_quantity > 0
                   ? item.delivery_quantity
                   : Math.max(0, qty - prev);
               },
             },
             {
               label: "Сума, грн",
-              value: (item) =>
-                (
-                  num(item.base_selling_price + item.baseDelivery) *
-                    getValue(m.id, "quantity", getSelectionQty(m.id)) || 0
-                ).toFixed(2),
+              value: (item) => {
+                const qty = getValue(
+                  item.id,
+                  "quantity",
+                  getSelectionQty(item.id)
+                );
+                return (num(item.base_purchase_price) * qty).toFixed(2);
+              },
             },
           ]}
         />
