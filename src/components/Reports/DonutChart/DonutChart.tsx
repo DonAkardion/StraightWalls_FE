@@ -60,7 +60,6 @@ export const DoughnutChart = () => {
     fetchDonutData();
   }, [token]);
 
-  console.log(donutChartData);
   const tasksStatus: Record<ProjectStatus, number> = {} as Record<
     ProjectStatus,
     number
