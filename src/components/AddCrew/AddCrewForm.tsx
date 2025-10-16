@@ -7,8 +7,9 @@ import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
 import { useCrew } from "@/features/addWorker/addWorkerContext";
 import { handleAddCrew } from "@/api/crews";
-import { handleAddWorker } from "@/api/workers";
+import { handleAddWorker, handleUpdateWorker } from "@/api/workers";
 import AddWorkerForm from "./AddWorkerForm/AddWorkerForm";
+import ExistingWorkersSelect from "./ExistingWorkersSelect/ExistingWorkersSelect";
 
 export default function AddCrewForm() {
   const { addCrew } = useCrew();
@@ -19,12 +20,15 @@ export default function AddCrewForm() {
   const [loading, setLoading] = useState(false);
   const [crewWorkers, setCrewWorkers] = useState<Worker[]>([]);
   const [inputs, setInputs] = useState<Worker>({
-      id: 0,
-      full_name: "",
-      position: "",
-      phone_number: "",
-      team_id: null,
+    id: 0,
+    full_name: "",
+    position: "",
+    phone_number: "",
+    team_id: null,
   });
+  const [selectedExistingWorkers, setSelectedExistingWorkers] = useState<
+    Worker[]
+  >([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +47,11 @@ export default function AddCrewForm() {
       );
 
       addCrew(newCrew);
+
       if (crewWorkers.length > 0) {
         for (const worker of crewWorkers) {
-        await handleAddWorker({ ...worker, team_id: newCrew.id }, token);
-      }
+          await handleAddWorker({ ...worker, team_id: newCrew.id }, token);
+        }
       } else {
         if (
           inputs.full_name.trim() &&
@@ -54,6 +59,12 @@ export default function AddCrewForm() {
           inputs.phone_number.trim()
         ) {
           await handleAddWorker({ ...inputs, team_id: newCrew.id }, token);
+        }
+      }
+
+      if (selectedExistingWorkers.length > 0) {
+        for (const worker of selectedExistingWorkers) {
+          await handleUpdateWorker(worker.id, token, { team_id: newCrew.id });
         }
       }
       router.back();
@@ -90,13 +101,17 @@ export default function AddCrewForm() {
           setCrewWorkers={setCrewWorkers}
         />
 
+        <ExistingWorkersSelect
+          selectedWorkers={selectedExistingWorkers}
+          setSelectedWorkers={setSelectedExistingWorkers}
+        />
         <div className="mt-10">
           <button
             type="submit"
             disabled={loading}
             className={`${styles.addCrewButton} cursor-pointer w-full h-12 md:h-[54px] rounded-md text-[18px] text-black transition`}
           >
-            {loading ? "Збереження..." : "Додати"}
+            {loading ? "Збереження..." : "Створити"}
           </button>
         </div>
       </form>

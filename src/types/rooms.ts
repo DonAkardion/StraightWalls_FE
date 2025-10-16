@@ -30,7 +30,6 @@ export enum RoomType {
   CORRIDOR = "corridor", // Коридор
   BATHROOM = "bathroom", // Санвузол
   BATHROOM2 = "bathroom2", // Санвузол2
-  CEILING = "ceiling", // Стелі
 }
 
 export interface RoomStats {

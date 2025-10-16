@@ -52,11 +52,13 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
   };
 
   const handleAdd = async () => {
-    const isAllFilled = Object.values(formData).every(
-      (val) => val !== null && val !== undefined && String(val).trim() !== ""
+    const requiredFields = ["full_name", "position", "phone_number"];
+    const isAllFilled = requiredFields.every(
+      (key) => String(formData[key as keyof typeof formData]).trim() !== ""
     );
+
     if (!isAllFilled) {
-      alert("Будь ласка, заповніть усі поля");
+      alert("Будь ласка, заповніть усі обов’язкові поля");
       return;
     }
 

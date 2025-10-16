@@ -79,7 +79,7 @@ export function SettingsTable({
   }, [totals, onTotalsChange]);
 
   const gridStyle: React.CSSProperties = {
-    gridTemplateColumns: `repeat(${columns.length}, minmax(94px,86px))`,
+    gridTemplateColumns: `repeat(${columns.length}, minmax(105px,96px))`,
   };
 
   return (
