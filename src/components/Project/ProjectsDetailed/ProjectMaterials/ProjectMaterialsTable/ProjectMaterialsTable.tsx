@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./ProjectMaterialsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
-import { Material, TableMaterial } from "@/types/material";
+import { TableMaterial } from "@/types/material";
 import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 import { NumericInputWithControls } from "./NumericInputWithControls";
 
@@ -22,7 +22,6 @@ interface Props {
   editable?: boolean;
   confirmed?: boolean;
   onEdit?: (updated: TableMaterial) => void;
-  // onDelete?: (id: number) => void;
   onQuantityChange?: (
     materialId: number,
     field: keyof MaterialWithQuantity,
@@ -32,6 +31,8 @@ interface Props {
   enableTooltips?: boolean;
 }
 
+const TOTAL_ROW_ID = -1;
+
 export const ProjectMaterialsTable = ({
   materials,
   selection,
@@ -39,12 +40,16 @@ export const ProjectMaterialsTable = ({
   confirmed = false,
   enableTooltips = true,
   onEdit,
-  // onDelete,
   onQuantityChange,
   className,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
+
+  const safeNum = (v: unknown) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
 
   const getSelectionQty = (materialId: number): number =>
     selection.find((s) => s.materialId === materialId)?.quantity ?? 0;
@@ -55,16 +60,14 @@ export const ProjectMaterialsTable = ({
     fallback: number
   ): number => {
     const raw = inputValues[`${materialId}-${field}`];
-    return raw !== undefined ? Number(raw) || 0 : fallback;
+    return raw !== undefined ? safeNum(raw) : fallback;
   };
 
   const getInputValue = (
     materialId: number,
     field: keyof MaterialWithQuantity,
     fallback: number
-  ): string => {
-    return inputValues[`${materialId}-${field}`] ?? fallback.toString();
-  };
+  ): string => inputValues[`${materialId}-${field}`] ?? fallback.toString();
 
   const handleInputChange = (
     materialId: number,
@@ -75,48 +78,85 @@ export const ProjectMaterialsTable = ({
       ...prev,
       [`${materialId}-${field}`]: val,
     }));
-
-    if (onQuantityChange) {
-      if (val === "") {
-        onQuantityChange(materialId, field, 0);
-      } else {
-        const num = Math.max(0, Number(val));
-        if (!isNaN(num)) {
-          onQuantityChange(materialId, field, num);
-        }
-      }
-    }
+    const num = val === "" ? 0 : Math.max(0, safeNum(val));
+    onQuantityChange?.(materialId, field, num);
   };
 
-  const num = (v: number | string | undefined) =>
-    Number(v == null ? 0 : v) || 0;
+  const totals = useMemo(() => {
+    return materials.reduce(
+      (acc, m) => {
+        const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+        const prev = getValue(
+          m.id,
+          "previous_remaining",
+          Number(m.previous_remaining) ?? 0
+        );
+        const delivered =
+          typeof m.delivery_quantity === "number" && m.delivery_quantity > 0
+            ? m.delivery_quantity
+            : Math.max(0, qty - prev);
+
+        acc.quantity += qty;
+        acc.delivered += delivered;
+        acc.sum += safeNum(m.base_purchase_price) * qty;
+        return acc;
+      },
+      { quantity: 0, delivered: 0, sum: 0 }
+    );
+  }, [materials, selection, inputValues]);
+
+  const totalRow = useMemo(
+    () =>
+      ({
+        id: TOTAL_ROW_ID,
+        name: "Разом",
+        base_purchase_price: "",
+        unit: "",
+        previous_remaining: 0,
+        additional_delivery: 0,
+        current_remaining: 0,
+        delivery_quantity: totals.delivered,
+        quantity: totals.quantity,
+        sum: totals.sum,
+      } as unknown as TableMaterial),
+    [totals]
+  );
+
+  const dataWithTotal = useMemo(
+    () => [...materials, totalRow],
+    [materials, totalRow]
+  );
+
+  const isTotalRow = (m: TableMaterial) => m.id === TOTAL_ROW_ID;
+  const format2 = (n: number) => safeNum(n).toFixed(2);
 
   return (
     <Table<TableMaterial>
-      data={materials}
+      data={dataWithTotal}
       className={className}
       showIndex
       expandedId={expandedId}
       enableTooltips={enableTooltips}
-      onEdit={onEdit ? (item) => onEdit(item) : undefined}
-      // onDelete={(item) => onDelete(item.id)}
+      getRowClassName={(m) => (isTotalRow(m) ? styles.totalRow : "")}
+      onEdit={onEdit ? (item) => !isTotalRow(item) && onEdit(item) : undefined}
       onInspect={(item) =>
+        !isTotalRow(item) &&
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
       columns={[
         {
           key: "name",
           label: "Найменування матеріалу",
-          tooltip: (material) => `Назва: ${material.name}`,
+          render: (m) => (isTotalRow(m) ? <strong>Разом</strong> : m.name),
         },
-
         { key: "base_purchase_price", label: "Ціна, грн" },
-        // { key: "base_selling_price", label: "Продаж, грн" },
         {
           key: "quantity",
           label: "Кількість",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              <strong>{totals.quantity}</strong>
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="quantity"
@@ -128,7 +168,7 @@ export const ProjectMaterialsTable = ({
                 }
               />
             ) : (
-              <span className={confirmed ? "text-green-600 " : ""}>
+              <span className={confirmed ? "text-green-600" : ""}>
                 {getValue(m.id, "quantity", getSelectionQty(m.id))}
               </span>
             ),
@@ -136,18 +176,23 @@ export const ProjectMaterialsTable = ({
         {
           key: "unit",
           label: "Од. вимір.",
-          tooltip: (material) => `Од. вимір.: ${material.unit}`,
+          render: (m) => (isTotalRow(m) ? "" : m.unit),
         },
-        // { key: "base_delivery", label: "Доставка" },
         {
           key: "previous_remaining",
           label: "Залишок з поперед.",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              ""
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="previous_remaining"
-                value={getInputValue(m.id, "previous_remaining", 0)}
+                value={getInputValue(
+                  m.id,
+                  "previous_remaining",
+                  Number(m.previous_remaining) ?? 0
+                )}
                 fallback={Number(m.previous_remaining) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
@@ -162,12 +207,14 @@ export const ProjectMaterialsTable = ({
           key: "additional_delivery",
           label: "Доставка",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              ""
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="additional_delivery"
                 value={getInputValue(m.id, "additional_delivery", 0)}
-                fallback={0}
+                fallback={Number(m.additional_delivery) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
                   onQuantityChange?.(id, field, val)
@@ -181,12 +228,14 @@ export const ProjectMaterialsTable = ({
           key: "current_remaining",
           label: "Залишок",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              ""
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="current_remaining"
                 value={getInputValue(m.id, "current_remaining", 0)}
-                fallback={0}
+                fallback={Number(m.current_remaining) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
                   onQuantityChange?.(id, field, val)
@@ -199,114 +248,96 @@ export const ProjectMaterialsTable = ({
         {
           key: "delivery_quantity",
           label: "Доставлено",
-          render: (m) => {
-            const qty =
-              Number(getValue(m.id, "quantity", getSelectionQty(m.id))) || 0;
-            const prev =
-              Number(
-                getValue(
+          render: (m) =>
+            isTotalRow(m) ? (
+              <strong>{totals.delivered}</strong>
+            ) : (
+              (() => {
+                const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+                const prev = getValue(
                   m.id,
                   "previous_remaining",
                   Number(m.previous_remaining) ?? 0
-                )
-              ) || 0;
-
-            const delivered =
-              typeof m.delivery_quantity === "number" && m.delivery_quantity > 0
-                ? m.delivery_quantity
-                : Math.max(0, qty - prev);
-
-            return <span>{delivered}</span>;
-          },
+                );
+                const delivered =
+                  typeof m.delivery_quantity === "number" &&
+                  m.delivery_quantity > 0
+                    ? m.delivery_quantity
+                    : Math.max(0, qty - prev);
+                return <span>{delivered}</span>;
+              })()
+            ),
         },
         {
           key: "sum",
           label: "Сума, грн",
-          render: (m) => {
-            const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
-            return (Number(m.base_purchase_price) * qty).toFixed(2);
-          },
+          render: (m) =>
+            isTotalRow(m) ? (
+              <strong>{format2(totals.sum)}</strong>
+            ) : (
+              format2(
+                safeNum(m.base_purchase_price) *
+                  getValue(m.id, "quantity", getSelectionQty(m.id))
+              )
+            ),
         },
       ]}
-      renderInspection={(m) => (
-        <Inspect<TableMaterial>
-          item={m}
-          getId={(item) => item.id}
-          onEdit={onEdit}
-          fields={[
-            {
-              label: "Ціна, грн",
-              value: (item) => num(item.base_purchase_price),
-            },
-            {
-              label: "Кількість",
-              value: (item) =>
-                getValue(item.id, "quantity", getSelectionQty(item.id)),
-            },
-            { label: "Од. вимір.", value: (item) => item.unit },
-            {
-              label: "Залишок з поперед.",
-              value: (item) =>
-                getValue(
-                  item.id,
-                  "previous_remaining",
-                  Number(item.previous_remaining) ?? 0
-                ),
-            },
-            {
-              label: "Доставка",
-              value: (item) =>
-                getValue(
-                  item.id,
-                  "additional_delivery",
-                  Number(item.additional_delivery) ?? 0
-                ),
-            },
-            {
-              label: "Залишок",
-              value: (item) =>
-                getValue(
-                  item.id,
-                  "current_remaining",
-                  Number(item.current_remaining) ?? 0
-                ),
-            },
-            {
-              label: "Доставлено",
-              value: (item) => {
-                const qty =
-                  Number(
-                    getValue(item.id, "quantity", getSelectionQty(item.id))
-                  ) || 0;
-                const prev =
-                  Number(
-                    getValue(
-                      item.id,
-                      "previous_remaining",
-                      Number(item.previous_remaining) ?? 0
-                    )
-                  ) || 0;
-
-                return typeof item.delivery_quantity === "number" &&
-                  item.delivery_quantity > 0
-                  ? item.delivery_quantity
-                  : Math.max(0, qty - prev);
+      renderInspection={(m) =>
+        isTotalRow(m) ? null : (
+          <Inspect<TableMaterial>
+            item={m}
+            getId={(item) => item.id}
+            onEdit={onEdit}
+            fields={[
+              {
+                label: "Ціна, грн",
+                value: (item) => item.base_purchase_price,
               },
-            },
-            {
-              label: "Сума, грн",
-              value: (item) => {
-                const qty = getValue(
-                  item.id,
-                  "quantity",
-                  getSelectionQty(item.id)
-                );
-                return (num(item.base_purchase_price) * qty).toFixed(2);
+              {
+                label: "Кількість",
+                value: (item) =>
+                  getValue(item.id, "quantity", getSelectionQty(item.id)),
               },
-            },
-          ]}
-        />
-      )}
+              { label: "Од. вимір.", value: (item) => item.unit },
+              {
+                label: "Залишок з поперед.",
+                value: (item) => item.previous_remaining,
+              },
+              { label: "Доставка", value: (item) => item.additional_delivery },
+              { label: "Залишок", value: (item) => item.current_remaining },
+              {
+                label: "Доставлено",
+                value: (item) => {
+                  const qty =
+                    Number(
+                      getValue(item.id, "quantity", getSelectionQty(item.id))
+                    ) || 0;
+                  const prev =
+                    Number(
+                      getValue(
+                        item.id,
+                        "previous_remaining",
+                        Number(item.previous_remaining) ?? 0
+                      )
+                    ) || 0;
+                  return typeof item.delivery_quantity === "number" &&
+                    item.delivery_quantity > 0
+                    ? item.delivery_quantity
+                    : Math.max(0, qty - prev);
+                },
+              },
+              {
+                label: "Сума, грн",
+                value: (item) =>
+                  format2(
+                    safeNum(item.base_purchase_price) *
+                      getValue(item.id, "quantity", getSelectionQty(item.id))
+                  ),
+              },
+            ]}
+          />
+        )
+      }
     />
   );
 };

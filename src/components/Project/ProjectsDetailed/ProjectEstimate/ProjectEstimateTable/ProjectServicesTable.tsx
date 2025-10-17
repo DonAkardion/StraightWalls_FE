@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import styles from "./ProjectServicesTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { Service } from "@/types/service";
@@ -23,6 +23,8 @@ interface Props {
   enableTooltips?: boolean;
 }
 
+const TOTAL_ROW_ID = -1;
+
 export const ProjectServicesTable = ({
   services,
   selection,
@@ -36,64 +38,107 @@ export const ProjectServicesTable = ({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [inputValues, setInputValues] = useState<Record<number, string>>({});
 
-  const getQuantity = (serviceId: number): number => {
-    const selectionVal =
-      selection.find((sel) => sel.serviceId === serviceId)?.quantity ?? 0;
+  const safeNum = (v: unknown) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
 
+  const getQuantity = (serviceId: number): number => {
+    const selQ =
+      selection.find((s) => s.serviceId === serviceId)?.quantity ?? 0;
     const raw = inputValues[serviceId];
-    return raw !== undefined ? Number(raw) || 0 : selectionVal;
+    return raw !== undefined ? safeNum(raw) : safeNum(selQ);
   };
 
   const getInputValue = (serviceId: number): string => {
-    const selectionVal =
-      selection.find((sel) => sel.serviceId === serviceId)?.quantity ?? 0;
-
-    return inputValues[serviceId] ?? selectionVal.toString();
+    const selQ =
+      selection.find((s) => s.serviceId === serviceId)?.quantity ?? 0;
+    return inputValues[serviceId] ?? String(selQ);
   };
 
   const handleChange = (serviceId: number, value: number) => {
-    setInputValues((prev) => ({ ...prev, [serviceId]: value.toString() }));
-    if (onQuantityChange) onQuantityChange(serviceId, value);
+    setInputValues((prev) => ({
+      ...prev,
+      [serviceId]: String(Math.max(0, value)),
+    }));
+    onQuantityChange?.(serviceId, Math.max(0, value));
   };
 
   const handleInputChange = (serviceId: number, val: string) => {
     setInputValues((prev) => ({ ...prev, [serviceId]: val }));
-
-    if (onQuantityChange) {
-      if (val === "") {
-        onQuantityChange(serviceId, 0);
-      } else {
-        const num = Math.max(0, Number(val));
-        if (!isNaN(num)) {
-          onQuantityChange(serviceId, num);
-        }
-      }
+    if (val === "") {
+      onQuantityChange?.(serviceId, 0);
+      return;
     }
+    const num = safeNum(val);
+    if (num >= 0) onQuantityChange?.(serviceId, num);
   };
+
+  const totals = useMemo(() => {
+    return services.reduce(
+      (acc, s) => {
+        const q = getQuantity(s.id);
+        const price = safeNum(s.price);
+        const salary = safeNum((s as any).salary);
+        acc.quantity += q;
+        acc.price += price;
+        acc.salary += salary;
+        acc.sum += price * q;
+        return acc;
+      },
+      { quantity: 0, price: 0, salary: 0, sum: 0 }
+    );
+  }, [services, selection, inputValues]);
+
+  const totalRowPlaceholder = useMemo(
+    () =>
+      ({
+        id: TOTAL_ROW_ID,
+        name: "Разом",
+        unit_of_measurement: "",
+        price: totals.price,
+        salary: totals.salary,
+      } as unknown as Service),
+    [totals.price, totals.salary]
+  );
+
+  const extendedData = useMemo(
+    () => [...services, totalRowPlaceholder],
+    [services, totalRowPlaceholder]
+  );
+
+  const format2 = (n: number) => safeNum(n).toFixed(2);
+
+  const isTotalRow = (item: Service) => item.id === TOTAL_ROW_ID;
 
   return (
     <Table<Service>
-      data={services}
+      data={extendedData}
       className={className}
       showIndex
       expandedId={expandedId}
       enableTooltips={enableTooltips}
-      onInspect={(item) =>
-        setExpandedId((prev) => (prev === item.id ? null : item.id))
+      onInspect={(item) => {
+        if (isTotalRow(item)) return;
+        setExpandedId((prev) => (prev === item.id ? null : item.id));
+      }}
+      onEdit={
+        onEdit ? (item) => !isTotalRow(item) && onEdit(item as any) : undefined
       }
-      onEdit={onEdit ? (item) => onEdit(item) : undefined}
+      getRowClassName={(item) => (isTotalRow(item) ? styles.totalRow : "")}
       columns={[
         {
           key: "name",
           label: "Найменування послуги",
-          tooltip: (service) => `Назва: ${service.name}`,
+          render: (s) => (isTotalRow(s) ? <strong>Разом</strong> : s.name),
         },
-
         {
           key: "quantity",
           label: "Кількість",
           render: (s) =>
-            editable ? (
+            isTotalRow(s) ? (
+              <strong>{totals.quantity}</strong>
+            ) : editable ? (
               <div
                 className={`${styles.editContainer} h-full flex justify-center items-center gap-1`}
                 onClick={(e) => e.stopPropagation()}
@@ -101,13 +146,10 @@ export const ProjectServicesTable = ({
                 <button
                   type="button"
                   className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center justify-center bg-white cursor-pointer"
-                  onClick={() =>
-                    handleChange(s.id, Math.max(0, getQuantity(s.id) - 1))
-                  }
+                  onClick={() => handleChange(s.id, getQuantity(s.id) - 1)}
                 >
                   −
                 </button>
-
                 <input
                   type="number"
                   min={0}
@@ -116,7 +158,6 @@ export const ProjectServicesTable = ({
                   onChange={(e) => handleInputChange(s.id, e.target.value)}
                   className={`${styles.editInput} md:w-12 w-[100px] text-center rounded px-1 py-0`}
                 />
-
                 <button
                   type="button"
                   className="w-4 h-4 pb-[3px] rounded md:flex hidden items-center justify-center bg-white cursor-pointer"
@@ -134,46 +175,62 @@ export const ProjectServicesTable = ({
         {
           key: "unit_of_measurement",
           label: "Од. вимір.",
-          tooltip: (service) => `Од. вимір.: ${service.unit_of_measurement}`,
+          render: (s) => (isTotalRow(s) ? "" : s.unit_of_measurement),
         },
-        { key: "price", label: "Вартість, грн" },
+        {
+          key: "price",
+          label: "Вартість, грн",
+          render: (s) =>
+            isTotalRow(s) ? (
+              <strong>{format2(totals.price)}</strong>
+            ) : (
+              format2(safeNum(s.price))
+            ),
+        },
         {
           key: "salary",
           label: "Зарплата",
-          tooltip: (service) =>
-            `Опис: ${(service.salary ?? service.salary, "0")}`,
+          render: (s) =>
+            isTotalRow(s) ? (
+              <strong>{format2(totals.salary)}</strong>
+            ) : (
+              format2(safeNum((s as any).salary))
+            ),
         },
         {
           key: "sum",
           label: "Сума, грн",
-          render: (s) => (s.price * getQuantity(s.id)).toFixed(2),
+          render: (s) =>
+            isTotalRow(s) ? (
+              <strong>{format2(totals.sum)}</strong>
+            ) : (
+              format2(safeNum(s.price) * getQuantity(s.id))
+            ),
         },
       ]}
-      renderInspection={(s) => (
-        <Inspect<Service>
-          item={s}
-          getId={(item) => item.id}
-          onEdit={onEdit}
-          fields={[
-            // {
-            //   label: "Кількість",
-            //   value: (s) => s.quantity,
-            // },
-            {
-              label: "Од. вимір.",
-              value: (item) => item.unit_of_measurement,
-            },
-            {
-              label: "Вартість, грн",
-              value: (item) => item.price,
-            },
-            {
-              label: "Сума, грн",
-              value: (item) => (item.price * getQuantity(s.id)).toFixed(2),
-            },
-          ]}
-        />
-      )}
+      renderInspection={(s) =>
+        isTotalRow(s) ? null : (
+          <Inspect<Service>
+            item={s}
+            getId={(item) => item.id}
+            onEdit={onEdit}
+            fields={[
+              {
+                label: "Од. вимір.",
+                value: (item) => item.unit_of_measurement,
+              },
+              {
+                label: "Вартість, грн",
+                value: (item) => format2(safeNum(item.price)),
+              },
+              {
+                label: "Сума, грн",
+                value: () => format2(safeNum(s.price) * getQuantity(s.id)),
+              },
+            ]}
+          />
+        )
+      }
     />
   );
 };
