@@ -77,11 +77,16 @@ export const ProjectEstimateComplete = ({
       // prepare payload for API
       const payload: UpdateWorkRequest = {
         quantity: Number(form.quantity) || 0,
+        cost: Number(form.price) || 0,
       };
 
       await updateWork(project.id, form.id, payload, token);
 
-      setWorksLocal((prev) => prev.map((w) => (w.id === form.id ? form : w)));
+      setWorksLocal((prev) =>
+        prev.map((w) =>
+          w.id === form.id ? { ...form, price: Number(form.price) } : w
+        )
+      );
       setCurrentForm(null);
     } catch (err) {
       console.error("Помилка при збереженні Послуги:", err);

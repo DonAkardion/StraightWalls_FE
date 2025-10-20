@@ -22,7 +22,7 @@ export function mapWorks(services: ServiceWithQuantity[]) {
     .map((s) => ({
       name: s.name,
       description: s.description,
-      cost: String(s.price),
+      cost: String(s.custom_price ?? s.price),
       quantity: String(s.quantity),
       unit: s.unit_of_measurement,
       salary: s.salary,
@@ -96,7 +96,10 @@ export function AddProjectConfirm() {
   };
 
   const totalWorksCost = useMemo(() => {
-    return services.reduce((sum, s) => sum + s.price * s.quantity, 0);
+    return services.reduce(
+      (sum, s) => sum + (s.custom_price ?? s.price) * s.quantity,
+      0
+    );
   }, [services]);
 
   const totalMaterialCost = useMemo(() => {

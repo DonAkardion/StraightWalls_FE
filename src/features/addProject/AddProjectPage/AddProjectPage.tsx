@@ -73,6 +73,31 @@ export function AddProjectPage() {
 
   const [isNameTouched, setIsNameTouched] = useState(false);
 
+  const [totalArea, setTotalArea] = useState(0);
+
+  function materialsChanged(
+    prevArr: MaterialWithQuantity[],
+    nextArr: MaterialWithQuantity[]
+  ) {
+    if (prevArr.length !== nextArr.length) return true;
+    for (let i = 0; i < prevArr.length; i++) {
+      const p = prevArr[i];
+      const n = nextArr[i];
+      if (
+        (p.quantity ?? 0) !== (n.quantity ?? 0) ||
+        (Number(p.base_purchase_price) || 0) !==
+          (Number(n.base_purchase_price) || 0) ||
+        (p.previous_remaining ?? 0) !== (n.previous_remaining ?? 0) ||
+        (p.additional_delivery ?? 0) !== (n.additional_delivery ?? 0) ||
+        (p.current_remaining ?? 0) !== (n.current_remaining ?? 0) ||
+        (p.delivery_quantity ?? 0) !== (n.delivery_quantity ?? 0)
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   useEffect(() => {
     if (!token) return;
 
@@ -140,12 +165,16 @@ export function AddProjectPage() {
   }, [clientId, objectId, clients, objects, setName, isNameTouched]);
 
   const handleServiceSelectionChange = (
-    updated: { serviceId: number; quantity: number }[]
+    updated: { serviceId: number; quantity: number; price?: number }[]
   ) => {
     const newServices: ServiceWithQuantity[] = services.map((s) => {
       const found = updated.find((u) => u.serviceId === s.id);
       if (!found) return s;
-      return { ...s, quantity: found.quantity };
+      return {
+        ...s,
+        quantity: found.quantity,
+        custom_price: found.price ?? s.price,
+      };
     });
 
     setServices(newServices);
@@ -159,24 +188,52 @@ export function AddProjectPage() {
     }
   }, [loading]);
 
-  const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
-    const newMaterials: MaterialWithQuantity[] = materials.map((m) => {
-      const found = updated.find((u) => u.materialId === m.id);
-      if (!found) return m;
+  useEffect(() => {
+    if (totalArea <= 0 || materials.length === 0) return;
 
+    const next: MaterialWithQuantity[] = materials.map((m) => {
+      const qty = totalArea;
+      const prevRem = m.previous_remaining ?? 0;
       return {
         ...m,
-        quantity: found.quantity,
-        previous_remaining: found.previous_remaining ?? 0,
-        additional_delivery: found.additional_delivery ?? 0,
-        current_remaining: found.current_remaining ?? 0,
-        delivery_quantity:
-          found.delivery_quantity ??
-          Math.max(0, (found.quantity ?? 0) - (found.previous_remaining ?? 0)),
+        quantity: qty,
+        previous_remaining: prevRem,
+        additional_delivery: m.additional_delivery ?? 0,
+        current_remaining: m.current_remaining ?? 0,
+        delivery_quantity: m.delivery_quantity ?? Math.max(0, qty - prevRem),
       };
     });
 
-    setMaterials(newMaterials);
+    if (materialsChanged(materials, next)) {
+      setMaterials(next);
+    }
+  }, [totalArea]);
+
+  const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
+    const next: MaterialWithQuantity[] = materials.map((m) => {
+      const found = updated.find((u) => u.materialId === m.id);
+      if (!found) return m;
+
+      const qty = found.quantity ?? m.quantity ?? 0;
+      const prevRem = found.previous_remaining ?? m.previous_remaining ?? 0;
+      const price = found.base_purchase_price ?? m.base_purchase_price ?? 0;
+
+      return {
+        ...m,
+        quantity: qty,
+        base_purchase_price: price,
+        previous_remaining: prevRem,
+        additional_delivery:
+          found.additional_delivery ?? m.additional_delivery ?? 0,
+        current_remaining: found.current_remaining ?? m.current_remaining ?? 0,
+        delivery_quantity:
+          found.delivery_quantity ?? Math.max(0, qty - prevRem),
+      };
+    });
+
+    if (materialsChanged(materials, next)) {
+      setMaterials(next);
+    }
   };
 
   const handleSubmit = async () => {
@@ -229,14 +286,20 @@ export function AddProjectPage() {
   const isFormValid = errors.length === 0;
 
   const totalWorksCost = useMemo(() => {
-    return services.reduce((sum, s) => sum + s.price * s.quantity, 0);
+    return services.reduce(
+      (sum, s) => sum + (s.custom_price ?? s.price) * s.quantity,
+      0
+    );
   }, [services]);
 
   const totalMaterialCost = useMemo(() => {
-    return materials.reduce(
-      (sum, m) => sum + m.base_purchase_price * m.quantity,
-      0
-    );
+    if (!materials.length) return 0;
+
+    return materials.reduce((sum, m) => {
+      const qty = Number(m.quantity ?? 0);
+      const price = Number(m.base_purchase_price ?? 0);
+      return sum + price * qty;
+    }, 0);
   }, [materials]);
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
@@ -311,7 +374,7 @@ export function AddProjectPage() {
       />
       {clientId && objectId && (
         <div className="mb-[30px]">
-          <SelectedObjectInfo objectId={objectId} />
+          <SelectedObjectInfo objectId={objectId} onAreaChange={setTotalArea} />
         </div>
       )}
       {/* Кошторис по послугах */}
@@ -341,6 +404,7 @@ export function AddProjectPage() {
           onSelectionChange={handleMaterialsSelectionChange}
           tableClassName="projectAddMaterialsTableWrap"
           onConfirm={() => scrollToRef(materialsRef)}
+          area={totalArea}
         />
         {materials.length > 0 && (
           <span

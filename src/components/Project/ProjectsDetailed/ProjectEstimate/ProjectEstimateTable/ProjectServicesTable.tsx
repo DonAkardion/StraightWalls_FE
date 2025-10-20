@@ -18,6 +18,7 @@ interface Props {
   editable?: boolean;
   confirmed?: boolean;
   onQuantityChange?: (serviceId: number, quantity: number) => void;
+  onPriceChange?: (serviceId: number, newPrice: number) => void;
   onEdit?: (updated: WorkForTable) => void;
   className?: string;
   enableTooltips?: boolean;
@@ -32,11 +33,13 @@ export const ProjectServicesTable = ({
   confirmed = false,
   enableTooltips = true,
   onQuantityChange,
+  onPriceChange,
   onEdit,
   className,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [inputValues, setInputValues] = useState<Record<number, string>>({});
+  const [priceInputs, setPriceInputs] = useState<Record<number, string>>({});
 
   const safeNum = (v: unknown) => {
     const n = Number(v);
@@ -74,11 +77,25 @@ export const ProjectServicesTable = ({
     if (num >= 0) onQuantityChange?.(serviceId, num);
   };
 
+  const getPrice = (serviceId: number, original: number): number => {
+    const raw = priceInputs[serviceId];
+    return raw !== undefined ? safeNum(raw) : safeNum(original);
+  };
+
+  const getPriceInput = (serviceId: number, original: number): string =>
+    priceInputs[serviceId] ?? String(original);
+
+  const handlePriceChange = (serviceId: number, val: string) => {
+    setPriceInputs((prev) => ({ ...prev, [serviceId]: val }));
+    const num = val === "" ? 0 : safeNum(val);
+    onPriceChange?.(serviceId, Math.max(0, num));
+  };
+
   const totals = useMemo(() => {
     return services.reduce(
       (acc, s) => {
         const q = getQuantity(s.id);
-        const price = safeNum(s.price);
+        const price = getPrice(s.id, s.price);
         const salary = safeNum((s as any).salary);
         acc.quantity += q;
         acc.price += price;
@@ -88,7 +105,7 @@ export const ProjectServicesTable = ({
       },
       { quantity: 0, price: 0, salary: 0, sum: 0 }
     );
-  }, [services, selection, inputValues]);
+  }, [services, selection, inputValues, priceInputs]);
 
   const totalRowPlaceholder = useMemo(
     () =>
@@ -183,8 +200,19 @@ export const ProjectServicesTable = ({
           render: (s) =>
             isTotalRow(s) ? (
               <strong>{format2(totals.price)}</strong>
+            ) : editable ? (
+              <input
+                type="number"
+                min={0}
+                value={getPriceInput(s.id, s.price)}
+                onClick={(e) => e.stopPropagation()}
+                onChange={(e) => handlePriceChange(s.id, e.target.value)}
+                className={`${styles.editInput} md:w-16 w-[100px] text-center rounded px-1 py-0`}
+              />
             ) : (
-              format2(safeNum(s.price))
+              <span className={confirmed ? "text-green-600 " : ""}>
+                {format2(getPrice(s.id, s.price))}
+              </span>
             ),
         },
         {
@@ -204,7 +232,7 @@ export const ProjectServicesTable = ({
             isTotalRow(s) ? (
               <strong>{format2(totals.sum)}</strong>
             ) : (
-              format2(safeNum(s.price) * getQuantity(s.id))
+              format2(getPrice(s.id, s.price) * getQuantity(s.id))
             ),
         },
       ]}
@@ -219,10 +247,10 @@ export const ProjectServicesTable = ({
                 label: "Од. вимір.",
                 value: (item) => item.unit_of_measurement,
               },
-              {
-                label: "Вартість, грн",
-                value: (item) => format2(safeNum(item.price)),
-              },
+              // {
+              //   label: "Вартість, грн",
+              //   value: (item) => format2(safeNum(item.price)),
+              // },
               {
                 label: "Сума, грн",
                 value: () => format2(safeNum(s.price) * getQuantity(s.id)),

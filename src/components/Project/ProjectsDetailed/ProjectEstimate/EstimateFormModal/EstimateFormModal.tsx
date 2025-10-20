@@ -8,11 +8,12 @@ interface Props {
   setForm: React.Dispatch<React.SetStateAction<WorkForTable | null>>;
 }
 
-type EditableField = "quantity";
+type EditableField = "quantity" | "price";
 
 export const EstimateFormModal = ({ form, setForm }: Props) => {
   const [values, setValues] = useState<Record<EditableField, string>>({
     quantity: String(form.quantity ?? 0),
+    price: String(form.price ?? 0),
   });
 
   const [errors, setErrors] = useState<Partial<Record<EditableField, string>>>(
@@ -22,6 +23,7 @@ export const EstimateFormModal = ({ form, setForm }: Props) => {
   useEffect(() => {
     setValues({
       quantity: String(form.quantity ?? 0),
+      price: String(form.price ?? 0),
     });
     setErrors({});
   }, [form]);
@@ -78,6 +80,7 @@ export const EstimateFormModal = ({ form, setForm }: Props) => {
 
   return (
     <div className="flex flex-col md:gap-3 gap-2 p-2">
+      {renderNumberInput("price", "Ціна, грн")}
       {renderNumberInput("quantity", "Кількість")}
     </div>
   );

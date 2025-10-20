@@ -180,6 +180,7 @@ export interface ProjectDetailedResponse {
 }
 
 export interface UpdateMaterialRequest {
+  purchase_price: number;
   previous_remaining: number;
   remaining_stock: number;
   current_remaining: number;
@@ -188,4 +189,5 @@ export interface UpdateMaterialRequest {
 
 export interface UpdateWorkRequest {
   quantity: number;
+  cost: number;
 }
