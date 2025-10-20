@@ -31,7 +31,6 @@ export function ClientObjectSettings({ objectId }: Props) {
     "Коридор",
     "Санвузол",
     "Санвузол2",
-    "Стелі",
   ];
 
   const ROOM_TYPE_LABELS: Record<RoomType, string> = {
@@ -44,7 +43,6 @@ export function ClientObjectSettings({ objectId }: Props) {
     [RoomType.CORRIDOR]: "Коридор",
     [RoomType.BATHROOM]: "Санвузол",
     [RoomType.BATHROOM2]: "Санвузол2",
-    [RoomType.CEILING]: "Стелі",
   };
 
   const fetchRooms = async () => {

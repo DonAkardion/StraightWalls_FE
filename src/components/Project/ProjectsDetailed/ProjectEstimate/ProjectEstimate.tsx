@@ -11,6 +11,10 @@ interface ServiceSelection {
   serviceId: number;
   quantity: number;
 }
+interface PriceSelection {
+  serviceId: number;
+  price: number;
+}
 
 interface Props {
   services: (Service | ServiceWithQuantity)[];
@@ -41,7 +45,10 @@ export const ProjectEstimate = ({
       quantity: hasQuantity(s) ? s.quantity : 0,
     }))
   );
-
+  const [priceSelection, setPriceSelection] = useState<PriceSelection[]>(() =>
+    services.map((s) => ({ serviceId: s.id, price: s.price }))
+  );
+  const [priceChanges, setPriceChanges] = useState<Record<number, number>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const pathname = usePathname();
@@ -80,15 +87,27 @@ export const ProjectEstimate = ({
     }
   };
 
+  const handlePriceChange = (serviceId: number, newPrice: number) => {
+    setPriceSelection((prev) =>
+      prev.map((p) =>
+        p.serviceId === serviceId ? { ...p, price: newPrice } : p
+      )
+    );
+  };
+
   const handleConfirm = () => {
     const next = !isConfirmed;
     setIsConfirmed(next);
-    // дублюємо фільтрацію при підтвердженні
-    if (next && onSelectionChange) {
-      onSelectionChange(selection);
-    }
-    if (next && onConfirm) {
-      onConfirm();
+
+    if (next) {
+      const combined = selection.map((sel) => {
+        const price = priceSelection.find(
+          (p) => p.serviceId === sel.serviceId
+        )?.price;
+        return { ...sel, price };
+      });
+      onSelectionChange?.(combined);
+      onConfirm?.();
     }
   };
 
@@ -110,15 +129,29 @@ export const ProjectEstimate = ({
     return hasQuantity(service) ? service.quantity : 0;
   };
 
+  const getPrice = (serviceId: number, defaultPrice: number): number => {
+    return (
+      priceSelection.find((p) => p.serviceId === serviceId)?.price ??
+      defaultPrice
+    );
+  };
+
   const totalMain = useMemo(
-    () => mainServices.reduce((sum, s) => sum + s.price * getQuantity(s), 0),
-    [mainServices, selection, editable]
+    () =>
+      mainServices.reduce(
+        (sum, s) => sum + getPrice(s.id, s.price) * getQuantity(s),
+        0
+      ),
+    [mainServices, selection, priceSelection]
   );
 
   const totalAdditional = useMemo(
     () =>
-      additionalServices.reduce((sum, s) => sum + s.price * getQuantity(s), 0),
-    [additionalServices, selection, editable]
+      additionalServices.reduce(
+        (sum, s) => sum + getPrice(s.id, s.price) * getQuantity(s),
+        0
+      ),
+    [additionalServices, selection, priceSelection]
   );
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
@@ -140,6 +173,7 @@ export const ProjectEstimate = ({
             }))}
             editable={!isConfirmed && editable}
             onQuantityChange={handleQuantityChange}
+            onPriceChange={handlePriceChange}
             className={tableClassName}
             confirmed={isConfirmed}
           />
@@ -182,6 +216,7 @@ export const ProjectEstimate = ({
             }))}
             editable={!isConfirmed && editable}
             onQuantityChange={handleQuantityChange}
+            onPriceChange={handlePriceChange}
             className={tableClassName}
             confirmed={isConfirmed}
           />

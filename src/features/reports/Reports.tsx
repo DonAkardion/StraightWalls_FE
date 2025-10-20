@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ReportsContainer } from "./ReportsContainer";
 import { DoughnutChart } from "@/components/Reports/DonutChart/DonutChart";
 import { GraphicChart } from "@/components/Reports/GraphicChart/GraphicChart";
-import { MaterialsList } from "@/components/Settings/MaterialSettings/MaterialList";
+// import { MaterialsList } from "@/components/Settings/MaterialSettings/MaterialList";
 import { Material } from "@/types/material";
 import { getProjects } from "@/api/projects";
 import { getMaterials } from "@/api/material";
@@ -47,7 +47,7 @@ export function Reports() {
   return (
     <ReportsContainer>
       <DoughnutChart />
-      <MaterialsList materials={materials} />
+      {/* <MaterialsList materials={materials} /> */}
       <GraphicChart projects={projects} />
     </ReportsContainer>
   );

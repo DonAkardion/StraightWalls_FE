@@ -78,6 +78,7 @@ export const ProjectMaterialsComplete = ({
       const diff = newQty - oldQty;
       // prepare payload for API
       const payload: UpdateMaterialRequest = {
+        purchase_price: Number(form.base_purchase_price) || 0,
         previous_remaining: Number(form.previous_remaining) || 0,
         remaining_stock: newQty,
         current_remaining: Number(form.current_remaining) || 0,

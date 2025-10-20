@@ -9,6 +9,7 @@ interface Props {
 }
 
 type EditableField =
+  | "base_purchase_price"
   | "remaining_stock"
   | "previous_remaining"
   | "additional_delivery"
@@ -16,6 +17,7 @@ type EditableField =
 
 export const ProjectMaterialForm = ({ form, setForm }: Props) => {
   const [values, setValues] = useState<Record<EditableField, string>>({
+    base_purchase_price: String(form.base_purchase_price ?? 0),
     remaining_stock: String(form.remaining_stock ?? 0),
     previous_remaining: String(form.previous_remaining ?? 0),
     additional_delivery: String(form.additional_delivery ?? 0),
@@ -28,6 +30,7 @@ export const ProjectMaterialForm = ({ form, setForm }: Props) => {
 
   useEffect(() => {
     setValues({
+      base_purchase_price: String(form.base_purchase_price ?? 0),
       remaining_stock: String(form.remaining_stock ?? 0),
       previous_remaining: String(form.previous_remaining ?? 0),
       additional_delivery: String(form.additional_delivery ?? 0),
@@ -88,6 +91,7 @@ export const ProjectMaterialForm = ({ form, setForm }: Props) => {
 
   return (
     <div className="flex flex-col md:gap-3 gap-2 p-2">
+      {renderNumberInput("base_purchase_price", "Ціна, грн")}
       {renderNumberInput("remaining_stock", "Залишок матеріалів")}
       {renderNumberInput("previous_remaining", "Залишилось з минулого об'єкту")}
       {renderNumberInput("additional_delivery", "Додаткова доставка")}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./ProjectMaterialsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
-import { Material, TableMaterial } from "@/types/material";
+import { TableMaterial } from "@/types/material";
 import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 import { NumericInputWithControls } from "./NumericInputWithControls";
 
@@ -21,8 +21,8 @@ interface Props {
   selection: MaterialSelection[];
   editable?: boolean;
   confirmed?: boolean;
+  area?: number;
   onEdit?: (updated: TableMaterial) => void;
-  // onDelete?: (id: number) => void;
   onQuantityChange?: (
     materialId: number,
     field: keyof MaterialWithQuantity,
@@ -32,19 +32,26 @@ interface Props {
   enableTooltips?: boolean;
 }
 
+const TOTAL_ROW_ID = -1;
+
 export const ProjectMaterialsTable = ({
   materials,
   selection,
   editable = false,
   confirmed = false,
+  area,
   enableTooltips = true,
   onEdit,
-  // onDelete,
   onQuantityChange,
   className,
 }: Props) => {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
+
+  const safeNum = (v: unknown) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
 
   const getSelectionQty = (materialId: number): number =>
     selection.find((s) => s.materialId === materialId)?.quantity ?? 0;
@@ -55,16 +62,14 @@ export const ProjectMaterialsTable = ({
     fallback: number
   ): number => {
     const raw = inputValues[`${materialId}-${field}`];
-    return raw !== undefined ? Number(raw) || 0 : fallback;
+    return raw !== undefined ? safeNum(raw) : fallback;
   };
 
   const getInputValue = (
     materialId: number,
     field: keyof MaterialWithQuantity,
     fallback: number
-  ): string => {
-    return inputValues[`${materialId}-${field}`] ?? fallback.toString();
-  };
+  ): string => inputValues[`${materialId}-${field}`] ?? fallback.toString();
 
   const handleInputChange = (
     materialId: number,
@@ -75,7 +80,6 @@ export const ProjectMaterialsTable = ({
       ...prev,
       [`${materialId}-${field}`]: val,
     }));
-
     if (onQuantityChange) {
       if (val === "") {
         onQuantityChange(materialId, field, 0);
@@ -99,7 +103,6 @@ export const ProjectMaterialsTable = ({
       expandedId={expandedId}
       enableTooltips={enableTooltips}
       onEdit={onEdit ? (item) => onEdit(item) : undefined}
-      // onDelete={(item) => onDelete(item.id)}
       onInspect={(item) =>
         setExpandedId((prev) => (prev === item.id ? null : item.id))
       }
@@ -109,36 +112,49 @@ export const ProjectMaterialsTable = ({
           label: "Найменування матеріалу",
           tooltip: (material) => `Назва: ${material.name}`,
         },
-
-        { key: "base_purchase_price", label: "Ціна, грн" },
-        // { key: "base_selling_price", label: "Продаж, грн" },
+        {
+          key: "base_purchase_price",
+          label: "Ціна, грн",
+          render: (m) =>
+            editable ? (
+              <input
+                type="number"
+                min={0}
+                value={getInputValue(
+                  m.id,
+                  "base_purchase_price",
+                  Number(m.base_purchase_price) ?? 0
+                )}
+                onChange={(e) =>
+                  handleInputChange(m.id, "base_purchase_price", e.target.value)
+                }
+                onClick={(e) => e.stopPropagation()}
+                className={`${styles.editInput} md:w-16 w-[100px] text-center rounded px-1 py-0`}
+              />
+            ) : (
+              <span className={confirmed ? "text-green-600" : ""}>
+                {getValue(
+                  m.id,
+                  "base_purchase_price",
+                  Number(m.base_purchase_price) ?? 0
+                )}
+              </span>
+            ),
+        },
         {
           key: "quantity",
           label: "Кількість",
-          render: (m) =>
-            editable ? (
-              <NumericInputWithControls
-                materialId={m.id}
-                field="quantity"
-                value={getInputValue(m.id, "quantity", 0)}
-                fallback={0}
-                onInputChange={handleInputChange}
-                onStepChange={(id, field, val) =>
-                  onQuantityChange?.(id, field, val)
-                }
-              />
-            ) : (
-              <span className={confirmed ? "text-green-600 " : ""}>
-                {getValue(m.id, "quantity", getSelectionQty(m.id))}
-              </span>
-            ),
+          render: (m) => (
+            <span>
+              {area ?? getValue(m.id, "quantity", getSelectionQty(m.id))}
+            </span>
+          ),
         },
         {
           key: "unit",
           label: "Од. вимір.",
           tooltip: (material) => `Од. вимір.: ${material.unit}`,
         },
-        // { key: "base_delivery", label: "Доставка" },
         {
           key: "previous_remaining",
           label: "Залишок з поперед.",
@@ -167,7 +183,7 @@ export const ProjectMaterialsTable = ({
                 materialId={m.id}
                 field="additional_delivery"
                 value={getInputValue(m.id, "additional_delivery", 0)}
-                fallback={0}
+                fallback={Number(m.additional_delivery) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
                   onQuantityChange?.(id, field, val)
@@ -186,7 +202,7 @@ export const ProjectMaterialsTable = ({
                 materialId={m.id}
                 field="current_remaining"
                 value={getInputValue(m.id, "current_remaining", 0)}
-                fallback={0}
+                fallback={Number(m.current_remaining) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
                   onQuantityChange?.(id, field, val)
@@ -210,12 +226,10 @@ export const ProjectMaterialsTable = ({
                   Number(m.previous_remaining) ?? 0
                 )
               ) || 0;
-
             const delivered =
               typeof m.delivery_quantity === "number" && m.delivery_quantity > 0
                 ? m.delivery_quantity
                 : Math.max(0, qty - prev);
-
             return <span>{delivered}</span>;
           },
         },
@@ -223,8 +237,14 @@ export const ProjectMaterialsTable = ({
           key: "sum",
           label: "Сума, грн",
           render: (m) => {
-            const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
-            return (Number(m.base_purchase_price) * qty).toFixed(2);
+            const qty =
+              area ?? getValue(m.id, "quantity", getSelectionQty(m.id));
+            const price = getValue(
+              m.id,
+              "base_purchase_price",
+              Number(m.base_purchase_price) ?? 0
+            );
+            return (price * qty).toFixed(2);
           },
         },
       ]}
@@ -234,43 +254,7 @@ export const ProjectMaterialsTable = ({
           getId={(item) => item.id}
           onEdit={onEdit}
           fields={[
-            {
-              label: "Ціна, грн",
-              value: (item) => num(item.base_purchase_price),
-            },
-            {
-              label: "Кількість",
-              value: (item) =>
-                getValue(item.id, "quantity", getSelectionQty(item.id)),
-            },
             { label: "Од. вимір.", value: (item) => item.unit },
-            {
-              label: "Залишок з поперед.",
-              value: (item) =>
-                getValue(
-                  item.id,
-                  "previous_remaining",
-                  Number(item.previous_remaining) ?? 0
-                ),
-            },
-            {
-              label: "Доставка",
-              value: (item) =>
-                getValue(
-                  item.id,
-                  "additional_delivery",
-                  Number(item.additional_delivery) ?? 0
-                ),
-            },
-            {
-              label: "Залишок",
-              value: (item) =>
-                getValue(
-                  item.id,
-                  "current_remaining",
-                  Number(item.current_remaining) ?? 0
-                ),
-            },
             {
               label: "Доставлено",
               value: (item) => {
@@ -286,7 +270,6 @@ export const ProjectMaterialsTable = ({
                       Number(item.previous_remaining) ?? 0
                     )
                   ) || 0;
-
                 return typeof item.delivery_quantity === "number" &&
                   item.delivery_quantity > 0
                   ? item.delivery_quantity
@@ -296,12 +279,15 @@ export const ProjectMaterialsTable = ({
             {
               label: "Сума, грн",
               value: (item) => {
-                const qty = getValue(
-                  item.id,
-                  "quantity",
-                  getSelectionQty(item.id)
+                const qty =
+                  area ??
+                  getValue(item.id, "quantity", getSelectionQty(item.id));
+                const price = getValue(
+                  m.id,
+                  "base_purchase_price",
+                  Number(m.base_purchase_price) ?? 0
                 );
-                return (num(item.base_purchase_price) * qty).toFixed(2);
+                return (price * qty).toFixed(2);
               },
             },
           ]}

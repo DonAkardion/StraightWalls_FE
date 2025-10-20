@@ -9,9 +9,13 @@ import { Room } from "@/types/rooms";
 
 interface Props {
   objectId: number | null;
+  onAreaChange?: (area: number) => void;
 }
 
-export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
+export const SelectedObjectInfo: React.FC<Props> = ({
+  objectId,
+  onAreaChange,
+}) => {
   const { token } = useUser();
   const [loading, setLoading] = useState(false);
   const [object, setObject] = useState<ClientObject | null>(null);
@@ -34,6 +38,21 @@ export const SelectedObjectInfo: React.FC<Props> = ({ objectId }) => {
 
     fetchData();
   }, [objectId, token]);
+
+  useEffect(() => {
+    if (!object || !onAreaChange || !object.roomStats) return;
+
+    const stats = object.roomStats;
+    const totalSum =
+      Number(stats.regularRoomsArea ?? 0) +
+      Number(stats.regularRoomsSlopesMeters ?? 0) +
+      Number(stats.regularRoomsElementsMeters ?? 0) +
+      Number(stats.bathroomArea ?? 0) +
+      Number(stats.bathroomSlopesMeters ?? 0) +
+      Number(stats.bathroomElementsMeters ?? 0);
+
+    onAreaChange(totalSum);
+  }, [object, onAreaChange]);
 
   const ROOM_TYPE_LABELS: Record<string, string> = {
     wardrobe: "Гардероб",

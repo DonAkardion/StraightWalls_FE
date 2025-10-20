@@ -17,7 +17,7 @@ export default function AddWorkerForm({
   crewWorkers,
   setCrewWorkers,
   inputForm,
-  setInputForm
+  setInputForm,
 }: AddWorkerFormProps) {
   // const [inputs, setInputs] = useState<Worker>({
   //   id: 0,
@@ -76,7 +76,7 @@ export default function AddWorkerForm({
 
   return (
     <section className="mt-8">
-      <p className="text-[20px] text-black mb-3">Робітники</p>
+      <p className="text-[20px] text-black mb-3">Створити робітників</p>
       <div
         className={`${styles.addWorkerForm} bg-white rounded-lg overflow-hidden`}
       >

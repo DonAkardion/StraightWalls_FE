@@ -10,6 +10,7 @@ import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationConte
 export interface MaterialSelection {
   materialId: number;
   quantity: number;
+  base_purchase_price?: number;
   previous_remaining?: number;
   additional_delivery?: number;
   current_remaining?: number;
@@ -27,6 +28,7 @@ interface Props {
   tableClassName?: string;
   tablesTitle?: string;
   onConfirm?: () => void;
+  area?: number;
 }
 const hasQuantity = (
   s: Material | MaterialWithQuantity
@@ -40,11 +42,13 @@ export const ProjectMaterials = ({
   tableClassName,
   tablesTitle,
   onConfirm,
+  area,
 }: Props) => {
   const [selection, setSelection] = useState<MaterialSelection[]>(() =>
     materials.map((m) => ({
       materialId: m.id,
-      quantity: hasQuantity(m) ? m.quantity : 0,
+      quantity: area ?? (hasQuantity(m) ? m.quantity : 0),
+      base_purchase_price: m.base_purchase_price ?? 0,
       previous_remaining: hasQuantity(m) ? m.previous_remaining ?? 0 : 0,
       additional_delivery: hasQuantity(m) ? m.additional_delivery ?? 0 : 0,
       current_remaining: hasQuantity(m) ? m.current_remaining ?? 0 : 0,
@@ -57,28 +61,57 @@ export const ProjectMaterials = ({
   const { user } = useUser();
   const role = user?.role;
 
-  // Синхронізація selection при зміні списку матеріалів
   useEffect(() => {
-    setSelection(
-      materials.map((m) => ({
-        materialId: m.id,
-        quantity: hasQuantity(m) ? m.quantity : 0,
-        previous_remaining: hasQuantity(m) ? m.previous_remaining ?? 0 : 0,
-        additional_delivery: hasQuantity(m) ? m.additional_delivery ?? 0 : 0,
-        current_remaining: hasQuantity(m) ? m.current_remaining ?? 0 : 0,
-        delivery_quantity: hasQuantity(m) ? m.delivery_quantity ?? 0 : 0,
-      }))
+    onSelectionChange?.(selection);
+  }, [selection, onSelectionChange]);
+
+  useEffect(() => {
+    if (!materials.length) return;
+
+    setSelection((prev) =>
+      materials.map((m) => {
+        const existing = prev.find((s) => s.materialId === m.id);
+        return {
+          materialId: m.id,
+          quantity:
+            existing?.quantity ??
+            (hasQuantity(m) ? m.quantity ?? 0 : 0) ??
+            area ??
+            0,
+          base_purchase_price:
+            existing?.base_purchase_price ?? Number(m.base_purchase_price ?? 0),
+          previous_remaining:
+            existing?.previous_remaining ??
+            (hasQuantity(m) ? m.previous_remaining ?? 0 : 0),
+          additional_delivery:
+            existing?.additional_delivery ??
+            (hasQuantity(m) ? m.additional_delivery ?? 0 : 0),
+          current_remaining:
+            existing?.current_remaining ??
+            (hasQuantity(m) ? m.current_remaining ?? 0 : 0),
+          delivery_quantity:
+            existing?.delivery_quantity ??
+            (hasQuantity(m) ? m.delivery_quantity ?? 0 : 0),
+        };
+      })
     );
   }, [materials]);
 
+  useEffect(() => {
+    if (!area) return;
+
+    setSelection((prev) =>
+      prev.map((s) => ({
+        ...s,
+        quantity: area,
+      }))
+    );
+  }, [area]);
+
   const effectiveMaterials = useMemo(() => {
-    if (editable && !isConfirmed) {
-      // режим редагування → показуємо всі
-      return materials;
-    }
-    // підтверджено або фінальна сторінка → тільки вибрані
-    return materials.filter((m) => hasQuantity(m) && m.quantity > 0);
-  }, [materials, editable, isConfirmed]);
+    return materials;
+  }, [materials]);
+
   const handleQuantityChange = (
     materialId: number,
     field: keyof MaterialWithQuantity,
@@ -88,47 +121,23 @@ export const ProjectMaterials = ({
       sel.materialId === materialId ? { ...sel, [field]: value } : sel
     );
     setSelection(next);
-
-    if (onSelectionChange) {
-      onSelectionChange(next);
-    }
   };
 
   const handleConfirm = () => {
     const next = !isConfirmed;
     setIsConfirmed(next);
-    if (next && onSelectionChange) {
-      onSelectionChange(selection);
-    }
-    if (next && onConfirm) {
-      onConfirm();
-    }
+    if (next && onConfirm) onConfirm();
   };
 
-  const getQuantity = (material: Material | MaterialWithQuantity) => {
-    if (editable) {
-      return (
-        selection.find((sel) => sel.materialId === material.id)?.quantity ?? 0
-      );
-    }
-    return hasQuantity(material) ? material.quantity : 0;
-  };
+  const total = useMemo(() => {
+    if (!selection.length) return 0;
+    return selection.reduce((sum, s) => {
+      const qty = Number(s.quantity ?? area ?? 0);
+      const price = Number(s.base_purchase_price ?? 0);
+      return sum + price * qty;
+    }, 0);
+  }, [selection, area]);
 
-  const calculateMaterialSum = (
-    m: Material | MaterialWithQuantity,
-    qty: number
-  ): number => {
-    return m.base_purchase_price * qty;
-  };
-
-  const total = useMemo(
-    () =>
-      effectiveMaterials.reduce(
-        (sum, m) => sum + calculateMaterialSum(m, getQuantity(m)),
-        0
-      ),
-    [effectiveMaterials, selection, editable]
-  );
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   return (
@@ -146,6 +155,7 @@ export const ProjectMaterials = ({
         onQuantityChange={handleQuantityChange}
         className={tableClassName}
         confirmed={isConfirmed}
+        area={area}
       />
 
       <div

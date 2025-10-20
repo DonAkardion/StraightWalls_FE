@@ -5,6 +5,7 @@ import { Material } from "@/types/material";
 
 export interface ServiceWithQuantity extends Service {
   quantity: number;
+  custom_price?: number;
 }
 export interface MaterialWithQuantity extends Material {
   quantity: number;
