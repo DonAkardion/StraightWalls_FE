@@ -4,6 +4,18 @@ import React, { useMemo, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import styles from "./AddProjectPage.module.css";
+import {
+  useProjectCreation,
+  ServiceWithQuantity,
+  MaterialWithQuantity,
+} from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
+
+import { getClients } from "@/api/clients";
+import { getServices } from "@/api/services";
+import { getMaterials } from "@/api/material";
+import { createProject } from "@/api/projects";
+import { updateMaterialStock } from "@/api/material";
+import { useUser } from "@/context/UserContextProvider";
 
 import { ClientSelector } from "@/components/addProject/ClientSelector/ClientSelector";
 import { ObjectSelector } from "@/components/addProject/ClientSelector/ObjectSelector";
@@ -12,28 +24,16 @@ import { ProjectDates } from "@/components/addProject/ProjectDates/ProjectDates"
 import { ProjectEstimate } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimate";
 import { ProjectMaterials } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
 import { PaymentDetails } from "@/components/Project/ProjectsDetailed/ProjectPayment/PaymentDetails/PaymentDetails";
-import { MaterialIncomeEditor } from "@/components/addProject/MaterialIncomeEditor/MaterialIncomeEditor";
 import { CrewSelector } from "@/components/addProject/CrewSelector/CrewSelector";
 import { AddProjectCrew } from "@/components/addProject/AddProjectCrew/AddProjectCrew";
-
-import {
-  useProjectCreation,
-  ServiceWithQuantity,
-  MaterialWithQuantity,
-} from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
-import { getClients } from "@/api/clients";
-import { getServices } from "@/api/services";
-import { getMaterials } from "@/api/material";
-import { createProject } from "@/api/projects";
-import { updateMaterialStock } from "@/api/material";
-import { Client, ClientObject } from "@/types/client";
-import { useUser } from "@/context/UserContextProvider";
 import { ProjectNameInput } from "@/components/addProject/ProjectNameInput/ProjectNameInput";
 import {
   mapWorks,
   mapMaterials,
 } from "@/features/addProject/AddProjectConfirm/AddProjectConfirm";
 import { MaterialSelection } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterials";
+
+import { Client, ClientObject } from "@/types/client";
 
 export function AddProjectPage() {
   const {
@@ -60,48 +60,19 @@ export function AddProjectPage() {
 
   const { token } = useUser();
   const router = useRouter();
-  const params = useParams();
-  const role = params.role as string;
+  const { role } = useParams();
 
   const [clients, setClients] = useState<Client[]>([]);
-  const selectedClient = clients.find((c) => c.id === clientId);
-
   const [objects, setObjects] = useState<ClientObject[]>([]);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [isNameTouched, setIsNameTouched] = useState(false);
-
   const [totalArea, setTotalArea] = useState(0);
 
-  function materialsChanged(
-    prevArr: MaterialWithQuantity[],
-    nextArr: MaterialWithQuantity[]
-  ) {
-    if (prevArr.length !== nextArr.length) return true;
-    for (let i = 0; i < prevArr.length; i++) {
-      const p = prevArr[i];
-      const n = nextArr[i];
-      if (
-        (p.quantity ?? 0) !== (n.quantity ?? 0) ||
-        (Number(p.base_purchase_price) || 0) !==
-          (Number(n.base_purchase_price) || 0) ||
-        (p.previous_remaining ?? 0) !== (n.previous_remaining ?? 0) ||
-        (p.additional_delivery ?? 0) !== (n.additional_delivery ?? 0) ||
-        (p.current_remaining ?? 0) !== (n.current_remaining ?? 0) ||
-        (p.delivery_quantity ?? 0) !== (n.delivery_quantity ?? 0)
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
+  // === INIT LOAD ===
   useEffect(() => {
     if (!token) return;
-
-    const init = async () => {
+    (async () => {
       try {
         setLoading(true);
         const [clientsData, servicesData, materialsData] = await Promise.all([
@@ -111,65 +82,57 @@ export function AddProjectPage() {
         ]);
 
         setClients(clientsData);
-
         setServices(servicesData.map((s) => ({ ...s, quantity: 0 })));
-        setMaterials(
-          materialsData.map((m) => ({
-            ...m,
-            quantity: 0,
-            previous_remaining: 0,
-            additional_delivery: 0,
-            current_remaining: 0,
-            delivery_quantity: 0,
-          }))
-        );
-      } catch (err) {
+
+        const mainMaterial = materialsData[0];
+        if (mainMaterial) {
+          setMaterials([
+            {
+              ...mainMaterial,
+              quantity: 0,
+              previous_remaining: 0,
+              additional_delivery: 0,
+              current_remaining: 0,
+              delivery_quantity: 0,
+            },
+          ]);
+        }
+      } catch {
         setError("Не вдалося завантажити дані");
       } finally {
         setLoading(false);
       }
-    };
-
-    init();
+    })();
   }, [token, setServices, setMaterials]);
 
+  // === OBJECTS ===
   useEffect(() => {
     if (!clientId) return;
+    const client = clients.find((c) => c.id === clientId);
+    if (!client) return;
 
-    const selectedClient = clients.find((c) => c.id === clientId);
-    if (selectedClient) {
-      setObjects(selectedClient.objects || []);
-
-      if (selectedClient.objects && selectedClient.objects.length > 0) {
-        setObjectId(selectedClient.objects[0].id);
-      } else {
-        setObjectId(null);
-      }
-    } else {
-      setObjects([]);
-      setObjectId(null);
-    }
+    const objs = client.objects || [];
+    setObjects(objs);
+    setObjectId(objs[0]?.id ?? null);
   }, [clientId, clients, setObjectId]);
 
+  // === AUTO NAME ===
   useEffect(() => {
     if (isNameTouched) return;
-
     const client = clients.find((c) => c.id === clientId);
     const object = objects.find((o) => o.id === objectId);
-
-    if (client && object) {
-      setName(`${client.full_name} / ${object.name}`);
-    } else if (client) {
-      setName(`${client.full_name}`);
-    }
+    if (client && object) setName(`${client.full_name} / ${object.name}`);
+    else if (client) setName(client.full_name);
   }, [clientId, objectId, clients, objects, setName, isNameTouched]);
 
+  // === SERVICES ===
   const handleServiceSelectionChange = (
     updated: { serviceId: number; quantity: number; price?: number }[]
   ) => {
     const newServices: ServiceWithQuantity[] = services.map((s) => {
       const found = updated.find((u) => u.serviceId === s.id);
       if (!found) return s;
+
       return {
         ...s,
         quantity: found.quantity,
@@ -180,65 +143,59 @@ export function AddProjectPage() {
     setServices(newServices);
   };
 
+  // === AUTO SCROLL ===
   useEffect(() => {
-    if (!loading) {
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "auto" });
-      }, 0);
-    }
+    if (!loading) window.scrollTo({ top: 0, behavior: "auto" });
   }, [loading]);
 
+  // === AREA → MATERIAL ===
   useEffect(() => {
-    if (totalArea <= 0 || materials.length === 0) return;
+    if (totalArea <= 0 || !materials[0]) return;
 
-    const next: MaterialWithQuantity[] = materials.map((m) => {
-      const qty = totalArea;
-      const prevRem = m.previous_remaining ?? 0;
-      return {
-        ...m,
-        quantity: qty,
-        previous_remaining: prevRem,
-        additional_delivery: m.additional_delivery ?? 0,
-        current_remaining: m.current_remaining ?? 0,
-        delivery_quantity: m.delivery_quantity ?? Math.max(0, qty - prevRem),
-      };
-    });
+    const m = materials[0];
+    const updated = {
+      ...m,
+      quantity: totalArea,
+      previous_remaining: m.previous_remaining ?? 0,
+      additional_delivery: m.additional_delivery ?? 0,
+      current_remaining: m.current_remaining ?? 0,
+      delivery_quantity:
+        m.delivery_quantity ??
+        Math.max(0, totalArea - (m.previous_remaining ?? 0)),
+    };
 
-    if (materialsChanged(materials, next)) {
-      setMaterials(next);
+    if (JSON.stringify(m) !== JSON.stringify(updated)) {
+      setMaterials([updated]);
     }
   }, [totalArea]);
 
+  // === MATERIAL CHANGES ===
   const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
-    const next: MaterialWithQuantity[] = materials.map((m) => {
-      const found = updated.find((u) => u.materialId === m.id);
-      if (!found) return m;
+    if (!materials[0]) return;
+    const m = materials[0];
+    const found = updated.find((u) => u.materialId === m.id);
+    if (!found) return;
 
-      const qty = found.quantity ?? m.quantity ?? 0;
-      const prevRem = found.previous_remaining ?? m.previous_remaining ?? 0;
-      const price = found.base_purchase_price ?? m.base_purchase_price ?? 0;
+    const next = {
+      ...m,
+      quantity: found.quantity ?? m.quantity ?? 0,
+      base_purchase_price:
+        found.base_purchase_price ?? m.base_purchase_price ?? 0,
+      previous_remaining: found.previous_remaining ?? m.previous_remaining ?? 0,
+      additional_delivery:
+        found.additional_delivery ?? m.additional_delivery ?? 0,
+      current_remaining: found.current_remaining ?? m.current_remaining ?? 0,
+      delivery_quantity: found.delivery_quantity ?? m.delivery_quantity ?? 0,
+    };
 
-      return {
-        ...m,
-        quantity: qty,
-        base_purchase_price: price,
-        previous_remaining: prevRem,
-        additional_delivery:
-          found.additional_delivery ?? m.additional_delivery ?? 0,
-        current_remaining: found.current_remaining ?? m.current_remaining ?? 0,
-        delivery_quantity:
-          found.delivery_quantity ?? Math.max(0, qty - prevRem),
-      };
-    });
-
-    if (materialsChanged(materials, next)) {
-      setMaterials(next);
+    if (JSON.stringify(next) !== JSON.stringify(m)) {
+      setMaterials([next]);
     }
   };
 
+  // === SUBMIT ===
   const handleSubmit = async () => {
     if (!token) return;
-
     const payload = {
       project: {
         name,
@@ -251,77 +208,60 @@ export function AddProjectPage() {
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
-      ...(initialPayment && {
-        initial_payment: {
-          ...initialPayment,
-          amount: String(initialPayment.amount),
-        },
-      }),
     };
 
     try {
-      const response = await createProject(payload, token);
-      // updateMaterials
-      await Promise.all(
-        materials.map(async (m) => {
-          if (m.quantity > 0) {
-            const newQuantity = Math.max(0, (m.stock ?? 0) - m.quantity);
-
-            await updateMaterialStock(token, m.id, newQuantity);
-          }
-        })
-      );
+      await createProject(payload, token);
+      const m = materials[0];
+      if (m && m.quantity > 0) {
+        const newQty = Math.max(0, (m.stock ?? 0) - m.quantity);
+        await updateMaterialStock(token, m.id, newQty);
+      }
       router.push(`/${role}/projects`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);
     }
   };
 
+  // === VALIDATION ===
   const errors: string[] = [];
   if (!clientId) errors.push("Оберіть клієнта");
-  if (!!objects.length && !objectId) errors.push("У клієнта відсутній об’єкт");
-  if (!name?.trim()) errors.push("Відсутня назву проєкту");
-  // if (!crewId) errors.push("Оберіть бригаду");
-
+  if (objects.length && !objectId) errors.push("У клієнта відсутній об’єкт");
+  if (!name?.trim()) errors.push("Відсутня назва проєкту");
   const isFormValid = errors.length === 0;
 
-  const totalWorksCost = useMemo(() => {
-    return services.reduce(
-      (sum, s) => sum + (s.custom_price ?? s.price) * s.quantity,
-      0
-    );
-  }, [services]);
+  // === TOTALS ===
+  const totalWorksCost = useMemo(
+    () =>
+      services.reduce(
+        (sum, s) => sum + (s.custom_price ?? s.price) * s.quantity,
+        0
+      ),
+    [services]
+  );
 
   const totalMaterialCost = useMemo(() => {
-    if (!materials.length) return 0;
-
-    return materials.reduce((sum, m) => {
-      const qty = Number(m.quantity ?? 0);
-      const price = Number(m.base_purchase_price ?? 0);
-      return sum + price * qty;
-    }, 0);
+    const m = materials[0];
+    if (!m) return 0;
+    return Number(m.base_purchase_price ?? 0) * Number(m.quantity ?? 0);
   }, [materials]);
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
-  // Scroll fixes
-
+  // === SCROLL REFS ===
   const estimateRef = useRef<HTMLDivElement | null>(null);
   const materialsRef = useRef<HTMLDivElement | null>(null);
+  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) =>
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const scrollToRef = (ref: React.RefObject<HTMLDivElement>) => {
-    if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
-
+  // === UI ===
   if (loading)
     return (
-      <div className="absolute top-[30%] left-[60%] ">Завантаження ...</div>
+      <div className="absolute top-[30%] left-[60%]">Завантаження ...</div>
     );
   if (error)
     return (
-      <div className="text-red-500 absolute top-[30%] left-[60%] ">{error}</div>
+      <div className="text-red-500 absolute top-[30%] left-[60%]">{error}</div>
     );
 
   return (

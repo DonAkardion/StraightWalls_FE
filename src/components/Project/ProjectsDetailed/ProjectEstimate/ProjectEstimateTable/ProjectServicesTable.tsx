@@ -113,10 +113,10 @@ export const ProjectServicesTable = ({
         id: TOTAL_ROW_ID,
         name: "Разом",
         unit_of_measurement: "",
-        price: totals.price,
-        salary: totals.salary,
+        price: 0,
+        salary: 0,
       } as unknown as Service),
-    [totals.price, totals.salary]
+    []
   );
 
   const extendedData = useMemo(
@@ -192,14 +192,14 @@ export const ProjectServicesTable = ({
         {
           key: "unit_of_measurement",
           label: "Од. вимір.",
-          render: (s) => (isTotalRow(s) ? "" : s.unit_of_measurement),
+          render: (s) => s.unit_of_measurement,
         },
         {
           key: "price",
           label: "Вартість, грн",
           render: (s) =>
             isTotalRow(s) ? (
-              <strong>{format2(totals.price)}</strong>
+              <strong></strong>
             ) : editable ? (
               <input
                 type="number"
@@ -220,7 +220,7 @@ export const ProjectServicesTable = ({
           label: "Зарплата",
           render: (s) =>
             isTotalRow(s) ? (
-              <strong>{format2(totals.salary)}</strong>
+              <strong></strong>
             ) : (
               format2(safeNum((s as any).salary))
             ),
