@@ -19,14 +19,16 @@ const daysOfWeek = [
 ];
 
 const colors: Record<string, string> = {
-  new: "#ffb326",
-  in_progress: "#0097c0",
+  new: "#0097c0",
+  in_progress: "#ffb326",
   completed: "#15ae08",
   canceled: "#b70000",
 };
 
-
-type DayColorsMap = Record<number, Record<number, Record<number, string[]>>>;
+type DayColorsMap = Record<
+  number,
+  Record<number, Record<number, { color: string; id: number; name: string }[]>>
+>;
 
 const Calendar = () => {
   const [calendar, setCalendar] = useState<Crew[]>([]);
@@ -67,10 +69,15 @@ const Calendar = () => {
 
   useEffect(() => {
     if (!token) return;
+
     const fetchCalendarData = async () => {
       try {
         const calendarData = await getCrews(token);
         setCalendar(calendarData);
+
+        if (calendarData.length > 0) {
+          setSelectedCrew(calendarData[0]);
+        }
       } catch (error) {
         console.error("Error fetching calendar data:", error);
       }
@@ -79,59 +86,72 @@ const Calendar = () => {
   }, [token]);
 
   const handleCrewSelect = async (crew: Crew) => {
-  setCalendar(calendar.map(c => ({ ...c, selected: c.id === crew.id })));
-  setSelectedCrew(crew);
+    setCalendar(calendar.map((c) => ({ ...c, selected: c.id === crew.id })));
+    setSelectedCrew(crew);
 
-  const validProjects = crew.projects?.filter(
-    (proj): proj is Project => !!proj.start_date && !!proj.end_date
-  );
+    const validProjects = crew.projects?.filter(
+      (proj): proj is Project => !!proj.start_date && !!proj.end_date
+    );
 
-  if (!validProjects?.length || !token) {
-    setDayColors({});
-    return;
-  }
-
-  const reports = await Promise.all(
-    validProjects.map((proj) =>
-      getProjectReport(proj.id, token).catch(() => null)
-    )
-  );
-
-  const colorsMap: DayColorsMap = {};
-
-  reports.forEach((report) => {
-    if (!report) return;
-
-    const { status, start_date, end_date, name, id } = report.project;
-    const color = colors[report.project.status];
-    if (!color) return;
-
-    const start = new Date(start_date);
-    const end = new Date(end_date);
-
-    for (
-      let d = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-      d <= end;
-      d.setDate(d.getDate() + 1)
-    ) {
-      const y = d.getFullYear();
-      const m = d.getMonth();
-      const day = d.getDate();
-
-      if (!colorsMap[y]) colorsMap[y] = {};
-      if (!colorsMap[y][m]) colorsMap[y][m] = {};
-      if (!colorsMap[y][m][day]) colorsMap[y][m][day] = [];
-      if (!colorsMap[y][m][day].includes(color)) colorsMap[y][m][day].push(color);
+    if (!validProjects?.length || !token) {
+      setDayColors({});
+      return;
     }
-  });
 
-  setDayColors(colorsMap);
-};
+    const reports = await Promise.all(
+      validProjects.map((proj) =>
+        getProjectReport(proj.id, token).catch(() => null)
+      )
+    );
+
+    const colorsMap: DayColorsMap = {};
+
+    reports.forEach((report) => {
+      if (!report) return;
+
+      const { status, start_date, end_date, name, id } = report.project;
+      const baseColor = colors[status];
+      if (!baseColor) return;
+
+      const start = new Date(start_date);
+      const end = new Date(end_date);
+
+      const totalDays = Math.max(
+        1,
+        Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+      );
+
+      for (let i = 0; i <= totalDays; i++) {
+        const d = new Date(start);
+        d.setDate(start.getDate() + i);
+
+        const y = d.getFullYear();
+        const m = d.getMonth();
+        const day = d.getDate();
+
+        if (!colorsMap[y]) colorsMap[y] = {};
+        if (!colorsMap[y][m]) colorsMap[y][m] = {};
+        if (!colorsMap[y][m][day]) colorsMap[y][m][day] = [];
+
+        const alpha = 0.5 + (i / totalDays) * 0.5;
+        const rgba = baseColor.replace("#", "");
+        const r = parseInt(rgba.substring(0, 2), 16);
+        const g = parseInt(rgba.substring(2, 4), 16);
+        const b = parseInt(rgba.substring(4, 6), 16);
+        const colorWithAlpha = `rgba(${r},${g},${b},${alpha.toFixed(2)})`;
+
+        colorsMap[y][m][day].push({ color: colorWithAlpha, id, name });
+      }
+    });
+
+    setDayColors(colorsMap);
+  };
 
   useEffect(() => {
-    setDayColors({});
-    if (selectedCrew) handleCrewSelect(selectedCrew);
-  }, [currentMonth, currentYear]);
+    if (selectedCrew) {
+      handleCrewSelect(selectedCrew);
+    }
+  }, [selectedCrew, currentMonth, currentYear]);
 
   const handlePrevMonth = () => {
     if (currentMonth === 0) {
@@ -151,16 +171,16 @@ const Calendar = () => {
     }
   };
 
-  const filteredCalendar = calendar.filter(
-    (crew) => crew.projects?.some((proj) => proj.start_date && proj.end_date)
+  const filteredCalendar = calendar.filter((crew) =>
+    crew.projects?.some((proj) => proj.start_date && proj.end_date)
   );
 
   return (
-    <div className="bg-white w-full max-w-[1126px] rounded p-4 sm:p-6 drop-shadow-md font-inter mx-auto mb-10 mt-10">
+    <div className="bg-white w-full max-w-[1126px] rounded p-4 sm:p-6 drop-shadow-md  mx-auto mb-10 mt-10">
       <div className="flex justify-center items-center mb-4">
         <div className="flex items-center gap-2">
           <button
-            className="text-[23px] font-bold hover:cursor-pointer hover:text-red-500"
+            className="text-[24px] font-bold hover:cursor-pointer hover:text-red-500"
             onClick={handlePrevMonth}
           >
             &laquo;
@@ -172,7 +192,7 @@ const Calendar = () => {
             })}
           </span>
           <button
-            className="text-[23px] font-bold hover:cursor-pointer hover:text-green-500"
+            className="text-[24px] font-bold hover:cursor-pointer hover:text-green-500"
             onClick={handleNextMonth}
           >
             &raquo;
@@ -186,7 +206,9 @@ const Calendar = () => {
             <button
               key={crew.id}
               onClick={() => handleCrewSelect(crew)}
-              className={`${styles.calendarButton} flex-1 px-4 py-2 rounded text-black text-[12px] 
+              className={`${
+                styles.calendarButton
+              } flex-1 px-4 py-2 rounded text-black text-[14px] 
                 ${
                   crew.selected
                     ? "font-semibold bg-[linear-gradient(90deg,rgba(255,179,38,0.5)_36.06%,rgba(191,117,42,0.5)_100%)]"
@@ -213,31 +235,52 @@ const Calendar = () => {
         {dates.flat().map((date, i) => {
           if (date === 0) return <div key={i} />;
 
-          const dayColorsArray = dayColors[currentYear]?.[currentMonth]?.[date] || [];
-          let bgStyle: React.CSSProperties = { backgroundColor: "white" };
+          const dayEntries =
+            dayColors[currentYear]?.[currentMonth]?.[date] || [];
 
-          if (dayColorsArray.length === 1) {
-            bgStyle.backgroundColor = dayColorsArray[0];
+          let bgStyle: React.CSSProperties = {};
+          let borderStyle: React.CSSProperties = {};
+
+          if (dayEntries.length === 0) {
+            bgStyle.background = "white";
+          } else if (dayEntries.length === 1) {
+            bgStyle.background = dayEntries[0].color;
             bgStyle.color = "white";
-          } else if (dayColorsArray.length > 1) {
-            const step = 100 / dayColorsArray.length;
-            const gradientStops = dayColorsArray
-              .map((color, idx) => {
+          } else if (dayEntries.length > 1) {
+            const step = 100 / dayEntries.length;
+            const gradientStops = dayEntries
+              .map((entry, idx) => {
                 const start = step * idx;
                 const end = step * (idx + 1);
-                return `${color} ${start}% ${end}%`;
+                return `${entry.color} ${start}% ${end}%`;
               })
               .join(", ");
 
             bgStyle.background = `linear-gradient(135deg, ${gradientStops})`;
             bgStyle.color = "white";
           }
+          const title =
+            dayEntries.length > 0
+              ? dayEntries.map((e) => `№${e.id} ${e.name}`).join(", ")
+              : "";
+
+          if (
+            date === today.getDate() &&
+            currentMonth === today.getMonth() &&
+            currentYear === today.getFullYear()
+          ) {
+            borderStyle = {
+              outline: "2px solid #000000",
+              outlineOffset: "-2px",
+            };
+          }
 
           return (
             <button
               key={i}
-              className="rounded-md shadow-md py-1 sm:py-2 mt-2"
-              style={bgStyle}
+              className={`${styles.calendarDay} rounded-md  py-1 sm:py-2 mt-2 hover:scale-105 transition-transform`}
+              style={{ ...bgStyle, ...borderStyle }}
+              title={title}
             >
               {date}
             </button>
