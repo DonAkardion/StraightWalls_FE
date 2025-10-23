@@ -35,8 +35,8 @@ export function mapMaterials(materials: MaterialWithQuantity[]) {
     .map((m) => ({
       material_id: m.id,
       name: m.name,
-      purchase_price: String(m.base_purchase_price),
-      selling_price: String(m.base_selling_price),
+      purchase_price: String(m.base_purchase_price ?? 0),
+      selling_price: String(m.base_purchase_price ?? 0), //String(m.base_selling_price),
       previous_remaining: String(m.previous_remaining),
       remaining_stock: String(m.quantity),
       additional_delivery: String(m.additional_delivery),

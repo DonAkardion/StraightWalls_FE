@@ -233,10 +233,10 @@
   background: #ffb32666;
   width: 100px;
 }
-/* :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(7) {
+:global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(7) {
   background: #ffb32666;
   width: 100px;
-} */
+}
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(8) {
   padding: 0 6px;
 }
@@ -274,9 +274,9 @@
 :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(4) {
   background: #ffb32666;
 }
-/* :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(5) {
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(5) {
   background: #ffb32666;
-} */
+}
 :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(7) {
   background: #ffb32666;
 }

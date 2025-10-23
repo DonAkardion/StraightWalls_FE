@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import styles from "./ProjectMaterialsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
-import { TableMaterial } from "@/types/material";
+import { Material, TableMaterial } from "@/types/material";
 import { MaterialWithQuantity } from "@/features/addProject/ProjectCreationContext/ProjectCreationContext";
 import { NumericInputWithControls } from "./NumericInputWithControls";
 
@@ -21,7 +21,7 @@ interface Props {
   selection: MaterialSelection[];
   editable?: boolean;
   confirmed?: boolean;
-  area?: number;
+  // area?: number;
   onEdit?: (updated: TableMaterial) => void;
   onQuantityChange?: (
     materialId: number,
@@ -32,14 +32,14 @@ interface Props {
   enableTooltips?: boolean;
 }
 
-const TOTAL_ROW_ID = -1;
+// const TOTAL_ROW_ID = -1;
 
 export const ProjectMaterialsTable = ({
   materials,
   selection,
   editable = false,
   confirmed = false,
-  area,
+  // area,
   enableTooltips = true,
   onEdit,
   onQuantityChange,
@@ -125,9 +125,10 @@ export const ProjectMaterialsTable = ({
                   "base_purchase_price",
                   Number(m.base_purchase_price) ?? 0
                 )}
-                onChange={(e) =>
-                  handleInputChange(m.id, "base_purchase_price", e.target.value)
-                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  handleInputChange(m.id, "base_purchase_price", val);
+                }}
                 onClick={(e) => e.stopPropagation()}
                 className={`${styles.editInput} md:w-16 w-[100px] text-center rounded px-1 py-0`}
               />
@@ -144,12 +145,33 @@ export const ProjectMaterialsTable = ({
         {
           key: "quantity",
           label: "Кількість",
-          render: (m) => (
-            <span>
-              {area ?? getValue(m.id, "quantity", getSelectionQty(m.id))}
-            </span>
-          ),
+          render: (m) =>
+            editable ? (
+              <NumericInputWithControls
+                materialId={m.id}
+                field="quantity"
+                value={getInputValue(m.id, "quantity", 0)}
+                fallback={0}
+                onInputChange={handleInputChange}
+                onStepChange={(id, field, val) =>
+                  onQuantityChange?.(id, field, val)
+                }
+              />
+            ) : (
+              <span className={confirmed ? "text-green-600 " : ""}>
+                {getValue(m.id, "quantity", getSelectionQty(m.id))}
+              </span>
+            ),
         },
+        // {
+        //   key: "quantity",
+        //   label: "Кількість",
+        //   render: (m) => (
+        //     <span>
+        //       {area ?? getValue(m.id, "quantity", getSelectionQty(m.id))}
+        //     </span>
+        //   ),
+        // },
         {
           key: "unit",
           label: "Од. вимір.",
@@ -237,14 +259,16 @@ export const ProjectMaterialsTable = ({
           key: "sum",
           label: "Сума, грн",
           render: (m) => {
-            const qty =
-              area ?? getValue(m.id, "quantity", getSelectionQty(m.id));
-            const price = getValue(
-              m.id,
-              "base_purchase_price",
-              Number(m.base_purchase_price) ?? 0
-            );
-            return (price * qty).toFixed(2);
+            const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+            return (Number(m.base_purchase_price) * qty).toFixed(2);
+            // const qty =
+            //   area ?? getValue(m.id, "quantity", getSelectionQty(m.id));
+            // const price = getValue(
+            //   m.id,
+            //   "base_purchase_price",
+            //   Number(m.base_purchase_price) ?? 0
+            // );
+            // return (price * qty).toFixed(2);
           },
         },
       ]}
@@ -279,15 +303,19 @@ export const ProjectMaterialsTable = ({
             {
               label: "Сума, грн",
               value: (item) => {
-                const qty =
-                  area ??
-                  getValue(item.id, "quantity", getSelectionQty(item.id));
-                const price = getValue(
-                  m.id,
-                  "base_purchase_price",
-                  Number(m.base_purchase_price) ?? 0
+                const qty = getValue(
+                  item.id,
+                  "quantity",
+                  getSelectionQty(item.id)
+                  // const qty =
+                  //   area ??
+                  //   getValue(item.id, "quantity", getSelectionQty(item.id));
+                  // const price = getValue(
+                  //   m.id,
+                  //   "base_purchase_price",
+                  //   Number(m.base_purchase_price) ?? 0
                 );
-                return (price * qty).toFixed(2);
+                return (num(item.base_purchase_price) * qty).toFixed(2);
               },
             },
           ]}
