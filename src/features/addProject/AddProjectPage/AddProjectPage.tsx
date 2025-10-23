@@ -2,6 +2,7 @@
 
 import React, { useMemo, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { FakeMaterialTable } from "@/features/addProject/FakeMaterial/FakeMaterialTable";
 
 import styles from "./AddProjectPage.module.css";
 import {
@@ -84,20 +85,31 @@ export function AddProjectPage() {
         setClients(clientsData);
         setServices(servicesData.map((s) => ({ ...s, quantity: 0 })));
 
-        const mainMaterial = materialsData[0];
-        if (mainMaterial) {
-          setMaterials([
-            {
-              ...mainMaterial,
-              quantity: 0,
-              previous_remaining: 0,
-              additional_delivery: 0,
-              current_remaining: 0,
-              delivery_quantity: 0,
-            },
-          ]);
-        }
-      } catch {
+        // const mainMaterial = materialsData[0];
+        // if (mainMaterial) {
+        //   setMaterials([
+        //     {
+        //       ...mainMaterial,
+        //       quantity: 0,
+        //       previous_remaining: 0,
+        //       additional_delivery: 0,
+        //       current_remaining: 0,
+        //       delivery_quantity: 0,
+        //     },
+        //   ]);
+        // }
+        // } catch {
+        setMaterials(
+          materialsData.map((m) => ({
+            ...m,
+            quantity: 0,
+            previous_remaining: 0,
+            additional_delivery: 0,
+            current_remaining: 0,
+            delivery_quantity: 0,
+          }))
+        );
+      } catch (err) {
         setError("Не вдалося завантажити дані");
       } finally {
         setLoading(false);
@@ -148,50 +160,85 @@ export function AddProjectPage() {
     if (!loading) window.scrollTo({ top: 0, behavior: "auto" });
   }, [loading]);
 
-  // === AREA → MATERIAL ===
+  const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
+    const newMaterials: MaterialWithQuantity[] = materials.map((m) => {
+      const found = updated.find((u) => u.materialId === m.id);
+      if (!found) return m;
+      return {
+        ...m,
+        quantity: found.quantity,
+        previous_remaining: found.previous_remaining ?? 0,
+        additional_delivery: found.additional_delivery ?? 0,
+        current_remaining: found.current_remaining ?? 0,
+        delivery_quantity:
+          found.delivery_quantity ??
+          Math.max(0, (found.quantity ?? 0) - (found.previous_remaining ?? 0)),
+        base_purchase_price:
+          found.base_purchase_price ?? m.base_purchase_price ?? 0,
+      };
+    });
+    setMaterials(newMaterials);
+  };
+  // === AREA → MAIN SERVICES ===
   useEffect(() => {
-    if (totalArea <= 0 || !materials[0]) return;
+    if (totalArea <= 0 || services.length === 0) return;
 
-    const m = materials[0];
-    const updated = {
-      ...m,
-      quantity: totalArea,
-      previous_remaining: m.previous_remaining ?? 0,
-      additional_delivery: m.additional_delivery ?? 0,
-      current_remaining: m.current_remaining ?? 0,
-      delivery_quantity:
-        m.delivery_quantity ??
-        Math.max(0, totalArea - (m.previous_remaining ?? 0)),
-    };
+    const needsUpdate = services.some(
+      (s) => s.service_type === "main" && (s.quantity ?? 0) !== totalArea
+    );
 
-    if (JSON.stringify(m) !== JSON.stringify(updated)) {
-      setMaterials([updated]);
-    }
-  }, [totalArea]);
+    if (!needsUpdate) return;
+
+    const updatedServices = services.map((s) =>
+      s.service_type === "main" ? { ...s, quantity: totalArea } : s
+    );
+
+    setServices(updatedServices);
+  }, [totalArea, services, setServices]);
+  // === AREA → MATERIAL ===
+  // useEffect(() => {
+  //   if (totalArea <= 0 || !materials[0]) return;
+
+  //   const m = materials[0];
+  //   const updated = {
+  //     ...m,
+  //     quantity: totalArea,
+  //     previous_remaining: m.previous_remaining ?? 0,
+  //     additional_delivery: m.additional_delivery ?? 0,
+  //     current_remaining: m.current_remaining ?? 0,
+  //     delivery_quantity:
+  //       m.delivery_quantity ??
+  //       Math.max(0, totalArea - (m.previous_remaining ?? 0)),
+  //   };
+
+  //   if (JSON.stringify(m) !== JSON.stringify(updated)) {
+  //     setMaterials([updated]);
+  //   }
+  // }, [totalArea]);
 
   // === MATERIAL CHANGES ===
-  const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
-    if (!materials[0]) return;
-    const m = materials[0];
-    const found = updated.find((u) => u.materialId === m.id);
-    if (!found) return;
+  // const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
+  //   if (!materials[0]) return;
+  //   const m = materials[0];
+  //   const found = updated.find((u) => u.materialId === m.id);
+  //   if (!found) return;
 
-    const next = {
-      ...m,
-      quantity: found.quantity ?? m.quantity ?? 0,
-      base_purchase_price:
-        found.base_purchase_price ?? m.base_purchase_price ?? 0,
-      previous_remaining: found.previous_remaining ?? m.previous_remaining ?? 0,
-      additional_delivery:
-        found.additional_delivery ?? m.additional_delivery ?? 0,
-      current_remaining: found.current_remaining ?? m.current_remaining ?? 0,
-      delivery_quantity: found.delivery_quantity ?? m.delivery_quantity ?? 0,
-    };
+  //   const next = {
+  //     ...m,
+  //     quantity: found.quantity ?? m.quantity ?? 0,
+  //     base_purchase_price:
+  //       found.base_purchase_price ?? m.base_purchase_price ?? 0,
+  //     previous_remaining: found.previous_remaining ?? m.previous_remaining ?? 0,
+  //     additional_delivery:
+  //       found.additional_delivery ?? m.additional_delivery ?? 0,
+  //     current_remaining: found.current_remaining ?? m.current_remaining ?? 0,
+  //     delivery_quantity: found.delivery_quantity ?? m.delivery_quantity ?? 0,
+  //   };
 
-    if (JSON.stringify(next) !== JSON.stringify(m)) {
-      setMaterials([next]);
-    }
-  };
+  //   if (JSON.stringify(next) !== JSON.stringify(m)) {
+  //     setMaterials([next]);
+  //   }
+  // };
 
   // === SUBMIT ===
   const handleSubmit = async () => {
@@ -208,15 +255,31 @@ export function AddProjectPage() {
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
+      ...(initialPayment && {
+        initial_payment: {
+          ...initialPayment,
+          amount: String(initialPayment.amount),
+        },
+      }),
     };
 
     try {
-      await createProject(payload, token);
-      const m = materials[0];
-      if (m && m.quantity > 0) {
-        const newQty = Math.max(0, (m.stock ?? 0) - m.quantity);
-        await updateMaterialStock(token, m.id, newQty);
-      }
+      const response = await createProject(payload, token);
+      await Promise.all(
+        materials.map(async (m) => {
+          if (m.quantity > 0) {
+            const newQuantity = Math.max(0, (m.stock ?? 0) - m.quantity);
+
+            await updateMaterialStock(token, m.id, newQuantity);
+          }
+        })
+      );
+      // await createProject(payload, token);
+      // const m = materials[0];
+      // if (m && m.quantity > 0) {
+      //   const newQty = Math.max(0, (m.stock ?? 0) - m.quantity);
+      //   await updateMaterialStock(token, m.id, newQty);
+      // }
       router.push(`/${role}/projects`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);
@@ -241,9 +304,10 @@ export function AddProjectPage() {
   );
 
   const totalMaterialCost = useMemo(() => {
-    const m = materials[0];
-    if (!m) return 0;
-    return Number(m.base_purchase_price ?? 0) * Number(m.quantity ?? 0);
+    return materials.reduce(
+      (sum, m) => sum + m.base_purchase_price * m.quantity,
+      0
+    );
   }, [materials]);
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
@@ -334,6 +398,21 @@ export function AddProjectPage() {
           Відправити на Viber
         </span>
       </div>
+      <div className="relative md:mt-[150px] mt-[80px]">
+        <div ref={estimateRef} className="relative"></div>
+        <FakeMaterialTable
+          area={totalArea}
+          editable={true}
+          onChange={(data) => {
+            console.log("Fake material data:", data);
+          }}
+        />
+        <span
+          className={`${styles.clientsDownloadPDF} absolute top-[10px] right-[5px] md:top-[26px] md:right-[5px] cursor-pointer`}
+        >
+          Завантажити PDF
+        </span>
+      </div>
       {/* Матеріали */}
       <div className="relative md:mt-[150px] mt-[80px]">
         <div ref={materialsRef} className="relative"></div>
@@ -344,7 +423,7 @@ export function AddProjectPage() {
           onSelectionChange={handleMaterialsSelectionChange}
           tableClassName="projectAddMaterialsTableWrap"
           onConfirm={() => scrollToRef(materialsRef)}
-          area={totalArea}
+          // area={totalArea}
         />
         {materials.length > 0 && (
           <span

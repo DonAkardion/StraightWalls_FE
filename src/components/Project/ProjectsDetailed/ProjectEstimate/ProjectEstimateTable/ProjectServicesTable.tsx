@@ -148,6 +148,7 @@ export const ProjectServicesTable = ({
           key: "name",
           label: "Найменування послуги",
           render: (s) => (isTotalRow(s) ? <strong>Разом</strong> : s.name),
+          tooltip: (s) => `Назва: ${s.name}`,
         },
         {
           key: "quantity",

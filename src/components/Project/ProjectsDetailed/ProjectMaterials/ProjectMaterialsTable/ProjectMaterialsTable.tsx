@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styles from "./ProjectMaterialsTable.module.css";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
@@ -21,7 +21,7 @@ interface Props {
   selection: MaterialSelection[];
   editable?: boolean;
   confirmed?: boolean;
-  area?: number;
+  // area?: number;
   onEdit?: (updated: TableMaterial) => void;
   onQuantityChange?: (
     materialId: number,
@@ -39,7 +39,7 @@ export const ProjectMaterialsTable = ({
   selection,
   editable = false,
   confirmed = false,
-  area,
+  // area,
   enableTooltips = true,
   onEdit,
   onQuantityChange,
@@ -95,28 +95,95 @@ export const ProjectMaterialsTable = ({
   const num = (v: number | string | undefined) =>
     Number(v == null ? 0 : v) || 0;
 
+  // === TOTAlS ===
+  const totals = useMemo(() => {
+    return materials.reduce(
+      (acc, m) => {
+        const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+        const prev = getValue(
+          m.id,
+          "previous_remaining",
+          Number(m.previous_remaining) ?? 0
+        );
+        const delivery = getValue(
+          m.id,
+          "additional_delivery",
+          Number(m.additional_delivery) ?? 0
+        );
+        const current = getValue(
+          m.id,
+          "current_remaining",
+          Number(m.current_remaining) ?? 0
+        );
+        const price = getValue(
+          m.id,
+          "base_purchase_price",
+          Number(m.base_purchase_price) ?? 0
+        );
+        acc.quantity += qty;
+        acc.previous_remaining += prev;
+        acc.additional_delivery += delivery;
+        acc.current_remaining += current;
+        acc.sum += price * qty;
+        return acc;
+      },
+      {
+        quantity: 0,
+        previous_remaining: 0,
+        additional_delivery: 0,
+        current_remaining: 0,
+        sum: 0,
+      }
+    );
+  }, [materials, inputValues, selection]);
+
+  const totalRowPlaceholder = useMemo(
+    () =>
+      ({
+        id: TOTAL_ROW_ID,
+        name: "Разом",
+        unit: "",
+        base_purchase_price: 0,
+        quantity: 0,
+      } as unknown as TableMaterial),
+    []
+  );
+
+  const extendedData = useMemo(
+    () => [...materials, totalRowPlaceholder],
+    [materials, totalRowPlaceholder]
+  );
+  const isTotalRow = (m: TableMaterial) => m.id === TOTAL_ROW_ID;
+
+  const format2 = (n: number) => safeNum(n).toFixed(2);
+
   return (
     <Table<TableMaterial>
-      data={materials}
+      data={extendedData}
       className={className}
       showIndex
       expandedId={expandedId}
       enableTooltips={enableTooltips}
-      onEdit={onEdit ? (item) => onEdit(item) : undefined}
-      onInspect={(item) =>
-        setExpandedId((prev) => (prev === item.id ? null : item.id))
-      }
+      onEdit={onEdit ? (item) => !isTotalRow(item) && onEdit(item) : undefined}
+      onInspect={(item) => {
+        if (isTotalRow(item)) return;
+        setExpandedId((prev) => (prev === item.id ? null : item.id));
+      }}
+      getRowClassName={(item) => (isTotalRow(item) ? styles.totalRow : "")}
       columns={[
         {
           key: "name",
           label: "Найменування матеріалу",
           tooltip: (material) => `Назва: ${material.name}`,
+          render: (m) => (isTotalRow(m) ? <strong>Разом</strong> : m.name),
         },
         {
           key: "base_purchase_price",
           label: "Ціна, грн",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              ""
+            ) : editable ? (
               <input
                 type="number"
                 min={0}
@@ -125,9 +192,10 @@ export const ProjectMaterialsTable = ({
                   "base_purchase_price",
                   Number(m.base_purchase_price) ?? 0
                 )}
-                onChange={(e) =>
-                  handleInputChange(m.id, "base_purchase_price", e.target.value)
-                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  handleInputChange(m.id, "base_purchase_price", val);
+                }}
                 onClick={(e) => e.stopPropagation()}
                 className={`${styles.editInput} md:w-16 w-[100px] text-center rounded px-1 py-0`}
               />
@@ -144,22 +212,48 @@ export const ProjectMaterialsTable = ({
         {
           key: "quantity",
           label: "Кількість",
-          render: (m) => (
-            <span>
-              {area ?? getValue(m.id, "quantity", getSelectionQty(m.id))}
-            </span>
-          ),
+          render: (m) =>
+            isTotalRow(m) ? (
+              <strong>{totals.quantity}</strong>
+            ) : editable ? (
+              <NumericInputWithControls
+                materialId={m.id}
+                field="quantity"
+                value={getInputValue(m.id, "quantity", 0)}
+                fallback={0}
+                onInputChange={handleInputChange}
+                onStepChange={(id, field, val) =>
+                  onQuantityChange?.(id, field, val)
+                }
+              />
+            ) : (
+              <span className={confirmed ? "text-green-600 " : ""}>
+                {getValue(m.id, "quantity", getSelectionQty(m.id))}
+              </span>
+            ),
         },
+        // {
+        //   key: "quantity",
+        //   label: "Кількість",
+        //   render: (m) => (
+        //     <span>
+        //       {area ?? getValue(m.id, "quantity", getSelectionQty(m.id))}
+        //     </span>
+        //   ),
+        // },
         {
           key: "unit",
           label: "Од. вимір.",
           tooltip: (material) => `Од. вимір.: ${material.unit}`,
+          render: (m) => (isTotalRow(m) ? "" : m.unit),
         },
         {
           key: "previous_remaining",
           label: "Залишок з поперед.",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              <strong>{totals.previous_remaining}</strong>
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="previous_remaining"
@@ -178,7 +272,9 @@ export const ProjectMaterialsTable = ({
           key: "additional_delivery",
           label: "Доставка",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              <strong>{totals.additional_delivery}</strong>
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="additional_delivery"
@@ -197,7 +293,9 @@ export const ProjectMaterialsTable = ({
           key: "current_remaining",
           label: "Залишок",
           render: (m) =>
-            editable ? (
+            isTotalRow(m) ? (
+              <strong>{totals.current_remaining}</strong>
+            ) : editable ? (
               <NumericInputWithControls
                 materialId={m.id}
                 field="current_remaining"
@@ -216,6 +314,7 @@ export const ProjectMaterialsTable = ({
           key: "delivery_quantity",
           label: "Доставлено",
           render: (m) => {
+            if (isTotalRow(m)) return "";
             const qty =
               Number(getValue(m.id, "quantity", getSelectionQty(m.id))) || 0;
             const prev =
@@ -236,63 +335,68 @@ export const ProjectMaterialsTable = ({
         {
           key: "sum",
           label: "Сума, грн",
-          render: (m) => {
-            const qty =
-              area ?? getValue(m.id, "quantity", getSelectionQty(m.id));
-            const price = getValue(
-              m.id,
-              "base_purchase_price",
-              Number(m.base_purchase_price) ?? 0
-            );
-            return (price * qty).toFixed(2);
-          },
+          render: (m) =>
+            isTotalRow(m) ? (
+              <strong>{format2(totals.sum)}</strong>
+            ) : (
+              (() => {
+                const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+                return (Number(m.base_purchase_price) * qty).toFixed(2);
+              })()
+            ),
         },
       ]}
-      renderInspection={(m) => (
-        <Inspect<TableMaterial>
-          item={m}
-          getId={(item) => item.id}
-          onEdit={onEdit}
-          fields={[
-            { label: "Од. вимір.", value: (item) => item.unit },
-            {
-              label: "Доставлено",
-              value: (item) => {
-                const qty =
-                  Number(
-                    getValue(item.id, "quantity", getSelectionQty(item.id))
-                  ) || 0;
-                const prev =
-                  Number(
-                    getValue(
-                      item.id,
-                      "previous_remaining",
-                      Number(item.previous_remaining) ?? 0
-                    )
-                  ) || 0;
-                return typeof item.delivery_quantity === "number" &&
-                  item.delivery_quantity > 0
-                  ? item.delivery_quantity
-                  : Math.max(0, qty - prev);
+      renderInspection={(m) =>
+        isTotalRow(m) ? null : (
+          <Inspect<TableMaterial>
+            item={m}
+            getId={(item) => item.id}
+            onEdit={onEdit}
+            fields={[
+              { label: "Од. вимір.", value: (item) => item.unit },
+              {
+                label: "Доставлено",
+                value: (item) => {
+                  const qty =
+                    Number(
+                      getValue(item.id, "quantity", getSelectionQty(item.id))
+                    ) || 0;
+                  const prev =
+                    Number(
+                      getValue(
+                        item.id,
+                        "previous_remaining",
+                        Number(item.previous_remaining) ?? 0
+                      )
+                    ) || 0;
+                  return typeof item.delivery_quantity === "number" &&
+                    item.delivery_quantity > 0
+                    ? item.delivery_quantity
+                    : Math.max(0, qty - prev);
+                },
               },
-            },
-            {
-              label: "Сума, грн",
-              value: (item) => {
-                const qty =
-                  area ??
-                  getValue(item.id, "quantity", getSelectionQty(item.id));
-                const price = getValue(
-                  m.id,
-                  "base_purchase_price",
-                  Number(m.base_purchase_price) ?? 0
-                );
-                return (price * qty).toFixed(2);
+              {
+                label: "Сума, грн",
+                value: (item) => {
+                  const qty = getValue(
+                    item.id,
+                    "quantity",
+                    getSelectionQty(item.id)
+                    // const qty =
+                    //   area ??
+                    //   getValue(item.id, "quantity", getSelectionQty(item.id));
+                    // const price = getValue(
+                    //   m.id,
+                    //   "base_purchase_price",
+                    //   Number(m.base_purchase_price) ?? 0
+                  );
+                  return (num(item.base_purchase_price) * qty).toFixed(2);
+                },
               },
-            },
-          ]}
-        />
-      )}
+            ]}
+          />
+        )
+      }
     />
   );
 };
