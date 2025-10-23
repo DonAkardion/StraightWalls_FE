@@ -208,6 +208,12 @@ export function AddProjectPage() {
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
+      ...(initialPayment && {
+        initial_payment: {
+          ...initialPayment,
+          amount: String(initialPayment.amount),
+        },
+      }),
     };
 
     try {
