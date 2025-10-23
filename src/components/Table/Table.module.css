@@ -296,6 +296,24 @@
 :global(.projectMaterialsEditorWrap) .TableCellInspect {
   display: none;
 }
+/* правила для AddProject  Fake Material*/
+:global(.fakeMaterialTable) .TableRowCell:nth-child(6) {
+  background: #ffb32666;
+  width: 100px;
+}
+:global(.fakeMaterialTable) .TableRowCell:nth-child(7) {
+  background: #ffb32666;
+  width: 120px;
+}
+:global(.fakeMaterialTable) .TableRowCell:nth-child(9) {
+  width: 140px;
+}
+:global(.fakeMaterialTable) .TableCell:nth-child(4) {
+  background: #ffb32666;
+}
+:global(.fakeMaterialTable) .TableCell:nth-child(5) {
+  background: #ffb32666;
+}
 /* правила для AddProject  MaterialsIncome*/
 :global(.projectMaterialsIncomeEditorWrap) .TableRowCell {
   padding: 0 6px;
@@ -519,6 +537,23 @@
   }
   :global(.projectAddMaterialsTableWrap) .TableCellInspect {
     display: table-cell;
+  }
+  /* правила для AddProject  Fake Material*/
+  :global(.fakeMaterialTable) .TableRowCell:nth-child(6) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.fakeMaterialTable) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.fakeMaterialTable) .TableCell:nth-child(4) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.fakeMaterialTable) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
   }
   /* правила для AddProject  MaterialsIncome*/
   :global(.projectMaterialsIncomeEditorWrap) .indentCellLast {

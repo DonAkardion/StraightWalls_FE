@@ -2,6 +2,7 @@
 
 import React, { useMemo, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { FakeMaterialTable } from "@/features/addProject/FakeMaterial/FakeMaterialTable";
 
 import styles from "./AddProjectPage.module.css";
 import {
@@ -395,6 +396,21 @@ export function AddProjectPage() {
           className={`${styles.clientsSendToViber} absolute top-[26px] right-[5px] sm:top-[6px] md:top-[24px] md:right-[5px] cursor-pointer`}
         >
           Відправити на Viber
+        </span>
+      </div>
+      <div className="relative md:mt-[150px] mt-[80px]">
+        <div ref={estimateRef} className="relative"></div>
+        <FakeMaterialTable
+          area={totalArea}
+          editable={true}
+          onChange={(data) => {
+            console.log("Fake material data:", data);
+          }}
+        />
+        <span
+          className={`${styles.clientsDownloadPDF} absolute top-[10px] right-[5px] md:top-[26px] md:right-[5px] cursor-pointer`}
+        >
+          Завантажити PDF
         </span>
       </div>
       {/* Матеріали */}
