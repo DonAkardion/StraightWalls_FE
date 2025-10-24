@@ -91,7 +91,7 @@ export const FakeMaterialTable = ({
   const handleConfirm = () => setIsConfirmed((prev) => !prev);
 
   return (
-    <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[66px]`}>
+    <section className={`${styles.sectionEstimate} `}>
       <h2
         className={`${styles.estimateTytle} mb-[26px] sm:mb-[10px] md:mb-[16px]`}
       >

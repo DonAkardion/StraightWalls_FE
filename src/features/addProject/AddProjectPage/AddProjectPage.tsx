@@ -414,7 +414,7 @@ export function AddProjectPage() {
         </span>
       </div>
       {/* Матеріали */}
-      <div className="relative md:mt-[150px] mt-[80px]">
+      <div className="relative ">
         <div ref={materialsRef} className="relative"></div>
         <ProjectMaterials
           editable={true}

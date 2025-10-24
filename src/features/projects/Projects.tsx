@@ -95,7 +95,7 @@ export function Projects() {
 
   return (
     <>
-      <div className=" max-w-fit mx-auto mt-16 px-5 md:px-15">
+      <div className=" max-w-fit mx-auto mt-10 md:mt-16 px-5 md:px-15">
         <CrewCalendar />
       </div>
 

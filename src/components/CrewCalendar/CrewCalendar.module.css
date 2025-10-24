@@ -11,3 +11,32 @@
 .CalendarHeadDay {
   background: none;
 }
+.Tooltip {
+  font-family: var(--font-inter);
+}
+.CalendarBody {
+  padding-bottom: 10px;
+  background-clip: content-box;
+}
+.CalendarBody::-webkit-scrollbar {
+  height: 4px;
+}
+
+.CalendarBody::-webkit-scrollbar-track {
+  background: var(--yellow-gradient);
+  border-radius: 8px;
+}
+
+.CalendarBody::-webkit-scrollbar-thumb {
+  background-color: var(--color-black);
+  border-radius: 8px;
+}
+
+.CalendarBody::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-black);
+}
+@media (width >= 48rem /* 768px */) {
+  .CalendarBody::-webkit-scrollbar {
+    height: 8px;
+  }
+}
