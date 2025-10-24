@@ -30,3 +30,13 @@
 .confirmButton.confirmed:hover {
   box-shadow: inset 0 0 4px 2px var(--red);
 }
+.estimateTytle {
+  font-size: 20px;
+  line-height: 24px;
+}
+@media (width >= 48rem /* 768px */) {
+  .estimateTytle {
+    font-size: 36px;
+    line-height: 44px;
+  }
+}

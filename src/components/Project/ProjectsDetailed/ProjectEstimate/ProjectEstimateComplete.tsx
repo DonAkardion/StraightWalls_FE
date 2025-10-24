@@ -101,7 +101,9 @@ export const ProjectEstimateComplete = ({
     Number(currentForm.quantity) >= 0;
 
   return (
-    <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[156px]`}>
+    <section
+      className={`${styles.sectionEstimate} mt-[40px] md:mt-[30px] mb-[90px] md:mb-[116px]`}
+    >
       <h2 className={`${styles.estimateTytle} mb-[10px] md:mb-[16px]`}>
         {tablesTitle}
       </h2>

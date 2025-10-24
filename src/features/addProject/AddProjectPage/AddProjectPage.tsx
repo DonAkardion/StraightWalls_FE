@@ -398,8 +398,7 @@ export function AddProjectPage() {
           Відправити на Viber
         </span>
       </div>
-      <div className="relative md:mt-[150px] mt-[80px]">
-        <div ref={estimateRef} className="relative"></div>
+      <div className="relative md:mt-[160px] mt-[90px]">
         <FakeMaterialTable
           area={totalArea}
           editable={true}

@@ -115,7 +115,7 @@ export const ProjectMaterialsComplete = ({
     Number(currentForm.remaining_stock) >= 0;
 
   return (
-    <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[156px]`}>
+    <section className={`${styles.sectionEstimate} mb-[30px] md:mb-[56px]`}>
       <h2 className={`${styles.estimateTytle} mb-[10px] md:mb-[16px]`}>
         {tablesTitle}
       </h2>
