@@ -42,7 +42,7 @@ export const ProjectDates = ({
             type="date"
             value={startDate}
             onChange={(e) => onStartDateChange(e.target.value)}
-            className={`w-full h-[46px] border rounded px-3 py-2 ${
+            className={`w-full h-[46px] border rounded px-3 py-2 cursor-pointer  ${
               error ? "border-red-500" : "border-gray-300"
             }`}
           />
@@ -57,7 +57,7 @@ export const ProjectDates = ({
             type="date"
             value={endDate}
             onChange={(e) => onEndDateChange(e.target.value)}
-            className={`w-full h-[46px] border rounded px-3 py-2 ${
+            className={`w-full h-[46px] border rounded px-3 py-2 cursor-pointer ${
               error ? "border-red-500" : "border-gray-300"
             }`}
           />
