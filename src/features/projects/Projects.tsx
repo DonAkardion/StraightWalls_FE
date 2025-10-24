@@ -8,7 +8,8 @@ import { useParams } from "next/navigation";
 import { Project, ProjectResponse, ProjectStatus } from "@/types/project";
 
 import { AllProjectsList } from "@/components/Project/AllProjectsList";
-import Calendar from "@/components/Calendar/Calendar";
+// import Calendar from "@/components/Calendar/Calendar";
+import { CrewCalendar } from "@/components/CrewCalendar/CrewCalendar";
 import { ProjectsFormModal } from "@/components/Project/ProjectsFormModal";
 import { FormModal } from "@/components/Table/Form/FormModal";
 import { useUser } from "@/context/UserContextProvider";
@@ -93,44 +94,50 @@ export function Projects() {
   }
 
   return (
-    <section
-      className={`${styles.clients} max-w-[1126px] m-auto pt-[46px] pl-[20px] pb-[35px] pr-[20px] md:pt-[60px] md:pl-[60px] md:pr-[60px] md:pb-[50px]`}
-    >
-      <AllProjectsList
-        projects={projects}
-        onDelete={handleDelete}
-        onEdit={(updated) => {
-          setModalData(updated);
-          setCurrentForm(updated);
-        }}
-        onAdd={() => {}}
-        role={roleStr}
-        tablesTytle="Всі проєкти"
-        onRefreshReport={(id) => {}}
-      />
+    <>
+      <div className=" max-w-fit mx-auto mt-16 px-5 md:px-15">
+        <CrewCalendar />
+      </div>
 
-      <Calendar />
-
-      {currentForm && modalData && (
-        <FormModal
-          title="Редагувати проєкт"
-          onClose={() => {
-            setModalData(null);
-            setCurrentForm(null);
+      <section
+        className={`${styles.clients} max-w-[1126px] m-auto pt-[46px] pl-[20px] pb-[35px] pr-[20px] md:pt-[60px] md:pl-[60px] md:pr-[60px] md:pb-[50px]`}
+      >
+        <AllProjectsList
+          projects={projects}
+          onDelete={handleDelete}
+          onEdit={(updated) => {
+            setModalData(updated);
+            setCurrentForm(updated);
           }}
-          onSave={handleSaveProject}
-          isValid={
-            !!currentForm.name &&
-            !!currentForm.client_id &&
-            !!currentForm.team_id
-          }
-        >
-          <ProjectsFormModal
-            project={modalData}
-            onChange={(updated) => setCurrentForm(updated)}
-          />
-        </FormModal>
-      )}
-    </section>
+          onAdd={() => {}}
+          role={roleStr}
+          tablesTytle="Всі проєкти"
+          onRefreshReport={(id) => {}}
+        />
+
+        {/* <Calendar /> */}
+
+        {currentForm && modalData && (
+          <FormModal
+            title="Редагувати проєкт"
+            onClose={() => {
+              setModalData(null);
+              setCurrentForm(null);
+            }}
+            onSave={handleSaveProject}
+            isValid={
+              !!currentForm.name &&
+              !!currentForm.client_id &&
+              !!currentForm.team_id
+            }
+          >
+            <ProjectsFormModal
+              project={modalData}
+              onChange={(updated) => setCurrentForm(updated)}
+            />
+          </FormModal>
+        )}
+      </section>
+    </>
   );
 }
