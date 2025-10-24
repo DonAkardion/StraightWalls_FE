@@ -2,7 +2,7 @@
 
 import React, { useMemo, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { FakeMaterialTable } from "@/features/addProject/FakeMaterial/FakeMaterialTable";
+import { FakeMaterialTable } from "@/components/Project/ProjectsDetailed/FakeMaterial/FakeMaterialTable";
 
 import styles from "./AddProjectPage.module.css";
 import {
@@ -398,8 +398,7 @@ export function AddProjectPage() {
           Відправити на Viber
         </span>
       </div>
-      <div className="relative md:mt-[150px] mt-[80px]">
-        <div ref={estimateRef} className="relative"></div>
+      <div className="relative md:mt-[160px] mt-[90px]">
         <FakeMaterialTable
           area={totalArea}
           editable={true}
@@ -414,7 +413,7 @@ export function AddProjectPage() {
         </span>
       </div>
       {/* Матеріали */}
-      <div className="relative md:mt-[150px] mt-[80px]">
+      <div className="relative ">
         <div ref={materialsRef} className="relative"></div>
         <ProjectMaterials
           editable={true}

@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { ProjectInfo } from "@/components/Project/ProjectsDetailed/ProjectInfo/ProjectInfo";
 import { ProjectEstimateComplete } from "@/components/Project/ProjectsDetailed/ProjectEstimate/ProjectEstimateComplete";
 import { ProjectMaterialsComplete } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsComplete";
+import { FakeMaterialTable } from "@/components/Project/ProjectsDetailed/FakeMaterial/FakeMaterialTable";
 import { ProjectPayment } from "@/components/Project/ProjectsDetailed/ProjectPayment/ProjectPayment";
 import {
   ProjectPaymentForm,
@@ -89,6 +90,11 @@ export function ProjectsDetailed({ projectId }: Props) {
           tableClassName="projectDetailedMaterialsCompleteTableWrap"
           tablesTitle="Матеріали"
           role={roleStr}
+        />
+        <FakeMaterialTable
+          area={100} //area={project.area || 100}
+          editable={false}
+          viewMode={true}
         />
         <ProjectEstimateComplete
           report={report}

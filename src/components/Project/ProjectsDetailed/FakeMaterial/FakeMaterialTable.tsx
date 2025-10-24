@@ -3,6 +3,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import { NumericInputWithControls } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsTable/NumericInputWithControls";
+import { FormModal } from "@/components/Table/Form/FormModal";
 import styles from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsTable/ProjectMaterialsTable.module.css";
 
 interface FakeMaterial {
@@ -16,6 +17,7 @@ interface FakeMaterial {
 interface Props {
   area: number;
   editable?: boolean;
+  viewMode?: boolean;
   onChange?: (data: {
     name: string;
     unit: string;
@@ -28,6 +30,7 @@ interface Props {
 export const FakeMaterialTable = ({
   area,
   editable = false,
+  viewMode = false,
   onChange,
 }: Props) => {
   const [price, setPrice] = useState<number>(235);
@@ -35,6 +38,10 @@ export const FakeMaterialTable = ({
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+
+  // modal edit (for viewMode)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editForm, setEditForm] = useState({ price: 0, quantity: 0 });
 
   useEffect(() => {
     if (area > 0) setQuantity(area);
@@ -90,8 +97,21 @@ export const FakeMaterialTable = ({
 
   const handleConfirm = () => setIsConfirmed((prev) => !prev);
 
+  const openEditModal = () => {
+    setEditForm({ price, quantity });
+    setIsEditModalOpen(true);
+  };
+
+  const saveEdit = () => {
+    setPrice(editForm.price);
+    setQuantity(editForm.quantity);
+    setIsEditModalOpen(false);
+  };
+
+  const isValid = editForm.price > 0 && editForm.quantity > 0;
+
   return (
-    <section className={`${styles.sectionEstimate} mb-[90px] md:mb-[66px]`}>
+    <section className={`${styles.sectionEstimate} `}>
       <h2
         className={`${styles.estimateTytle} mb-[26px] sm:mb-[10px] md:mb-[16px]`}
       >
@@ -105,6 +125,7 @@ export const FakeMaterialTable = ({
         onInspect={(item) =>
           setExpandedId((prev) => (prev === item.id ? null : item.id))
         }
+        onEdit={viewMode ? openEditModal : undefined}
         columns={[
           { key: "name", label: "Назва матеріалу", render: (m) => m.name },
           {
@@ -165,21 +186,64 @@ export const FakeMaterialTable = ({
           />
         )}
       />
-
-      <div className="w-full flex justify-center">
-        <div
-          className={`${styles.confirmButton} ${
-            isConfirmed ? styles.confirmed : ""
-          } flex rounded-[5px] md:mt-[40px] md:mb-[40px] mb-[20px] mt-[20px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
-        >
-          <button
-            onClick={handleConfirm}
-            className="w-full h-full flex items-center justify-center text-center"
+      {editable && (
+        <div className="w-full flex justify-center">
+          <div
+            className={`${styles.confirmButton} ${
+              isConfirmed ? styles.confirmed : ""
+            } flex rounded-[5px] md:mt-[40px] md:mb-[40px] mb-[20px] mt-[20px] w-full max-w-[360px] h-[50px] items-center justify-center cursor-pointer`}
           >
-            {isConfirmed ? "Редагувати" : "Підтвердити"}
-          </button>
+            <button
+              onClick={handleConfirm}
+              className="w-full h-full flex items-center justify-center text-center"
+            >
+              {isConfirmed ? "Редагувати" : "Підтвердити"}
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+      {/* Modal for view mode */}
+      {isEditModalOpen && (
+        <FormModal
+          title="Редагувати матеріал"
+          onClose={() => setIsEditModalOpen(false)}
+          onSave={saveEdit}
+          isValid={isValid}
+        >
+          <div className="flex flex-col gap-3 p-4">
+            <label>
+              Ціна, грн:
+              <input
+                name="price"
+                type="number"
+                value={editForm.price}
+                onChange={(e) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    price: Number(e.target.value),
+                  }))
+                }
+                className="w-full border-b px-2 py-1 outline-none focus:outline-none focus-visible:outline-none appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </label>
+            <label>
+              Кількість:
+              <input
+                name="quantity"
+                type="number"
+                value={editForm.quantity}
+                onChange={(e) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    quantity: Number(e.target.value),
+                  }))
+                }
+                className="w-full border-b px-2 py-1 outline-none focus:outline-none focus-visible:outline-none appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              />
+            </label>
+          </div>
+        </FormModal>
+      )}
     </section>
   );
 };

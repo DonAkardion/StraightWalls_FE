@@ -26,9 +26,13 @@
 .navigationAddProjectBtn {
   background: var(--yellow-gradient);
 }
-.mobileMenuAddProjectBtn {
-  background: var(--yellow-gradient);
+.navigationAddProjectBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
 }
+.mobileMenuAddProjectBtn:hover {
+  box-shadow: 0px 4px 14.8px 0px #ffb326;
+}
+
 .personalNotifyMark {
   background: var(--green);
 }
