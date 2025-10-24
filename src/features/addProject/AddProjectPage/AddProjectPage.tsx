@@ -2,7 +2,7 @@
 
 import React, { useMemo, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { FakeMaterialTable } from "@/features/addProject/FakeMaterial/FakeMaterialTable";
+import { FakeMaterialTable } from "@/components/Project/ProjectsDetailed/FakeMaterial/FakeMaterialTable";
 
 import styles from "./AddProjectPage.module.css";
 import {
