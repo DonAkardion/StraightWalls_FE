@@ -68,7 +68,17 @@ export const AddWorkerModal = ({ onClose, onAdd }: AddWorkerModalProps) => {
     }
 
     try {
-      onAdd(formData as Worker);
+      const payload: Partial<Worker> = {
+        full_name: formData.full_name,
+        position: formData.position,
+        phone_number: formData.phone_number,
+      };
+
+      if (formData.team_id) {
+        payload.team_id = formData.team_id;
+      }
+
+      onAdd(payload as Worker);
       onClose();
     } catch (error) {
       if (error instanceof Error) {

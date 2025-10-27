@@ -4,6 +4,8 @@ import { Table } from "@/components/Table/Table";
 import { Inspect } from "@/components/Table/Inspect/Inspect";
 import { NumericInputWithControls } from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsTable/NumericInputWithControls";
 import { FormModal } from "@/components/Table/Form/FormModal";
+import { patchProject } from "@/api/projects";
+import { useUser } from "@/context/UserContextProvider";
 import styles from "@/components/Project/ProjectsDetailed/ProjectMaterials/ProjectMaterialsTable/ProjectMaterialsTable.module.css";
 
 interface FakeMaterial {
@@ -25,6 +27,8 @@ interface Props {
     quantity: number;
     sum: number;
   }) => void;
+  initialPrice?: number;
+  projectId?: number;
 }
 
 export const FakeMaterialTable = ({
@@ -32,8 +36,11 @@ export const FakeMaterialTable = ({
   editable = false,
   viewMode = false,
   onChange,
+  initialPrice,
+  projectId,
 }: Props) => {
-  const [price, setPrice] = useState<number>(235);
+  const { token } = useUser();
+  const [price, setPrice] = useState<number>(initialPrice ?? 235);
   const [quantity, setQuantity] = useState<number>(area);
   const [inputValues, setInputValues] = useState<Record<string, string>>({});
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -102,10 +109,23 @@ export const FakeMaterialTable = ({
     setIsEditModalOpen(true);
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     setPrice(editForm.price);
     setQuantity(editForm.quantity);
     setIsEditModalOpen(false);
+
+    if (projectId && token) {
+      try {
+        await patchProject(
+          projectId,
+          { universal_material_price_per_m2: String(editForm.price) },
+          token
+        );
+        console.log("✅ Ціну фейкового матеріалу оновлено:", editForm.price);
+      } catch (err) {
+        console.error(" Помилка оновлення матеріалу:", err);
+      }
+    }
   };
 
   const isValid = editForm.price > 0 && editForm.quantity > 0;
@@ -150,23 +170,7 @@ export const FakeMaterialTable = ({
           {
             key: "quantity",
             label: "Кількість",
-            render: (m) =>
-              editable && !isConfirmed ? (
-                <NumericInputWithControls
-                  materialId={m.id}
-                  field="quantity"
-                  value={String(quantity)}
-                  fallback={0}
-                  onInputChange={(_, __, val) =>
-                    setQuantity(Math.max(0, Number(val)))
-                  }
-                  onStepChange={(_, __, val) => setQuantity(Math.max(0, val))}
-                />
-              ) : (
-                <span className={isConfirmed ? "text-green-600" : ""}>
-                  {m.quantity}
-                </span>
-              ),
+            render: (m) => <span className="">{quantity}</span>,
           },
           { key: "unit", label: "Од. вимір.", render: (m) => m.unit },
           {
@@ -226,7 +230,7 @@ export const FakeMaterialTable = ({
                 className="w-full border-b px-2 py-1 outline-none focus:outline-none focus-visible:outline-none appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
             </label>
-            <label>
+            {/* <label>
               Кількість:
               <input
                 name="quantity"
@@ -240,7 +244,7 @@ export const FakeMaterialTable = ({
                 }
                 className="w-full border-b px-2 py-1 outline-none focus:outline-none focus-visible:outline-none appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               />
-            </label>
+            </label> */}
           </div>
         </FormModal>
       )}

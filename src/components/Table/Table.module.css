@@ -216,6 +216,9 @@
   background: #ffb32666;
   width: 120px;
 }
+:global(.projectEstimateTableWrap) .TableCell:nth-child(8) {
+  width: 120px;
+}
 :global(.projectEstimateTableWrap) .indentCellLast {
   display: none;
 }
@@ -302,7 +305,6 @@
   width: 100px;
 }
 :global(.fakeMaterialTable) .TableRowCell:nth-child(7) {
-  background: #ffb32666;
   width: 120px;
 }
 :global(.fakeMaterialTable) .TableRowCell:nth-child(9) {
@@ -311,9 +313,7 @@
 :global(.fakeMaterialTable) .TableCell:nth-child(4) {
   background: #ffb32666;
 }
-:global(.fakeMaterialTable) .TableCell:nth-child(5) {
-  background: #ffb32666;
-}
+
 /* правила для AddProject  MaterialsIncome*/
 :global(.projectMaterialsIncomeEditorWrap) .TableRowCell {
   padding: 0 6px;

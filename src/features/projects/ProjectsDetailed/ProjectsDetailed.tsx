@@ -81,6 +81,18 @@ export function ProjectsDetailed({ projectId }: Props) {
 
   const project = report.project;
 
+  // === CALCULATE AREA AND PRICE ===
+  const stats = project.object?.roomStats;
+  const area = stats
+    ? Number(stats.totalArea ?? 0) +
+      Number(stats.totalSlopesMeters ?? 0) +
+      Number(stats.totalElementsMeters ?? 0)
+    : 0;
+
+  const initialPrice = project.universal_material_price_per_m2
+    ? Number(project.universal_material_price_per_m2)
+    : undefined;
+
   return (
     <div className="m-auto max-w-[1440px] pl-[20px] pr-[20px] pt-[76px] pb-[40px] md:pl-[80px] md:pr-[56px] md:pt-[60px] md:pb-[48px] ">
       <div>
@@ -92,9 +104,11 @@ export function ProjectsDetailed({ projectId }: Props) {
           role={roleStr}
         />
         <FakeMaterialTable
-          area={100} //area={project.area || 100}
+          area={area}
+          initialPrice={initialPrice}
           editable={false}
           viewMode={true}
+          projectId={project.id}
         />
         <ProjectEstimateComplete
           report={report}

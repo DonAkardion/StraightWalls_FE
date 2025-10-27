@@ -69,6 +69,9 @@ export function AddProjectPage() {
   const [error, setError] = useState<string | null>(null);
   const [isNameTouched, setIsNameTouched] = useState(false);
   const [totalArea, setTotalArea] = useState(0);
+  const [roomStats, setRoomStats] = useState<any | null>(null);
+  const [universalMaterialPrice, setUniversalMaterialPrice] =
+    useState<number>(235);
 
   // === INIT LOAD ===
   useEffect(() => {
@@ -85,20 +88,6 @@ export function AddProjectPage() {
         setClients(clientsData);
         setServices(servicesData.map((s) => ({ ...s, quantity: 0 })));
 
-        // const mainMaterial = materialsData[0];
-        // if (mainMaterial) {
-        //   setMaterials([
-        //     {
-        //       ...mainMaterial,
-        //       quantity: 0,
-        //       previous_remaining: 0,
-        //       additional_delivery: 0,
-        //       current_remaining: 0,
-        //       delivery_quantity: 0,
-        //     },
-        //   ]);
-        // }
-        // } catch {
         setMaterials(
           materialsData.map((m) => ({
             ...m,
@@ -179,66 +168,42 @@ export function AddProjectPage() {
     });
     setMaterials(newMaterials);
   };
-  // === AREA → MAIN SERVICES ===
+  // === AREA → MAIN SERVICES (advanced) ===
   useEffect(() => {
-    if (totalArea <= 0 || services.length === 0) return;
+    if (!roomStats || !services.length) return;
 
-    const needsUpdate = services.some(
-      (s) => s.service_type === "main" && (s.quantity ?? 0) !== totalArea
-    );
+    // calc results
+    const totalSum =
+      Number(roomStats.regularRoomsArea ?? 0) +
+      Number(roomStats.regularRoomsSlopesMeters ?? 0) +
+      Number(roomStats.regularRoomsElementsMeters ?? 0) +
+      Number(roomStats.bathroomArea ?? 0) +
+      Number(roomStats.bathroomSlopesMeters ?? 0) +
+      Number(roomStats.bathroomElementsMeters ?? 0);
 
-    if (!needsUpdate) return;
+    const values = [
+      totalSum, // 1 - Total area
+      Number(roomStats.regularRoomsSlopesMeters ?? 0), // 2
+      Number(roomStats.regularRoomsElementsMeters ?? 0), // 3
+      Number(roomStats.bathroomArea ?? 0) +
+        Number(roomStats.bathroomSlopesMeters ?? 0) +
+        Number(roomStats.bathroomElementsMeters ?? 0), // 4
+      Number(roomStats.regularRoomsArea ?? 0), // 5
+    ];
 
-    const updatedServices = services.map((s) =>
-      s.service_type === "main" ? { ...s, quantity: totalArea } : s
-    );
+    const mainServices = services.filter((s) => s.service_type === "main");
+    if (!mainServices.length) return;
 
-    setServices(updatedServices);
-  }, [totalArea, services, setServices]);
-  // === AREA → MATERIAL ===
-  // useEffect(() => {
-  //   if (totalArea <= 0 || !materials[0]) return;
+    const updated = services.map((s) => {
+      if (s.service_type !== "main") return s;
+      const mainIndex = mainServices.findIndex((m) => m.id === s.id);
+      const newQuantity =
+        mainIndex < values.length ? values[mainIndex] : s.quantity ?? 0;
+      return { ...s, quantity: newQuantity };
+    });
 
-  //   const m = materials[0];
-  //   const updated = {
-  //     ...m,
-  //     quantity: totalArea,
-  //     previous_remaining: m.previous_remaining ?? 0,
-  //     additional_delivery: m.additional_delivery ?? 0,
-  //     current_remaining: m.current_remaining ?? 0,
-  //     delivery_quantity:
-  //       m.delivery_quantity ??
-  //       Math.max(0, totalArea - (m.previous_remaining ?? 0)),
-  //   };
-
-  //   if (JSON.stringify(m) !== JSON.stringify(updated)) {
-  //     setMaterials([updated]);
-  //   }
-  // }, [totalArea]);
-
-  // === MATERIAL CHANGES ===
-  // const handleMaterialsSelectionChange = (updated: MaterialSelection[]) => {
-  //   if (!materials[0]) return;
-  //   const m = materials[0];
-  //   const found = updated.find((u) => u.materialId === m.id);
-  //   if (!found) return;
-
-  //   const next = {
-  //     ...m,
-  //     quantity: found.quantity ?? m.quantity ?? 0,
-  //     base_purchase_price:
-  //       found.base_purchase_price ?? m.base_purchase_price ?? 0,
-  //     previous_remaining: found.previous_remaining ?? m.previous_remaining ?? 0,
-  //     additional_delivery:
-  //       found.additional_delivery ?? m.additional_delivery ?? 0,
-  //     current_remaining: found.current_remaining ?? m.current_remaining ?? 0,
-  //     delivery_quantity: found.delivery_quantity ?? m.delivery_quantity ?? 0,
-  //   };
-
-  //   if (JSON.stringify(next) !== JSON.stringify(m)) {
-  //     setMaterials([next]);
-  //   }
-  // };
+    setServices(updated);
+  }, [roomStats]);
 
   // === SUBMIT ===
   const handleSubmit = async () => {
@@ -252,6 +217,7 @@ export function AddProjectPage() {
         status: "new",
         start_date: startDate || null,
         end_date: endDate || null,
+        universal_material_price_per_m2: String(universalMaterialPrice),
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
@@ -274,12 +240,6 @@ export function AddProjectPage() {
           }
         })
       );
-      // await createProject(payload, token);
-      // const m = materials[0];
-      // if (m && m.quantity > 0) {
-      //   const newQty = Math.max(0, (m.stock ?? 0) - m.quantity);
-      //   await updateMaterialStock(token, m.id, newQty);
-      // }
       router.push(`/${role}/projects`);
     } catch (error) {
       console.error("Помилка створення проєкту", error);
@@ -378,12 +338,17 @@ export function AddProjectPage() {
       />
       {clientId && objectId && (
         <div className="mb-[30px]">
-          <SelectedObjectInfo objectId={objectId} onAreaChange={setTotalArea} />
+          <SelectedObjectInfo
+            objectId={objectId}
+            onAreaChange={setTotalArea}
+            onStatsChange={setRoomStats}
+          />
         </div>
       )}
       {/* Кошторис по послугах */}
       <div className="relative">
         <div ref={estimateRef} className="relative"></div>
+
         <ProjectEstimate
           services={services}
           editable={true}
@@ -403,7 +368,7 @@ export function AddProjectPage() {
           area={totalArea}
           editable={true}
           onChange={(data) => {
-            console.log("Fake material data:", data);
+            setUniversalMaterialPrice(data.price);
           }}
         />
         <span
@@ -432,12 +397,6 @@ export function AddProjectPage() {
           </span>
         )}
       </div>
-
-      {/* <MaterialIncomeEditor
-        materials={materials}
-        tableClassName="projectMaterialsIncomeEditorWrap"
-        tablesTytle="Заробіток на матеріалах"
-      /> */}
 
       <div
         className={`${styles.materialPayment} my-[40px] md:mt-[170px] md:mb-[100px]`}

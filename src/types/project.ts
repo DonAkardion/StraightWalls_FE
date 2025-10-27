@@ -49,6 +49,7 @@ export interface UpdateProjectPayload {
   status?: ProjectStatus;
   start_date?: string;
   end_date?: string;
+  universal_material_price_per_m2?: string;
 }
 
 export interface ProjectResponse {
@@ -95,6 +96,8 @@ export interface ProjectReportResponse {
     is_team_paid: boolean;
     start_date: string;
     end_date: string;
+    universal_material_price_per_m2: string | null;
+    universal_material_total: string | null;
     created_at: string;
     updated_at: string;
     client: Client;
