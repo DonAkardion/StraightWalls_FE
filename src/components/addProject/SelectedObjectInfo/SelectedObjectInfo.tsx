@@ -10,11 +10,13 @@ import { Room } from "@/types/rooms";
 interface Props {
   objectId: number | null;
   onAreaChange?: (area: number) => void;
+  onStatsChange?: (stats: ClientObject["roomStats"]) => void;
 }
 
 export const SelectedObjectInfo: React.FC<Props> = ({
   objectId,
   onAreaChange,
+  onStatsChange,
 }) => {
   const { token } = useUser();
   const [loading, setLoading] = useState(false);
@@ -43,6 +45,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({
     if (!object || !onAreaChange || !object.roomStats) return;
 
     const stats = object.roomStats;
+    onStatsChange?.(stats);
     const totalSum =
       Number(stats.regularRoomsArea ?? 0) +
       Number(stats.regularRoomsSlopesMeters ?? 0) +
@@ -52,7 +55,7 @@ export const SelectedObjectInfo: React.FC<Props> = ({
       Number(stats.bathroomElementsMeters ?? 0);
 
     onAreaChange(totalSum);
-  }, [object, onAreaChange]);
+  }, [object, onAreaChange, onStatsChange]);
 
   const ROOM_TYPE_LABELS: Record<string, string> = {
     wardrobe: "Гардероб",
@@ -105,27 +108,27 @@ export const SelectedObjectInfo: React.FC<Props> = ({
           >
             {[
               {
-                label: "Площа кімнат",
+                label: "Гіпс м²",
                 value: object.roomStats.regularRoomsArea,
               },
               {
-                label: "Відкоси",
+                label: "МПВ1",
                 value: object.roomStats.regularRoomsSlopesMeters,
               },
               {
-                label: "Елементи",
+                label: "МП1",
                 value: object.roomStats.regularRoomsElementsMeters,
               },
               {
-                label: "Площа Санвузлів",
+                label: "Санвузл м²",
                 value: object.roomStats.bathroomArea,
               },
               {
-                label: "Відкоси Санвузлів",
+                label: "МПВ",
                 value: object.roomStats.bathroomSlopesMeters,
               },
               {
-                label: "Елементи Санвузлів",
+                label: "МП",
                 value: object.roomStats.bathroomElementsMeters,
               },
             ].map((stat, idx) => (

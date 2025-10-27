@@ -11,6 +11,8 @@ interface ProjectRange {
   crewId: number;
   projectId: number;
   name: string;
+  address: string;
+  clientPhone: string;
   start: Date;
   end: Date;
   color: string;
@@ -19,6 +21,8 @@ interface ProjectRange {
 interface MonthSegment {
   projectId: number;
   name: string;
+  address: string;
+  clientPhone: string;
   color: string;
   startDay: number;
   endDay: number;
@@ -103,6 +107,8 @@ export const CrewCalendar = () => {
               crewId: crew.id,
               projectId: proj.id,
               name: report.project.name,
+              address: report.project.object.address,
+              clientPhone: report.project.client.phone_number,
               start: new Date(report.project.start_date),
               end: new Date(report.project.end_date),
               color,
@@ -194,6 +200,8 @@ export const CrewCalendar = () => {
         monthSegments.push({
           projectId: p.projectId,
           name: p.name,
+          address: p.address,
+          clientPhone: p.clientPhone,
           color: p.color,
           startDay: clipped.startDay,
           endDay: clipped.endDay,
@@ -367,12 +375,19 @@ export const CrewCalendar = () => {
                             whiteSpace: "nowrap",
                             textOverflow: "ellipsis",
                           }}
-                          onMouseEnter={(e) => showTooltip(`${seg.name}`, e)}
+                          onMouseEnter={(e) =>
+                            showTooltip(
+                              ` №${seg.projectId} ${seg.name} / ${seg.address} /
+                            ${seg.clientPhone}`,
+                              e
+                            )
+                          }
                           onMouseLeave={hideTooltip}
                           // title={seg.name}
                         >
                           <span className="truncate w-full text-center">
-                            {seg.name}
+                            №{seg.projectId} {seg.name} / {seg.address} /{" "}
+                            {seg.clientPhone}
                           </span>
                         </div>
                       );
