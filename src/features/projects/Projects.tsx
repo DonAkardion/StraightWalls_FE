@@ -59,11 +59,9 @@ export function Projects() {
   const handleSaveProject = async () => {
     if (!token || !currentForm) return;
     try {
-      const updatedResp = await patchProject(
-        currentForm.id,
-        currentForm,
-        token
-      );
+      const { team_id, ...rest } = currentForm;
+      const payload = team_id ? { ...rest, team_id } : rest;
+      const updatedResp = await patchProject(currentForm.id, payload, token);
       const updated = mapProject(updatedResp);
 
       setProjects((prev) =>
@@ -125,11 +123,7 @@ export function Projects() {
               setCurrentForm(null);
             }}
             onSave={handleSaveProject}
-            isValid={
-              !!currentForm.name &&
-              !!currentForm.client_id &&
-              !!currentForm.team_id
-            }
+            isValid={!!currentForm.name && !!currentForm.client_id}
           >
             <ProjectsFormModal
               project={modalData}

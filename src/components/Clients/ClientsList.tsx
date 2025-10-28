@@ -36,7 +36,8 @@ export const ClientsList = ({
     <div>
       {client.objects.map((o, i) => (
         <div key={i}>
-          {o.name}: {o.address}
+          №{o.id} {o.name}
+          {/* : {o.address} */}
         </div>
       ))}
     </div>

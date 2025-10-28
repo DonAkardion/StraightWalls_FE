@@ -52,6 +52,25 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
   }>({});
 
   useEffect(() => {
+    if (isEdit) return;
+
+    const { full_name, phone_number, object } = createForm;
+
+    if (object.address.trim() && full_name.trim() && phone_number.trim()) {
+      const autoName = `${object.address}, ${full_name}, ${phone_number}`;
+      setCreateForm((prev) => ({
+        ...prev,
+        object: { ...prev.object, name: autoName },
+      }));
+    }
+  }, [
+    createForm.full_name,
+    createForm.phone_number,
+    createForm.object.address,
+    isEdit,
+  ]);
+
+  useEffect(() => {
     if (client) {
       setEditForm(client);
     } else {
@@ -172,7 +191,7 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
 
       {!isEdit && (
         <>
-          <label className="block mb-3">
+          {/* <label className="block mb-3">
             <div>Назва Об’єкту</div>
             <input
               type="text"
@@ -190,7 +209,7 @@ export const ClientFormModal = ({ client, onChange, refreshClient }: Props) => {
             {touched.objectName && errors.objectName && (
               <p className="text-red-500 text-sm mt-1">{errors.objectName}</p>
             )}
-          </label>
+          </label> */}
           <label className="block mb-3">
             <div>Адреса</div>
             <input

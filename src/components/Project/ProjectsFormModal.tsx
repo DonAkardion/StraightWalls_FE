@@ -17,7 +17,12 @@ interface PaymentCalendarProps {
   max?: string;
 }
 
-const PaymentCalendar: React.FC<PaymentCalendarProps> = ({ value, onChange, min, max }) => {
+const PaymentCalendar: React.FC<PaymentCalendarProps> = ({
+  value,
+  onChange,
+  min,
+  max,
+}) => {
   const [selectedDate, setSelectedDate] = useState(value);
 
   useEffect(() => {
@@ -44,7 +49,10 @@ interface ProjectsFormModalProps {
   onChange: (updated: Project) => void;
 }
 
-export function ProjectsFormModal({ project, onChange }: ProjectsFormModalProps) {
+export function ProjectsFormModal({
+  project,
+  onChange,
+}: ProjectsFormModalProps) {
   const { token } = useUser();
   const [formData, setFormData] = useState<Project>(project);
   const [clients, setClients] = useState<Client[]>([]);
@@ -58,7 +66,10 @@ export function ProjectsFormModal({ project, onChange }: ProjectsFormModalProps)
     if (!token) return;
     const fetchData = async () => {
       try {
-        const [clientsRes, crewsRes] = await Promise.all([getClients(token), getCrews(token)]);
+        const [clientsRes, crewsRes] = await Promise.all([
+          getClients(token),
+          getCrews(token),
+        ]);
         setClients(clientsRes);
         setCrews(crewsRes);
       } catch (e) {
@@ -83,10 +94,16 @@ export function ProjectsFormModal({ project, onChange }: ProjectsFormModalProps)
   };
 
   const handleCrewChange = (crewId: number | null) => {
-    if (crewId === null) return;
-    const updated = { ...formData, team_id: crewId };
-    setFormData(updated);
-    onChange(updated);
+    let updated: Partial<Project> = { ...formData };
+
+    if (crewId) {
+      updated.team_id = crewId;
+    } else {
+      const { team_id, ...rest } = updated;
+      updated = rest;
+    }
+    setFormData(updated as Project);
+    onChange(updated as Project);
   };
 
   return (
@@ -102,10 +119,18 @@ export function ProjectsFormModal({ project, onChange }: ProjectsFormModalProps)
       />
 
       <div className={styles.ModalInputTytle}>Оберіть клієнта</div>
-      <ClientSelector clients={clients} value={formData.client_id ?? null} onChange={handleClientChange} />
+      <ClientSelector
+        clients={clients}
+        value={formData.client_id ?? null}
+        onChange={handleClientChange}
+      />
 
       <div className={styles.ModalInputTytle}>Оберіть бригаду</div>
-      <CrewSelector crews={crews} value={formData.team_id ?? null} onChange={handleCrewChange} />
+      <CrewSelector
+        crews={crews}
+        value={formData.team_id ?? null}
+        onChange={handleCrewChange}
+      />
 
       <div className={styles.ModalInputTytle}>Дата початку терміну</div>
       <PaymentCalendar
