@@ -70,7 +70,8 @@ export const ObjectSelector: React.FC<Props> = ({
       >
         {selected ? (
           <span className={`${styles.selectorPlaceholder}`}>
-            {selected.name}: {selected.address}
+            {selected.name}
+            {/* : {selected.address} */}
           </span>
         ) : (
           <span className={`${styles.selectorPlaceholder}`}>{placeholder}</span>

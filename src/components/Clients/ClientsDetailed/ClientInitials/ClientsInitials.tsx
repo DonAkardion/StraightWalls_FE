@@ -49,8 +49,8 @@ export const ClientsInitials = ({ client, role }: Props) => {
             return (
               <div key={column} className="flex flex-col gap-2">
                 {client.objects.map((obj) => {
-                  const label = `${obj.name}: ${obj.address}`;
-                  const isEditable = role === "admin" || role === "accountant"; // 👈 дозволені ролі
+                  const label = `№${obj.id} ${obj.name}`; //: ${obj.address}
+                  const isEditable = role === "admin" || role === "accountant";
                   return (
                     <ClientInfoItem
                       key={obj.id}

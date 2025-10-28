@@ -10,6 +10,8 @@ import { useUser } from "@/context/UserContextProvider";
 interface ProjectRange {
   crewId: number;
   projectId: number;
+  objectId: number;
+  objectName: string;
   name: string;
   address: string;
   clientPhone: string;
@@ -20,6 +22,8 @@ interface ProjectRange {
 
 interface MonthSegment {
   projectId: number;
+  objectId: number;
+  objectName: string;
   name: string;
   address: string;
   clientPhone: string;
@@ -106,6 +110,8 @@ export const CrewCalendar = () => {
             projectRanges.push({
               crewId: crew.id,
               projectId: proj.id,
+              objectId: report.project.object.id,
+              objectName: report.project.object.name,
               name: report.project.name,
               address: report.project.object.address,
               clientPhone: report.project.client.phone_number,
@@ -199,6 +205,8 @@ export const CrewCalendar = () => {
         if (!clipped) return;
         monthSegments.push({
           projectId: p.projectId,
+          objectId: p.objectId,
+          objectName: p.objectName,
           name: p.name,
           address: p.address,
           clientPhone: p.clientPhone,
@@ -376,9 +384,13 @@ export const CrewCalendar = () => {
                             textOverflow: "ellipsis",
                           }}
                           onMouseEnter={(e) =>
+                            // showTooltip(
+                            //   ` №${seg.projectId} ${seg.name} / ${seg.address} /
+                            // ${seg.clientPhone}`,
+                            //   e
+                            // )
                             showTooltip(
-                              ` №${seg.projectId} ${seg.name} / ${seg.address} /
-                            ${seg.clientPhone}`,
+                              ` № ${seg.objectId} ${seg.objectName}`,
                               e
                             )
                           }
@@ -386,8 +398,9 @@ export const CrewCalendar = () => {
                           // title={seg.name}
                         >
                           <span className="truncate w-full text-center">
-                            №{seg.projectId} {seg.name} / {seg.address} /{" "}
-                            {seg.clientPhone}
+                            {/* №{seg.projectId} {seg.name} / {seg.address} /{" "}
+                            {seg.clientPhone} */}
+                            №{seg.objectId} {seg.objectName}
                           </span>
                         </div>
                       );

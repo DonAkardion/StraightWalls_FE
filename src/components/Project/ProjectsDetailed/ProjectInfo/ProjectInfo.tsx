@@ -52,9 +52,9 @@ export function ProjectInfo({ report, role }: Props) {
     if (!token) return;
 
     try {
-      // Робимо PATCH запит на бекенд
+      // PATCH
       await changeProjectStatus(project.id, token, { status: newStatus });
-      // Оновлюємо локальний стан
+      // local update
       setMockStatus(newStatus as typeof mockStatus);
     } catch (error) {
       console.error("Не вдалося змінити статус проекту:", error);
@@ -85,8 +85,10 @@ export function ProjectInfo({ report, role }: Props) {
           <h2
             className={`${styles.projectInfoNameTytle}  flex items-center gap-[20px] mb-[14px] md:mb-0 md:gap-[6px]`}
           >
-            <span>{project.name}</span>{" "}
-            <span className="whitespace-nowrap">№ {project.id}</span>
+            <span>
+              {project.name} № {project.id}
+            </span>{" "}
+            {/* <span className="whitespace-nowrap"></span> */}
           </h2>
         </div>
         {role === "admin" || role === "accountant" ? (

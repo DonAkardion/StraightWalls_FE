@@ -122,7 +122,7 @@ export function AddProjectPage() {
     if (isNameTouched) return;
     const client = clients.find((c) => c.id === clientId);
     const object = objects.find((o) => o.id === objectId);
-    if (client && object) setName(`${client.full_name} / ${object.name}`);
+    if (client && object) setName(`${object.name}`); //${client.full_name} /
     else if (client) setName(client.full_name);
   }, [clientId, objectId, clients, objects, setName, isNameTouched]);
 
