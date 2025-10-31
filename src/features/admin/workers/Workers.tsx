@@ -46,6 +46,10 @@ export function Workers() {
     status: "",
   });
 
+  const [selectedExistingWorkers, setSelectedExistingWorkers] = useState<
+    Worker[]
+  >([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // token
@@ -96,6 +100,7 @@ export function Workers() {
       console.log("Error:", error);
     }
   };
+
   const handleSaveCrew = async () => {
     if (!token) return;
     try {
@@ -107,19 +112,48 @@ export function Workers() {
       setCrews((prev) =>
         prev.map((c) => (c.id === updatedCrew.id ? updatedCrew : c))
       );
+
+      if (selectedExistingWorkers.length > 0) {
+        const updatedWorkersLocal = [...workers];
+
+        for (const worker of selectedExistingWorkers) {
+          // PATCH worker, change team_id
+          const patched = await handleUpdateWorker(worker.id, token, {
+            team_id: updatedCrew.id,
+          });
+
+          // upate local state of workers
+          const idx = updatedWorkersLocal.findIndex((w) => w.id === worker.id);
+          if (idx !== -1) {
+            updatedWorkersLocal[idx] = {
+              ...updatedWorkersLocal[idx],
+              ...patched,
+            };
+          } else {
+            updatedWorkersLocal.push(patched);
+          }
+        }
+
+        setWorkers(updatedWorkersLocal);
+        setSelectedExistingWorkers([]);
+      }
+
       closeModal();
     } catch (error) {
       console.log(error);
+      alert("Не вдалося зберегти зміни бригади");
     }
   };
 
   const openEditModal = (crew: Crew) => {
     setCrewFormData(crew);
+    setSelectedExistingWorkers([]);
     setModalData({ crew });
   };
 
   const openAddModal = () => {
     setCrewFormData({ id: 0, name: "", status: "" });
+    setSelectedExistingWorkers([]);
     setModalData({ crew: {} as Crew });
   };
 
@@ -214,6 +248,8 @@ export function Workers() {
             onChange={(data) => setCrewFormData(data)}
             workers={workers}
             onWorkersUpdate={setWorkers}
+            selectedExistingWorkers={selectedExistingWorkers}
+            setSelectedExistingWorkers={setSelectedExistingWorkers}
           />
         </FormModal>
       )}

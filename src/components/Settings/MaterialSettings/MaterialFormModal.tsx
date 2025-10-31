@@ -44,9 +44,9 @@ export const MaterialFormModal = ({
     //   newErrors.base_selling_price = "Вкажіть коректну ціну";
     // }
 
-    if (data.stock === undefined || Number(data.stock) <= 0) {
-      newErrors.stock = "Залишок має бути більше 0";
-    }
+    // if (data.stock === undefined || Number(data.stock) <= 0) {
+    //   newErrors.stock = "Залишок має бути більше 0";
+    // }
 
     // if (data.base_delivery === undefined || Number(data.base_delivery) < 0) {
     //   newErrors.base_delivery = "Ціна доставки не може бути від’ємною";
