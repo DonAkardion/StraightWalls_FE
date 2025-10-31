@@ -98,7 +98,7 @@ export function Projects() {
       </div>
 
       <section
-        className={`${styles.clients} max-w-[1126px] m-auto pt-[46px] pl-[20px] pb-[35px] pr-[20px] md:pt-[60px] md:pl-[60px] md:pr-[60px] md:pb-[50px]`}
+        className={`${styles.clients} max-w-[1130px] m-auto pt-[46px] pl-[20px] pb-[35px] pr-[20px] md:pt-[60px] md:pl-[60px] md:pr-[60px] md:pb-[50px]`}
       >
         <AllProjectsList
           projects={projects}

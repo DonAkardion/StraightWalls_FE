@@ -53,8 +53,8 @@ export const ProjectMaterialsTable = ({
     return Number.isFinite(n) ? n : 0;
   };
 
-  const getSelectionQty = (materialId: number): number =>
-    selection.find((s) => s.materialId === materialId)?.quantity ?? 0;
+  const getSelectionQty = (material: TableMaterial): number =>
+    selection.find((s) => s.materialId === material.material_id)?.quantity ?? 0;
 
   const getValue = (
     materialId: number,
@@ -99,7 +99,7 @@ export const ProjectMaterialsTable = ({
   const totals = useMemo(() => {
     return materials.reduce(
       (acc, m) => {
-        const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+        const qty = getValue(m.id, "quantity", getSelectionQty(m));
         const prev = getValue(
           m.id,
           "previous_remaining",
@@ -228,7 +228,7 @@ export const ProjectMaterialsTable = ({
               />
             ) : (
               <span className={confirmed ? "text-green-600 " : ""}>
-                {getValue(m.id, "quantity", getSelectionQty(m.id))}
+                {getValue(m.id, "quantity", getSelectionQty(m))}
               </span>
             ),
         },
@@ -316,7 +316,7 @@ export const ProjectMaterialsTable = ({
           render: (m) => {
             if (isTotalRow(m)) return "";
             const qty =
-              Number(getValue(m.id, "quantity", getSelectionQty(m.id))) || 0;
+              Number(getValue(m.id, "quantity", getSelectionQty(m))) || 0;
             const prev =
               Number(
                 getValue(
@@ -340,7 +340,7 @@ export const ProjectMaterialsTable = ({
               <strong>{format2(totals.sum)}</strong>
             ) : (
               (() => {
-                const qty = getValue(m.id, "quantity", getSelectionQty(m.id));
+                const qty = getValue(m.id, "quantity", getSelectionQty(m));
                 return (Number(m.base_purchase_price) * qty).toFixed(2);
               })()
             ),
@@ -359,7 +359,7 @@ export const ProjectMaterialsTable = ({
                 value: (item) => {
                   const qty =
                     Number(
-                      getValue(item.id, "quantity", getSelectionQty(item.id))
+                      getValue(item.id, "quantity", getSelectionQty(item))
                     ) || 0;
                   const prev =
                     Number(
@@ -381,7 +381,7 @@ export const ProjectMaterialsTable = ({
                   const qty = getValue(
                     item.id,
                     "quantity",
-                    getSelectionQty(item.id)
+                    getSelectionQty(item)
                     // const qty =
                     //   area ??
                     //   getValue(item.id, "quantity", getSelectionQty(item.id));
