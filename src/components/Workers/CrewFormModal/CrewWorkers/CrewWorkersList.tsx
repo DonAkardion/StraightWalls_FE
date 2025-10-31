@@ -21,7 +21,7 @@ export function CrewWorkersList({ workers, onAdd, onDelete }: Props) {
           onClick={onAdd}
           className={`${styles.createObjectBtn} px-5 py-2 rounded cursor-pointer`}
         >
-          Додати робітника
+          Створити робітника
         </button>
       </div>
 

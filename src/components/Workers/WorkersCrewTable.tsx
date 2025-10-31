@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Table } from "@/components/Table/Table";
 import { Crew } from "@/types/crew";
 import { Worker } from "@/types/worker";
@@ -27,7 +27,26 @@ export function WorkersCrewTable({
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const ctx = useCrew();
 
-  const crews = initialCrews || [];
+  const crews = useMemo(() => {
+    if (!initialCrews) return [];
+
+    const extractNumber = (name: string): number | null => {
+      const match = name.match(/№\s*(\d+)/i);
+      return match ? parseInt(match[1], 10) : null;
+    };
+
+    const withNumbers = initialCrews
+      .map((c) => ({ ...c, sortNum: extractNumber(c.name) }))
+      .filter((c) => c.sortNum !== null)
+      .sort((a, b) => (a.sortNum ?? 0) - (b.sortNum ?? 0));
+
+    const withoutNumbers = initialCrews
+      .map((c) => ({ ...c, sortNum: extractNumber(c.name) }))
+      .filter((c) => c.sortNum === null);
+
+    return [...withNumbers, ...withoutNumbers];
+  }, [initialCrews]);
+
   const workers = initialWorkers || [];
 
   return (
@@ -73,6 +92,11 @@ export function WorkersCrewTable({
                   <span>Вільні</span>
                 </div>
               );
+            },
+            tooltip: (crew: Crew) => {
+              if (crew.projects && crew.projects.length > 0) {
+                return `Об'єкт: ${crew.projects[0].name}`;
+              }
             },
           },
         ]}

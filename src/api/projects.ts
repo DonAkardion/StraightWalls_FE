@@ -171,13 +171,17 @@ export async function deleteWork(
 export async function addMaterialToProject(
   projectId: number,
   data: {
+    material_id: number;
     name: string;
     purchase_price: string;
     selling_price: string;
     remaining_stock: string;
+    additional_delivery: string;
+    current_remaining: string;
+    previous_remaining: string;
     delivery: string;
     unit: string;
-  },
+  }[],
   token: string
 ) {
   return fetcher<{ success: boolean }>(`${API_URL}/${projectId}/materials`, {

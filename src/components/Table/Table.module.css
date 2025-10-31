@@ -354,6 +354,45 @@
 :global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
   padding: 0 6px;
 }
+/* правила для ProjectDetailed  EditMaterials*/
+
+:global(.projectDetailedMaterialsCompleteEdit) .indentCellSmallSecond {
+  width: 20px;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell {
+  padding: 0 6px;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(6) {
+  background: #ffb32666;
+  width: 100px;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(7) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(9) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(10) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(11) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(4) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(5) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(7) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(8) {
+  background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(9) {
+  background: #ffb32666;
+}
 /* правила для Reports Materials*/
 :global(.reportsMaterialsWrap) .indentCellLast {
   display: none;

@@ -296,9 +296,19 @@ export const CrewCalendar = () => {
           <div
             className={`${styles.CalendarSelect} px-2 py-3 rounded-tl-xl  flex items-center justify-center `}
           >
-            <button onClick={handlePrevMonth}>&lt;</button>
+            <button
+              className=" cursor-pointer hover:font-bold"
+              onClick={handlePrevMonth}
+            >
+              &lt;
+            </button>
             <span className="font-medium px-4">{monthName}</span>
-            <button onClick={handleNextMonth}>&gt;</button>
+            <button
+              className=" cursor-pointer hover:font-bold"
+              onClick={handleNextMonth}
+            >
+              &gt;
+            </button>
           </div>
           <div className={`${styles.CalendarCrews} h-full`}>
             {schedule.map(({ crew, lanesCount }) => (
