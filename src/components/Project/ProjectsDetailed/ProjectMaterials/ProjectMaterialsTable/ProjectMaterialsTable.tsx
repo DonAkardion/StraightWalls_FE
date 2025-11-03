@@ -219,7 +219,7 @@ export const ProjectMaterialsTable = ({
               <NumericInputWithControls
                 materialId={m.id}
                 field="quantity"
-                value={getInputValue(m.id, "quantity", 0)}
+                value={getInputValue(m.id, "quantity", m.quantity ?? 0)}
                 fallback={0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
@@ -257,7 +257,11 @@ export const ProjectMaterialsTable = ({
               <NumericInputWithControls
                 materialId={m.id}
                 field="previous_remaining"
-                value={getInputValue(m.id, "previous_remaining", 0)}
+                value={getInputValue(
+                  m.id,
+                  "previous_remaining",
+                  Number(m.previous_remaining ?? 0)
+                )}
                 fallback={Number(m.previous_remaining) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
@@ -278,7 +282,11 @@ export const ProjectMaterialsTable = ({
               <NumericInputWithControls
                 materialId={m.id}
                 field="additional_delivery"
-                value={getInputValue(m.id, "additional_delivery", 0)}
+                value={getInputValue(
+                  m.id,
+                  "additional_delivery",
+                  Number(m.additional_delivery ?? 0)
+                )}
                 fallback={Number(m.additional_delivery) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
@@ -299,7 +307,11 @@ export const ProjectMaterialsTable = ({
               <NumericInputWithControls
                 materialId={m.id}
                 field="current_remaining"
-                value={getInputValue(m.id, "current_remaining", 0)}
+                value={getInputValue(
+                  m.id,
+                  "current_remaining",
+                  Number(m.current_remaining ?? 0)
+                )}
                 fallback={Number(m.current_remaining) ?? 0}
                 onInputChange={handleInputChange}
                 onStepChange={(id, field, val) =>
