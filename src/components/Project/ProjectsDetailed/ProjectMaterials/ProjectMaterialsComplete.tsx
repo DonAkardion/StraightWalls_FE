@@ -27,18 +27,81 @@ export const ProjectMaterialsComplete = ({
 
   const [materialsLocal, setMaterialsLocal] = useState<TableMaterial[]>([]);
   const [allMaterials, setAllMaterials] = useState<TableMaterial[]>([]);
-  const [allMaterialsDraft, setAllMaterialsDraft] = useState<TableMaterial[]>(
-    []
-  );
+  const [materialsBackup, setMaterialsBackup] = useState<TableMaterial[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleToggleEditMode = async () => {
     if (!isEditMode) {
-      // копія з поточних матеріалів у чернетку
-      setAllMaterialsDraft(JSON.parse(JSON.stringify(materialsLocal)));
-      setIsEditMode(true);
+      if (!token) return;
+
+      setLoadingAll(true);
+      try {
+        setMaterialsBackup(JSON.parse(JSON.stringify(materialsLocal)));
+
+        const materials = await getMaterials(token);
+
+        const merged: TableMaterial[] = materials.map((m) => {
+          const existing = materialsLocal.find(
+            (pm) => pm.material_id === m.id || pm.id === m.id
+          );
+
+          if (existing) {
+            const qty = Number(existing.remaining_stock) || 0;
+            return {
+              ...m,
+              id: existing.id,
+              material_id: existing.material_id,
+              name: existing.name ?? m.name,
+              description: existing.description ?? m.description ?? "",
+              base_purchase_price:
+                Number(existing.base_purchase_price) ||
+                Number(m.base_purchase_price) ||
+                0,
+              base_selling_price:
+                Number(existing.base_selling_price) ||
+                Number(m.base_selling_price) ||
+                0,
+              base_delivery:
+                Number(existing.base_delivery) || Number(m.base_delivery) || 0,
+
+              remaining_stock: qty,
+              quantity: qty,
+
+              previous_remaining: Number(existing.previous_remaining) || 0,
+              current_remaining: Number(existing.current_remaining) || 0,
+              additional_delivery: Number(existing.additional_delivery) || 0,
+              delivery_quantity: Number(existing.delivery_quantity) || 0,
+              unit: existing.unit ?? m.unit ?? "-",
+            };
+          }
+
+          return {
+            id: m.id,
+            material_id: m.id,
+            name: m.name,
+            description: m.description ?? "",
+            base_purchase_price: Number(m.base_purchase_price) ?? 0,
+            base_selling_price: Number(m.base_selling_price) ?? 0,
+            base_delivery: Number(m.base_delivery) ?? 0,
+            remaining_stock: 0,
+            quantity: 0,
+            previous_remaining: 0,
+            current_remaining: 0,
+            additional_delivery: 0,
+            delivery_quantity: 0,
+            unit: m.unit ?? "-",
+          };
+        });
+
+        setAllMaterials(merged);
+        setIsEditMode(true);
+      } catch (err) {
+        console.error("Помилка завантаження матеріалів:", err);
+      } finally {
+        setLoadingAll(false);
+      }
     } else {
-      // вихід без збереження
+      setMaterialsLocal(materialsBackup);
       setIsEditMode(false);
     }
   };
@@ -46,7 +109,6 @@ export const ProjectMaterialsComplete = ({
   const [loadingSave, setLoadingSave] = useState(false);
   const [loadingAll, setLoadingAll] = useState(false);
 
-  // --- Ініціалізація поточних матеріалів проєкту ---
   useEffect(() => {
     if (!project?.materials) return;
 
@@ -72,7 +134,6 @@ export const ProjectMaterialsComplete = ({
     setMaterialsLocal(initial);
   }, [project]);
 
-  // --- Підвантажити всі матеріали при активації режиму редагування ---
   useEffect(() => {
     if (!isEditMode || !token) return;
 
@@ -86,10 +147,9 @@ export const ProjectMaterialsComplete = ({
             (pm) => pm.material_id === m.id || pm.id === m.id
           );
 
-          // якщо матеріал вже є в проєкті -> беремо його поточні цифри
           if (existing) {
             return {
-              id: existing.id, // id рядка в project_materials
+              id: existing.id,
               material_id: existing.material_id,
               name: existing.name ?? m.name,
               description: existing.description ?? m.description ?? "",
@@ -104,9 +164,8 @@ export const ProjectMaterialsComplete = ({
               base_delivery:
                 existing.base_delivery ?? Number(m.base_delivery) ?? 0,
 
-              // ці значення є живими в проєкті
               remaining_stock: Number(existing.remaining_stock) || 0,
-              quantity: Number(existing.remaining_stock) || 0, // 👈 головне
+              quantity: Number(existing.remaining_stock) || 0,
               previous_remaining: Number(existing.previous_remaining) || 0,
               current_remaining: Number(existing.current_remaining) || 0,
               additional_delivery: Number(existing.additional_delivery) || 0,
@@ -116,9 +175,8 @@ export const ProjectMaterialsComplete = ({
             };
           }
 
-          // якщо матеріалу ще немає в проєкті -> це "кандидат"
           return {
-            id: m.id, // тимчасово локальне id (ідентифікатор зі складу)
+            id: m.id,
             material_id: m.id,
             name: m.name,
             description: m.description ?? "",
@@ -126,7 +184,6 @@ export const ProjectMaterialsComplete = ({
             base_selling_price: Number(m.base_selling_price) ?? 0,
             base_delivery: Number(m.base_delivery) ?? 0,
 
-            // новий матеріал ще не доданий -> 0
             remaining_stock: 0,
             quantity: 0,
             previous_remaining: 0,
@@ -181,7 +238,6 @@ export const ProjectMaterialsComplete = ({
 
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
-  // --- Збереження змін ---
   const handleSaveChanges = async () => {
     if (!token) return;
     setLoadingSave(true);
@@ -199,7 +255,6 @@ export const ProjectMaterialsComplete = ({
         );
 
         if (exists) {
-          // оновлюємо існуючий рядок project_materials
           const payload: UpdateMaterialRequest = {
             purchase_price: Number(mat.base_purchase_price) || 0,
             previous_remaining: Number(mat.previous_remaining) || 0,
@@ -209,11 +264,7 @@ export const ProjectMaterialsComplete = ({
           };
 
           await updateMaterial(project.id, exists.id, payload, token);
-
-          // локально оновимо materialsLocal
-          // щоб після збереження перейти назад в режим перегляду з актуальними цифрами
         } else {
-          // додаємо новий матеріал у проект
           const newMat = {
             material_id: mat.material_id,
             name: mat.name,
@@ -231,7 +282,6 @@ export const ProjectMaterialsComplete = ({
         }
       }
 
-      // оновлюємо локальний стейт materialsLocal на основі allMaterials (але беремо тільки ті, де qty > 0)
       const updatedView = allMaterials
         .filter((m) => Number(m.remaining_stock) > 0)
         .map((m) => {
@@ -243,19 +293,17 @@ export const ProjectMaterialsComplete = ({
           };
         });
 
-      setMaterialsLocal(
-        allMaterialsDraft.filter((m) => Number(m.remaining_stock) > 0)
-      );
+      setMaterialsLocal(updatedView);
+      setAllMaterials([]);
+      setMaterialsBackup([]);
       setIsEditMode(false);
     } catch (error) {
-      console.error("❌ Помилка збереження матеріалів:", error);
       alert("Не вдалося зберегти зміни матеріалів");
     } finally {
       setLoadingSave(false);
     }
   };
 
-  // --- Вибір таблиці ---
   const tableMaterials = isEditMode ? allMaterials : materialsLocal;
 
   const selectionData = tableMaterials.map((m) => ({

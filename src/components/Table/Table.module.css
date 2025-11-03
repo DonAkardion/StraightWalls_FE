@@ -628,6 +628,87 @@
   :global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
     padding: 0;
   }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(6) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(7) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(9) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(10) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(11) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(4) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(5) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(7) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(8) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(9) {
+    display: table-cell;
+  }
+  /* правила для ProjectDetailed  EditMaterials*/
+
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell {
+    padding: 0 6px;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(6) {
+    /* width: 100px; */
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(9) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(10) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(11) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(4) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(5) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(7) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(8) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(9) {
+    display: table-cell;
+    background: none;
+  }
   /* правила для Reports Materials*/
   :global(.reportsMaterialsWrap) .indentCellLast {
     display: table-cell;
