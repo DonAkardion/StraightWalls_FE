@@ -38,7 +38,7 @@ export function mapMaterials(materials: MaterialWithQuantity[]) {
       purchase_price: String(m.base_purchase_price ?? 0),
       selling_price: String(m.base_purchase_price ?? 0), //String(m.base_selling_price),
       previous_remaining: String(m.previous_remaining),
-      remaining_stock: String(m.quantity),
+      estimated_quantity: String(m.quantity),
       additional_delivery: String(m.additional_delivery),
       current_remaining: String(m.current_remaining),
       delivery: m.base_delivery ? String(m.base_delivery) : "0",

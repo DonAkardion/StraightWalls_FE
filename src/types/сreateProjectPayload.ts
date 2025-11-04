@@ -26,7 +26,7 @@ export interface CreateProjectPayload {
     description?: string;
     purchase_price: string;
     selling_price: string;
-    remaining_stock: string;
+    estimated_quantity: string;
     delivery: string;
     unit: string;
   }[];

@@ -248,8 +248,8 @@
   width: 100px;
   padding: 0 6px;
 }
+
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(10) {
-  background: #ffb32666;
   width: 100px;
 }
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(11) {
@@ -257,8 +257,10 @@
   width: 100px;
 }
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
+  background: #ffb32666;
   padding: 0 6px;
 }
+
 :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(6) {
   width: 110px;
 }
@@ -283,10 +285,13 @@
 :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(7) {
   background: #ffb32666;
 }
-:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(8) {
+/* :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(8) {
+  background: #ffb32666;
+} */
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(9) {
   background: #ffb32666;
 }
-:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(9) {
+:global(.projectAddMaterialsTableWrap) .TableCell:nth-child(10) {
   background: #ffb32666;
 }
 :global(.projectAddMaterialsTableWrap) .indentCellSmall {
@@ -372,7 +377,7 @@
 :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(9) {
   background: #ffb32666;
 }
-:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(10) {
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(12) {
   background: #ffb32666;
 }
 :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(11) {
@@ -387,7 +392,7 @@
 :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(7) {
   background: #ffb32666;
 }
-:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(8) {
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(10) {
   background: #ffb32666;
 }
 :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(9) {
@@ -554,7 +559,16 @@
     background: none;
     width: auto;
   }
-
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(12) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableRowCell:nth-child(13) {
+    display: table-cell;
+    background: none;
+    width: auto;
+  }
   :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(5) {
     display: table-cell;
     background: none;
@@ -568,6 +582,14 @@
     background: none;
   }
   :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(9) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(10) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectAddMaterialsTableWrap) .TableCell:nth-child(11) {
     display: table-cell;
     background: none;
   }
@@ -626,7 +648,7 @@
     display: table-cell;
   }
   :global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
-    padding: 0;
+    padding: 0 6px;
   }
   :global(.projectDetailedMaterialsCompleteTableWrap)
     .TableRowCell:nth-child(6) {
@@ -648,6 +670,14 @@
     .TableRowCell:nth-child(11) {
     display: table-cell;
   }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(12) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap)
+    .TableRowCell:nth-child(13) {
+    display: table-cell;
+  }
   :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(4) {
     display: table-cell;
   }
@@ -661,6 +691,12 @@
     display: table-cell;
   }
   :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(9) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(10) {
+    display: table-cell;
+  }
+  :global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(11) {
     display: table-cell;
   }
   /* правила для ProjectDetailed  EditMaterials*/
@@ -689,6 +725,14 @@
     display: table-cell;
     background: none;
   }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(12) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(13) {
+    display: table-cell;
+    background: none;
+  }
   :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(4) {
     display: table-cell;
     background: none;
@@ -706,6 +750,14 @@
     background: none;
   }
   :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(9) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(10) {
+    display: table-cell;
+    background: none;
+  }
+  :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(11) {
     display: table-cell;
     background: none;
   }

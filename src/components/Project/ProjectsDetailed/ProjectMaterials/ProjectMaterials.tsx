@@ -28,7 +28,6 @@ interface Props {
   tableClassName?: string;
   tablesTitle?: string;
   onConfirm?: () => void;
-  // area?: number;
 }
 const hasQuantity = (
   s: Material | MaterialWithQuantity
@@ -42,8 +41,7 @@ export const ProjectMaterials = ({
   tableClassName,
   tablesTitle,
   onConfirm,
-}: // area,
-Props) => {
+}: Props) => {
   const [selection, setSelection] = useState<MaterialSelection[]>(() =>
     materials.map((m) => ({
       materialId: m.id,
@@ -62,10 +60,6 @@ Props) => {
   const { user } = useUser();
   const role = user?.role;
 
-  // useEffect(() => {
-  //   onSelectionChange?.(selection);
-  // }, [selection, onSelectionChange]);
-
   useEffect(() => {
     setSelection(
       materials.map((m) => ({
@@ -78,49 +72,6 @@ Props) => {
       }))
     );
   }, [materials]);
-
-  // useEffect(() => {
-  //   if (!materials.length) return;
-
-  //   setSelection((prev) =>
-  //     materials.map((m) => {
-  //       const existing = prev.find((s) => s.materialId === m.id);
-  //       return {
-  //         materialId: m.id,
-  //         quantity:
-  //           existing?.quantity ??
-  //           (hasQuantity(m) ? m.quantity ?? 0 : 0) ??
-  //           area ??
-  //           0,
-  //         base_purchase_price:
-  //           existing?.base_purchase_price ?? Number(m.base_purchase_price ?? 0),
-  //         previous_remaining:
-  //           existing?.previous_remaining ??
-  //           (hasQuantity(m) ? m.previous_remaining ?? 0 : 0),
-  //         additional_delivery:
-  //           existing?.additional_delivery ??
-  //           (hasQuantity(m) ? m.additional_delivery ?? 0 : 0),
-  //         current_remaining:
-  //           existing?.current_remaining ??
-  //           (hasQuantity(m) ? m.current_remaining ?? 0 : 0),
-  //         delivery_quantity:
-  //           existing?.delivery_quantity ??
-  //           (hasQuantity(m) ? m.delivery_quantity ?? 0 : 0),
-  //       };
-  //     })
-  //   );
-  // }, [materials]);
-
-  // useEffect(() => {
-  //   if (!area) return;
-
-  //   setSelection((prev) =>
-  //     prev.map((s) => ({
-  //       ...s,
-  //       quantity: area,
-  //     }))
-  //   );
-  // }, [area]);
 
   const effectiveMaterials = useMemo(() => {
     if (editable && !isConfirmed) {
@@ -167,25 +118,25 @@ Props) => {
     m: Material | MaterialWithQuantity,
     qty: number
   ): number => {
-    return m.base_purchase_price * qty;
+    const prev = Number(hasQuantity(m) ? m.previous_remaining ?? 0 : 0);
+    const delivery2 = Number(hasQuantity(m) ? m.additional_delivery ?? 0 : 0);
+    const current = Number(hasQuantity(m) ? m.current_remaining ?? 0 : 0);
+    const price = Number(m.base_purchase_price ?? 0);
+
+    const delivery1 = Math.max(0, qty - prev);
+
+    const cost = Math.max(0, delivery1 + delivery2 - current);
+
+    return cost * price;
   };
 
-  // const total = useMemo(() => {
-  //   if (!selection.length) return 0;
-  //   return selection.reduce((sum, s) => {
-  //     const qty = Number(s.quantity ?? area ?? 0);
-  //     const price = Number(s.base_purchase_price ?? 0);
-  //     return sum + price * qty;
-  //   }, 0);
-  // }, [selection, area]);
-  const total = useMemo(
-    () =>
-      effectiveMaterials.reduce(
-        (sum, m) => sum + calculateMaterialSum(m, getQuantity(m)),
-        0
-      ),
-    [effectiveMaterials, selection, editable]
-  );
+  const total = useMemo(() => {
+    return effectiveMaterials.reduce((sum, m) => {
+      const qty = getQuantity(m);
+      return sum + calculateMaterialSum(m, qty);
+    }, 0);
+  }, [effectiveMaterials, selection, editable]);
+
   const formatNumber = (n: number) => n.toFixed(2).replace(".", ",");
 
   return (

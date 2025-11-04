@@ -17,7 +17,7 @@ export interface TableService {
   unit_of_measurement?: string;
   price: number | string;
   service_type: "main" | "additional";
-  remaining_stock?: number | string;
+  estimated_quantity?: number | string;
   previous_remaining?: number | string;
   current_remaining?: number | string;
   additional_delivery?: number | string;

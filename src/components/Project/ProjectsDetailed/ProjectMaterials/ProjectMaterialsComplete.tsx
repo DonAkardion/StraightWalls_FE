@@ -46,7 +46,7 @@ export const ProjectMaterialsComplete = ({
           );
 
           if (existing) {
-            const qty = Number(existing.remaining_stock) || 0;
+            const qty = Number(existing.estimated_quantity) || 0;
             return {
               ...m,
               id: existing.id,
@@ -64,7 +64,7 @@ export const ProjectMaterialsComplete = ({
               base_delivery:
                 Number(existing.base_delivery) || Number(m.base_delivery) || 0,
 
-              remaining_stock: qty,
+              estimated_quantity: qty,
               quantity: qty,
 
               previous_remaining: Number(existing.previous_remaining) || 0,
@@ -83,7 +83,7 @@ export const ProjectMaterialsComplete = ({
             base_purchase_price: Number(m.base_purchase_price) ?? 0,
             base_selling_price: Number(m.base_selling_price) ?? 0,
             base_delivery: Number(m.base_delivery) ?? 0,
-            remaining_stock: 0,
+            estimated_quantity: 0,
             quantity: 0,
             previous_remaining: 0,
             current_remaining: 0,
@@ -113,7 +113,7 @@ export const ProjectMaterialsComplete = ({
     if (!project?.materials) return;
 
     const initial: TableMaterial[] = project.materials.map((m) => {
-      const rs = Number(m.remaining_stock) || 0;
+      const rs = Number(m.estimated_quantity) || 0;
       return {
         id: m.id,
         material_id: m.material_id,
@@ -122,7 +122,7 @@ export const ProjectMaterialsComplete = ({
         base_purchase_price: Number(m.purchase_price) || 0,
         base_selling_price: Number(m.selling_price) || 0,
         base_delivery: Number(m.delivery) || 0,
-        remaining_stock: rs,
+        estimated_quantity: rs,
         quantity: rs,
         unit: m.unit ?? "-",
         previous_remaining: Number(m.previous_remaining) || 0,
@@ -164,8 +164,8 @@ export const ProjectMaterialsComplete = ({
               base_delivery:
                 existing.base_delivery ?? Number(m.base_delivery) ?? 0,
 
-              remaining_stock: Number(existing.remaining_stock) || 0,
-              quantity: Number(existing.remaining_stock) || 0,
+              estimated_quantity: Number(existing.estimated_quantity) || 0,
+              quantity: Number(existing.estimated_quantity) || 0,
               previous_remaining: Number(existing.previous_remaining) || 0,
               current_remaining: Number(existing.current_remaining) || 0,
               additional_delivery: Number(existing.additional_delivery) || 0,
@@ -184,7 +184,7 @@ export const ProjectMaterialsComplete = ({
             base_selling_price: Number(m.base_selling_price) ?? 0,
             base_delivery: Number(m.base_delivery) ?? 0,
 
-            remaining_stock: 0,
+            estimated_quantity: 0,
             quantity: 0,
             previous_remaining: 0,
             current_remaining: 0,
@@ -218,7 +218,7 @@ export const ProjectMaterialsComplete = ({
             return {
               ...m,
               quantity: value,
-              remaining_stock: value,
+              estimated_quantity: value,
             };
           }
           return { ...m, [field]: value };
@@ -231,8 +231,16 @@ export const ProjectMaterialsComplete = ({
   const totalCost = useMemo(() => {
     const list = isEditMode ? allMaterials : materialsLocal;
     return list.reduce((sum, m) => {
-      const qty = Number(m.remaining_stock) || 0;
-      return sum + Number(m.base_purchase_price) * qty;
+      const qty = Number(m.estimated_quantity) || 0;
+      const prev = Number(m.previous_remaining) || 0;
+      const delivery2 = Number(m.additional_delivery) || 0;
+      const current = Number(m.current_remaining) || 0;
+      const price = Number(m.base_purchase_price) || 0;
+
+      const delivery1 = Math.max(0, qty - prev);
+      const cost = Math.max(0, delivery1 + delivery2 - current);
+      const rowTotal = cost * price;
+      return sum + rowTotal;
     }, 0);
   }, [materialsLocal, allMaterials, isEditMode]);
 
@@ -244,11 +252,11 @@ export const ProjectMaterialsComplete = ({
 
     try {
       const materialsToSave = allMaterials.filter(
-        (m) => Number(m.remaining_stock) > 0
+        (m) => Number(m.estimated_quantity) > 0
       );
 
       for (const mat of materialsToSave) {
-        const qty = Number(mat.remaining_stock) || 0;
+        const qty = Number(mat.estimated_quantity) || 0;
 
         const exists = materialsLocal.find(
           (m) => m.material_id === mat.material_id
@@ -258,7 +266,7 @@ export const ProjectMaterialsComplete = ({
           const payload: UpdateMaterialRequest = {
             purchase_price: Number(mat.base_purchase_price) || 0,
             previous_remaining: Number(mat.previous_remaining) || 0,
-            remaining_stock: qty,
+            estimated_quantity: qty,
             current_remaining: Number(mat.current_remaining) || 0,
             additional_delivery: Number(mat.additional_delivery) || 0,
           };
@@ -270,7 +278,7 @@ export const ProjectMaterialsComplete = ({
             name: mat.name,
             purchase_price: String(mat.base_purchase_price),
             selling_price: String(mat.base_selling_price ?? 0),
-            remaining_stock: String(qty),
+            estimated_quantity: String(qty),
             additional_delivery: String(mat.additional_delivery ?? 0),
             current_remaining: String(mat.current_remaining ?? 0),
             previous_remaining: String(mat.previous_remaining ?? 0),
@@ -283,12 +291,12 @@ export const ProjectMaterialsComplete = ({
       }
 
       const updatedView = allMaterials
-        .filter((m) => Number(m.remaining_stock) > 0)
+        .filter((m) => Number(m.estimated_quantity) > 0)
         .map((m) => {
-          const rs = Number(m.remaining_stock) || 0;
+          const rs = Number(m.estimated_quantity) || 0;
           return {
             ...m,
-            remaining_stock: rs,
+            estimated_quantity: rs,
             quantity: rs,
           };
         });
@@ -308,7 +316,7 @@ export const ProjectMaterialsComplete = ({
 
   const selectionData = tableMaterials.map((m) => ({
     materialId: m.material_id,
-    quantity: Number(m.quantity) || Number(m.remaining_stock) || 0,
+    quantity: Number(m.quantity) || Number(m.estimated_quantity) || 0,
   }));
 
   return (
