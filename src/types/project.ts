@@ -163,7 +163,7 @@ export interface ProjectDetailedResponse {
     purchase_price: string;
     selling_price: string;
     margin: string;
-    remaining_stock: string;
+    estimated_quantity: string;
     delivery: string;
     unit: string;
     created_at: string;
@@ -185,7 +185,7 @@ export interface ProjectDetailedResponse {
 export interface UpdateMaterialRequest {
   purchase_price: number;
   previous_remaining: number;
-  remaining_stock: number;
+  estimated_quantity: number;
   current_remaining: number;
   additional_delivery: number;
 }

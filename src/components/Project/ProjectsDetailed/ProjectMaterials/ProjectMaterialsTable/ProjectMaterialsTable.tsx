@@ -11,6 +11,7 @@ interface MaterialSelection {
   materialId: number;
   quantity: number;
   previous_remaining?: number;
+  delivery?: number;
   additional_delivery?: number;
   current_remaining?: number;
   delivery_quantity?: number;
@@ -39,7 +40,6 @@ export const ProjectMaterialsTable = ({
   selection,
   editable = false,
   confirmed = false,
-  // area,
   enableTooltips = true,
   onEdit,
   onQuantityChange,
@@ -105,7 +105,12 @@ export const ProjectMaterialsTable = ({
           "previous_remaining",
           Number(m.previous_remaining) ?? 0
         );
-        const delivery = getValue(
+        // const delivery1 = getValue(
+        //   m.id,
+        //   "delivery_quantity",
+        //   Number(m.delivery_quantity) ?? 0
+        // );
+        const delivery2 = getValue(
           m.id,
           "additional_delivery",
           Number(m.additional_delivery) ?? 0
@@ -115,16 +120,22 @@ export const ProjectMaterialsTable = ({
           "current_remaining",
           Number(m.current_remaining) ?? 0
         );
+        const delivery1 = Math.max(0, qty - prev);
+        const cost = Math.max(0, delivery1 + delivery2 - current);
+
         const price = getValue(
           m.id,
           "base_purchase_price",
           Number(m.base_purchase_price) ?? 0
         );
+        const sum = cost * price;
         acc.quantity += qty;
         acc.previous_remaining += prev;
-        acc.additional_delivery += delivery;
+        acc.delivery_quantity += delivery1;
+        acc.additional_delivery += delivery2;
         acc.current_remaining += current;
-        acc.sum += price * qty;
+        acc.cost += cost;
+        acc.sum += sum;
         return acc;
       },
       {
@@ -132,6 +143,8 @@ export const ProjectMaterialsTable = ({
         previous_remaining: 0,
         additional_delivery: 0,
         current_remaining: 0,
+        delivery_quantity: 0,
+        cost: 0,
         sum: 0,
       }
     );
@@ -211,7 +224,7 @@ export const ProjectMaterialsTable = ({
         },
         {
           key: "quantity",
-          label: "Кількість",
+          label: "Орієнтовна Кількість",
           render: (m) =>
             isTotalRow(m) ? (
               <strong>{totals.quantity}</strong>
@@ -273,8 +286,26 @@ export const ProjectMaterialsTable = ({
             ),
         },
         {
+          key: "delivery_quantity",
+          label: "Доставка 1",
+          render: (m) => {
+            if (isTotalRow(m))
+              return <strong>{totals.delivery_quantity}</strong>;
+
+            const qty = getValue(m.id, "quantity", getSelectionQty(m));
+            const prev = getValue(
+              m.id,
+              "previous_remaining",
+              Number(m.previous_remaining ?? 0)
+            );
+            const delivery1 = Math.max(0, qty - prev);
+
+            return <span className="">{delivery1}</span>;
+          },
+        },
+        {
           key: "additional_delivery",
-          label: "Доставка",
+          label: "Доставка 2",
           render: (m) =>
             isTotalRow(m) ? (
               <strong>{totals.additional_delivery}</strong>
@@ -323,10 +354,10 @@ export const ProjectMaterialsTable = ({
             ),
         },
         {
-          key: "delivery_quantity",
-          label: "Доставлено",
+          key: "purchase_price",
+          label: "Собівартість",
           render: (m) => {
-            if (isTotalRow(m)) return "";
+            if (isTotalRow(m)) return <strong>{totals.cost}</strong>;
             const qty =
               Number(getValue(m.id, "quantity", getSelectionQty(m))) || 0;
             const prev =
@@ -337,25 +368,55 @@ export const ProjectMaterialsTable = ({
                   Number(m.previous_remaining) ?? 0
                 )
               ) || 0;
-            const delivered =
-              typeof m.delivery_quantity === "number" && m.delivery_quantity > 0
-                ? m.delivery_quantity
-                : Math.max(0, qty - prev);
-            return <span>{delivered}</span>;
+            const delivery1 = Math.max(0, qty - prev);
+            const delivery2 = getValue(
+              m.id,
+              "additional_delivery",
+              Number(m.additional_delivery ?? 0)
+            );
+            const current = getValue(
+              m.id,
+              "current_remaining",
+              Number(m.current_remaining ?? 0)
+            );
+            const cost = Math.max(0, delivery1 + delivery2 - current);
+            return <span>{cost}</span>;
           },
         },
         {
           key: "sum",
           label: "Сума, грн",
-          render: (m) =>
-            isTotalRow(m) ? (
-              <strong>{format2(totals.sum)}</strong>
-            ) : (
-              (() => {
-                const qty = getValue(m.id, "quantity", getSelectionQty(m));
-                return (Number(m.base_purchase_price) * qty).toFixed(2);
-              })()
-            ),
+          render: (m) => {
+            if (isTotalRow(m)) return <strong>{format2(totals.sum)}</strong>;
+
+            const qty = getValue(m.id, "quantity", getSelectionQty(m));
+            const prev = getValue(
+              m.id,
+              "previous_remaining",
+              Number(m.previous_remaining ?? 0)
+            );
+            const delivery1 = Math.max(0, qty - prev);
+            const delivery2 = getValue(
+              m.id,
+              "additional_delivery",
+              Number(m.additional_delivery ?? 0)
+            );
+            const current = getValue(
+              m.id,
+              "current_remaining",
+              Number(m.current_remaining ?? 0)
+            );
+            const cost = Math.max(0, delivery1 + delivery2 - current);
+            const price = getValue(
+              m.id,
+              "base_purchase_price",
+              Number(m.base_purchase_price) ?? 0
+            );
+
+            // 💰 Сума рядка = Собівартість × Ціна
+            const total = cost * price;
+            return <span>{format2(total)}</span>;
+          },
         },
       ]}
       renderInspection={(m) =>
@@ -367,7 +428,7 @@ export const ProjectMaterialsTable = ({
             fields={[
               { label: "Од. вимір.", value: (item) => item.unit },
               {
-                label: "Доставлено",
+                label: "Собівартість",
                 value: (item) => {
                   const qty =
                     Number(
@@ -381,28 +442,57 @@ export const ProjectMaterialsTable = ({
                         Number(item.previous_remaining) ?? 0
                       )
                     ) || 0;
-                  return typeof item.delivery_quantity === "number" &&
-                    item.delivery_quantity > 0
-                    ? item.delivery_quantity
-                    : Math.max(0, qty - prev);
+                  const delivery1 = Math.max(0, qty - prev);
+                  const delivery2 = getValue(
+                    item.id,
+                    "additional_delivery",
+                    Number(item.additional_delivery ?? 0)
+                  );
+                  const current = getValue(
+                    item.id,
+                    "current_remaining",
+                    Number(item.current_remaining ?? 0)
+                  );
+                  const cost = Math.max(0, delivery1 + delivery2 - current);
+                  return format2(cost);
                 },
               },
               {
                 label: "Сума, грн",
                 value: (item) => {
-                  const qty = getValue(
+                  const qty =
+                    Number(
+                      getValue(item.id, "quantity", getSelectionQty(item))
+                    ) || 0;
+                  const prev =
+                    Number(
+                      getValue(
+                        item.id,
+                        "previous_remaining",
+                        Number(item.previous_remaining) ?? 0
+                      )
+                    ) || 0;
+                  const delivery1 = Math.max(0, qty - prev);
+                  const delivery2 = getValue(
                     item.id,
-                    "quantity",
-                    getSelectionQty(item)
-                    // const qty =
-                    //   area ??
-                    //   getValue(item.id, "quantity", getSelectionQty(item.id));
-                    // const price = getValue(
-                    //   m.id,
-                    //   "base_purchase_price",
-                    //   Number(m.base_purchase_price) ?? 0
+                    "additional_delivery",
+                    Number(item.additional_delivery ?? 0)
                   );
-                  return (num(item.base_purchase_price) * qty).toFixed(2);
+                  const current = getValue(
+                    item.id,
+                    "current_remaining",
+                    Number(item.current_remaining ?? 0)
+                  );
+                  const cost = Math.max(0, delivery1 + delivery2 - current);
+                  const price = getValue(
+                    item.id,
+                    "base_purchase_price",
+                    Number(item.base_purchase_price) ?? 0
+                  );
+
+                  // 💰 Сума = Собівартість × Ціна
+                  const total = cost * price;
+                  return format2(total);
                 },
               },
             ]}

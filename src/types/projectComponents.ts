@@ -18,7 +18,7 @@ export interface ProjectMaterial {
   purchase_price: string;
   selling_price: string;
   margin: string;
-  remaining_stock: string;
+  estimated_quantity: string;
   delivery: string;
   unit: string;
   previous_remaining: number;

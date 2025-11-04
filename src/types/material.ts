@@ -21,8 +21,9 @@ export interface MaterialFormData {
   delivery: number;
   unit: string;
   previous_remaining: number;
-  remaining_stock: number;
+  estimated_quantity: number;
   current_remaining: number;
+  delivery_quantity?: number | string;
   additional_delivery: number;
 }
 
@@ -33,9 +34,10 @@ export interface TableMaterial {
   base_purchase_price: number | string;
   base_selling_price: number | string;
   base_delivery: number | string;
-  remaining_stock?: number | string;
+  estimated_quantity?: number | string;
   previous_remaining?: number | string;
   current_remaining?: number | string;
+  delivery_quantity?: number | string;
   additional_delivery?: number | string;
   description?: string | null;
   [key: string]: any;

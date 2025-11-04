@@ -175,7 +175,7 @@ export async function addMaterialToProject(
     name: string;
     purchase_price: string;
     selling_price: string;
-    remaining_stock: string;
+    estimated_quantity: string;
     additional_delivery: string;
     current_remaining: string;
     previous_remaining: string;

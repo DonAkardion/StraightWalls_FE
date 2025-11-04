@@ -31,7 +31,7 @@ export function MaterialsTable() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const { token } = useUser();
-  
+
   useEffect(() => {
     if (!token) return;
 
@@ -43,7 +43,7 @@ export function MaterialsTable() {
           project.materials.map((mat) => ({
             id: mat.id,
             name: mat.name,
-            quantity: String(Math.round(Number(mat.remaining_stock))),
+            quantity: String(Math.round(Number(mat.estimated_quantity))),
             unitPrice: String(mat.selling_price),
             supplier: "ТОВ компанія",
             icon: "",
