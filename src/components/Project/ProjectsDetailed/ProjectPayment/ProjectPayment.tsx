@@ -79,6 +79,13 @@ export function ProjectPayment({ report, refreshProject, role }: Props) {
               value: formatCurrency(parseAmount(report.totalWorksCost)),
             },
             {
+              label: "Заробіток на матеріалах",
+              value: `${formatCurrency(
+                parseAmount(report.project.universal_material_total) -
+                  parseAmount(report.totalMaterialsCost)
+              )} `,
+            },
+            {
               label: "Аванс при заїзді бригади",
               value: advancePayment
                 ? formatCurrency(parseAmount(advancePayment.amount))

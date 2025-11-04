@@ -72,6 +72,8 @@ export function AddProjectPage() {
   const [roomStats, setRoomStats] = useState<any | null>(null);
   const [universalMaterialPrice, setUniversalMaterialPrice] =
     useState<number>(235);
+  const [universalMaterialTotal, setUniversalMaterialTotal] =
+    useState<number>(0);
 
   // === INIT LOAD ===
   useEffect(() => {
@@ -218,6 +220,7 @@ export function AddProjectPage() {
         start_date: startDate || null,
         end_date: endDate || null,
         universal_material_price_per_m2: String(universalMaterialPrice),
+        universal_material_total: String(universalMaterialTotal),
       },
       works: mapWorks(services),
       materials: mapMaterials(materials),
@@ -369,6 +372,7 @@ export function AddProjectPage() {
           editable={true}
           onChange={(data) => {
             setUniversalMaterialPrice(data.price);
+            setUniversalMaterialTotal(data.sum);
           }}
         />
         <span
@@ -431,12 +435,12 @@ export function AddProjectPage() {
             },
             {
               label: "Вартість усіх використаних матеріалів",
-              value: `${formatNumber(totalMaterialCost)} грн`,
+              value: `${formatNumber(universalMaterialTotal)} грн`,
             },
-            {
-              label: "Заробіток на матеріалах",
-              value: `${formatNumber(materialsIncomeTotal)} грн`,
-            },
+            // {
+            //   label: "Заробіток на матеріалах",
+            //   value: `${formatNumber(materialsIncomeTotal)} грн`,
+            // },
             {
               label: "Аванс при заїзді бригади",
               value: `${formatNumber(advanceAmount)} грн`,
