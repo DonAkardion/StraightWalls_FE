@@ -109,6 +109,7 @@ export function ProjectsDetailed({ projectId }: Props) {
           editable={false}
           viewMode={true}
           projectId={project.id}
+          onUpdate={refreshProject}
         />
         <ProjectEstimateComplete
           report={report}

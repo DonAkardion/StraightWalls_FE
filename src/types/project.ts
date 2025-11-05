@@ -50,6 +50,7 @@ export interface UpdateProjectPayload {
   start_date?: string;
   end_date?: string;
   universal_material_price_per_m2?: string;
+  universal_material_total?: string;
 }
 
 export interface ProjectResponse {
