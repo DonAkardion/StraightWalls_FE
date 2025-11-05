@@ -29,6 +29,7 @@ interface Props {
   }) => void;
   initialPrice?: number;
   projectId?: number;
+  onUpdate?: () => void;
 }
 
 export const FakeMaterialTable = ({
@@ -38,6 +39,7 @@ export const FakeMaterialTable = ({
   onChange,
   initialPrice,
   projectId,
+  onUpdate,
 }: Props) => {
   const { token } = useUser();
   const [price, setPrice] = useState<number>(initialPrice ?? 235);
@@ -118,10 +120,16 @@ export const FakeMaterialTable = ({
       try {
         await patchProject(
           projectId,
-          { universal_material_price_per_m2: String(editForm.price) },
+          {
+            universal_material_price_per_m2: String(editForm.price),
+            universal_material_total: String(
+              editForm.price * editForm.quantity
+            ),
+          },
+
           token
         );
-        console.log("✅ Ціну фейкового матеріалу оновлено:", editForm.price);
+        onUpdate?.();
       } catch (err) {
         console.error(" Помилка оновлення матеріалу:", err);
       }
