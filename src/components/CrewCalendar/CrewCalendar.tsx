@@ -82,7 +82,20 @@ export const CrewCalendar = () => {
     (async () => {
       try {
         const data = await getCrews(token);
-        setCrews(data);
+        const sorted = [...data].sort((a, b) => {
+          const regex = /№\s*(\d+)/;
+
+          const numA = a.name.match(regex)?.[1];
+          const numB = b.name.match(regex)?.[1];
+
+          if (numA && numB) return Number(numA) - Number(numB);
+
+          if (numA && !numB) return -1;
+          if (!numA && numB) return 1;
+
+          return a.name.localeCompare(b.name, "uk");
+        });
+        setCrews(sorted);
       } catch (e) {
         console.error("Crew fetch error", e);
       }
