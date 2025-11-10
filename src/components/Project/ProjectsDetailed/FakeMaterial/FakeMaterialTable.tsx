@@ -178,7 +178,7 @@ export const FakeMaterialTable = ({
           {
             key: "quantity",
             label: "Кількість",
-            render: (m) => <span className="">{quantity}</span>,
+            render: (m) => <span className="">{quantity.toFixed(2)}</span>,
           },
           { key: "unit", label: "Од. вимір.", render: (m) => m.unit },
           {

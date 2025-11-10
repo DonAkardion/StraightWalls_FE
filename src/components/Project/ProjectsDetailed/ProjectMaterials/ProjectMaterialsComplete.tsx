@@ -8,6 +8,7 @@ import { updateMaterial, addMaterialToProject } from "@/api/projects";
 import { getMaterials } from "@/api/material";
 import { TableMaterial } from "@/types/material";
 import { UpdateMaterialRequest } from "@/types/project";
+import { ProjectMaterialsWithHeaderOverlay } from "./ProjectMaterialsWithHeaderOverlay";
 
 interface Props {
   report: ProjectReportResponse;
@@ -335,63 +336,70 @@ export const ProjectMaterialsComplete = ({
           </button>
         )}
       </div>
+      <div className="">
+        {isEditMode ? (
+          loadingAll ? (
+            <p>Завантаження матеріалів...</p>
+          ) : (
+            <>
+              <ProjectMaterialsWithHeaderOverlay>
+                <ProjectMaterialsTable
+                  materials={tableMaterials}
+                  selection={selectionData}
+                  editable
+                  onQuantityChange={handleQuantityChange}
+                  className="projectDetailedMaterialsCompleteEdit"
+                />
 
-      {isEditMode ? (
-        loadingAll ? (
-          <p>Завантаження матеріалів...</p>
-        ) : (
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={handleSaveChanges}
+                    disabled={loadingSave}
+                    className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 disabled:opacity-60"
+                  >
+                    {loadingSave ? "Збереження..." : "Зберегти зміни"}
+                  </button>
+                </div>
+              </ProjectMaterialsWithHeaderOverlay>
+            </>
+          )
+        ) : materialsLocal.length > 0 ? (
           <>
-            <ProjectMaterialsTable
-              materials={tableMaterials}
-              selection={selectionData}
-              editable
-              onQuantityChange={handleQuantityChange}
-              className="projectDetailedMaterialsCompleteEdit"
-            />
+            <ProjectMaterialsWithHeaderOverlay>
+              <ProjectMaterialsTable
+                materials={tableMaterials}
+                selection={selectionData}
+                editable={false}
+                className={tableClassName}
+                onEdit={
+                  role === "admin" || role === "accountant"
+                    ? undefined
+                    : undefined
+                }
+              />
 
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={handleSaveChanges}
-                disabled={loadingSave}
-                className="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600 disabled:opacity-60"
+              <div
+                className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
               >
-                {loadingSave ? "Збереження..." : "Зберегти зміни"}
-              </button>
-            </div>
+                <div
+                  className={`${styles.totatCostMain} ${styles.totatCostMainSwadow} flex justify-between items-center mt-[16px] gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]`}
+                >
+                  <div className={styles.totatCostMainTytle}>
+                    Загальна вартість матеріалів
+                  </div>
+                  <div className={`${styles.totatCostMainSum} shrink-0`}>
+                    {formatNumber(totalCost)} грн
+                  </div>
+                </div>
+              </div>
+            </ProjectMaterialsWithHeaderOverlay>
           </>
-        )
-      ) : materialsLocal.length > 0 ? (
-        <>
-          <ProjectMaterialsTable
-            materials={tableMaterials}
-            selection={selectionData}
-            editable={false}
-            className={tableClassName}
-            onEdit={
-              role === "admin" || role === "accountant" ? undefined : undefined
-            }
-          />
-
-          <div
-            className={`${styles.tableBetweenWrapSecond} relative h-[60px] md:h-[48px] w-full z-[10]`}
-          >
-            <div
-              className={`${styles.totatCostMain} ${styles.totatCostMainSwadow} flex justify-between items-center mt-[16px] gap-2 h-[60px] md:h-[74px] w-full rounded-[5px] py-[13px] px-[15px] md:py-[18px] md:pl-[24px] md:pr-[40px]`}
-            >
-              <div className={styles.totatCostMainTytle}>
-                Загальна вартість матеріалів
-              </div>
-              <div className={`${styles.totatCostMainSum} shrink-0`}>
-                {formatNumber(totalCost)} грн
-              </div>
-            </div>
+        ) : (
+          <div className={`${styles.totatCostMainTytle} mt-[30px]`}>
+            Матеріали відсутні
           </div>
-        </>
-      ) : (
-        <div className={`${styles.totatCostMainTytle} mt-[30px]`}>
-          Матеріали відсутні
-        </div>
-      )}
+        )}
+      </div>
     </section>
   );
 };

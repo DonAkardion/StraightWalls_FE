@@ -379,7 +379,7 @@ export const ProjectMaterialsTable = ({
               "current_remaining",
               Number(m.current_remaining ?? 0)
             );
-            const cost = Math.max(0, delivery1 + delivery2 - current);
+            const cost = Math.max(0, prev + delivery1 + delivery2 - current);
             return <span>{cost}</span>;
           },
         },

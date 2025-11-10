@@ -155,7 +155,7 @@ export const ProjectServicesTable = ({
           label: "Кількість",
           render: (s) =>
             isTotalRow(s) ? (
-              <strong>{totals.quantity}</strong>
+              <strong>{format2(totals.quantity)}</strong>
             ) : editable ? (
               <div
                 className={`${styles.editContainer} h-full flex justify-center items-center gap-1`}

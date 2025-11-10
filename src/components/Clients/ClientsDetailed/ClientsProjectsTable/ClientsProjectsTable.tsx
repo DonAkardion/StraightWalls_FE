@@ -38,8 +38,7 @@ export const ClientsProjectsTable = ({
       }
     };
     fetchProjects();
-  }, [token, clientId])
-
+  }, [token, clientId]);
 
   useEffect(() => {
     if (!token || !projects.length) return;
@@ -77,7 +76,7 @@ export const ClientsProjectsTable = ({
   const statusMap: Record<string, string> = {
     completed: "Виконано",
     in_progress: "В Роботі",
-    new: "В Черзі",
+    new: "Очікує",
     canceled: "Скасовано",
   };
 

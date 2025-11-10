@@ -92,7 +92,7 @@ export const DoughnutChart = () => {
   const ukrLabels: Partial<Record<ProjectStatus, string>> = {
     [ProjectStatus.COMPLETED]: "Виконано",
     [ProjectStatus.IN_PROGRESS]: "В процесі",
-    [ProjectStatus.NEW]: "В Черзі",
+    [ProjectStatus.NEW]: "Очікує",
     [ProjectStatus.CANCELED]: "Відхилено",
     // [ProjectStatus.CONFIRMED]: "Підтверджено",
     // [ProjectStatus.SCHEDULED]: "Заплановано"

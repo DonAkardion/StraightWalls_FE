@@ -289,7 +289,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
               key={p.project.id}
               className={getRowClassName(p.project.status)}
             >
-              {p.totalMaterialsProfit}
+              {p.totalMaterialsProfit.toFixed(2)}
             </div>
           ))}
         </div>
@@ -305,7 +305,7 @@ export const InProgressTable: React.FC<InProgressTableProps> = ({
               key={p.project.id}
               className={getRowClassName(p.project.status)}
             >
-              {p.totalMaterialsProfit}
+              {p.totalMaterialsProfit.toFixed(2)}
             </div>
           ))}
         </div>
