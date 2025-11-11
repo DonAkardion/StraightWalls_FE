@@ -121,7 +121,7 @@ export const ProjectMaterialsTable = ({
           Number(m.current_remaining) ?? 0
         );
         const delivery1 = Math.max(0, qty - prev);
-        const cost = Math.max(0, delivery1 + delivery2 - current);
+        const cost = Math.max(0, prev + delivery1 + delivery2 - current);
 
         const price = getValue(
           m.id,

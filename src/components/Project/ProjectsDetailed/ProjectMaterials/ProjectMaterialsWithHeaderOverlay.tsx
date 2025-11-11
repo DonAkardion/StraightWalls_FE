@@ -124,7 +124,7 @@ export const ProjectMaterialsWithHeaderOverlay: React.FC<
   }, [showOverlay]);
 
   return (
-    <div ref={containerRef} className={`relative ${className}`}>
+    <div ref={containerRef} className={`relative hidden md:block ${className}`}>
       {/* оригінальний хедер таблиці */}
       <div className="absolute top-[5%]" ref={headerSentinelRef}></div>
 
