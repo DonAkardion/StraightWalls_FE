@@ -348,14 +348,23 @@ export const CrewCalendar = () => {
             <div
               className={`${styles.CalendarBodyHead} flex rounded-tr-xl pr-5`}
             >
-              {days.map((d) => (
-                <div
-                  key={d}
-                  className={`${styles.CalendarHeadDay} w-[32px] h-[48px] flex items-center justify-center sticky top-0  `}
-                >
-                  {d}
-                </div>
-              ))}
+              {days.map((d) => {
+                const date = new Date(year, month, d);
+                const dayOfWeek = date.getDay();
+                const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                return (
+                  <div
+                    key={d}
+                    className={`${
+                      styles.CalendarHeadDay
+                    } w-[32px] h-[48px] flex items-center justify-center sticky top-0  ${
+                      isWeekend ? "bg-gray-200" : "bg-none"
+                    }`}
+                  >
+                    {d}
+                  </div>
+                );
+              })}
             </div>
 
             {/* Rows with schedules */}
@@ -371,12 +380,19 @@ export const CrewCalendar = () => {
                 >
                   {/* Grid */}
                   <div className="flex h-full">
-                    {days.map((d) => (
-                      <div
-                        key={d}
-                        className="w-[32px] h-full border-r border-gray-200"
-                      />
-                    ))}
+                    {days.map((d) => {
+                      const date = new Date(year, month, d);
+                      const dayOfWeek = date.getDay();
+                      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+                      return (
+                        <div
+                          key={d}
+                          className={`w-[32px] h-full border-r border-gray-200 ${
+                            isWeekend ? "bg-gray-200" : ""
+                          }`}
+                        />
+                      );
+                    })}
                   </div>
 
                   {/* Overlay-Bars projects */}
