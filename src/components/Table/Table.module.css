@@ -359,6 +359,30 @@
 :global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell {
   padding: 0 6px;
 }
+:global(.projectDetailedMaterialsCompleteTableWrap) .TableCell:nth-child(3) {
+  max-width: 320px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell:nth-child(6) {
+  width: 100px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell:nth-child(8) {
+  width: 96px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap) .TableRowCell:nth-child(9) {
+  width: 180px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap)
+  .TableRowCell:nth-child(10) {
+  width: 100px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap)
+  .TableRowCell:nth-child(11) {
+  width: 108px;
+}
+:global(.projectDetailedMaterialsCompleteTableWrap)
+  .TableRowCell:nth-child(12) {
+  width: 108px;
+}
 /* правила для ProjectDetailed  EditMaterials*/
 
 :global(.projectDetailedMaterialsCompleteEdit) .indentCellSmallSecond {
@@ -376,12 +400,19 @@
 }
 :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(9) {
   background: #ffb32666;
+  width: 180px;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(10) {
+  width: 100px;
 }
 :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(12) {
   background: #ffb32666;
 }
 :global(.projectDetailedMaterialsCompleteEdit) .TableRowCell:nth-child(11) {
   background: #ffb32666;
+}
+:global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(3) {
+  max-width: 320px;
 }
 :global(.projectDetailedMaterialsCompleteEdit) .TableCell:nth-child(4) {
   background: #ffb32666;

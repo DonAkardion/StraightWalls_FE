@@ -1,0 +1,9 @@
+.header {
+  background: white;
+  font-family: var(--font-koulen);
+  font-weight: 400;
+  font-size: 20px;
+}
+.headerContainer {
+  background: var(--yellow);
+}

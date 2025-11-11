@@ -8,9 +8,9 @@
 .CalendarBodyHead {
   background: var(--yellow);
 }
-.CalendarHeadDay {
+/* .CalendarHeadDay {
   background: none;
-}
+} */
 .Tooltip {
   font-family: var(--font-inter);
 }

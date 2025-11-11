@@ -29,7 +29,7 @@ interface Props {
 const statusMap: Record<string, string> = {
   completed: "Виконано",
   in_progress: "В Роботі",
-  new: "В Черзі",
+  new: "Очікує",
   canceled: "Скасовано",
 };
 
