@@ -134,7 +134,7 @@ export const ProjectMaterialsWithHeaderOverlay: React.FC<
       {/* плашка, яка з’являється при скролі */}
       {showOverlay && (
         <div
-          className={`${styles.header} fixed w-full top-1 h-[76px] border-gray-300 z-50 rounded-[5px] overflow-hidden`}
+          className={`${styles.header} hidden md:block fixed w-full top-1 h-[76px] border-gray-300 z-50 rounded-[5px] overflow-hidden`}
           style={{
             ...overlayStyle,
             right: "auto",
